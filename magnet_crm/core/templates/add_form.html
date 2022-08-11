@@ -16,13 +16,40 @@
 								<div class="col-12">
 									<form method="POST"> 
 										{% csrf_token %}
+
+										<!-- <div class="form-check">
+										  <input class="form-check-input" type="radio" name="flexRadioDefault" >
+										  <label class="form-check-label" >
+										    Default radio
+										  </label>
+										</div>
+										<div class="form-check">
+										  <input class="form-check-input" type="radio" name="flexRadioDefault" >
+										  <label class="form-check-label" >
+										    Default checked radio
+										  </label>
+										</div> -->
+
+
 										<div class="mb-4">
 											<h6 class="font-weight-semibold">Followup choices</h6>
-											<select onChange="toggle_choice(this.options[this.selectedIndex].value,1)" class="form-control">
+											{% for x in first_choices %}
+												<div class="form-check">
+												  <input class="form-check-input" type="radio" name="flexRadioDefault" value="{{x.followup_choice_code}}" onChange="toggle_choice_radio({{x.followup_choice_code}},1)">
+												  <label class="form-check-label" >
+												    {{x.followup_choices}}
+												  </label>
+												</div>
+											{% endfor %}
+
+
+											<!-- <select onChange="toggle_choice(this.options[this.selectedIndex].value,1)" class="form-control">
 												{% for x in first_choices %}
 												<option value="{{x.followup_choice_code}}">{{x.followup_choices}}</option>
 												{% endfor %}
-											</select>
+											</select> -->
+
+
 											<div id="append_container">
 												
 											</div>
@@ -95,6 +122,78 @@
 					
 					console.log(textbox_dict)
 					$("#append_div_"+urutan).find('input').remove()
+					if (textbox_dict[code]){
+						new_string='<input name="text_notes" class="form-control" placeholder="Masukkan Notes">'	
+						$("#append_div_"+urutan).append(new_string);
+						
+					}
+					
+
+
+					// $("#append_div").empty()
+					$("#append_div_"+counter_div).append(string);
+
+					console.log("urutan sekarang",urutan , " counter_div sekarang", counter_div )	
+				}
+				
+
+				
+				// location.reload();
+				// console.log("callback")
+				
+
+
+			}
+		});
+
+	}
+
+	function toggle_choice_radio(code,urutan){
+		console.log("ini code ",code)
+		$.ajax({
+			url: "{% url 'ajax_form' %}",
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				csrfmiddlewaretoken:"{{csrf_token}}",
+				tree_level: code,
+			},
+			error: function() {
+				console.log("error")
+			},
+			success: function(res) {
+				// print(res)
+				console.log(res)
+				console.log("urutan ",urutan , " counter_div", counter_div )
+
+				if (urutan != counter_div){
+					for (var x = urutan+1 ; x<=counter_div; x++){
+						$("#append_div_"+x).remove()
+					}	
+					counter_div = urutan
+				}
+				// else{
+				// 	$("#append_div_"+urutan).remove()
+				// }
+				if (res.next_tree_choices.length != 0){
+					counter_div = urutan+1
+					string ="<div id='append_div_"+counter_div+"' class='mt-2' style='border-top: 1px solid black;'></div>";
+					$("#append_container").append(string);
+
+					// string ="<select class='form-control' onChange='toggle_choice(this.options[this.selectedIndex].value,"+(urutan+1)+")'>";
+					// string+="<option value=''  class='form-control' > Pilih Salah Satu</option>"
+					string = ""
+					$.each(res.next_tree_choices, function( index, value ) {
+					  console.log( value.choice_id + ": " + value.choice_text );
+
+					  string+='<div class="form-check"><input class="form-check-input" type="radio" name="radio_'+counter_div+'" value="'+value.choice_id+'" onChange="toggle_choice_radio(\''+value.choice_id+'\','+(urutan+1)+')"><label class="form-check-label" >'+value.choice_text+'</label></div>';
+					  textbox_dict[value.choice_id] = value.choice_textfield
+					});
+					// string+="</select>";
+					
+					console.log(textbox_dict)
+					$("#append_div_"+urutan).find('input[name="text_notes"').remove()
+
 					if (textbox_dict[code]){
 						new_string='<input name="text_notes" class="form-control" placeholder="Masukkan Notes">'	
 						$("#append_div_"+urutan).append(new_string);
