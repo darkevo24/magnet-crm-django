@@ -43,7 +43,8 @@
 
 <script type="text/javascript">
 
-	var counter_div =1
+	var counter_div =1;
+	var textbox_dict = {};
 	function toggle_choice(code,urutan){
 		console.log("ini code ",code)
 		$.ajax({
@@ -84,15 +85,22 @@
 					$("#append_container").append(string);
 
 					string ="<select class='form-control' onChange='toggle_choice(this.options[this.selectedIndex].value,"+(urutan+1)+")'>";
-
+					string+="<option value=''  class='form-control' > Pilih Salah Satu</option>"
 					$.each(res.next_tree_choices, function( index, value ) {
 					  console.log( value.choice_id + ": " + value.choice_text );
 					  string+="<option value='"+value.choice_id+"'  class='form-control' >"+value.choice_text+"</option>"
+					  textbox_dict[value.choice_id] = value.choice_textfield
 					});
 					string+="</select>";
-
-
-					string+='<input name="text_notes" class="form-control">'
+					
+					console.log(textbox_dict)
+					$("#append_div_"+urutan).find('input').remove()
+					if (textbox_dict[code]){
+						new_string='<input name="text_notes" class="form-control" placeholder="Masukkan Notes">'	
+						$("#append_div_"+urutan).append(new_string);
+						
+					}
+					
 
 
 					// $("#append_div").empty()
@@ -112,6 +120,11 @@
 		});
 
 	}
+
+
+	// function show_textbox(id){
+
+	// }
 </script>
 
 

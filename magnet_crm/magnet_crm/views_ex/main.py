@@ -87,7 +87,7 @@ def ajax_form(request):
 		
 	arr_tree = []
 	for x in next_tree:
-		arr_tree.append({"choice_text":x.followup_choices,"choice_id":x.followup_choice_code})
+		arr_tree.append({"choice_text":x.followup_choices,"choice_id":x.followup_choice_code,"choice_textfield":x.followup_textfield})
 
 
 	
