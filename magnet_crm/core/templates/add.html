@@ -5,29 +5,29 @@
 {% load core_extras %}
 <div class="row">
 	<!-- Typeahead -->
-					<div class="card col-12">
-						<div class="card-header">
-							<h5 class="card-title">Create Tree</h5>
-						</div>
+	<div class="card col-12">
+		<div class="card-header">
+			<h5 class="card-title">Create Tree</h5>
+		</div>
 
-						<div class="card-body">
-							<div class="row">
-								<div class="col-12">
-									<form method="POST"> 
-										{% csrf_token %}
-										<div class="mb-4">
-											<h6 class="font-weight-semibold">Followup choices</h6>
-											{{tree_form.followup_choices | add_class:"form-control"}}
-										</div>
-										<button type="submit">Submit</button>
-											
-									</form>
-									
-								</div>
-
-							</div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-12">
+					<form method="POST"> 
+						{% csrf_token %}
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Followup choices</h6>
+							{{tree_form.followup_choices | add_class:"form-control"}}
 						</div>
-					</div>
-					<!-- /typeahead -->
+						<button type="submit" class="btn btn-primary">Submit</button>
+							
+					</form>
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- /typeahead -->
 </div>
 {% endblock content %}

@@ -5,6 +5,7 @@ from django.shortcuts import render
 from core.forms.main import *
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.http import JsonResponse
 def index(request):
 	template = 'list.html'
 	tree_level = request.GET.get('level')
@@ -54,3 +55,44 @@ def add_tree(request):
 	}
 
 	return render(request,template, context=context)
+
+
+
+
+def add_form(request):
+	template = 'add_form.html'
+	tree_form = ChoicesForm(request.POST or None)
+	first_choices = Followup.objects.exclude(followup_choice_code__icontains="_")
+	# if tree_form.is_valid():
+		
+	
+	# 	return redirect(reverse('list'))
+
+
+	context = {
+		'first_choices':first_choices,
+		'tree_form' : tree_form
+	}
+
+	return render(request,template, context=context)
+
+def ajax_form(request):
+
+	response = {}
+	data = []
+
+	if request.POST and request.is_ajax:
+		tree_level = request.POST["tree_level"]
+		next_tree = Followup.objects.filter(followup_choice_head=tree_level).exclude(followup_choice_code=tree_level)
+		
+	arr_tree = []
+	for x in next_tree:
+		arr_tree.append({"choice_text":x.followup_choices,"choice_id":x.followup_choice_code})
+
+
+	
+	response["next_tree_choices"] = arr_tree
+
+
+
+	return JsonResponse(response)

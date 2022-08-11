@@ -25,5 +25,7 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', main_view.index, name='list'),
     path('add', main_view.add_tree, name='add'),
+    path('form', main_view.add_form, name='form'),
+    path('ajax_form', main_view.ajax_form, name='ajax_form'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
