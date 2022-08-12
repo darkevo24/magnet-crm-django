@@ -1,7 +1,7 @@
 from django.db import models
-
+from core.models import Base_Model
 # Create your models here.
-class Followup(models.Model):
+class Followup(Base_Model):
 	# uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	followup_choices = models.CharField(max_length=255,default="")
 	followup_choice_code = models.TextField(default='')
@@ -11,7 +11,7 @@ class Followup(models.Model):
 		return self.followup_choices
 
 
-class FollowupSelected(models.Model):
+class FollowupSelected(Base_Model):
 	# uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	followup_selected_code = models.TextField(default='')
 	def __str__(self):

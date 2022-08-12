@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'magnet_crm.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'magnet_db',
+        'NAME': 'magnet_crm_db',
         'USER': 'ivan',
         'PASSWORD': '',
         'HOST': 'localhost',
