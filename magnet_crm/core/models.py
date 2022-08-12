@@ -1,3 +1,36 @@
 from django.db import models
 
+from django.contrib.auth.models import User,Permission
+import uuid
+
 # Create your models here.
+class Base_Model(models.Model):
+   created_at = models.DateTimeField(auto_now_add=True)
+   created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="%(app_label)s_%(class)s_created_by")
+   updated_at = models.DateTimeField(auto_now=True)
+   updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="%(app_label)s_%(class)s_updated_by")
+   is_active = models.BooleanField(default=True)
+
+   class Meta:
+	   abstract = True
+
+
+class Profile(Base_Model):
+	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+	user = models.OneToOneField(
+		User,
+		blank=False,
+		null=False,
+		on_delete=models.CASCADE,
+	)
+	is_supervisor = models.BooleanField(default=False)
+	reset_token = models.CharField(max_length=255,default="")
+	is_ib = models.BooleanField(default=False)
+	full_name = models.CharField(max_length=255,default="")
+	no_ktp = models.CharField(max_length=255,default="")
+	phone_no = models.CharField(max_length=255,default="", unique=True)
+	email = models.CharField(max_length=255,default="", unique=True)
+	is_verified = models.BooleanField(default=False)
+	verify_uid = models.CharField(max_length=255,default="")
+	def __str__(self):
+		return self.full_name

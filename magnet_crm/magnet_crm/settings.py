@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'followup',
-    'core'
+    'core',
+    'staff',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +56,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'magnet_crm.urls'
-print(" BASE_DIR",BASE_DIR)
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -83,8 +84,8 @@ WSGI_APPLICATION = 'magnet_crm.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'magnet_crm',
-        'USER': 'postgres',
+        'NAME': 'magnet_db',
+        'USER': 'ivan',
         'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': 5432,
