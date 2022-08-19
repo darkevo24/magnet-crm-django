@@ -1,11 +1,18 @@
 from django import forms
 import datetime
-
+from django.forms import ModelForm
 
 from followup.models import *
 from django.forms import TextInput,EmailInput,PasswordInput,ChoiceField
 
+from core.models import *
 
+
+class ProfileForm(ModelForm):
+	class Meta:
+		model = Profile
+		fields = ['full_name', 'no_ktp', 'phone_no', 'email']
+		
 class TreeForm(forms.ModelForm):
 	class Meta:
 		model = Followup

@@ -6,6 +6,7 @@ from core.forms.main import *
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import JsonResponse
+
 def index(request):
 	template = 'list.html'
 	tree_level = request.GET.get('level')

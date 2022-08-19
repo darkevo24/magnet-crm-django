@@ -8,10 +8,10 @@
 		<div class="card-header">
 			<div class="row">
 				<div class="col">
-					<h5 class="card-title">Tree List</h5>	
+					<h5 class="card-title">Staff level List</h5>	
 				</div>
 				<div class="col text-right">
-					<a href="{% url 'add'  %}?level=" class="btn btn-success">Add New</a>	
+					<a href="{% url 'staff-level-add'  %}?level=" class="btn btn-success">Add level</a>	
 				</div>
 				
 				
@@ -27,19 +27,20 @@
 					  <thead>
 					    <tr>
 					      <th scope="col">#</th>
-					      <th scope="col">Choices</th>
-					      <th scope="col">Detail</th>
-					      <th scope="col">Add</th>
+					      <th scope="col">Level Name</th>
+					      <th scope="col">Jumlah Staff</th>
 					    </tr>
 					  </thead>
 					  <tbody>
-					  	{% for x in all_choices%}
-							
+					  	{% for staff_level in staff_level_list%}
 							<tr>
-						      <th scope="row">{{forloop.counter}}</th>
-						      <th scope="row">{{x.followup_choices}}</th>
-						      <td><a href="{% url 'list'  %}?level={{x.followup_choice_code}}" class="btn btn-primary">Detail</a></td>
-						      <td><a href="{% url 'add'  %}?level={{x.followup_choice_code}}" class="btn btn-primary">Add</a></td>
+						      <td scope="row">{{forloop.counter}}</td>
+						      <td scope="row">{{staff_level.level_name}}</td>
+						      <td scope="row">
+						      	
+						      </td>
+						      <td></td>
+						      <td></td>
 						    </tr>
 						{% endfor %}
 					    
@@ -57,6 +58,6 @@
 			</div>
 		</div>
 	</div>
-					<!-- /typeahead -->
+	<!-- /typeahead -->
 </div>
 {% endblock content %}

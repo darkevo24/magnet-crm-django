@@ -1,0 +1,82 @@
+
+{% extends 'base/head.html' %}
+
+{% block content %}
+{% load core_extras %}
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12">
+		<div class="card-header">
+			<h5 class="card-title">New Staff</h5>
+		</div>
+
+		<div class="card-body">
+			<div class="row">
+				<div class="col-12">
+					<form method="POST"> 
+						{% csrf_token %}
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Name</h6>
+							{{profile_form.full_name | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Email</h6>
+							{{profile_form.email | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Phone Number</h6>
+							{{profile_form.phone_no | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">No KTP</h6>
+							{{profile_form.no_ktp | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Staff Level</h6>
+							{{staff_form.staff_level | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Atasan</h6>
+							{{staff_form.staff_parent | add_class:"form-control"}}
+						</div>
+						<button type="submit" class="btn btn-primary">Submit</button>
+							
+					</form>
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- /typeahead -->
+</div>
+<script type="text/javascript">
+	$( document ).ready(function() {
+    	console.log( "ready!" );
+    	$('#id_staff_level').change(function () {
+	        var end = this.value;
+	        // var firstDropVal = $('#pick').val();
+	        console.log(end)
+	        $.ajax({
+	            url: "{% url 'ajax-get-subdivison' %}",
+	            type: 'POST',
+	            dataType: 'json',
+	            data: {
+	                staff_level_id: end,
+	            },
+	            error: function() {
+	                console.log("error")
+	                
+	            },
+	            success: function(res) {
+	            	console.log("search")
+	            	
+	            }
+	        });
+
+	    });
+	});
+
+	
+</script>
+{% endblock content %}

@@ -7,6 +7,9 @@ class Staff_Level(Base_Model):
 	level = models.IntegerField(default=0)
 	level_name = models.CharField(default='Financial Consultant', max_length=255)
 
+	def __str__(self):
+		return self.level_name
+
 class Staff(Base_Model):
 	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	staff_level = models.OneToOneField(
@@ -23,11 +26,10 @@ class Staff(Base_Model):
 	)
 	staff_parent = models.OneToOneField(
 		'self',
-		blank=False,
-		null=False,
+		blank=True,
+		null=True,
 		on_delete=models.CASCADE,
 	)
-	
 	def __str__(self):
 		return self.profile.full_name
 

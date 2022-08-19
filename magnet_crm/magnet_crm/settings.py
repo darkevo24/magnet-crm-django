@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'followup',
     'core',
     'staff',
+    'client',
 ]
 
 MIDDLEWARE = [

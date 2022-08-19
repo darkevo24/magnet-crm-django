@@ -19,6 +19,7 @@ from django.urls import path
 from magnet_crm.views_ex import (
     main as main_view,
 )
+from staff import views as staff_views
 from django.conf.urls.static import static
 from django.conf import settings
 urlpatterns = [
@@ -27,5 +28,18 @@ urlpatterns = [
     path('add', main_view.add_tree, name='add'),
     path('form', main_view.add_form, name='form'),
     path('ajax_form', main_view.ajax_form, name='ajax_form'),
+
+    # Staff
+    path('staff', staff_views.staff_list, name='staff-list'),
+    path('staff/add', staff_views.staff_add, name='staff-add'),
+    path('staff_level', staff_views.staff_level_list, name='staff-level-list'),
+    path('staff_level/add', staff_views.staff_level_add, name='staff-level-add'),
+
+
+    path('ajax-magnet/get_subdivison', staff_views.get_subdivison, name='ajax-get-subdivison'),
+
+
+    
+
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
