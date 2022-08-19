@@ -37,7 +37,7 @@
 						</div>
 						<div class="mb-4">
 							<h6 class="font-weight-semibold">Atasan</h6>
-							{{staff_form.staff_parent | add_class:"form-control"}}
+							{{staff_form.staff_parent_id | add_class:"form-control"}}
 						</div>
 						<button type="submit" class="btn btn-primary">Submit</button>
 							
@@ -53,6 +53,17 @@
 <script type="text/javascript">
 	$( document ).ready(function() {
     	console.log( "ready!" );
+    	
+    	var data = {
+		    id: 1,
+		    text: 'Barn owl'
+		};
+    	var newOption = new Option(data.text, data.id, false, false);
+    	$('#id_staff_parent_id').select2();
+		$('#id_staff_parent_id').append(newOption).trigger('change');
+		$('#id_staff_parent_id').val(null).trigger('change');
+		console.log(123);
+
     	$('#id_staff_level').change(function () {
 	        var end = this.value;
 	        // var firstDropVal = $('#pick').val();
@@ -65,11 +76,22 @@
 	                staff_level_id: end,
 	            },
 	            error: function() {
-	                console.log("error")
+	                console.log("error");
 	                
 	            },
 	            success: function(res) {
-	            	console.log("search")
+	            	console.log("search");
+	            	var data_staff_dict = res['data']
+	            	console.log(data_staff_dict);
+	            	$('#id_staff_parent_id').empty().trigger("change");
+	            	$.each(data_staff_dict, function(key, value){
+	            		console.log(value['uid'], value['name'])
+	            		
+				    	var newOption = new Option(value['name'], value['uid'], false, false);
+				    	$('#id_staff_parent_id').append(newOption);
+				    	console.log(123);
+				    });
+				    
 	            	
 	            }
 	        });

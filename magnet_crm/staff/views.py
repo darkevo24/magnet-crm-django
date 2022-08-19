@@ -52,35 +52,43 @@ def staff_add(request):
 	template = 'admin/staff/staff_add.html'
 	profile_form = ProfileForm(request.POST or None)
 	staff_form = StaffForm(request.POST or None)
-	
-	try:
-		with transaction.atomic():
 
-			if profile_form.is_valid() and staff_form.is_valid():
-				profile = profile_form.save(commit=False)
-				user = User()
-				user.username = user.email = profile.email
-				
-				password = User.objects.make_random_password()
-				user.set_password(password)
-				user.save()
 
-				profile.updated_by = profile.created_by = user
-				profile.user = user
-				profile.save()
+	if request.POST:
+		selected_staff_parent_id = request.POST['staff_parent_id']
+		staff_form.fields['staff_parent_id'].choices = [(selected_staff_parent_id, selected_staff_parent_id)]
+		try:
+			with transaction.atomic():
 
-				staff = staff_form.save(commit=False)
-				staff.profile = profile
-				staff.created_by = staff.updated_by = user
-				staff.save()
+				if profile_form.is_valid() and staff_form.is_valid():
+					select_staff_parent = Staff.objects.filter(id=selected_staff_parent_id).first()
+					print(select_staff_parent, '<---')
+					
+					profile = profile_form.save(commit=False)
+					user = User()
+					user.username = user.email = profile.email
+					
+					password = User.objects.make_random_password()
+					user.set_password(password)
+					user.save()
 
-				return redirect(reverse('staff-list'))
-			else:
-				print(profile_form.errors )
-				print(staff_form.errors)
+					profile.updated_by = profile.created_by = user
+					profile.user = user
+					profile.save()
 
-	except IntegrityError as e:
-		print(e)
+					staff = staff_form.save(commit=False)
+					staff.staff_parent = select_staff_parent
+					staff.profile = profile
+					staff.created_by = staff.updated_by = user
+					staff.save()
+
+					return redirect(reverse('staff-list'))
+				else:
+					print(profile_form.errors )
+					print(staff_form.errors)
+
+		except IntegrityError as e:
+			print(e)
 
 	context = {
 		'staff_form': staff_form,
@@ -124,16 +132,17 @@ from django.views.decorators.csrf import csrf_exempt
 def get_subdivison(request):
 	if request.POST:
 		staff_level_id = request.POST['staff_level_id']
+		print('staff_level_id : ', staff_level_id)
 		staff_list = Staff.objects.filter(staff_level__id=staff_level_id, is_active=True).prefetch_related('profile')
 		staff_dict = {}
 		for staff in staff_list:
-			staff_uid = staff.uid
-			
+			staff_uid = str(staff.id)
+
 			if staff_uid not in staff_dict:
 				staff_dict[staff_uid] = {}
 			staff_dict[staff_uid]['uid'] = staff_uid
 			staff_dict[staff_uid]['name'] = staff.profile.full_name
-
+			print(staff_dict)
 			
 
 		return JsonResponse({'status': True, 'data' : staff_dict,})

@@ -30,13 +30,13 @@ class Client(Base_Model):
 
 class Client_Staff(Base_Model):
 	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-	client = models.OneToOneField(
+	client = models.ForeignKey(
 		Client,
 		blank=False,
 		null=False,
 		on_delete=models.CASCADE,
 	)
-	staff = models.OneToOneField(
+	staff = models.ForeignKey(
 		Staff,
 		blank=False,
 		null=False,
@@ -46,19 +46,19 @@ class Client_Staff(Base_Model):
 
 class Client_Followup(Base_Model):
 	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-	client = models.OneToOneField(
+	client = models.ForeignKey(
 		Client,
 		blank=False,
 		null=False,
 		on_delete=models.CASCADE,
 	)
-	followup = models.OneToOneField(
+	followup = models.ForeignKey(
 		Followup,
 		blank=False,
 		null=False,
 		on_delete=models.CASCADE,
 	)
-	staff = models.OneToOneField(
+	staff = models.ForeignKey(
 		Staff,
 		blank=False,
 		null=False,
@@ -70,13 +70,13 @@ class Client_Followup(Base_Model):
 class Client_Schedule(Base_Model):
 	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	schedule_date = models.DateTimeField(null=True, blank=True)
-	client = models.OneToOneField(
+	client = models.ForeignKey(
 		Client,
 		blank=False,
 		null=False,
 		on_delete=models.CASCADE,
 	)
-	staff = models.OneToOneField(
+	staff = models.ForeignKey(
 		Staff,
 		blank=False,
 		null=False,

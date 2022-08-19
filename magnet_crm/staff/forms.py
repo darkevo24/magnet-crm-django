@@ -8,9 +8,14 @@ class StaffLevelForm(ModelForm):
 		fields = ['level', 'level_name',]
 
 class StaffForm(ModelForm):
-	staff_parent = forms.CharField(max_length=100, required=False)
+	SUPERVISOR_CHOICES =(
+	    ("0", "Pilih supervisor"),
+	   
+	)
+	staff_parent_id = forms.ChoiceField(choices = SUPERVISOR_CHOICES, required=False)
+
 	
-	staff_parent_id = forms.CharField(widget = forms.HiddenInput(), required = False)
+	# staff_parent_id = forms.CharField(widget = forms.HiddenInput(), required = False)
 
 	class Meta:
 		model = Staff

@@ -30,6 +30,7 @@
 					      <th scope="col">Fullname</th>
 					      <th scope="col">Email</th>
 					      <th scope="col">Level</th>
+					      <th scope="col">Supervisor</th>
 					      <th scope="col">Last Login</th>
 					    </tr>
 					  </thead>
@@ -39,7 +40,9 @@
 						      <td scope="row">{{forloop.counter}}</td>
 						      <td scope="row">{{staff.profile.full_name}}</td>
 						      <td scope="row">{{staff.profile.email}}</td>
+
 						      <td scope="row">{{staff.staff_level.level_name}}</td>
+						      <td scope="row">{{staff.staff_parent.profile.full_name}}</td>
 						      <td></td>
 						    </tr>
 						{% endfor %}

@@ -12,19 +12,19 @@ class Staff_Level(Base_Model):
 
 class Staff(Base_Model):
 	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-	staff_level = models.OneToOneField(
+	staff_level = models.ForeignKey(
 		Staff_Level,
 		blank=False,
 		null=False,
 		on_delete=models.CASCADE,
 	)
-	profile = models.OneToOneField(
+	profile = models.ForeignKey(
 		Profile,
 		blank=False,
 		null=False,
 		on_delete=models.CASCADE,
 	)
-	staff_parent = models.OneToOneField(
+	staff_parent = models.ForeignKey(
 		'self',
 		blank=True,
 		null=True,
@@ -34,14 +34,14 @@ class Staff(Base_Model):
 		return self.profile.full_name
 
 class Staff_History(Base_Model):
-	parent_staff = models.OneToOneField(
+	parent_staff = models.ForeignKey(
 		Staff,
 		related_name="Staff_History_Parent_Staff",
 		blank=False,
 		null=False,
 		on_delete=models.CASCADE,
 	)
-	child_staff = models.OneToOneField(
+	child_staff = models.ForeignKey(
 		Staff,
 		related_name="Staff_History_Child_Staff",
 		blank=False,
