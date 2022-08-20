@@ -20,14 +20,26 @@ from magnet_crm.views_ex import (
     main as main_view,
 )
 from staff import views as staff_views
+from client import views as client_views
+
 from django.conf.urls.static import static
 from django.conf import settings
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('', main_view.index, name='list'),
+    path('', main_view.admin_login, name='admin-login'),
+
+    path('followup_list', main_view.index, name='list'),
     path('add', main_view.add_tree, name='add'),
-    path('form', main_view.add_form, name='form'),
+
+
+    
     path('ajax_form', main_view.ajax_form, name='ajax_form'),
+
+    # Client
+    path('client', client_views.client_list, name='client-list'),
+    path('client/add', client_views.client_add, name='client-add'),
+    path('client/followup/<str:id_client>', client_views.client_followup_list, name='client-followup-list'),
+    path('client/followup/<str:id_client>/add', main_view.add_form, name='followup-form'),
 
     # Staff
     path('staff', staff_views.staff_list, name='staff-list'),

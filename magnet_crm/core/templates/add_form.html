@@ -7,14 +7,14 @@
 	<!-- Typeahead -->
 					<div class="card col-12">
 						<div class="card-header">
-							<h5 class="card-title">Create Tree - 123</h5>
+							<h5 class="card-title">Create Followup Form</h5>
 						</div>
-						<!-- {{tree_form.selected}} -->
+						
 
 						<div class="card-body">
 							<div class="row">
 								<div class="col-12">
-									<form method="POST"> 
+									<form method="POST" id="form-main"> 
 										{% csrf_token %}
 
 										<!-- <div class="form-check">
@@ -35,7 +35,7 @@
 											<h6 class="font-weight-semibold">Followup choices</h6>
 											{% for x in first_choices %}
 												<div class="form-check">
-												  <input class="form-check-input" type="radio" name="flexRadioDefault" value="{{x.followup_choice_code}}" onChange="toggle_choice_radio({{x.followup_choice_code}},1)">
+												  <input class="form-check-input" type="radio" name="radio_1" value="{{x.followup_choice_code}}" onChange="toggle_choice_radio({{x.followup_choice_code}},1)">
 												  <label class="form-check-label" >
 												    {{x.followup_choices}}
 												  </label>
@@ -56,6 +56,8 @@
 											
 
 										</div>
+										<input type="" id="selected_radio" name="selected_radio" value="1" >
+										<input type="" id="selected_client" name="selected_client" value="{{id_client}}" >
 										<button type="submit" class="btn btn-primary">Submit</button>
 											
 									</form>
@@ -72,6 +74,7 @@
 
 	var counter_div =1;
 	var textbox_dict = {};
+	var selected_radio = 1;
 	function toggle_choice(code,urutan){
 		console.log("ini code ",code)
 		$.ajax({
@@ -120,7 +123,7 @@
 					});
 					string+="</select>";
 					
-					console.log(textbox_dict)
+					console.log(textbox_dict,'textbox_dict')
 					$("#append_div_"+urutan).find('input').remove()
 					if (textbox_dict[code]){
 						new_string='<input name="text_notes" class="form-control" placeholder="Masukkan Notes">'	
@@ -149,7 +152,8 @@
 	}
 
 	function toggle_choice_radio(code,urutan){
-		console.log("ini code ",code)
+		console.log("ini code ",code,urutan)
+		$("#selected_radio").val(urutan)
 		$.ajax({
 			url: "{% url 'ajax_form' %}",
 			type: 'POST',
@@ -220,6 +224,16 @@
 
 	}
 
+	$(function() {
+		
+		
+		
+		// $('#form-main').submit(function(e){
+		// 	e.preventDefault();
+		// 	e.stopPropagation();
+			
+		// });
+	});
 
 	// function show_textbox(id){
 

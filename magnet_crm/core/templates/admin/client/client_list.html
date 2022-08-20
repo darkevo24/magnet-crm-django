@@ -1,0 +1,76 @@
+
+{% extends 'base/head.html' %}
+
+{% block content %}
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12">
+		<div class="card-header">
+			<div class="row">
+				<div class="col">
+					<h5 class="card-title">Client List</h5>	
+				</div>
+				<div class="col text-right">
+					<a href="{% url 'client-add'  %}?level=" class="btn btn-success">Add Client</a>	
+				</div>
+				
+				
+			</div>
+			
+		</div>
+
+		<div class="card-body">
+			<div class="row">
+				<div class="col-12">
+
+					<table class="table">
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">Nama</th>
+					      <th scope="col">Umur</th>
+					      <th scope="col">Gender</th>
+					      <th scope="col">Pekerjaan</th>
+					      <th scope="col">Domisili</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					  	{% for client in client_list %}
+							<tr data-href="{% url 'client-followup-list' client.id %}" class="table-row">
+						      <td scope="row">{{forloop.counter}}</td>
+						      <td scope="row">{{client.nama}}</td>
+						      <td scope="row">{{client.umur}}</td>
+						      <td scope="row">{{client.gender}}</td>
+						      <td scope="row">{{client.pekerjaan}}</td>
+						      <td scope="row">{{client.domisili}}</td>
+						      <td></td>
+						    </tr>
+						{% endfor %}
+					    
+					    
+					  </tbody>
+					</table>
+
+					
+
+					
+
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- /typeahead -->
+</div>
+<script type="text/javascript">
+	$(function() {
+		
+		$(".table-row").click(function() {
+		 	var link = $(this).data('href');
+		 	window.location.href = link;
+		});
+
+	});
+</script>
+{% endblock content %}

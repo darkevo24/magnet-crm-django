@@ -1,0 +1,56 @@
+
+{% extends 'base/head.html' %}
+
+{% block content %}
+{% load core_extras %}
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12">
+		<div class="card-header">
+			<h5 class="card-title">New Client</h5>
+		</div>
+
+		<div class="card-body">
+			<div class="row">
+				<div class="col-12">
+					<form method="POST"> 
+						{% csrf_token %}
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">nama</h6>
+							{{client_form.nama | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">umur</h6>
+							{{client_form.umur | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">gender</h6>
+							{{client_form.gender | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">pekerjaan</h6>
+							{{client_form.pekerjaan | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">domisili</h6>
+							{{client_form.domisili | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">source</h6>
+							{{client_form.source | add_class:"form-control"}}
+						</div>
+						<button type="submit" class="btn btn-primary">Submit</button>
+							
+					</form>
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- /typeahead -->
+</div>
+<script type="text/javascript">
+	
+</script>
+{% endblock content %}

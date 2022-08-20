@@ -1,0 +1,71 @@
+
+{% extends 'base/head.html' %}
+
+{% block content %}
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12">
+		<div class="card-header">
+			<div class="row">
+				<div class="col">
+					<h5 class="card-title">Client Followup List</h5>	
+				</div>
+				<div class="col text-right">
+					<a href="{% url 'followup-form' id_client %}?level=" class="btn btn-success">Add Followup Client</a>	
+				</div>
+				
+				
+			</div>
+			
+		</div>
+
+		<div class="card-body">
+			<div class="row">
+				<div class="col-12">
+
+					<table class="table">
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">Client</th>
+					      <th scope="col">Followup</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					  	{% for client in client_followup_list %}
+							<tr data-href="{% url 'client-followup-list' client.id %}" class="table-row">
+						      <td scope="row">{{forloop.counter}}</td>
+						      <td scope="row">{{client.client}}</td>
+						      <td scope="row">{{client.followup}}</td>
+						      
+						      <td></td>
+						    </tr>
+						{% endfor %}
+					    
+					    
+					  </tbody>
+					</table>
+
+					
+
+					
+
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- /typeahead -->
+</div>
+<script type="text/javascript">
+	$(function() {
+		
+		$(".table-row").click(function() {
+		 	var link = $(this).data('href');
+		 	window.location.href = link;
+		});
+
+	});
+</script>
+{% endblock content %}

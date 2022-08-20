@@ -2,10 +2,48 @@
 from django.shortcuts import render
 # # from core.forms.admin.main.main import *
 # # from referal.models import *
+from client.models import *
+from staff.models import *
 from core.forms.main import *
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import JsonResponse
+from django.contrib.auth import authenticate, login,logout
+
+def admin_login(request):
+	template = 'admin/core/login.html'
+	form = LoginForm(request.POST or None)
+	error_message = ""
+
+	if request.POST:
+		if form.is_valid():
+			email = form.cleaned_data['email']
+			password = form.cleaned_data['password']
+			
+
+			user = authenticate(request, username=email, password=password)
+			
+			data = User.objects.first()
+			print(data,"ini data")
+			profile = Profile.objects.filter(user=user).first()
+
+			if user is not None:
+				login(request, user)
+
+				if request.GET.get('next') != None:
+					return redirect(request.GET.get('next'))
+				else:
+					return redirect(reverse('list'))
+			else:
+				print('user not found')
+				error_message = "Password salah"
+
+	context = {
+		'form': form,
+		'error_message': error_message
+	}
+
+	return render(request,template, context=context)
 
 def index(request):
 	template = 'list.html'
@@ -34,13 +72,16 @@ def add_tree(request):
 		print("tree level sekarang", tree_level!= None)
 		print("tree level sekarang", tree_level)
 		if tree_level == "" or tree_level == None:
-			instances = tree_form.save()
+			instances = tree_form.save(commit=False)
+			instances.created_by = request.user
 			instances.save()
 			instances.followup_choice_code = instances.id
 			instances.followup_choice_head = instances.id
 			instances.save()
 		else:
-			instances = tree_form.save()
+			instances = tree_form.save(commit=False)
+			instances.created_by = request.user
+			instances.save()
 			print("str(tree_level)+str(data.id)",str(tree_level))
 			print("str(tree_level)+str(data.id)",str(instances.id))
 			instances.followup_choice_code = str(tree_level)+"_"+str(instances.id)
@@ -60,19 +101,37 @@ def add_tree(request):
 
 
 
-def add_form(request):
+def add_form(request,id_client):
 	template = 'add_form.html'
-	tree_form = ChoicesForm(request.POST or None)
+	# tree_form = ChoicesForm(request.POST or None)
 	first_choices = Followup.objects.exclude(followup_choice_code__icontains="_")
+
+	if request.POST:
+		selected_radio = request.POST['selected_radio']
+		# print("selected_radio",selected_radio)
+		print("request.POST",request.POST)
+		tree_code = request.POST['radio_'+selected_radio]
+		staff = Staff.objects.filter(is_active=True,profile__user=request.user).first()
+		client = Client.objects.filter(is_active=True,id=id_client).first()
+		print("tree_code",tree_code)
+		tree = Followup.objects.filter(is_active=True,followup_choice_code=tree_code).first()
+		
+		client_followup = Client_Followup()
+		client_followup.client =  client
+		client_followup.followup = tree
+		client_followup.staff = staff
+		client_followup.created_by = request.user
+		client_followup.save()
 	# if tree_form.is_valid():
 		
 	
-	# 	return redirect(reverse('list'))
+		return redirect(reverse('client-followup-list', kwargs={'id_client': id_client}))
 
 
 	context = {
 		'first_choices':first_choices,
-		'tree_form' : tree_form
+		'id_client':id_client,
+		# 'tree_form' : tree_form
 	}
 
 	return render(request,template, context=context)

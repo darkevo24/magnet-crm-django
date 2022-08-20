@@ -2,10 +2,17 @@ from django.forms import ModelForm
 from client.models import *
 
 
-class StaffLevelForm(ModelForm):
+class ClientForm(ModelForm):
 	class Meta:
-		model = Staff_Level
-		fields = ['level', 'level_name',]
+		model = Client
+		fields = [
+			'nama',
+			'umur',
+			'gender',
+			'pekerjaan',
+			'domisili',
+			'source',
+		]
 
 class StaffForm(ModelForm):
 	class Meta:

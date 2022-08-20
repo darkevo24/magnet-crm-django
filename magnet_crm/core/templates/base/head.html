@@ -308,15 +308,23 @@
 						<!-- Main -->
 						<li class="nav-item-header"><div class="text-uppercase font-size-xs line-height-xs">Main</div> <i class="icon-menu" title="Main"></i></li>
 						<li class="nav-item">
-							<a href="index.html" class="nav-link active">
+							<a href="{% url 'list' %}" class="nav-link ">
 								<i class="icon-home4"></i>
 								<span>
-									Dashboard
+									Tree List
 								</span>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="{% url 'staff-list' %}" class="nav-link active">
+							<a href="{% url 'client-list' %}" class="nav-link ">
+								<i class="icon-home4"></i>
+								<span>
+									Client
+								</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="{% url 'staff-list' %}" class="nav-link ">
 								<i class="icon-home4"></i>
 								<span>
 									Staff
@@ -324,7 +332,7 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="{% url 'staff-level-list'%}" class="nav-link active">
+							<a href="{% url 'staff-level-list'%}" class="nav-link ">
 								<i class="icon-home4"></i>
 								<span>
 									Staff Level

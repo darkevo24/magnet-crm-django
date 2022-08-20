@@ -7,6 +7,10 @@ from django.forms import TextInput,EmailInput,PasswordInput,ChoiceField
 
 from core.models import *
 
+class LoginForm(forms.Form):
+	email = forms.EmailField(max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder': 'Email'}))
+	password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}), required=True)
+	
 
 class ProfileForm(ModelForm):
 	class Meta:

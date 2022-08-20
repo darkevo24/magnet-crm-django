@@ -8,12 +8,19 @@ import uuid
 class Client(Base_Model):
 	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	
-	profile = models.OneToOneField(
-		Profile,
-		blank=False,
-		null=False,
-		on_delete=models.CASCADE,
-	)
+	# profile = models.OneToOneField(
+	# 	Profile,
+	# 	blank=False,
+	# 	null=False,
+	# 	on_delete=models.CASCADE,
+	# )
+
+	nama = models.CharField(max_length=255)
+	umur = models.CharField(max_length=255, default='')
+	gender = models.CharField(max_length=255, default='')
+	pekerjaan = models.CharField(max_length=255, default='')
+	domisili = models.CharField(max_length=255, default='')
+
 	SOURCE_STR = [
 		('0', 'Google'), 
 		('1', 'Facebook'), 
@@ -25,7 +32,7 @@ class Client(Base_Model):
 	source = models.CharField(max_length=255, choices=SOURCE_STR, default='0')
 	
 	def __str__(self):
-		return self.profile.full_name
+		return self.nama
 
 
 class Client_Staff(Base_Model):

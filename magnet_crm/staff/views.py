@@ -55,20 +55,20 @@ def staff_add(request):
 
 
 	if request.POST:
-		selected_staff_parent_id = request.POST['staff_parent_id']
+		selected_staff_parent_id = request.POST.get('staff_parent_id', None)
 		staff_form.fields['staff_parent_id'].choices = [(selected_staff_parent_id, selected_staff_parent_id)]
 		try:
 			with transaction.atomic():
 
 				if profile_form.is_valid() and staff_form.is_valid():
-					select_staff_parent = Staff.objects.filter(id=selected_staff_parent_id).first()
-					print(select_staff_parent, '<---')
+					
 					
 					profile = profile_form.save(commit=False)
 					user = User()
 					user.username = user.email = profile.email
 					
-					password = User.objects.make_random_password()
+					# password = User.objects.make_random_password()
+					password = "123123"
 					user.set_password(password)
 					user.save()
 
@@ -77,7 +77,12 @@ def staff_add(request):
 					profile.save()
 
 					staff = staff_form.save(commit=False)
-					staff.staff_parent = select_staff_parent
+
+					if (selected_staff_parent_id!=None):
+						select_staff_parent = Staff.objects.filter(id=selected_staff_parent_id).first()
+						print(select_staff_parent, '<---')
+						staff.staff_parent = select_staff_parent
+
 					staff.profile = profile
 					staff.created_by = staff.updated_by = user
 					staff.save()
