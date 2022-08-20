@@ -29,6 +29,7 @@ class Client(Base_Model):
 	]
 	
 	is_registred = models.BooleanField(default=False)
+	is_locked = models.BooleanField(default=False)
 	source = models.CharField(max_length=255, choices=SOURCE_STR, default='0')
 	
 	def __str__(self):

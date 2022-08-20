@@ -160,6 +160,42 @@ def staff_level_update(request, staff_level_uid):
 	}
 	return render(request,template,context=context)
 
+def staff_level_inactive(request, staff_level_uid):
+
+	staff_level = Staff_Level.objects.filter(uid=staff_level_uid).first()
+	all_staff_ids = []
+	try:
+		with transaction.atomic():
+			staff_level.is_active = False
+			staff_level.updated_by = request.user
+			staff_level.save()
+
+			staff_with_same_level_list = Staff.objects.filter(staff_level__id=staff_level.id).update(updated_by=request.user, is_locked=True)
+			staff_parents = []
+			for staff in staff_with_same_level_list:
+				staff_parents.append(staff.id)
+				all_staff_ids.append(staff.id)
+
+			loop = True
+			first_loop = True
+			while loop:
+				staff_subordinates = Staff.objects.filter(staff_parent__in=staff_parents).update(updated_by=request.user, is_locked=True)
+				if staff_subordinates.count() == 0:
+					loop = False
+				staff_parents = []
+				for staff in staff_subordinates:
+					staff_parents.append(staff.id)
+					all_staff_ids.append(staff.id)
+
+				return redirect(reverse('staff-level-list'))
+
+			clients = Client.objects.filter(staff__id__in=all_staff_ids).update(updated_by=request.user, is_locked=True)
+	except IntegrityError as e:
+		print(e)
+
+	return redirect(reverse('staff-level-list'))
+	
+
 from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def get_subdivison(request):
@@ -182,4 +218,65 @@ def get_subdivison(request):
 	else:
 		return JsonResponse({'status': False,})
 
+def inactive_staff(request, staff_uid, lock_client):
+	try:
+		with transaction.atomic():
+			all_staff_ids = []
+
+			staff = Staff.objects.filter(uid=staff_uid).first()
+			all_staff_ids.append(staff.id)
+			loop = True
+			first_loop = True
+
+			# check if user wants to lock all_client and staff_subordinates
+			if lock_client == 0:
+				loop = False
+			# endcheck
+
+			staff_subordinates_ids = []
+			while loop:
+				if first_loop == True:
+					staff_subordinates = Staff.objects.filter(staff_parent__id=staff.id).update(is_locked=True, updated_by=request.user)
+				else:
+					staff_subordinates_ids = []
+					staff_subordinates = Staff.objects.filter(staff_parent__id__in=staff_subordinates).update(is_locked=True, updated_by=request.user)
+				for staff_loop in staff_subordinates:
+					all_staff_ids.append(staff_loop.id)
+					staff_subordinates_ids.append(staff_loop.id)
+
+
+			if lock_client == 1:
+				clients = Client.objects.filter(staff__id__in=all_staff_ids).update(is_locked=True, updated_by=request.user)
+
+			return redirect(reverse('staff-list'))
+	except IntegrityError as e:
+		print(e)
+
+def staff_lock_client(request, staff_uid):
+	try:
+		with transaction.atomic():
+			staff = Staff.objects.filter(uid=staff_uid).first()
+
+			clients = Client.objects.filter(staff__id=staff.id, is_active=True).update(is_locked=True, updated_by=request.user)
+
+			return True
+	except IntegrityError as e:
+		print(e)
+
+	return False
+
+def staff_supervisor_select_clients(request):
+	if request.POST:
+		try:
+			with transaction.atomic():
+				staff = Staff.objects.filter(uid=staff_uid).first()
+				staff_id_client_id_dict = request.POST['staff_id_client_id_dict']
+				for staff_id, client_ids in staff_id_client_id_dict:
+					selected_staff = Staff.objects.filter(id=staff_id)
+					clients = Client.objects.filter(id__in=client_ids, is_active=True).updated_by(staff=selected_staff, updated_by=request.user)
+				return True
+		except IntegrityError as e :
+			print(e)
+
+	return False
 
