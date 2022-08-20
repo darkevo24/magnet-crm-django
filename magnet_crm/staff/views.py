@@ -27,10 +27,10 @@ def staff_level_list(request):
 	staff_list = Staff.objects.filter(is_active=True).prefetch_related('staff_level')
 	staff_dict = {}
 	for staff in staff_list:
-		level = staff.staff_level.level
-		if level not in staff_dict:
-			staff_dict[level] = 0
-		staff_dict[level] += 1
+		staff_level_id = staff.staff_level.id
+		if staff_level_id not in staff_dict:
+			staff_dict[staff_level_id] = 0
+		staff_dict[staff_level_id] += 1
 
 
 	
@@ -123,6 +123,34 @@ def staff_level_add(request):
 
 				return redirect(reverse('staff-level-list'))
 
+	except IntegrityError as e:
+		print(e)
+
+	context = {
+		'form': form,
+
+	}
+	return render(request,template,context=context)
+
+def staff_level_update(request, staff_level_uid):
+
+	staff_level = Staff_Level.objects.filter(uid=staff_level_uid).first()
+	# user = authenticate(request, username='super@admin.com', password='123123')
+	# print('user', user)
+	# login(request, user)
+	# print('-->', request.user)
+
+	template = 'admin/staff_level/staff_level_update.html'
+	form = StaffLevelForm(request.POST or None, instance=staff_level)
+	try:
+		with transaction.atomic():
+
+			if form.is_valid():
+				staff_level = form.save(commit=False)
+				staff_level.updated_by = request.user
+				staff_level.save()
+
+				return redirect(reverse('staff-level-list'))
 	except IntegrityError as e:
 		print(e)
 

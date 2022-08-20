@@ -1,5 +1,7 @@
 
 {% extends 'base/head.html' %}
+{% load core_extras %}
+{% load i18n %}
 
 {% block content %}
 <div class="row">
@@ -22,39 +24,50 @@
 		<div class="card-body">
 			<div class="row">
 				<div class="col-12">
-
 					<table class="table">
-					  <thead>
-					    <tr>
-					      <th scope="col">#</th>
-					      <th scope="col">Level Name</th>
-					      <th scope="col">Jumlah Staff</th>
-					    </tr>
-					  </thead>
-					  <tbody>
+					  	<thead>
+					    	<tr>
+					      		<th scope="col">#</th>
+					      		<th scope="col">Level Name</th>
+					      		<th scope="col">Jumlah Staff</th>
+					      		<th scope="col" class="text-center">Action</th>
+					    	</tr>
+					  	</thead>
+					  	<tbody>
 					  	{% for staff_level in staff_level_list%}
 							<tr>
-						      <td scope="row">{{forloop.counter}}</td>
-						      <td scope="row">{{staff_level.level_name}}</td>
-						      <td scope="row">
-						      	
-						      </td>
-						      <td></td>
-						      <td></td>
+						    	<td scope="row">{{forloop.counter}}</td>
+						      	<td scope="row">{{staff_level.level_name}}</td>
+						      	<td scope="row">
+						      		{% with staff_level.id as staff_level_id %}
+							      		{% with staff_dict|dict_get:staff_level_id as staff_level_count %}
+							      			{{staff_level_count|default:0}}
+							      		{% endwith %}
+						      		{% endwith%}
+						      		
+						      	</td>
+						      	<td class="text-center">
+									<div class="list-icons">
+										<div class="dropdown">
+											<a href="#" class="list-icons-item" data-toggle="dropdown">
+												<i class="icon-menu9"></i>
+											</a>
+
+											<div class="dropdown-menu dropdown-menu-right">
+												<a href="{% url 'staff-level-update' staff_level.uid %}" class="dropdown-item"><i class="icon-pencil7"></i> Edit</a>
+												<a href="" class="dropdown-item"><i class="icon-trash"></i> Delete</a>
+											</div>
+										</div>
+									</div>
+								</td>
+						      
+						      	<td></td>
+						      	<td></td>
 						    </tr>
 						{% endfor %}
-					    
-					    
 					  </tbody>
-					</table>
-
-					
-
-					
-
-					
+					</table>					
 				</div>
-
 			</div>
 		</div>
 	</div>
