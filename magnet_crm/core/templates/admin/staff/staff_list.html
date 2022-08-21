@@ -32,6 +32,7 @@
 					      <th scope="col">Level</th>
 					      <th scope="col">Supervisor</th>
 					      <th scope="col">Last Login</th>
+					      <th scope="col" class="text-center">Action</th>
 					    </tr>
 					  </thead>
 					  <tbody>
@@ -44,6 +45,20 @@
 						      <td scope="row">{{staff.staff_level.level_name}}</td>
 						      <td scope="row">{{staff.staff_parent.profile.full_name}}</td>
 						      <td></td>
+						      <td class="text-center">
+									<div class="list-icons">
+										<div class="dropdown">
+											<a href="#" class="list-icons-item" data-toggle="dropdown">
+												<i class="icon-menu9"></i>
+											</a>
+
+											<div class="dropdown-menu dropdown-menu-right">
+												<a href="{% url 'staff-detail' staff.uid %}" class="dropdown-item"><i class="icon-pencil7"></i> Edit</a>
+												<a href="" class="dropdown-item"><i class="icon-trash"></i> Delete</a>
+											</div>
+										</div>
+									</div>
+								</td>
 						    </tr>
 						{% endfor %}
 					    

@@ -2,14 +2,18 @@
 from django.shortcuts import render
 # # from core.forms.admin.main.main import *
 # # from referal.models import *
-from core.forms.main import *
-from staff.models import *
+
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import JsonResponse
-from staff.forms import *
 from django.db import IntegrityError, transaction
 
+import json
+
+from staff.forms import *
+from core.forms.main import *
+from staff.models import *
+from client.models import *
 
 def staff_list(request):
 	template = 'admin/staff/staff_list.html'
@@ -41,6 +45,43 @@ def staff_level_list(request):
 	return render(request,template,context=context)
 
 from django.contrib.auth import authenticate, login
+
+def staff_detail(request, staff_uid):
+	template = 'admin/staff/staff_detail.html'
+	staff = Staff.objects.filter(uid=staff_uid).first()
+	client_staff_list = Client_Staff.objects.filter(staff=staff, is_active=True).prefetch_related('client')
+	client_ids = []
+	for client_staff in client_staff_list:
+		client_ids.append(client_staff.client.id)
+
+	client_schedule_list = Client_Schedule.objects.filter(client__id__in=client_ids, is_active=True).order_by('schedule_date')
+	client_schedule_list_json = []
+
+	# {
+ #                title: 'Long Event',
+ #                start: '2020-09-07',
+ #                end: '2020-09-10'
+ #            },
+
+	for client_schedule in client_schedule_list:
+		temp_dict = {}
+		temp_dict['title'] = 'Contact ' + client_schedule.client.nama
+		temp_dict['start'] = client_schedule.schedule_date.strftime("%Y-%m-%dT%H:%M:%S")
+		client_schedule_list_json.append(temp_dict)
+
+	print(client_schedule_list_json)
+	print(json.dumps(client_schedule_list_json))
+		
+
+	context = {
+		'client_schedule_list': client_schedule_list,
+		'staff': staff,
+		'client_staff_list': client_staff_list,
+		'client_schedule_list_json': json.dumps(client_schedule_list_json),
+	}
+	return render(request,template,context=context)
+
+
 
 def staff_add(request):
 

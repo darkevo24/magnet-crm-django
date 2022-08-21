@@ -4,6 +4,8 @@
 {% load i18n %}
 
 {% block content %}
+
+
 <div class="row">
 	<!-- Typeahead -->
 	<div class="card col-12">
@@ -29,7 +31,7 @@
 					    	<tr>
 					      		<th scope="col">#</th>
 					      		<th scope="col">Level Name</th>
-					      		<th scope="col">Jumlah Staff</th>
+					      		<th scope="col" class="text-center">Jumlah Staff</th>
 					      		<th scope="col" class="text-center">Action</th>
 					    	</tr>
 					  	</thead>
@@ -38,10 +40,10 @@
 							<tr>
 						    	<td scope="row">{{forloop.counter}}</td>
 						      	<td scope="row">{{staff_level.level_name}}</td>
-						      	<td scope="row">
+						      	<td scope="row" class="text-center">
 						      		{% with staff_level.id as staff_level_id %}
 							      		{% with staff_dict|dict_get:staff_level_id as staff_level_count %}
-							      			{{staff_level_count|default:0}}
+							      			<span class="badge badge-success badge-pill">{{staff_level_count|default:0}}</span>
 							      		{% endwith %}
 						      		{% endwith%}
 						      		
