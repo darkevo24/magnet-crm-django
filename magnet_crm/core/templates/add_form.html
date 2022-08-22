@@ -56,8 +56,12 @@
 											
 
 										</div>
-										<input type="" id="selected_radio" name="selected_radio" value="1" >
-										<input type="" id="selected_client" name="selected_client" value="{{id_client}}" >
+										<div class="form-group">
+										    <label >Notes</label>
+										    <textarea class="form-control" name="notes" rows="3"></textarea>
+										  </div>
+										<input type="" id="selected_radio" name="selected_radio" value="1" hidden>
+										<input type="" id="selected_client" name="selected_client" value="{{id_client}}" hidden>
 										<button type="submit" class="btn btn-primary">Submit</button>
 											
 									</form>

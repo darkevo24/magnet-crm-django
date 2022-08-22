@@ -11,7 +11,7 @@
 					<h5 class="card-title">Client Followup List</h5>	
 				</div>
 				<div class="col text-right">
-					<a href="{% url 'followup-form' id_client %}?level=" class="btn btn-success">Add Followup Client</a>	
+					<a href="{% url 'followup-form' id_client %}" class="btn btn-success">Add Followup Client</a>	
 				</div>
 				
 				
@@ -33,7 +33,7 @@
 					  </thead>
 					  <tbody>
 					  	{% for client in client_followup_list %}
-							<tr data-href="{% url 'client-followup-list' client.id %}" class="table-row">
+							<tr data-href="" class="table-row">
 						      <td scope="row">{{forloop.counter}}</td>
 						      <td scope="row">{{client.client}}</td>
 						      <td scope="row">{{client.followup}}</td>

@@ -108,6 +108,7 @@ def add_form(request,id_client):
 
 	if request.POST:
 		selected_radio = request.POST['selected_radio']
+		notes = request.POST['notes']
 		# print("selected_radio",selected_radio)
 		print("request.POST",request.POST)
 		tree_code = request.POST['radio_'+selected_radio]
@@ -120,6 +121,7 @@ def add_form(request,id_client):
 		client_followup.client =  client
 		client_followup.followup = tree
 		client_followup.staff = staff
+		client_followup.answer = notes
 		client_followup.created_by = request.user
 		client_followup.save()
 	# if tree_form.is_valid():
