@@ -12,7 +12,7 @@
 		<div class="card-body">
 			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
 			<div class="btn-group mr-lg-3 mb-3">
-				<a href="{% url 'add' %}"><button type="button" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Choices</span></button></a>
+				<a href="{% url 'followup-add' %}"><button type="button" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Choices</span></button></a>
 			</div>
 			<div class="row">
 			<div class="col-12">
@@ -24,6 +24,8 @@
 				      <th scope="col">Choices</th>
 				      <th scope="col">Detail</th>
 				      <th scope="col">Add</th>
+				      <th scope="col">Edit</th>
+				      <th scope="col">Delete</th>
 				    </tr>
 				  </thead>
 				  <tbody>
@@ -34,11 +36,18 @@
 					      <th scope="row">{{x.followup_choices}}</th>
 					      
 					      <td>
-					      	<a href="{% url 'list' %}?level={{x.followup_choice_code}}"><button type="button" class="btn btn-light"><i class="icon-file-eye"></i> <span class="d-none d-lg-inline-block ml-2">Detail</span></button></a>
+					      	<a href="{% url 'followup-list' %}?level={{x.followup_choice_code}}"><button type="button" class="btn btn-light"><i class="icon-file-eye"></i> <span class="d-none d-lg-inline-block ml-2">Detail</span></button></a>
 					      </td>
 					      <td>
-					      	<a href="{% url 'add' %}?level={{x.followup_choice_code}}"><button type="button" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Options</span></button></a>
+					      	<a href="{% url 'followup-add' %}?level={{x.followup_choice_code}}"><button type="button" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Options</span></button></a>
 					      </td>
+					      <td>
+					      	<a href="{% url 'followup-edit' x.id %}"><button type="button" class="btn btn-light"><i class="icon-compose"></i> <span class="d-none d-lg-inline-block ml-2">Edit Options</span></button></a>
+					      </td>
+					      <td>
+					      	<a href="{% url 'followup-delete' x.id %}"><button type="button" class="btn btn-light"><i class="icon-trash"></i> <span class="d-none d-lg-inline-block ml-2">Delete Options</span></button></a>
+					      </td>
+					      
 
 					    </tr>
 					{% endfor %}

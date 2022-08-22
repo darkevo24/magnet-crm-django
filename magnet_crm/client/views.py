@@ -11,10 +11,10 @@ from django.http import JsonResponse
 from client.forms import *
 from django.db import IntegrityError, transaction
 
-
+from django.utils import timezone
 def client_list(request):
 	template = 'admin/client/client_list.html'
-	client_list = Client.objects.filter(is_active=True)
+	client_list = Client.objects.filter(is_active=True).order_by("created_at")
 
 	
 	context = {
@@ -40,6 +40,37 @@ def client_add(request):
 					return redirect(reverse('client-list'))
 				else:
 					print(client_form.errors )
+					print(client_form.errors)
+
+		except IntegrityError as e:
+			print(e)
+
+	context = {
+		'client_form': client_form,
+
+	}
+	return render(request,template,context=context)
+
+def client_edit(request,id_client):
+	template = 'admin/client/client_add.html'
+
+	client = Client.objects.filter(id=id_client,is_active=True).first()
+	client_form = ClientForm(request.POST or None,instance=client)
+
+
+	if request.POST:
+		try:
+			with transaction.atomic():
+
+				if client_form.is_valid() :
+					
+					client = client_form.save(commit=False)
+					client.updated_by = request.user
+					client.updated_at = timezone.now()
+					client.save()
+
+					return redirect(reverse('client-list'))
+				else:
 					print(client_form.errors)
 
 		except IntegrityError as e:

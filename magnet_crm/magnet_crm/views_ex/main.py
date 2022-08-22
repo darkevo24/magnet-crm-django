@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login,logout
 import json
+from django.utils import timezone
 def admin_login(request):
 	template = 'admin/core/login.html'
 	form = LoginForm(request.POST or None)
@@ -49,9 +50,9 @@ def index(request):
 	template = 'list.html'
 	tree_level = request.GET.get('level')
 	if tree_level == "" or tree_level == None:
-		all_choices = Followup.objects.exclude(followup_choice_code__icontains="_")
+		all_choices = Followup.objects.filter(is_active=True).exclude(followup_choice_code__icontains="_")
 	else:
-		all_choices = Followup.objects.filter(followup_choice_head=tree_level).exclude(followup_choice_code=tree_level)
+		all_choices = Followup.objects.filter(followup_choice_head=tree_level,is_active=True).exclude(followup_choice_code=tree_level)
 	
 	context = {
 		'all_choices' : all_choices
@@ -112,7 +113,7 @@ def add_tree(request):
 			instances.save()
 		
 	
-		return redirect(reverse('list'))
+		return redirect(reverse('followup-list'))
 
 
 	context = {
@@ -120,6 +121,38 @@ def add_tree(request):
 	}
 
 	return render(request,template, context=context)
+
+def edit_tree(request,tree_id):
+	template = 'add.html'
+	tree = Followup.objects.filter(id=tree_id).first()
+	tree_form = TreeForm(request.POST or None,instance=tree)
+
+	if tree_form.is_valid():
+		instances = tree_form.save(commit=False)
+		instances.updated_by = request.user
+		instances.updated_at = timezone.now()
+		instances.save()
+	
+		return redirect(reverse('followup-list'))
+
+
+	context = {
+		'tree_form' : tree_form
+	}
+
+	return render(request,template, context=context)
+
+def delete_tree(request,tree_id):
+	template = 'add.html'
+	tree = Followup.objects.filter(id=tree_id).first()
+	tree.is_active = False
+	tree.updated_by = request.user
+	tree.updated_at = timezone.now()
+	tree.save()
+	
+	return redirect(reverse('followup-list'))
+
+
 
 
 

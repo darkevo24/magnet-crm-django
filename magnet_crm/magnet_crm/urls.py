@@ -29,8 +29,10 @@ urlpatterns = [
     path('', main_view.admin_login, name='admin-login'),
 
     # Core
-    path('followup_list', main_view.index, name='list'),
-    path('followup_add', main_view.add_tree, name='add'),
+    path('followup_list', main_view.index, name='followup-list'),
+    path('followup_add', main_view.add_tree, name='followup-add'),
+    path('followup_edit/<str:tree_id>', main_view.edit_tree, name='followup-edit'),
+    path('followup_delete/<str:tree_id>', main_view.delete_tree, name='followup-delete'),
 
 
     
@@ -42,6 +44,7 @@ urlpatterns = [
     # Client
     path('client', client_views.client_list, name='client-list'),
     path('client/add', client_views.client_add, name='client-add'),
+    path('client/<str:id_client>/edit', client_views.client_edit, name='client-edit'),
     path('client/followup/<str:id_client>', client_views.client_followup_list, name='client-followup-list'),
     path('client/followup/<str:id_client>/add', main_view.add_form, name='followup-form'),
 
