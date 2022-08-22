@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import JsonResponse, HttpResponseRedirect
 from django.db import IntegrityError, transaction
+from django.contrib import messages
 
 import json
 
@@ -302,11 +303,15 @@ def staff_lock(request, staff_uid):
 			staff.save()
 			client_staff_list = Client_Staff.objects.filter(staff__id=staff.id, is_active=True).values_list('client__id', flat=True)
 			clients = Client.objects.filter(id__in=client_staff_list, is_active=True).update(is_locked=True, updated_by=request.user)
+			
+			message_str = ('Staff %s (%s) has been locked'%(staff.profile.full_name, staff.staff_level.level_name) )
+			messages.success(request, message_str)
 
 			return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 	except IntegrityError as e:
 		print(e)
+		messages.errors(request, e )
 
 	return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
@@ -320,10 +325,14 @@ def staff_unlock(request, staff_uid):
 			client_staff_list = Client_Staff.objects.filter(staff__id=staff.id, is_active=True).values_list('client__id', flat=True)
 			clients = Client.objects.filter(id__in=client_staff_list, is_active=True).update(is_locked=False, updated_by=request.user)
 			
+			message_str = ('Staff %s (%s) has been unlocked'%(staff.profile.full_name, staff.staff_level.level_name) )
+			messages.success(request, message_str)
+
 			return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 			
 	except IntegrityError as e:
 		print(e)
+		messages.errors(request, e )
 
 	return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
