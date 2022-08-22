@@ -6,55 +6,56 @@
 	<!-- Typeahead -->
 	<div class="card col-12">
 		<div class="card-header">
-			<div class="row">
-				<div class="col">
-					<h5 class="card-title">Tree List</h5>	
-				</div>
-				<div class="col text-right">
-					<a href="{% url 'add'  %}?level=" class="btn btn-success">Add New</a>	
-				</div>
-				
-				
-			</div>
-			
+			<h5 class="card-title">Followup Choices List</h5>
 		</div>
 
 		<div class="card-body">
-			<div class="row">
-				<div class="col-12">
-
-					<table class="table">
-					  <thead>
-					    <tr>
-					      <th scope="col">#</th>
-					      <th scope="col">Choices</th>
-					      <th scope="col">Detail</th>
-					      <th scope="col">Add</th>
-					    </tr>
-					  </thead>
-					  <tbody>
-					  	{% for x in all_choices%}
-							
-							<tr>
-						      <th scope="row">{{forloop.counter}}</th>
-						      <th scope="row">{{x.followup_choices}}</th>
-						      <td><a href="{% url 'list'  %}?level={{x.followup_choice_code}}" class="btn btn-primary">Detail</a></td>
-						      <td><a href="{% url 'add'  %}?level={{x.followup_choice_code}}" class="btn btn-primary">Add</a></td>
-						    </tr>
-						{% endfor %}
-					    
-					    
-					  </tbody>
-					</table>
-
-					
-
-					
-
-					
-				</div>
-
+			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
+			<div class="btn-group mr-lg-3">
+				<a href="{% url 'add' %}"><button type="button" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Choices</span></button></a>
 			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-12">
+
+				<table class="table">
+				  <thead>
+				    <tr>
+				      <th scope="col">#</th>
+				      <th scope="col">Choices</th>
+				      <th scope="col">Detail</th>
+				      <th scope="col">Add</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				  	{% for x in all_choices%}
+						
+						<tr>
+					      <th scope="row">{{forloop.counter}}</th>
+					      <th scope="row">{{x.followup_choices}}</th>
+					      
+					      <td>
+					      	<a href="{% url 'list' %}?level={{x.followup_choice_code}}"><button type="button" class="btn btn-light"><i class="icon-file-eye"></i> <span class="d-none d-lg-inline-block ml-2">Detail</span></button></a>
+					      </td>
+					      <td>
+					      	<a href="{% url 'add' %}?level={{x.followup_choice_code}}"><button type="button" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Options</span></button></a>
+					      </td>
+
+					    </tr>
+					{% endfor %}
+				    
+				    
+				  </tbody>
+				</table>
+
+				
+
+				
+
+				
+			</div>
+
 		</div>
 	</div>
 					<!-- /typeahead -->
