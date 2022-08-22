@@ -28,8 +28,9 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', main_view.admin_login, name='admin-login'),
 
+    # Core
     path('followup_list', main_view.index, name='list'),
-    path('add', main_view.add_tree, name='add'),
+    path('followup_add', main_view.add_tree, name='add'),
 
 
     

@@ -90,8 +90,6 @@ def add_tree(request):
 
 	if tree_form.is_valid():
 		print("masuk valid")
-		
-
 		tree_level = request.GET.get('level')
 		print("tree level sekarang", tree_level!= "")
 		print("tree level sekarang", tree_level!= None)

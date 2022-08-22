@@ -9,21 +9,11 @@
 <div class="row">
 	<!-- Typeahead -->
 	<div class="card col-12">
-		<div class="card-header">
-			<div class="row">
-				<div class="col">
-					<h5 class="card-title">Staff level List</h5>	
-				</div>
-				<div class="col text-right">
-					<a href="{% url 'staff-level-add'  %}?level=" class="btn btn-success">Add level</a>	
-				</div>
-				
-				
-			</div>
-			
-		</div>
-
 		<div class="card-body">
+			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
+			<div class="btn-group mr-lg-3 mb-3">
+				<a href="{% url 'staff-add' %}"><button type="Staff" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Staff Level</span></button></a>
+			</div>
 			<div class="row">
 				<div class="col-12">
 					<table class="table">

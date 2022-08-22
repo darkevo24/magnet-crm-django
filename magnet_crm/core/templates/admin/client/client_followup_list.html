@@ -8,18 +8,15 @@
 	<!-- Typeahead -->
 	<div class="card col-12">
 		
-		<div class="card-header">
-			<h5 class="card-title">Client Followup List</h5>
+	<div class="card-header">
+		<h5 class="card-title">Client Followup List</h5>
+	</div>
+
+	<div class="card-body">
+		<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
+		<div class="btn-group mr-lg-3 mb-3">
+			<a href="{% url 'followup-form' id_client %}"><button type="Staff" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Followup Client</span></button></a>
 		</div>
-
-		<div class="card-body">
-			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
-			<div class="btn-group mr-lg-3">
-				<a href="{% url 'followup-form' id_client %}"><button type="button" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Followup Client</span></button></a>
-			</div>
-		</div>
-
-
 		<div class="card-body">
 			<div class="row">
 				<div class="col-12">
