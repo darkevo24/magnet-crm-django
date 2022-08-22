@@ -17,26 +17,38 @@
 		<div class="btn-group mr-lg-3 mb-3">
 			<a href="{% url 'followup-form' id_client %}"><button type="Staff" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Followup Client</span></button></a>
 		</div>
-		<div class="card-body">
-			<div class="row">
+		<div class="row">
 				<div class="col-12">
 
-					<table class="table">
+					<table class="table ">
 					  <thead>
 					    <tr>
 					      <th scope="col">#</th>
 					      <th scope="col">Client</th>
 					      <th scope="col">Followup</th>
+					      <th scope="col" class="text-center">Action</th>
 					    </tr>
 					  </thead>
 					  <tbody>
 					  	{% for client in client_followup_list %}
-							<tr data-href="" class="table-row">
+							<tr >
 						      <td scope="row">{{forloop.counter}}</td>
 						      <td scope="row">{{client.client}}</td>
 						      <td scope="row">{{client.followup}}</td>
 						      
-						      <td></td>
+						      <td class="text-center">
+									<div class="list-icons">
+										<div class="dropdown">
+											<a href="#" class="list-icons-item" data-toggle="dropdown">
+												<i class="icon-menu9"></i>
+											</a>
+
+											<div class="dropdown-menu dropdown-menu-right">
+												<a href="{% url 'followup-form-delete' client.client.id client.id %}" class="dropdown-item"><i class="icon-trash"></i> Delete</a>
+											</div>
+										</div>
+									</div>
+								</td>
 						    </tr>
 						{% endfor %}
 					    

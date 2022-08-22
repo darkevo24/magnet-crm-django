@@ -194,6 +194,15 @@ def add_form(request,id_client):
 
 	return render(request,template, context=context)
 
+def delete_form(request,id_client,id_followup):
+	fol = Client_Followup.objects.filter(id = id_followup).first()	
+	fol.is_active = False
+	fol.updated_by = request.user
+	fol.updated_at = timezone.now()
+	fol.save()
+
+	return redirect(reverse('client-followup-list', kwargs={'id_client': id_client}))
+
 def ajax_form(request):
 
 	response = {}

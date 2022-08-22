@@ -26,18 +26,22 @@
 					      <th scope="col">Gender</th>
 					      <th scope="col">Pekerjaan</th>
 					      <th scope="col">Domisili</th>
+					      <th scope="col">Detail</th>
 					      <th scope="col">Action</th>
 					    </tr>
 					  </thead>
 					  <tbody>
 					  	{% for client in client_list %}
-							<tr data-href="{% url 'client-followup-list' client.id %}" >
+							<tr>
 						      <td scope="row">{{forloop.counter}}</td>
 						      <td scope="row">{{client.nama}}</td>
 						      <td scope="row">{{client.umur}}</td>
 						      <td scope="row">{{client.gender}}</td>
 						      <td scope="row">{{client.pekerjaan}}</td>
 						      <td scope="row">{{client.domisili}}</td>
+						      <td scope="row">
+						      	<a href="{% url 'client-followup-list' client.id %}"><i class="icon-file-eye"></i></a>
+						      </td>
 						      <td class="text-center">
 									<div class="list-icons">
 										<div class="dropdown">
