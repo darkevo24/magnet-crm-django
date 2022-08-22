@@ -52,11 +52,14 @@ urlpatterns = [
     path('staff', staff_views.staff_list, name='staff-list'),
     path('staff/add', staff_views.staff_add, name='staff-add'),
     path('staff/detail/<uuid:staff_uid>', staff_views.staff_detail, name='staff-detail'),
+    path('staff/lock/<uuid:staff_uid>', staff_views.staff_lock, name='staff-lock'),
+    path('staff/unlock/<uuid:staff_uid>', staff_views.staff_unlock, name='staff-unlock'),
 
 
     path('staff_level', staff_views.staff_level_list, name='staff-level-list'),
     path('staff_level/add', staff_views.staff_level_add, name='staff-level-add'),
     path('staff_level/update/<uuid:staff_level_uid>', staff_views.staff_level_update, name='staff-level-update'),
+
 
 
     path('ajax-magnet/get_subdivison', staff_views.get_subdivison, name='ajax-get-subdivison'),

@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.db import IntegrityError, transaction
 
 import json
@@ -293,18 +293,39 @@ def inactive_staff(request, staff_uid, lock_client):
 	except IntegrityError as e:
 		print(e)
 
-def staff_lock_client(request, staff_uid):
+def staff_lock(request, staff_uid):
 	try:
 		with transaction.atomic():
 			staff = Staff.objects.filter(uid=staff_uid).first()
+			staff.is_locked = True
+			staff.updated_by = request.user
+			staff.save()
+			client_staff_list = Client_Staff.objects.filter(staff__id=staff.id, is_active=True).values_list('client__id', flat=True)
+			clients = Client.objects.filter(id__in=client_staff_list, is_active=True).update(is_locked=True, updated_by=request.user)
 
-			clients = Client.objects.filter(staff__id=staff.id, is_active=True).update(is_locked=True, updated_by=request.user)
+			return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-			return True
 	except IntegrityError as e:
 		print(e)
 
-	return False
+	return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def staff_unlock(request, staff_uid):
+	try:
+		with transaction.atomic():
+			staff = Staff.objects.filter(uid=staff_uid).first()
+			staff.is_locked = False
+			staff.updated_by = request.user
+			staff.save()
+			client_staff_list = Client_Staff.objects.filter(staff__id=staff.id, is_active=True).values_list('client__id', flat=True)
+			clients = Client.objects.filter(id__in=client_staff_list, is_active=True).update(is_locked=False, updated_by=request.user)
+			
+			return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+			
+	except IntegrityError as e:
+		print(e)
+
+	return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 def staff_supervisor_select_clients(request):
 	if request.POST:
