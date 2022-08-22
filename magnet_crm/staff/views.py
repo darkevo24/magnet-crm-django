@@ -15,6 +15,7 @@ from staff.forms import *
 from core.forms.main import *
 from staff.models import *
 from client.models import *
+from django.utils import timezone
 
 def staff_list(request):
 	template = 'admin/staff/staff_list.html'
@@ -46,6 +47,14 @@ def staff_level_list(request):
 	return render(request,template,context=context)
 
 from django.contrib.auth import authenticate, login
+
+def staff_delete(request, staff_uid):
+	staff = Staff.objects.filter(uid=staff_uid).first()
+	staff.is_active = False
+	staff.updated_by = request.user
+	staff.updated_at = timezone.now()
+	staff.save()
+	return redirect(reverse('staff-list'))
 
 def staff_detail(request, staff_uid):
 	template = 'admin/staff/staff_detail.html'
@@ -201,6 +210,15 @@ def staff_level_update(request, staff_level_uid):
 
 	}
 	return render(request,template,context=context)
+
+def staff_level_delete(request, staff_level_uid):
+
+	staff_level = Staff_Level.objects.filter(uid=staff_level_uid).first()
+	staff_level.is_active = False
+	staff_level.updated_by = request.user
+	staff_level.updated_at = timezone.now()
+	staff_level.save()
+	return redirect(reverse('staff-level-list'))
 
 def staff_level_inactive(request, staff_level_uid):
 
