@@ -38,17 +38,20 @@
                                         
                                             
                                             {% for client in all_client %}
+
                                                 <li class="media">
                                                     <div class="media-body ">
                                                         <div class="media-title font-weight-semibold">{{client.nama}}</div>
-                                                        {{client.gender}}-{{client.umur}}-{{client.pekerjaan}}-{{client.domisili}}
+                                                        <span class="pl-1 text-muted">{{client.phone_no}}</span>
+                                                        <span class="pl-1 text-muted">{{client.email}}</span>
 
                                                         
 
                                                     </div>
 
-                                                    <div class="ml-3 ">
-                                                        <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="icon-comment-discussion"></i></a>
+                                                   <div class="align-self-center ml-3">
+                                                        <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="fab fa-whatsapp mr-3 fa-2x"></i>123</a>
+                                                        <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="icon-phone-outgoing"></i>333</a>
                                                     </div>
 
                                                 </li>

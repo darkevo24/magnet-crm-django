@@ -7,6 +7,8 @@ class ClientForm(ModelForm):
 		model = Client
 		fields = [
 			'nama',
+			'phone_no',
+			'email',
 			'umur',
 			'gender',
 			'pekerjaan',

@@ -17,9 +17,15 @@ class Client(Base_Model):
 
 	nama = models.CharField(max_length=255)
 	umur = models.CharField(max_length=255, default='')
+	GENDER_CHOICES = (
+		('male', 'Male'),
+		('female', 'Female'),
+	)
 	gender = models.CharField(max_length=255, default='')
 	pekerjaan = models.CharField(max_length=255, default='')
 	domisili = models.CharField(max_length=255, default='')
+	phone_no = models.CharField(max_length=255, default='')
+	email = models.EmailField(null=True, blank=True)
 
 	SOURCE_STR = [
 		('0', 'Google'), 
