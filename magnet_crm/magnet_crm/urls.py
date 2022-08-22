@@ -35,6 +35,9 @@ urlpatterns = [
     
     path('ajax_form', main_view.ajax_form, name='ajax_form'),
 
+    # Admin Dashboard
+    path('dashboard', main_view.dashboard, name='dashboard'),
+
     # Client
     path('client', client_views.client_list, name='client-list'),
     path('client/add', client_views.client_add, name='client-add'),

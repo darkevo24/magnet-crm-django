@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login,logout
-
+import json
 def admin_login(request):
 	template = 'admin/core/login.html'
 	form = LoginForm(request.POST or None)
@@ -33,7 +33,7 @@ def admin_login(request):
 				if request.GET.get('next') != None:
 					return redirect(request.GET.get('next'))
 				else:
-					return redirect(reverse('list'))
+					return redirect(reverse('dashboard'))
 			else:
 				print('user not found')
 				error_message = "Password salah"
@@ -55,6 +55,31 @@ def index(request):
 	
 	context = {
 		'all_choices' : all_choices
+	}
+	return render(request,template,context=context)
+
+def dashboard(request):
+	template = 'admin/core/dashboard.html'
+	client_list = Client.objects.filter(is_active=True)
+
+	staff = Staff.objects.filter(profile__user=request.user).first()
+	print("staff",staff)
+	client_staff_list = Client_Staff.objects.filter(staff=staff, is_active=True).prefetch_related('client')
+	client_ids = []
+	for client_staff in client_staff_list:
+		client_ids.append(client_staff.client.id)
+	client_schedule_list = Client_Schedule.objects.filter(client__id__in=client_ids, is_active=True).order_by('schedule_date')
+	client_schedule_list_json = []
+	for client_schedule in client_schedule_list:
+		temp_dict = {}
+		temp_dict['title'] = 'Contact ' + client_schedule.client.nama
+		temp_dict['start'] = client_schedule.schedule_date.strftime("%Y-%m-%dT%H:%M:%S")
+		client_schedule_list_json.append(temp_dict)
+
+
+	context = {
+		'all_client' : client_list,
+		'client_schedule_list_json': json.dumps(client_schedule_list_json),
 	}
 	return render(request,template,context=context)
 

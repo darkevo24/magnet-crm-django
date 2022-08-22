@@ -40,47 +40,49 @@ class Command(BaseCommand):
 		counter = 1
 		try:
 			with transaction.atomic():
-				client_schedule_list = Client_Schedule.objects.filter(is_active=True)
-				for c in client_schedule_list:
-					c.schedule_date = timezone.now() + datetime.timedelta(days=counter)
-					c.save()
-					counter += 1
-				# for client_name in client_names:
-				# 	user = User()
-				# 	email = client_name + '@gmail.com'
-				# 	user.username = email
-				# 	user.email = email
-				# 	user.set_password(email)
-				# 	user.save()
-
-				# 	profile = Profile()
-				# 	profile.user = user
-				# 	profile.full_name = client_name
-				# 	profile.email = email
-				# 	profile.phone_no = phone_no + str(counter)
-				# 	profile.no_ktp = no_ktp + str(counter)
-				# 	profile.created_by = profile.updated_by = user
-				# 	profile.save()
-
-				# 	client = Client()
-				# 	client.profile = profile
-				# 	client.name = profile.full_name
-				# 	client.created_by = client.updated_by = user
-				# 	client.save()
-
-				# 	client_staff = Client_Staff()
-				# 	client_staff.updated_by = client_staff.created_by = user
-				# 	client_staff.client = client
-				# 	client_staff.staff = staff
-				# 	client_staff.save()
-
-				# 	client_schedule = Client_Schedule()
-				# 	client_schedule.created_by = client_schedule.updated_by = user
-				# 	client_schedule.client = client
-				# 	client_schedule.staff = staff
-				# 	client_schedule.schedule_date = datetime.datetime.now() + datetime.timedelta(days=counter)
-				# 	client_schedule.save()
+				user = User.objects.first()
+				staff = Staff.objects.first()
+				# client_schedule_list = Client_Schedule.objects.filter(is_active=True)
+				# for c in client_schedule_list:
+				# 	c.schedule_date = timezone.now() + datetime.timedelta(days=counter)
+				# 	c.save()
 				# 	counter += 1
+				for client_name in client_names:
+				# # 	user = User()
+				# # 	email = client_name + '@gmail.com'
+				# # 	user.username = email
+				# # 	user.email = email
+				# # 	user.set_password(email)
+				# # 	user.save()
+
+				# # 	profile = Profile()
+				# # 	profile.user = user
+				# # 	profile.full_name = client_name
+				# # 	profile.email = email
+				# # 	profile.phone_no = phone_no + str(counter)
+				# # 	profile.no_ktp = no_ktp + str(counter)
+				# # 	profile.created_by = profile.updated_by = user
+				# # 	profile.save()
+
+					client = Client()
+					# client.profile = profile
+					client.name = client_name
+					client.created_by = client.updated_by = user
+					client.save()
+
+					client_staff = Client_Staff()
+					client_staff.updated_by = client_staff.created_by = user
+					client_staff.client = client
+					client_staff.staff = staff
+					client_staff.save()
+
+					client_schedule = Client_Schedule()
+					client_schedule.created_by = client_schedule.updated_by = user
+					client_schedule.client = client
+					client_schedule.staff = staff
+					client_schedule.schedule_date = datetime.datetime.now() + datetime.timedelta(days=counter)
+					client_schedule.save()
+					counter += 1
 
 		except IntegrityError as e:
 			print('error bung')
