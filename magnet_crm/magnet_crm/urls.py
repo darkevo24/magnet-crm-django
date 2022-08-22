@@ -45,6 +45,8 @@ urlpatterns = [
     path('client', client_views.client_list, name='client-list'),
     path('client/add', client_views.client_add, name='client-add'),
     path('client/<str:id_client>/edit', client_views.client_edit, name='client-edit'),
+    path('client/<str:id_client>/delete', client_views.client_delete, name='client-delete'),
+
     path('client/followup/<str:id_client>', client_views.client_followup_list, name='client-followup-list'),
     path('client/followup/<str:id_client>/add', main_view.add_form, name='followup-form'),
 

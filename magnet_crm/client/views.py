@@ -17,7 +17,7 @@ def client_list(request):
 	template = 'admin/client/client_list.html'
 	client_list = Client.objects.filter(is_active=True).order_by("created_at")
 
-	messages.success(request, 'Profile details updated.')
+	# messages.success(request, 'Profile details updated.')
 	context = {
 		'client_list': client_list,
 	}
@@ -82,6 +82,16 @@ def client_edit(request,id_client):
 
 	}
 	return render(request,template,context=context)
+
+def client_delete(request,id_client):
+	
+	client = Client.objects.filter(id=id_client).first()
+	client.is_active = False
+	client.updated_by = request.user
+	client.updated_at = timezone.now()
+	client.save()
+	return redirect(reverse('client-list'))
+
 
 def client_followup_list(request,id_client):
 	template = 'admin/client/client_followup_list.html'
