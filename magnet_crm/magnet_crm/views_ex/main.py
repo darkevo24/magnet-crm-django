@@ -84,6 +84,17 @@ def dashboard(request):
 	}
 	return render(request,template,context=context)
 
+def client_transfer(request):
+	template = 'admin/core/client_transfer.html'
+	client_list = Client.objects.filter(is_active=True,is_locked= False)
+	staff_list = Staff.objects.filter(is_active=True,is_locked= False)
+
+	context = {
+		'all_client' : client_list,
+		'all_staff' : staff_list,
+	}
+	return render(request,template,context=context)
+
 
 def add_tree(request):
 	template = 'add.html'

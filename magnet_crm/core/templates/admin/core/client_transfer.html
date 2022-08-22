@@ -1,0 +1,77 @@
+
+{% extends 'base/head.html' %}
+{% block content %}
+{% load static %}
+{% load core_extras %}
+<script src="{% static 'limitless/global_assets/js/plugins/ui/fullcalendar/main.min.js' %}"></script>
+<div class="row">
+    <!-- Typeahead -->
+    <div class="card col-12">
+        <div class="card-header">
+            <h5 class="card-title">Dashboard</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                        
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <h1>Client List</h1>
+                            <select id="client_selection" class="form-control select-search" data-fouc>
+                                {% for client in all_client %}
+                                    <option value="{{client.id}}" selected>{{client.nama}}</option>
+                                {% endfor %}  
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <h1>Staff List</h1>
+                            <select id="staff_selection" class="form-control select-search" data-fouc>
+                                {% for staff in all_staff %}
+                                    <option value="{{staff.id}}" selected>{{staff.profile.full_name}}</option>
+                                {% endfor %}  
+                            </select>
+                        </div>
+                    </div>
+
+                    <select multiple="multiple" class="form-control listbox-no-selection" data-fouc>
+                        <option value="option1">Classical mechanics</option>
+                        <option value="option2">Electromagnetism</option>
+                        <option value="option4">Relativity</option>
+                        <option value="option5">Quantum mechanics</option>
+                        <option value="option7">Astrophysics</option>
+                        <option value="option8">Biophysics</option>
+                        <option value="option9">Chemical physics</option>
+                        <option value="option10">Econophysics</option>
+                        <option value="option11">Geophysics</option>
+                        <option value="option12">Medical physics</option>
+                        <option value="option13">Physical chemistry</option>
+                        <option value="option14">Continuum mechanics</option>
+                        <option value="option15">Electrodynamics</option>
+                        <option value="option16">Quantum field theory</option>
+                        <option value="option17">Scattering theory</option>
+                        <option value="option18">Chaos theory</option>
+                        <option value="option19">Newton's laws of motion</option>
+                        <option value="option20">Thermodynamics</option>
+                    </select>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /typeahead -->
+</div>
+<script type="text/javascript">
+    $( document ).ready(function() {
+        console.log( "ready!" );
+
+        
+        
+    });
+
+    
+</script>
+{% endblock content %}
+
+                            
+                        
