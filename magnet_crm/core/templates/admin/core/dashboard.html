@@ -42,16 +42,16 @@
                                                 <li class="media">
                                                     <div class="media-body ">
                                                         <div class="media-title font-weight-semibold">{{client.nama}}</div>
-                                                        <span class="pl-1 text-muted">{{client.phone_no}}</span>
-                                                        <span class="pl-1 text-muted">{{client.email}}</span>
+                                                        <div class="pl-1 text-muted">{{client.phone_no}}</div>
+                                                        <div class="pl-1 text-muted">{{client.email}}</div>
 
                                                         
 
                                                     </div>
 
                                                    <div class="align-self-center ml-3">
-                                                        <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="fab fa-whatsapp mr-3 fa-2x"></i>123</a>
-                                                        <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="icon-phone-outgoing"></i>333</a>
+                                                        <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="fab fa-whatsapp mr-3" style="font-size:1.8em"></i></a>
+                                                        <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="fas fa-phone mr-3" style="font-size: 1.8em"></i></a>
                                                     </div>
 
                                                 </li>

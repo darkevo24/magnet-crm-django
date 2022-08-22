@@ -299,9 +299,9 @@
 							</a>
 
 							<div class="media-body">
-								<div class="font-weight-semibold">Victoria Baker</div>
+								<div class="font-weight-semibold">{{request.user.profile.full_name}}</div>
 								<div class="font-size-sm line-height-sm opacity-50">
-									Senior developer
+									{{request.session.level_name}}
 								</div>
 							</div>
 

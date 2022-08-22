@@ -30,6 +30,9 @@ def admin_login(request):
 
 			if user is not None:
 				login(request, user)
+				staff = Staff.objects.filter(profile__user__id=user.id, is_active=True).first()
+				level_name = staff.staff_level.level_name
+				request.session['level_name'] = level_name
 
 				if request.GET.get('next') != None:
 					return redirect(request.GET.get('next'))

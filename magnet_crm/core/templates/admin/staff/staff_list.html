@@ -42,9 +42,9 @@
 						      <td scope="row">{{staff.staff_parent.profile.full_name}}</td>
 						      <td scope="row" class="text-center">
 						      	{% if staff.is_locked == True %}
-									<i class="icon-lock2"></i>
+									<i class="icon-lock2" style="color: red"></i>
 								{% else %}
-									<i class="icon-unlocked2"></i>
+									<i class="icon-unlocked2" style="color: green"></i>
 								{% endif %}
 
 						      </td>
