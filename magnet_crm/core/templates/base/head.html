@@ -443,4 +443,33 @@
 	<!-- /page content -->
 
 </body>
+	{% if messages %}
+	    {% for message in messages %}
+	    <div id="modal_theme_success" class="modal fade" tabindex="-1" style="color: white">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header bg-success">
+						<h6 class="modal-title" >{{message}}</h6>
+						<button type="button" class="close" id="alert_model_close_btn" data-dismiss="modal">×</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	    {% endfor %}
+	{% endif %}
+
+<script type="text/javascript">
+	$(function() {
+		
+		setInterval(function() {
+		    $('#alert_model_close_btn').click();
+		}, 1300);
+
+
+		{% if messages %}
+			$('#modal_theme_success').modal('show');
+		{% endif %}
+	});
+</script>
 </html>

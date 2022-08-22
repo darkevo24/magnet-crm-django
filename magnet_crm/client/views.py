@@ -10,13 +10,14 @@ from django.urls import reverse
 from django.http import JsonResponse
 from client.forms import *
 from django.db import IntegrityError, transaction
+from django.contrib import messages
 
 from django.utils import timezone
 def client_list(request):
 	template = 'admin/client/client_list.html'
 	client_list = Client.objects.filter(is_active=True).order_by("created_at")
 
-	
+	messages.success(request, 'Profile details updated.')
 	context = {
 		'client_list': client_list,
 	}
