@@ -3,6 +3,9 @@
 {% block content %}
 {% load static %}
 {% load core_extras %}
+<style type="text/css">
+    
+</style>
 <script src="{% static 'limitless/global_assets/js/plugins/ui/fullcalendar/main.min.js' %}"></script>
 <div class="row">
     <!-- Typeahead -->
@@ -12,51 +15,49 @@
         </div>
 
         <div class="card-body">
-            <div class="row">
-                <div class="col-12">
-                        
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <h1>Client List</h1>
-                            <select id="client_selection" class="form-control select-search" data-fouc>
-                                {% for client in all_client %}
-                                    <option value="{{client.id}}" selected>{{client.nama}}</option>
-                                {% endfor %}  
-                            </select>
+            <form method="POST"  id="main-form"> 
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12">
+                            
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <!-- <h1>Client List</h1>
+                                <select id="client_selection" class="form-control select-search" data-fouc>
+                                    {% for client in all_client %}
+                                        <option value="{{client.id}}" selected>{{client.nama}}</option>
+                                    {% endfor %}  
+                                </select> -->
+                            </div>
+                            <div class="col-6">
+                                <h1>Staff List</h1>
+                                <select id="staff_selection" class="form-control select-search" data-fouc onchange="staff_change(this)">
+                                    {% for staff in all_staff %}
+                                        <option value="{{staff.uid}}">{{staff.profile.full_name}}</option>
+                                    {% endfor %}  
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <h1>Staff List</h1>
-                            <select id="staff_selection" class="form-control select-search" data-fouc>
-                                {% for staff in all_staff %}
-                                    <option value="{{staff.id}}" selected>{{staff.profile.full_name}}</option>
-                                {% endfor %}  
-                            </select>
-                        </div>
-                    </div>
 
-                    <select multiple="multiple" class="form-control listbox-no-selection" data-fouc>
-                        <option value="option1">Classical mechanics</option>
-                        <option value="option2">Electromagnetism</option>
-                        <option value="option4">Relativity</option>
-                        <option value="option5">Quantum mechanics</option>
-                        <option value="option7">Astrophysics</option>
-                        <option value="option8">Biophysics</option>
-                        <option value="option9">Chemical physics</option>
-                        <option value="option10">Econophysics</option>
-                        <option value="option11">Geophysics</option>
-                        <option value="option12">Medical physics</option>
-                        <option value="option13">Physical chemistry</option>
-                        <option value="option14">Continuum mechanics</option>
-                        <option value="option15">Electrodynamics</option>
-                        <option value="option16">Quantum field theory</option>
-                        <option value="option17">Scattering theory</option>
-                        <option value="option18">Chaos theory</option>
-                        <option value="option19">Newton's laws of motion</option>
-                        <option value="option20">Thermodynamics</option>
-                    </select>
+                        <select id="client_box" multiple="multiple" class="form-control listbox-no-selection" data-fouc >
+                            {% for client in all_client %}
+                                <option value="{{client.id}}" >{{client.nama}}</option>
+                            {% endfor %}  
+                        </select>
+
+                        <div id="info_div">
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                    
+                <div id="input_container">
                     
                 </div>
-            </div>
+                
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
         </div>
     </div>
     <!-- /typeahead -->
@@ -65,9 +66,147 @@
     $( document ).ready(function() {
         console.log( "ready!" );
 
+        // $(document).on("click", "#removeall_btn", function(event){
+        //     //Your code   
+        //     $("#bootstrap-duallistbox-selected-list_ > option").each(function() {
+        //         console.log(this.text + ' ' + this.value);
+        //     });
+        //     $("#bootstrap-duallistbox-nonselected-list_ > option").each(function() {
+        //         console.log(this.text + ' ' + this.value);
+        //     });
+        // });
+        // $(document).on("click", "#moveall_btn", function(event){
+        //     //Your code   
+        //     $("#bootstrap-duallistbox-selected-list_ > option").each(function() {
+        //         console.log(this.text + ' ' + this.value);
+        //     });
+        //     $("#bootstrap-duallistbox-nonselected-list_ > option").each(function() {
+        //         console.log(this.text + ' ' + this.value);
+        //     });
+        // });
+
+
+        $('.listbox-no-selection').bootstrapDualListbox({
+            preserveSelectionOnMove: 'moved',
+            moveOnSelect: true
+        });    
         
+        ajax_staff_client()
         
+
     });
+
+    function ajax_staff_client(){
+        var current_staff = $("#staff_selection").val()
+        $.ajax({
+            url: "{% url 'client_transfer_staff_ajax' %}",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                csrfmiddlewaretoken:"{{csrf_token}}",
+                staff_uid: current_staff,
+            },
+            error: function() {
+                console.log("error")
+            },
+            success: function(res) {
+                // print(res)
+                console.log(res)
+                if (res.client_list.length != 0){
+                    $.each(res.client_list, function( index, value ) {
+                        console.log("masuk ke sini")
+                        $('#client_box').append($('<option>', {
+                            value: value.id,
+                            text: value.name
+                        }));
+                        $("#client_box").val(value.id).change();
+
+                        // $("#client_box").append('<option value="'+value.id+'">'+value.name+'</option>');
+                        // $('.listbox-dynamic-options').append('<option value="'+value.id+'">'+value.name+'</option>');
+                        $('#client_box').trigger('bootstrapDualListbox.refresh');  
+                    });
+                }
+
+            }
+        });
+    }
+
+    $("#main-form").submit(function(e){
+        e.preventDefault();
+        $("#input_container").empty()
+        
+        $.each(dict_changes,function(index,value){ 
+            $("#input_container").append('<input name="staff_uid_'+index+'" value="'+value+'">')
+        });
+
+         this.submit();
+    });
+
+
+    // $('.listbox-no-selection').on("DOMNodeInserted", function() {
+    //   alert("asd")
+    // });
+    var dict_changes = new Object();
+
+    function staff_change(e){
+        // console.log(e.value)
+        
+        $("#bootstrap-duallistbox-selected-list_ > option").each(function() {
+            console.log("value di kotak selected", this.value, this.text)
+            $("#client_box").find('option[value='+this.value+']').remove();
+            $('#bootstrap-duallistbox-selected-list_').find('option').remove();
+            $('.listbox-dynamic-options').trigger('bootstrapDualListbox.refresh');
+            ajax_staff_client()
+        });
+
+        // $("#bootstrap-duallistbox-selected-list_").find('option').remove()
+        // $('.listbox-dynamic-options').find('option').remove();
+        //     $('.listbox-dynamic-options').trigger('bootstrapDualListbox.refresh');
+        // 
+    }
+    function client_box_left(x){
+        // $("#bootstrap-duallistbox-selected-list_ > option").each(function() {
+        //     console.log(this.text + ' ' + this.value);
+        // });
+        var selected_staff = $("#staff_selection").val()
+        if (selected_staff in dict_changes){
+            dict_changes[selected_staff].push(x.value)
+        }
+        else{
+            dict_changes[selected_staff] = []
+            dict_changes[selected_staff].push(x.value)
+        }
+        console.log(dict_changes[selected_staff]);
+
+        
+        
+        update_info()
+    }
+    function client_box_right(x){
+        var selected_staff = $("#staff_selection").val()
+        if (selected_staff in dict_changes){
+            // dict_changes[selected_staff].remove(x.value)
+            dict_changes[selected_staff] = $.grep(dict_changes[selected_staff], function(value) {
+              return value != x.value;
+            });
+        }
+        console.log(dict_changes[selected_staff]);
+        update_info();
+    }
+    
+    function update_info(){
+        $("#info_div").empty()
+        $.each(dict_changes,function(index,value){ 
+            console.log("ini dict_changes", index)
+            $("#info_div").append("<p> id staff: "+index + " ini value "+ value)
+            // $.each(value, function(index2, value2) {
+            //     // alert(index2 + " : " + value2);
+            //     $("#info_div").append("|| id client: "+value2+"</p><br>")
+            // }); 
+
+        });
+        
+    }
 
     
 </script>
