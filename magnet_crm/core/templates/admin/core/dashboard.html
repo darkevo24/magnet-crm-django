@@ -14,7 +14,7 @@
 		<div class="card-body">
 			<div class="row">
 				<div class="col-12">
-					<ul class="nav nav-tabs nav-tabs-highlight nav-justified">
+					<ul class="nav nav-tabs nav-tabs-highlight">
                                 <!-- <li class="nav-item"><a href="#highlighted-justified-tab1" class="nav-link active" data-toggle="tab">General Information</a></li> -->
                                 <li class="nav-item"><a href="#highlighted-justified-tab2" class="nav-link active" data-toggle="tab">Clients</a></li>
                                 <li id="calendar-tab" class="nav-item"><a href="#highlighted-justified-tab3" class="nav-link" data-toggle="tab">Callendar</a></li>
@@ -52,6 +52,23 @@
                                                    <div class="align-self-center ml-3">
                                                         <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="fab fa-whatsapp mr-3" style="font-size:1.8em"></i></a>
                                                         <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="fas fa-phone mr-3" style="font-size: 1.8em"></i></a>
+                                                        <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="far fa-calendar-plus mr-3" style="font-size: 1.8em"></i></a>
+                                                        <div class="list-icons">
+                                                            <div class="dropdown">
+                                                                <a href="#" class="list-icons-item" data-toggle="dropdown">
+                                                                    <i class="icon-menu9" style="font-size: 1.8em"></i>
+                                                                </a>
+
+                                                                <div class="dropdown-menu dropdown-menu-right">
+                                                                    <a href="{% url 'client-followup-list' client.id  %}" class="dropdown-item">
+                                                                        <i class="fa-calendar-alt"></i> List Schedule
+                                                                    </a>
+                                                                    <a href="{% url 'client-schedule-add' client.id  %}" class="dropdown-item">
+                                                                        <i class="fa-calendar-alt"></i> Add Schedule
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                 </li>

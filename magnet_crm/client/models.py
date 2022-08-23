@@ -96,7 +96,15 @@ class Client_Schedule(Base_Model):
 		null=False,
 		on_delete=models.CASCADE,
 	)
+	SCHEDULE_TYPE = [
+		('whatsapp', 'Whatsapp'), 
+		('phone', 'Phone'), 
+		('email', 'Email'), 
+		('other', 'Others'), 
+	]
+	schedule_type = models.CharField(default='whatsapp', max_length=255, choices =SCHEDULE_TYPE )
 	status = models.CharField(default='', max_length=255)
+	notes = models.TextField(default='')
 	answer = models.CharField(default='', max_length=255)
 
 

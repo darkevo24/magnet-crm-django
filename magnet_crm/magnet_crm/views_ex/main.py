@@ -13,6 +13,13 @@ import json
 from django.utils import timezone
 from django.db import IntegrityError, transaction
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 def admin_login(request):
 	template = 'admin/core/login.html'
@@ -33,9 +40,17 @@ def admin_login(request):
 
 			if user is not None:
 				login(request, user)
+				
+				profile = user.profile
+				profile.last_login_ip = get_client_ip(request)
+				profile.save()
 				staff = Staff.objects.filter(profile__user__id=user.id, is_active=True).first()
-				level_name = staff.staff_level.level_name
-				request.session['level_name'] = level_name
+				if staff != None:
+					level_name = staff.staff_level.level_name
+					request.session['level_name'] = level_name
+
+				else:
+					request.session['level_name'] = 'Admin'
 
 				if request.GET.get('next') != None:
 					return redirect(request.GET.get('next'))

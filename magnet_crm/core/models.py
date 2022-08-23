@@ -32,5 +32,6 @@ class Profile(Base_Model):
 	email = models.CharField(max_length=255,default="", unique=True)
 	is_verified = models.BooleanField(default=False)
 	verify_uid = models.CharField(max_length=255,default="")
+	last_login_ip = models.CharField(max_length=255, default="")
 	def __str__(self):
 		return self.full_name

@@ -16,7 +16,11 @@ class ClientForm(ModelForm):
 			'source',
 		]
 
-class StaffForm(ModelForm):
+class ClientScheduleForm(ModelForm):
 	class Meta:
-		model = Staff
-		fields = ['staff_level', 'staff_parent',]
+		model = Client_Schedule
+		fields = [
+			'schedule_type',
+			'schedule_date',
+			'notes',
+		]

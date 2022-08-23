@@ -1,0 +1,56 @@
+
+{% extends 'base/head.html' %}
+
+{% block content %}
+{% load core_extras %}
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12">
+		<div class="card-header">
+			<h5 class="card-title">New Schedule</h5>
+		</div>
+
+		<div class="card-body">
+			<div class="row">
+				<div class="col-12">
+					<form method="POST"> 
+						{% csrf_token %}
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Type</h6>
+							{{form.schedule_type | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Schedule</h6>
+							{{form.schedule_date | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Notes</h6>
+							{{form.notes | add_class:"form-control"}}
+						</div>
+						<button type="submit" class="btn btn-primary">Submit</button>
+							
+					</form>
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- /typeahead -->
+</div>
+<script type="text/javascript">
+	$( document ).ready(function() {
+	    $('#id_schedule_date').daterangepicker({
+            // parentEl: '.content-inner',
+            singleDatePicker: true,
+            locale: {
+                format: 'dd/MM/YYYY h:mm a'
+            },
+            timePicker: true,
+            timePickerIncrement: 10,
+        });
+	});
+	 
+
+</script>
+{% endblock content %}

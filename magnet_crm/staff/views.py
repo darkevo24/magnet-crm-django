@@ -356,6 +356,24 @@ def staff_unlock(request, staff_uid):
 	
 	return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+def staff_add_client_schedule(request):
+	template = 'admin/staff/staff_client_schdule/add.html'
+	
+
+	form = ClientSchduleForm(request.POST or None, instance=staff_level)
+	try:
+		with transaction.atomic():
+			if request.POST:
+				if form.is_valid():
+					client_schedule = form.save(commit=False)
+					client_schedule.created_by = client_schedule.updated_by = request.user
+					client_schedule.save()
+
+					# return redirect(reverse('staff-level-list'))
+	except IntegrityError as e:
+		print(e)
+
+	return render(request,template,context=context)
 def staff_supervisor_select_clients(request):
 	if request.POST:
 		try:

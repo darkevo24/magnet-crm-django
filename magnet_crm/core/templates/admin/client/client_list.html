@@ -26,8 +26,8 @@
 					      <th scope="col">Gender</th>
 					      <th scope="col">Pekerjaan</th>
 					      <th scope="col">Domisili</th>
-					      <th scope="col">Detail</th>
-					      <th scope="col">Action</th>
+					      <th scope="col" class="text-center">Detail</th>
+					      <th scope="col" class="text-center">Action</th>
 					    </tr>
 					  </thead>
 					  <tbody>
@@ -39,7 +39,7 @@
 						      <td scope="row">{{client.gender}}</td>
 						      <td scope="row">{{client.pekerjaan}}</td>
 						      <td scope="row">{{client.domisili}}</td>
-						      <td scope="row">
+						      <td scope="row" class="text-center">
 						      	<a href="{% url 'client-followup-list' client.id %}"><i class="icon-file-eye"></i></a>
 						      </td>
 						      <td class="text-center">
