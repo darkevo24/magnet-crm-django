@@ -89,8 +89,33 @@ def dashboard(request):
 
 def client_transfer(request):
 	template = 'admin/core/client_transfer.html'
-	client_list = Client.objects.filter(is_active=True,is_locked= False)
-	staff_list = Staff.objects.filter(is_active=True,is_locked= False)
+
+	all_selected_client = Client_Staff.objects.filter(is_active=True).values_list('client__id',flat=True)
+	print("ini yang udah selected",all_selected_client)
+
+	client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("nama")
+	staff_list = Staff.objects.filter(is_active=True,is_locked = False).order_by("profile__full_name")
+
+	if request.POST:
+		print(request.POST)
+		all_keys = request.POST.keys()
+
+		all_staff_uid = []
+		for key in all_keys:
+			if 'staff_uid_' in key:
+				staff_uid = key.split("staff_uid_")[1]
+				all_staff_uid.append(staff_uid)
+
+		for staff_uid in all_staff_uid:
+			# prev_staff_existing_client = Client_Staff.on
+			for client_id in request.POST['staff_uid_'+staff_uid].split(","):
+				client_staff = Client_Staff()
+				client_staff.client = Client.objects.filter(id=client_id).first()
+				client_staff.staff = Staff.objects.filter(uid=staff_uid).first()
+				client_staff.created_by = request.user
+				client_staff.save()
+
+
 
 	context = {
 		'all_client' : client_list,
@@ -98,6 +123,25 @@ def client_transfer(request):
 	}
 	return render(request,template,context=context)
 
+def client_transfer_staff_ajax(request):
+	response = {}
+	data = []
+
+	if request.POST and request.is_ajax:
+		staff_uid = request.POST["staff_uid"]
+		staff_client = Client_Staff.objects.filter(staff__uid=staff_uid, is_active=True).prefetch_related('client')
+		
+		arr_client = []
+		for x in staff_client:
+			arr_client.append({"name":x.client.nama,"id":x.client.id})
+
+
+		
+		response["client_list"] = arr_client
+
+
+
+	return JsonResponse(response)
 
 def add_tree(request):
 	template = 'add.html'

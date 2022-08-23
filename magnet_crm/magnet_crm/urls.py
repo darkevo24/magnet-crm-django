@@ -41,6 +41,7 @@ urlpatterns = [
     # Admin Dashboard
     path('dashboard', main_view.dashboard, name='dashboard'),
     path('client_transfer', main_view.client_transfer, name='client_transfer'),
+    path('client_transfer_staff_ajax', main_view.client_transfer_staff_ajax, name='client_transfer_staff_ajax'),
 
     # Client
     path('client', client_views.client_list, name='client-list'),

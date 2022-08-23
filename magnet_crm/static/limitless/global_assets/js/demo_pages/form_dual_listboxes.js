@@ -27,11 +27,11 @@ var DualListboxes = function() {
         // Basic example
         $('.listbox').bootstrapDualListbox();
 
-        // Multiple selection
-        $('.listbox-no-selection').bootstrapDualListbox({
-            preserveSelectionOnMove: 'moved',
-            moveOnSelect: false
-        });
+        // // Multiple selection
+        // $('.listbox-no-selection').bootstrapDualListbox({
+        //     preserveSelectionOnMove: 'moved',
+        //     moveOnSelect: false
+        // });
 
         // Filtered results
         $('.listbox-filtered-results').bootstrapDualListbox({
