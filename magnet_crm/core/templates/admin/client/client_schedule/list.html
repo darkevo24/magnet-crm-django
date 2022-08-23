@@ -1,0 +1,90 @@
+
+{% extends 'base/head.html' %}
+
+{% block content %}
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12">
+		<div class="card-header">
+			<h5 class="card-title">Client List</h5>
+		</div>
+
+		<div class="card-body">
+			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
+			<div class="btn-group mr-lg-3 mb-3">
+				<a href="{% url 'client-add' %}"><button type="button" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Client</span></button></a>
+			</div>
+			<div class="row ">
+				<div class="col-12">
+
+					<table class="table">
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">Client</th>
+					      <th scope="col">Date</th>
+					      <th scope="col">Phone Number</th>
+					      <th scope="col">Email</th>
+					      <th scope="col">Contact By</th>
+					      <th scope="col">Notes</th>
+					      <th scope="col" class="text-center">Action</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					  	{% for client in client_list %}
+							<tr>
+						      <td scope="row">{{forloop.counter}}</td>
+						      <td scope="row">{{client.nama}}</td>
+						      <td scope="row">{{client.schedule_date}}</td>
+						      <td scope="row">{{client.phone_no}}</td>
+						      <td scope="row">{{client.email}}</td>
+						      <td scope="row">{{client.schedule_type}}</td>
+						      <td scope="row">{{client.notes}}</td>
+						      <td scope="row" class="text-center">
+						      	<a href="{% url 'client-followup-list' client.id %}"><i class="icon-file-eye"></i></a>
+						      </td>
+						      <td class="text-center">
+									<div class="list-icons">
+										<div class="dropdown">
+											<a href="#" class="list-icons-item" data-toggle="dropdown">
+												<i class="icon-menu9"></i>
+											</a>
+
+											<div class="dropdown-menu dropdown-menu-right">
+												<a href="{% url 'client-edit' client.id %}" class="dropdown-item"><i class="icon-pencil7"></i> Edit</a>
+												<a href="{% url 'client-delete' client.id %}" class="dropdown-item"><i class="icon-trash"></i> Delete</a>
+											</div>
+										</div>
+									</div>
+								</td>
+						    </tr>
+						{% endfor %}
+					    
+					    
+					  </tbody>
+					</table>
+
+					
+
+					
+
+					
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- /typeahead -->
+</div>
+<script type="text/javascript">
+	$(function() {
+		
+		$(".table-row").click(function() {
+		 	var link = $(this).data('href');
+		 	window.location.href = link;
+		});
+
+	});
+</script>
+{% endblock content %}

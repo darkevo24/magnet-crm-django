@@ -21,7 +21,7 @@
 						</div>
 						<div class="mb-4">
 							<h6 class="font-weight-semibold">Schedule</h6>
-							{{form.schedule_date | add_class:"form-control"}}
+							{{datetime_form.schedule_date | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
 							<h6 class="font-weight-semibold">Notes</h6>
@@ -44,7 +44,7 @@
             // parentEl: '.content-inner',
             singleDatePicker: true,
             locale: {
-                format: 'YYYY-MM-DDTHH:mm'
+                format: 'YYYY-MM-DD HH:mm'
             },
             // formatSubmit: 'yyyy/mm/dd',
             timePicker: true,

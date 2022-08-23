@@ -1,4 +1,3 @@
-
 from django.shortcuts import render
 # # from core.forms.admin.main.main import *
 # # from referal.models import *
@@ -7,12 +6,12 @@ from client.models import *
 from staff.models import *
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from client.forms import *
 from django.db import IntegrityError, transaction
 from django.contrib import messages
 from client.forms import *
-
+from datetime import datetime
 from django.utils import timezone
 import re
 
@@ -145,17 +144,34 @@ def client_schedule_update(request, client_schedule_id):
 	return render(request,template,context=context)
 
 
+def client_schedule_list(request, client_id):
+	template = 'admin/client/client_schedule/list.html'
+	staff = Staff.objects.filter(profile__user=request.user).first()
+	client = Client.objects.filter(id=client_id).first()
+	client_schedule_list = Client_Schedule.objects.filter(client__id=client.id, is_active=True).order_by('schedule_date')
+	
+
+	
+	context = {
+		'client_schedule_list': client_schedule_list,
+		'client':client,
+	}
+	return render(request,template,context=context)
+
 def client_schedule_add(request, client_id):
 	template = 'admin/client/client_schedule/add.html'
 	staff = Staff.objects.filter(profile__user=request.user).first()
 	client = Client.objects.filter(id=client_id).first()
-	form = ClientScheduleForm(request.POST)
+	datetime_form = DateTimeForm(request.POST)
+	form = ClientScheduleForm(request.POST, prefix='normal-form')
 
 	if request.POST:
 		try:
 			with transaction.atomic():
-				if form.is_valid():
+				if form.is_valid() and datetime_form.is_valid():
 					client_schedule = form.save(commit=False)
+					schedule_date = datetime.strptime(datetime_form.cleaned_data['schedule_date'], '%Y-%m-%d %H:%M')
+					client_schedule.schedule_date = schedule_date
 					client_schedule.staff = staff
 					client_schedule.client = client
 					client_schedule.created_by = client_schedule.updated_by = request.user
@@ -176,6 +192,7 @@ def client_schedule_add(request, client_id):
 			messages.error(request, e)
 
 	context = {}
+	context['datetime_form'] = datetime_form
 	context['form'] = form
 	context['staff'] = staff
 	context['client'] = client

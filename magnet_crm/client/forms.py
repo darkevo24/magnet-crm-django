@@ -16,6 +16,11 @@ class ClientForm(ModelForm):
 			'source',
 		]
 
+
+class DateTimeForm(forms.Form):
+    schedule_date = forms.CharField(label='Your name', max_length=100)
+
+
 class ClientScheduleForm(ModelForm):
 	# schedule_date = forms.DateTimeField(input_formats=['%I:%M %p %d-%b-%Y'],
  #             # widget = forms.DateTimeInput(
@@ -27,6 +32,5 @@ class ClientScheduleForm(ModelForm):
 		model = Client_Schedule
 		fields = [
 			'schedule_type',
-			'schedule_date',
 			'notes',
 		]
