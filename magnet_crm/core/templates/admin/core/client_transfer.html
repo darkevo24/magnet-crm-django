@@ -63,6 +63,17 @@
     <!-- /typeahead -->
 </div>
 <script type="text/javascript">
+
+
+    var dict_changes = new Object();
+    var dict_all_client= new Object();
+    var dict_ever_ajax = [];
+
+    //buat simpen data id client namanya siapa
+    {% for client in all_client %}
+        dict_all_client[{{client.id}}] = '{{client.nama}}';
+    {% endfor %}
+
     $( document ).ready(function() {
         console.log( "ready!" );
 
@@ -98,37 +109,75 @@
 
     function ajax_staff_client(){
         var current_staff = $("#staff_selection").val()
-        $.ajax({
-            url: "{% url 'client_transfer_staff_ajax' %}",
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                csrfmiddlewaretoken:"{{csrf_token}}",
-                staff_uid: current_staff,
-            },
-            error: function() {
-                console.log("error")
-            },
-            success: function(res) {
-                // print(res)
-                console.log(res)
-                if (res.client_list.length != 0){
-                    $.each(res.client_list, function( index, value ) {
-                        console.log("masuk ke sini")
-                        $('#client_box').append($('<option>', {
-                            value: value.id,
-                            text: value.name
-                        }));
-                        $("#client_box").val(value.id).change();
 
-                        // $("#client_box").append('<option value="'+value.id+'">'+value.name+'</option>');
-                        // $('.listbox-dynamic-options').append('<option value="'+value.id+'">'+value.name+'</option>');
+        if (!(dict_ever_ajax.includes(current_staff))){
+            $.ajax({
+                url: "{% url 'client_transfer_staff_ajax' %}",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    csrfmiddlewaretoken:"{{csrf_token}}",
+                    staff_uid: current_staff,
+                },
+                error: function() {
+                    console.log("error")
+                },
+                success: function(res) {
+                    // print(res)
+                    // console.log(res)
+                    if (res.client_list.length != 0){
+                        $.each(res.client_list, function( index, value ) {
+                                
+                            $('#client_box').append($('<option>', {
+                                value: value.id,
+                                text: value.name
+                            }));
+                            // $("#client_box").val(value.id).change();
+                            $('#client_box option[value="'+value.id+'"]').prop('selected', true)
+                            console.log("add ini",value,"harusnya ke change ke",value.id)
+
+
+                            dict_all_client[value.id] = value.name
+
+                            
+                            if (!(dict_ever_ajax.includes(current_staff))){
+
+                                if (current_staff in dict_changes){
+                                    dict_changes[current_staff].push(value.id)
+                                }
+                                else{
+                                    dict_changes[current_staff] = []
+                                    dict_changes[current_staff].push(value.id)
+                                }    
+
+                            }
+                            
+
+                        });
+                        dict_ever_ajax.push(current_staff)
+                        console.log(dict_all_client,"dict_all_client")
+                        console.log(dict_ever_ajax,"dict_ever_ajax")
                         $('#client_box').trigger('bootstrapDualListbox.refresh');  
-                    });
-                }
+                        update_info()
+                    }
 
-            }
-        });
+                }
+            });    
+        }
+        else{
+            $.each(dict_changes[current_staff],function(index,value){ 
+                console.log("masuk bawah",value)
+                $('#client_box').append($('<option>', {
+                    value: value,
+                    text: dict_all_client[value]
+                }));
+                $('#client_box option[value="'+value+'"]').prop('selected', true)
+                $('#client_box').trigger('bootstrapDualListbox.refresh');  
+            })
+        }
+
+        
+
     }
 
     $("#main-form").submit(function(e){
@@ -146,18 +195,19 @@
     // $('.listbox-no-selection').on("DOMNodeInserted", function() {
     //   alert("asd")
     // });
-    var dict_changes = new Object();
+    
 
     function staff_change(e){
         // console.log(e.value)
         
         $("#bootstrap-duallistbox-selected-list_ > option").each(function() {
             console.log("value di kotak selected", this.value, this.text)
+            console.log("ini mau di removed",$("#client_box").find('option[value='+this.value+']'))
             $("#client_box").find('option[value='+this.value+']').remove();
             $('#bootstrap-duallistbox-selected-list_').find('option').remove();
-            $('.listbox-dynamic-options').trigger('bootstrapDualListbox.refresh');
-            ajax_staff_client()
+            $('#client_box').trigger('bootstrapDualListbox.refresh');  
         });
+        ajax_staff_client()
 
         // $("#bootstrap-duallistbox-selected-list_").find('option').remove()
         // $('.listbox-dynamic-options').find('option').remove();

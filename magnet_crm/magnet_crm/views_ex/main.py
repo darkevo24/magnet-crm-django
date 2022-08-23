@@ -11,6 +11,9 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login,logout
 import json
 from django.utils import timezone
+from django.db import IntegrityError, transaction
+
+
 def admin_login(request):
 	template = 'admin/core/login.html'
 	form = LoginForm(request.POST or None)
@@ -97,25 +100,49 @@ def client_transfer(request):
 	staff_list = Staff.objects.filter(is_active=True,is_locked = False).order_by("profile__full_name")
 
 	if request.POST:
-		print(request.POST)
-		all_keys = request.POST.keys()
+		try:
+			with transaction.atomic():
+				print(request.POST)
+				all_keys = request.POST.keys()
 
-		all_staff_uid = []
-		for key in all_keys:
-			if 'staff_uid_' in key:
-				staff_uid = key.split("staff_uid_")[1]
-				all_staff_uid.append(staff_uid)
+				all_staff_uid = []
+				
+				for key in all_keys:
+					if 'staff_uid_' in key:
+						staff_uid = key.split("staff_uid_")[1]
+						all_staff_uid.append(staff_uid)
 
-		for staff_uid in all_staff_uid:
-			# prev_staff_existing_client = Client_Staff.on
-			for client_id in request.POST['staff_uid_'+staff_uid].split(","):
-				client_staff = Client_Staff()
-				client_staff.client = Client.objects.filter(id=client_id).first()
-				client_staff.staff = Staff.objects.filter(uid=staff_uid).first()
-				client_staff.created_by = request.user
-				client_staff.save()
+				for staff_uid in all_staff_uid:
+					if staff_uid != None and staff_uid != "":
+						
+						# get all related id
+						all_client_id = []
+						for client_id in request.POST['staff_uid_'+staff_uid].split(","):
+							all_client_id.append(client_id)
 
+						print(all_client_id)
+						prev_staff_existing_client = Client_Staff.objects.filter(is_active=True,staff__uid=staff_uid)
+						for staff_client in prev_staff_existing_client:
+							if not staff_client.id in all_client_id:
+								staff_client.is_active = False
+								staff_client.updated_by = request.user
+								staff_client.updated_at = timezone.now()
+								staff_client.save()
 
+						for client_id in request.POST['staff_uid_'+staff_uid].split(","):
+							if client_id != None and client_id != "" :
+								client_staff = Client_Staff()
+								client_staff.client = Client.objects.filter(id=client_id).first()
+								client_staff.staff = Staff.objects.filter(uid=staff_uid).first()
+								client_staff.created_by = request.user
+								client_staff.save()
+				
+				return redirect(reverse('client_transfer'))			
+
+						
+
+		except IntegrityError as e:
+			print(e)
 
 	context = {
 		'all_client' : client_list,
