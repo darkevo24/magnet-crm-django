@@ -27,19 +27,25 @@
 					      <th scope="col">Email</th>
 					      <th scope="col">Contact By</th>
 					      <th scope="col">Notes</th>
+					      <th scope="col" class="text-center">Followup<th>
 					      <th scope="col" class="text-center">Action</th>
 					    </tr>
 					  </thead>
 					  <tbody>
-					  	{% for client in client_list %}
+					  	{% for client_schedule in client_schedule_list %}
 							<tr>
 						      <td scope="row">{{forloop.counter}}</td>
-						      <td scope="row">{{client.nama}}</td>
-						      <td scope="row">{{client.schedule_date}}</td>
-						      <td scope="row">{{client.phone_no}}</td>
-						      <td scope="row">{{client.email}}</td>
-						      <td scope="row">{{client.schedule_type}}</td>
-						      <td scope="row">{{client.notes}}</td>
+						      <td scope="row">{{client_schedule.client.nama}}</td>
+						      <td scope="row">{{client_schedule.schedule_date}}</td>
+						      <td scope="row">{{client_schedule.client.phone_no}}</td>
+						      <td scope="row">{{client_schedule.client.email}}</td>
+						      <td scope="row">{{client_schedule.schedule_type}}</td>
+						      <td scope="row">{{client_schedule.notes}}</td>
+						      <td scope="row" class="text-center">
+						      	<i class=" icon-user-check" style="color: green"></i>
+						      </td>
+						     
+
 						      <td scope="row" class="text-center">
 						      	<a href="{% url 'client-followup-list' client.id %}"><i class="icon-file-eye"></i></a>
 						      </td>
