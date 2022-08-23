@@ -114,34 +114,34 @@ def cleanhtml(raw_html):
 	  cleantext = re.sub(CLEANR, '', raw_html)
 	  return cleantext
 
-def client_schedule_update(request, client_schedule_id):
-	template = 'admin/client/client_schedule/add.html'
-	client_schedule = Client_Schedule.objects.filter(id=client_schedule_id).first()
+# def client_schedule_update(request, client_schedule_id):
+# 	template = 'admin/client/client_schedule/add.html'
+# 	client_schedule = Client_Schedule.objects.filter(id=client_schedule_id).first()
 
-	staff = Staff.objects.filter(profile__user=request.user).first()
-	client = client_schedule.client
-	form = ClientScheduleForm(request.POST, instance=client_schedule)
+# 	staff = Staff.objects.filter(profile__user=request.user).first()
+# 	client = client_schedule.client
+# 	form = ClientScheduleForm(request.POST, instance=client_schedule)
 
-	if request.POST:
-		try:
-			with transaction.atomic():
-				if form.is_valid():
-					client_schedule = form.save(commit=False)
-					client_schedule.updated_by = request.user
-					client_schedule.save()
+# 	if request.POST:
+# 		try:
+# 			with transaction.atomic():
+# 				if form.is_valid():
+# 					client_schedule = form.save(commit=False)
+# 					client_schedule.updated_by = request.user
+# 					client_schedule.save()
 					
-					message_str = ('Schedule for %s has been updated'%(client.nama, ) )
-					messages.success(request, message_str)
+# 					message_str = ('Schedule for %s has been updated'%(client.nama, ) )
+# 					messages.success(request, message_str)
 
 					
-				else:
-					cleantext = re.sub(CLEANR, '', form.errors)
-					messages.errors(request, cleantext)
-		except IntegrityError as e:
-			messages.errors(request, e)
+# 				else:
+# 					cleantext = re.sub(CLEANR, '', form.errors)
+# 					messages.errors(request, cleantext)
+# 		except IntegrityError as e:
+# 			messages.errors(request, e)
 
 
-	return render(request,template,context=context)
+# 	return render(request,template,context=context)
 
 
 def client_schedule_list(request, client_id):
@@ -162,9 +162,9 @@ def client_schedule_add(request, client_id):
 	template = 'admin/client/client_schedule/add.html'
 	staff = Staff.objects.filter(profile__user=request.user).first()
 	client = Client.objects.filter(id=client_id).first()
-	datetime_form = DateTimeForm(request.POST, schedule_date=None)
+	datetime_form = DateTimeForm(request.POST or None,initial={' schedule_date': None})
 	form = ClientScheduleForm(request.POST, prefix='normal-form')
-
+	
 	if request.POST:
 		try:
 			with transaction.atomic():
@@ -186,9 +186,12 @@ def client_schedule_add(request, client_id):
 					return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 					
 				else:
+					print("else")
 					cleantext = re.sub(CLEANR, '', str(form.errors))
+					print(cleantext,str(datetime_form.errors))
 					messages.error(request, cleantext)
 		except IntegrityError as e:
+			print("masuk integrity")
 			messages.error(request, e)
 
 	context = {}
@@ -206,8 +209,9 @@ def client_schedule_update(request, client_schedule_uid):
 	client = client_schedule.client
 
 	staff = Staff.objects.filter(profile__user=request.user).first()
-	datetime_form = DateTimeForm(request.POST, schedule_date=client_schedule.schedule_date.strftime('%Y-%m-%d %H:%M'))
-	form = ClientScheduleForm(request.POST, instance=client_schedule, prefix='client-schedule-form')
+	datetime_form = DateTimeForm(request.POST or None,initial={'schedule_date': client_schedule.schedule_date.strftime('%Y-%m-%d %H:%M')})
+	# datetime_form = DateTimeForm(request.POST, schedule_date=client_schedule.schedule_date.strftime('%Y-%m-%d %H:%M'))
+	form = ClientScheduleForm(request.POST or None, instance=client_schedule, prefix='client-schedule-form')
 
 	if request.POST:
 		try:

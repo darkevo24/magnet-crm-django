@@ -20,10 +20,10 @@ class ClientForm(ModelForm):
 class DateTimeForm(forms.Form):
 	schedule_date = forms.CharField(label='Your name', max_length=100)
 
-	def __init__(self, ticket, *args, **kwargs):
-		schedule_date = kwargs.pop('schedule_date', None)
-		super(DateTimeForm, self).__init__(*args, **kwargs)
-		self.fields['schedule_date'].initial = schedule_date
+	# def __init__(self, ticket, *args, **kwargs):
+		# schedule_date = kwargs.pop('schedule_date', None)
+		# super(DateTimeForm, self).__init__(*args, **kwargs)
+		# self.fields['schedule_date'].initial = schedule_date
 
 
 class ClientScheduleForm(ModelForm):
