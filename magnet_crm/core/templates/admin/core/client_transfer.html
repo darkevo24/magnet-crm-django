@@ -39,9 +39,9 @@
                             </div>
                         </div>
 
-                        <select id="client_box" multiple="multiple" class="form-control listbox-no-selection" data-fouc >
+                        <select id="client_box" multiple="multiple" class="form-control listbox-no-selection" data-fouc onchange="onchange_real_select()">
                             {% for client in all_client %}
-                                <option value="{{client.id}}" >{{client.nama}}</option>
+                                <option value="{{client.id}}" >{{client.nama}} | {% if client.is_registred %} Registered {% else %} Not Registered{% endif %} | {{client.phone_no|default:"-"}} | {{client.email|default:"-"}} </option>
                             {% endfor %}  
                         </select>
 
@@ -71,11 +71,63 @@
 
     //buat simpen data id client namanya siapa
     {% for client in all_client %}
-        dict_all_client[{{client.id}}] = '{{client.nama}}';
+        dict_all_client[{{client.id}}] = '{{client.nama}} | {% if client.is_registred %} Registered {% else %} Not Registered{% endif %} | {{client.phone_no|default:"-"}} | {{client.email|default:"-"}}';
     {% endfor %}
 
+    function onchange_real_select(){
+        console.log("onchange_real_select")
+    }
     $( document ).ready(function() {
         console.log( "ready!" );
+
+        
+        $(document).on("click", "#moveall_btn", function(event){
+            //Your code   
+            $("#bootstrap-duallistbox-nonselected-list_ > option").each(function() {
+                console.log(this.text + ' ' + this.value);
+                // console.log($('#bootstrap-duallistbox-nonselected-list_ option[value="'+this.value+'"]')[0])
+                
+                // $('#client_box option[value="'+this.value+'"]').prop('selected', true)
+                // $('#client_box').trigger('bootstrapDualListbox.refresh');  
+                // [0].click();
+                $('#bootstrap-duallistbox-nonselected-list_ option[value="'+this.value+'"]').prop('selected',true).trigger('change');
+
+                var selected_staff = $("#staff_selection").val()
+                if (selected_staff in dict_changes){
+                    dict_changes[selected_staff].push(this.value)
+                }
+                else{
+                    dict_changes[selected_staff] = []
+                    dict_changes[selected_staff].push(this.value)
+                }
+                update_info()
+
+            });
+        });
+
+        $(document).on("click", "#removeall_btn", function(event){
+            //Your code   
+            $("#bootstrap-duallistbox-selected-list_ > option").each(function() {
+                console.log(this.text + ' ' + this.value);
+
+                temp_value = this.value
+                
+                $('#bootstrap-duallistbox-selected-list_ option[value="'+this.value+'"]').prop('selected',true).trigger('change');
+
+                var selected_staff = $("#staff_selection").val()
+                if (selected_staff in dict_changes){
+
+                    // dict_changes[selected_staff].remove(x.value)
+                    dict_changes[selected_staff] = $.grep(dict_changes[selected_staff], function(value) {
+                        console.log(value, temp_value ,"value, this.value")
+                      return value != parseInt(temp_value);
+                    });
+                }
+                
+                update_info();
+
+            });
+        });
 
         // $(document).on("click", "#removeall_btn", function(event){
         //     //Your code   
@@ -107,6 +159,7 @@
 
     });
 
+
     function ajax_staff_client(){
         var current_staff = $("#staff_selection").val()
 
@@ -127,17 +180,29 @@
                     // console.log(res)
                     if (res.client_list.length != 0){
                         $.each(res.client_list, function( index, value ) {
-                                
+                            
+                            var temp_naming = value.name +" | ";
+                            if (value.is_registred){
+                                temp_naming += "Registered | "
+                            }
+                            else{
+                                temp_naming += "Not registered | "
+                            }
+                            temp_naming += value.phone_no || "-" +" | ";
+                            temp_naming += value.email || "-"
+
                             $('#client_box').append($('<option>', {
                                 value: value.id,
-                                text: value.name
+                                text: temp_naming
                             }));
                             // $("#client_box").val(value.id).change();
                             $('#client_box option[value="'+value.id+'"]').prop('selected', true)
                             console.log("add ini",value,"harusnya ke change ke",value.id)
 
 
-                            dict_all_client[value.id] = value.name
+
+                            dict_all_client[value.id] = temp_naming
+
 
                             
                             if (!(dict_ever_ajax.includes(current_staff))){
@@ -215,32 +280,39 @@
         // 
     }
     function client_box_left(x){
+        console.log("masuk X ",x.value)
         // $("#bootstrap-duallistbox-selected-list_ > option").each(function() {
         //     console.log(this.text + ' ' + this.value);
         // });
-        var selected_staff = $("#staff_selection").val()
-        if (selected_staff in dict_changes){
-            dict_changes[selected_staff].push(x.value)
+        if (x.value != "" && x.value != null){
+            var selected_staff = $("#staff_selection").val()
+            if (selected_staff in dict_changes){
+                dict_changes[selected_staff].push(x.value)
+            }
+            else{
+                dict_changes[selected_staff] = []
+                dict_changes[selected_staff].push(x.value)
+            }
+            console.log(dict_changes[selected_staff]);    
         }
-        else{
-            dict_changes[selected_staff] = []
-            dict_changes[selected_staff].push(x.value)
-        }
-        console.log(dict_changes[selected_staff]);
+        
 
         
         
         update_info()
     }
     function client_box_right(x){
-        var selected_staff = $("#staff_selection").val()
-        if (selected_staff in dict_changes){
-            // dict_changes[selected_staff].remove(x.value)
-            dict_changes[selected_staff] = $.grep(dict_changes[selected_staff], function(value) {
-              return value != x.value;
-            });
+        if (x.value != "" && x.value != null){
+            var selected_staff = $("#staff_selection").val()
+            if (selected_staff in dict_changes){
+                // dict_changes[selected_staff].remove(x.value)
+                dict_changes[selected_staff] = $.grep(dict_changes[selected_staff], function(value) {
+                  return value != x.value;
+                });
+            }
+            console.log(dict_changes[selected_staff]);
         }
-        console.log(dict_changes[selected_staff]);
+        
         update_info();
     }
     

@@ -175,10 +175,9 @@ def client_transfer_staff_ajax(request):
 		
 		arr_client = []
 		for x in staff_client:
-			arr_client.append({"name":x.client.nama,"id":x.client.id})
+			arr_client.append({"name":x.client.nama,"id":x.client.id,'is_registred':x.client.is_registred,'phone_no':x.client.phone_no,'phone_no':x.client.email})
 
 
-		
 		response["client_list"] = arr_client
 
 
