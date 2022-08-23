@@ -75,7 +75,7 @@
 
 			<!-- <span class="badge badge-success my-3 my-lg-0 ml-lg-3">Online</span> -->
 
-			<!-- <ul class="navbar-nav ml-lg-auto">
+			<ul class="navbar-nav ml-lg-auto">
 				<li class="nav-item dropdown">
 					<a href="#" class="navbar-nav-link" data-toggle="dropdown">
 						<i class="icon-people"></i>
@@ -153,7 +153,7 @@
 						</div>
 					</div>
 				</li>
-			</ul> -->
+			</ul>
 		</div>
 
 		<ul class="navbar-nav flex-row order-1 order-lg-2 flex-1 flex-lg-0 justify-content-end align-items-center">
@@ -336,19 +336,21 @@
 								</span>
 							</a>
 						</li>
-						<li class="nav-item">
-							<a href="{% url 'followup-list' %}" class="nav-link ">
-								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
-								<span>
-									Followup List
-								</span>
-							</a>
-						</li>
+						
 						<li class="nav-item">
 							<a href="{% url 'client-list' %}" class="nav-link ">
 								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-client.png' %}">
 								<span>
 									Client
+								</span>
+							</a>
+						</li>
+						{% if request.user.is_staff == True %}
+						<li class="nav-item">
+							<a href="{% url 'followup-list' %}" class="nav-link ">
+								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+								<span>
+									Feedback List
 								</span>
 							</a>
 						</li>
@@ -368,6 +370,7 @@
 								</span>
 							</a>
 						</li>
+						{% endif %}
 						<!-- /page kits -->
 
 					</ul>

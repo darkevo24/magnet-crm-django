@@ -50,8 +50,11 @@
                                                     </div>
 
                                                    <div class="align-self-center ml-3">
-                                                        <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="fab fa-whatsapp mr-3" style="font-size:1.8em"></i></a>
-                                                        <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="fas fa-phone mr-3" style="font-size: 1.8em"></i></a>
+                                                        <i class="fab fa-whatsapp mr-3 whatsapp-button" data-client_id="{{client.id}}" data-journey_type="whatsapp" style="font-size:1.8em"></i>
+                                                        
+                                                        <i class="fas fa-phone mr-3 call-button" style="font-size: 1.8em" data-client_id="{{client.id}}" data-journey_type="called">
+                                                        </i>
+                                                        
                                                         <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="far fa-calendar-plus mr-3" style="font-size: 1.8em"></i></a>
                                                         <div class="list-icons">
                                                             <div class="dropdown">
@@ -100,63 +103,6 @@
 
     	
     	events = {{client_schedule_list_json|safe}};
-    	// const events = [
-     //        {
-     //            title: 'All Day Event',
-     //            start: '2020-09-01'
-     //        },
-     //        {
-     //            title: 'Long Event',
-     //            start: '2020-09-07',
-     //            end: '2020-09-10'
-     //        },
-     //        {
-     //            groupId: 999,
-     //            title: 'Repeating Event',
-     //            start: '2020-09-09T16:00:00'
-     //        },
-     //        {
-     //            groupId: 999,
-     //            title: 'Repeating Event',
-     //            start: '2020-09-16T16:00:00'
-     //        },
-     //        {
-     //            title: 'Conference',
-     //            start: '2020-09-11',
-     //            end: '2020-09-13'
-     //        },
-     //        {
-     //            title: 'Meeting',
-     //            start: '2020-09-12T10:30:00',
-     //            end: '2020-09-12T12:30:00'
-     //        },
-     //        {
-     //            title: 'Lunch',
-     //            start: '2020-09-12T12:00:00'
-     //        },
-     //        {
-     //            title: 'Meeting',
-     //            start: '2020-09-12T14:30:00'
-     //        },
-     //        {
-     //            title: 'Happy Hour',
-     //            start: '2020-09-12T17:30:00'
-     //        },
-     //        {
-     //            title: 'Dinner',
-     //            start: '2020-09-12T20:00:00'
-     //        },
-     //        {
-     //            title: 'Birthday Party',
-     //            start: '2020-09-13T07:00:00'
-     //        },
-     //        {
-     //            title: 'Click for Google',
-     //            url: 'http://google.com/',
-     //            start: '2020-09-28'
-     //        }
-     //    ];
-
     	const calendarBasicViewElement = document.querySelector('.fullcalendar-basic');
 
         // Initialize
@@ -196,6 +142,53 @@
         function init_calendar() {
         	calendarBasicViewInit.render();
         }
+        $('.call-button').click(function(){
+            var client_id = $(this).data('client_id');
+            var journey_type = $(this).data('journey_type');
+            console.log(client_id, journey_type)
+            submit_user_journey(client_id, journey_type)
+
+        });
+        $('.whatsapp-button').click(function(){
+            var client_id = $(this).data('client_id');
+            var journey_type = $(this).data('journey_type');
+            console.log(client_id, journey_type)
+            submit_user_journey(client_id, journey_type)
+
+        });
+        $('.feedback-button').click(function(){
+            var client_id = $(this).data('client_id');
+            var journey_type = $(this).data('whatsapp');
+            console.log(client_id, journey_type)
+            submit_user_journey(client_id, journey_type)
+
+        });
+        function submit_user_journey(client_id, journey_type)
+        {
+            var string_url = "{% url 'client-journey-add' 0 'default' %}"
+            string_url = string_url.replace('0', client_id)
+            string_url = string_url.replace('default', journey_type)
+            console.log(string_url)
+            $.ajax({
+                url: string_url,
+                type: 'get',
+                // dataType: 'json',
+                // data: {
+                //     csrfmiddlewaretoken:"{{csrf_token}}",
+                //     tree_level: code,
+                // },
+                error: function() {
+                    console.log("error")
+                },
+                success: function(res) {
+                    // print(res)
+                    console.log(res)
+
+                }
+            });
+        }
+      
+
 	});
 
 	

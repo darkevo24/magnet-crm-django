@@ -108,4 +108,36 @@ class Client_Schedule(Base_Model):
 	answer = models.CharField(default='', max_length=255)
 
 
+class Client_Journey(Base_Model):
+	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+	
+	client = models.ForeignKey(
+		Client,
+		blank=False,
+		null=False,
+		on_delete=models.CASCADE,
+	)
+	staff = models.ForeignKey(
+		Staff,
+		blank=False,
+		null=False,
+		on_delete=models.CASCADE,
+	)
+	
+
+	JOURNAL_TYPE = [
+		('registered', 'Registered'), 
+		('scheduled_followup', 'Scheduled Followup'), 
+		('feedback', 'Feeback'), 
+		('whatsapp', 'Whatsapp'),
+		('called', 'Called'), 
+		('emailed', 'Emailed'),
+		('changed_fc', 'Change FC'), 
+	]
+	
+	journal_type = models.CharField(max_length=255, choices=JOURNAL_TYPE)
+	
+	def __str__(self):
+		return self.client.nama + ' ' + self.journal_type + ' at ' + self.created_at
+
 	

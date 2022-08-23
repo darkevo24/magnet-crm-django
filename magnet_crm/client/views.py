@@ -1,20 +1,23 @@
 from django.shortcuts import render
 # # from core.forms.admin.main.main import *
 # # from referal.models import *
-from core.forms.main import *
-from client.models import *
-from staff.models import *
+
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import JsonResponse, HttpResponseRedirect
 from client.forms import *
 from django.db import IntegrityError, transaction
 from django.contrib import messages
-from client.forms import *
+
 from datetime import datetime
 from django.utils import timezone
 import re
 
+from core.forms.main import *
+from client.models import *
+from staff.models import *
+from client.forms import *
+from client.utils import *
 CLEANR = re.compile('<.*?>') 
 
 def client_list(request):
@@ -113,35 +116,6 @@ def client_followup_list(request,id_client):
 def cleanhtml(raw_html):
 	  cleantext = re.sub(CLEANR, '', raw_html)
 	  return cleantext
-
-# def client_schedule_update(request, client_schedule_id):
-# 	template = 'admin/client/client_schedule/add.html'
-# 	client_schedule = Client_Schedule.objects.filter(id=client_schedule_id).first()
-
-# 	staff = Staff.objects.filter(profile__user=request.user).first()
-# 	client = client_schedule.client
-# 	form = ClientScheduleForm(request.POST, instance=client_schedule)
-
-# 	if request.POST:
-# 		try:
-# 			with transaction.atomic():
-# 				if form.is_valid():
-# 					client_schedule = form.save(commit=False)
-# 					client_schedule.updated_by = request.user
-# 					client_schedule.save()
-					
-# 					message_str = ('Schedule for %s has been updated'%(client.nama, ) )
-# 					messages.success(request, message_str)
-
-					
-# 				else:
-# 					cleantext = re.sub(CLEANR, '', form.errors)
-# 					messages.errors(request, cleantext)
-# 		except IntegrityError as e:
-# 			messages.errors(request, e)
-
-
-# 	return render(request,template,context=context)
 
 
 def client_schedule_list(request, client_id):
@@ -247,3 +221,19 @@ def client_schedule_update(request, client_schedule_uid):
 	context['client'] = client
 
 	return render(request,template,context=context)
+
+def client_journey_add(request, client_id, journey_type):
+	data = {}
+	data['status'] = False
+	try:
+		with transaction.atomic():
+			staff = Staff.objects.filter(profile__user__id=request.user.id).first()
+			print(staff.id, '<----')
+			client = Client.objects.filter(id=client_id).first()
+			if create_client_journal(request, staff, client, journey_type) == True:
+				data['status'] = True
+
+	except IntegrityError as e:
+		print(e)
+	return JsonResponse(data)
+
