@@ -162,7 +162,7 @@ def client_schedule_add(request, client_id):
 	template = 'admin/client/client_schedule/add.html'
 	staff = Staff.objects.filter(profile__user=request.user).first()
 	client = Client.objects.filter(id=client_id).first()
-	datetime_form = DateTimeForm(request.POST)
+	datetime_form = DateTimeForm(request.POST, schedule_date=None)
 	form = ClientScheduleForm(request.POST, prefix='normal-form')
 
 	if request.POST:
@@ -187,6 +187,51 @@ def client_schedule_add(request, client_id):
 					
 				else:
 					cleantext = re.sub(CLEANR, '', str(form.errors))
+					messages.error(request, cleantext)
+		except IntegrityError as e:
+			messages.error(request, e)
+
+	context = {}
+	context['datetime_form'] = datetime_form
+	context['form'] = form
+	context['staff'] = staff
+	context['client'] = client
+
+	return render(request,template,context=context)
+
+def client_schedule_update(request, client_schedule_uid):
+	template = 'admin/client/client_schedule/update.html'
+	client_schedule = Client_Schedule.objects.filter(uid=client_schedule_uid).prefetch_related('client').first()
+	print(client_schedule)
+	client = client_schedule.client
+
+	staff = Staff.objects.filter(profile__user=request.user).first()
+	datetime_form = DateTimeForm(request.POST, schedule_date=client_schedule.schedule_date.strftime('%Y-%m-%d %H:%M'))
+	form = ClientScheduleForm(request.POST, instance=client_schedule, prefix='client-schedule-form')
+
+	if request.POST:
+		try:
+			with transaction.atomic():
+				if form.is_valid() and datetime_form.is_valid():
+					print('valid')
+					client_schedule = form.save(commit=False)
+					schedule_date = datetime.strptime(datetime_form.cleaned_data['schedule_date'], '%Y-%m-%d %H:%M')
+					client_schedule.schedule_date = schedule_date
+					client_schedule.updated_by = request.user
+					client_schedule.save()
+					
+					message_str = ('Schedule for %s has been registered'%(client.nama, ) )
+					messages.success(request, message_str)
+					message_str = ('Staff %s (%s) has been unlocked'%(staff.profile.full_name, staff.staff_level.level_name) )
+			
+
+			
+					return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+					
+				else:
+					print('eroors', form.errors, datetime_form.errors)
+					cleantext = re.sub(CLEANR, '', str(form.errors))
+					print(form.errors, datetime_form.errors)
 					messages.error(request, cleantext)
 		except IntegrityError as e:
 			messages.error(request, e)

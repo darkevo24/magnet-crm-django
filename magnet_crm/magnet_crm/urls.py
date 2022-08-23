@@ -51,6 +51,7 @@ urlpatterns = [
 
     path('client/<str:client_id>/client_schedule/add', client_views.client_schedule_add, name='client-schedule-add'),
     path('client/<str:client_id>/client_schedule/list', client_views.client_schedule_list, name='client-schedule-list'),
+    path('client/<uuid:client_schedule_uid>/client_schedule/update', client_views.client_schedule_update, name='client-schedule-update'),
 
     path('client/followup/<str:id_client>', client_views.client_followup_list, name='client-followup-list'),
     path('client/followup/<str:id_client>/add', main_view.add_form, name='followup-form'),
