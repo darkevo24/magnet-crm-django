@@ -261,8 +261,9 @@ from django.views.decorators.csrf import csrf_exempt
 def get_subdivison(request):
 	if request.POST:
 		staff_level_id = request.POST['staff_level_id']
+		staff_level = Staff_Level.objects.filter(id=staff_level_id).first()
 		print('staff_level_id : ', staff_level_id)
-		staff_list = Staff.objects.filter(staff_level__id=staff_level_id, is_active=True).prefetch_related('profile')
+		staff_list = Staff.objects.filter(staff_level__level=( staff_level.level - 1), is_active=True).prefetch_related('profile')
 		staff_dict = {}
 		for staff in staff_list:
 			staff_uid = str(staff.id)
