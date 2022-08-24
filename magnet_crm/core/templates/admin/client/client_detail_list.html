@@ -1,0 +1,246 @@
+
+{% extends 'base/head.html' %}
+
+{% block content %}
+
+
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12">
+		
+	<div class="card-header">
+		<h5 class="card-title">Client Detail & Info</h5>
+	</div>
+
+	<div class="card-body">
+		
+		<div class="row">
+			<div class="col-6 ">
+				<h5>Client Info</h5>
+				<div class="card p-2" style="overflow: scroll;">
+					<p></p>
+					<p>Name : {{client.nama|default:"-"}}</p>
+					<p>Age : {{client.umur|default:"-"}}</p>
+					<p>Gender : {{client.gender|default:"-"}}</p>
+					<p>Job : {{client.pekerjaan|default:"-"}}</p>
+					<p>Domicile : {{client.domisili|default:"-"}}</p>
+					<p>Phone No : {{client.phone_no|default:"-"}}</p>
+					<p>Email : {{client.email|default:"-"}}</p>
+					<p>Registerd : {{client.is_registerd}}</p>
+					<p>Source : {{client.source|default:"-"}}</p>
+					
+				</div>
+			</div>
+			<div class="col-6 ">
+				<h5>History Journey</h5>	
+				<!-- Top aligned -->
+				<div class="card card-body border-top-teal">
+					<div class="list-feed">
+						{% for journey in history_journey %}
+						<div class="list-feed-item">
+							<div class="text-muted">{{journey.created_at}}</div>
+							{{journey.staff.profile.full_name}} - {{journal.journal_type}}
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+				<!-- /top aligned -->
+			</div>
+
+
+			
+
+		</div>
+
+		<div class="row" style="height: 200vh;">
+			
+			<div class="col-6 ">
+				<h5>History Followup</h5>
+					<div class="card p-2" style=";overflow: scroll">
+				
+						<table class="table" id="table_followup">
+						  <thead>
+						    <tr>
+						      <th scope="col">#</th>
+						      <th scope="col">Nama</th>
+						      <th scope="col">Status</th>
+						      <th scope="col">Staff</th>
+						      <th scope="col">Pesan</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						  	{% for followup in history_followup %}
+								<tr>
+							      <td scope="row">{{forloop.counter|default:'-'}}</td>
+							      <td scope="row">{{followup.client.nama|default:'-'}}</td>
+							      <td scope="row">{{followup.followup.followup_choices|default:'-'}}</td>
+							      <td scope="row">{{followup.staff.profile.full_name|default:'-'}}</td>
+							      <td scope="row">{{followup.answer|default:'-'}}</td>
+							    </tr>
+							    <tr>
+							      <td scope="row">{{forloop.counter|default:'-'}}</td>
+							      <td scope="row">{{followup.client.nama|default:'-'}}</td>
+							      <td scope="row">{{followup.followup.followup_choices|default:'-'}}</td>
+							      <td scope="row">{{followup.staff.profile.full_name|default:'-'}}</td>
+							      <td scope="row">{{followup.answer|default:'-'}}</td>
+							    </tr>
+							    <tr>
+							      <td scope="row">{{forloop.counter|default:'-'}}</td>
+							      <td scope="row">{{followup.client.nama|default:'-'}}</td>
+							      <td scope="row">{{followup.followup.followup_choices|default:'-'}}</td>
+							      <td scope="row">{{followup.staff.profile.full_name|default:'-'}}</td>
+							      <td scope="row">{{followup.answer|default:'-'}}</td>
+							    </tr>
+							    <tr>
+							      <td scope="row">{{forloop.counter|default:'-'}}</td>
+							      <td scope="row">{{followup.client.nama|default:'-'}}</td>
+							      <td scope="row">{{followup.followup.followup_choices|default:'-'}}</td>
+							      <td scope="row">{{followup.staff.profile.full_name|default:'-'}}</td>
+							      <td scope="row">{{followup.answer|default:'-'}}</td>
+							    </tr>
+							    <tr>
+							      <td scope="row">{{forloop.counter|default:'-'}}</td>
+							      <td scope="row">{{followup.client.nama|default:'-'}}</td>
+							      <td scope="row">{{followup.followup.followup_choices|default:'-'}}</td>
+							      <td scope="row">{{followup.staff.profile.full_name|default:'-'}}</td>
+							      <td scope="row">{{followup.answer|default:'-'}}</td>
+							    </tr>
+							    <tr>
+							      <td scope="row">{{forloop.counter|default:'-'}}</td>
+							      <td scope="row">{{followup.client.nama|default:'-'}}</td>
+							      <td scope="row">{{followup.followup.followup_choices|default:'-'}}</td>
+							      <td scope="row">{{followup.staff.profile.full_name|default:'-'}}</td>
+							      <td scope="row">{{followup.answer|default:'-'}}</td>
+							    </tr>
+							{% endfor %}
+						    
+						    
+						  </tbody>
+						</table>
+					</div>
+			</div>
+			
+			<div class="col-6 ">
+				<h5>History Schedule</h5>
+					<div class="card p-2" style=";overflow: scroll">
+				
+						<table class="table" id="table_schedule">
+						  <thead>
+						    <tr>
+						      <th scope="col">#</th>
+						      <th scope="col">Nama</th>
+						      <th scope="col">Jadwal</th>
+						      <th scope="col">Staff</th>
+						      <th scope="col">Tipe Jadwal</th>
+						      <th scope="col">Status</th>
+						      <th scope="col">Notes</th>
+						      <th scope="col">Answer</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						  	{% for followup in history_schedule %}
+								<tr>
+							      <td scope="row">{{forloop.counter}}</td>
+							      <td scope="row">{{followup.client.nama}}</td>
+							      <td scope="row">{{followup.schedule_date}}</td>
+							      <td scope="row">{{followup.staff.profile.full_name}}</td>
+							      <td scope="row">{{followup.schedule_type}}</td>
+							      <td scope="row">{{followup.status|default:"-"}}</td>
+							      <td scope="row">{{followup.notes|default:"-"}}</td>
+							      <td scope="row">{{followup.answer|default:"-"}}</td>
+							    </tr>
+							    <tr>
+							      <td scope="row">{{forloop.counter}}</td>
+							      <td scope="row">{{followup.client.nama}}</td>
+							      <td scope="row">{{followup.schedule_date}}</td>
+							      <td scope="row">{{followup.staff.profile.full_name}}</td>
+							      <td scope="row">{{followup.schedule_type}}</td>
+							      <td scope="row">{{followup.status|default:"-"}}</td>
+							      <td scope="row">{{followup.notes|default:"-"}}</td>
+							      <td scope="row">{{followup.answer|default:"-"}}</td>
+							    </tr>
+							    <tr>
+							      <td scope="row">{{forloop.counter}}</td>
+							      <td scope="row">{{followup.client.nama}}</td>
+							      <td scope="row">{{followup.schedule_date}}</td>
+							      <td scope="row">{{followup.staff.profile.full_name}}</td>
+							      <td scope="row">{{followup.schedule_type}}</td>
+							      <td scope="row">{{followup.status|default:"-"}}</td>
+							      <td scope="row">{{followup.notes|default:"-"}}</td>
+							      <td scope="row">{{followup.answer|default:"-"}}</td>
+							    </tr>
+							    <tr>
+							      <td scope="row">{{forloop.counter}}</td>
+							      <td scope="row">{{followup.client.nama}}</td>
+							      <td scope="row">{{followup.schedule_date}}</td>
+							      <td scope="row">{{followup.staff.profile.full_name}}</td>
+							      <td scope="row">{{followup.schedule_type}}</td>
+							      <td scope="row">{{followup.status|default:"-"}}</td>
+							      <td scope="row">{{followup.notes|default:"-"}}</td>
+							      <td scope="row">{{followup.answer|default:"-"}}</td>
+							    </tr>
+							    <tr>
+							      <td scope="row">{{forloop.counter}}</td>
+							      <td scope="row">{{followup.client.nama}}</td>
+							      <td scope="row">{{followup.schedule_date}}</td>
+							      <td scope="row">{{followup.staff.profile.full_name}}</td>
+							      <td scope="row">{{followup.schedule_type}}</td>
+							      <td scope="row">{{followup.status|default:"-"}}</td>
+							      <td scope="row">{{followup.notes|default:"-"}}</td>
+							      <td scope="row">{{followup.answer|default:"-"}}</td>
+							    </tr>
+							{% endfor %}
+						    
+						    
+						  </tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+	<!-- /typeahead -->
+</div>
+<script type="text/javascript">
+	$(function() {
+		$("#table_schedule").DataTable({
+        	dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+			language: {
+	            search: '<span>Filter:</span> _INPUT_',
+	            searchPlaceholder: 'Type to filter...',
+	            lengthMenu: '<span>Show:</span> _MENU_',
+	        },
+	        scrollX: true,
+	        // scrollY: '350px',
+	        scrollCollapse: true,
+	        fixedColumns: {
+	            leftColumns: 2,
+	            // rightColumns: 1
+	        }
+        });
+        
+		$(".table-row").click(function() {
+		 	var link = $(this).data('href');
+		 	window.location.href = link;
+		});
+
+	});
+	$("#table_followup").DataTable({
+		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+		language: {
+            search: '<span>Filter:</span> _INPUT_',
+            searchPlaceholder: 'Type to filter...',
+            lengthMenu: '<span>Show:</span> _MENU_',
+        },
+        scrollX: true,
+        // scrollY: '350px',
+        scrollCollapse: true,
+        fixedColumns: {
+            leftColumns: 2,
+            // rightColumns: 1
+        }
+    });
+</script>
+{% endblock content %}

@@ -100,6 +100,27 @@ def client_delete(request,id_client):
 	return redirect(reverse('client-list'))
 
 
+def detail_list(request,id_client):
+	template = 'admin/client/client_detail_list.html'
+	cur_staff = Staff.objects.filter(profile__user=request.user).first()
+	
+	client = Client.objects.filter(id=id_client).first()
+
+	history_followup = Client_Followup.objects.filter(client=client)
+	history_schedule = Client_Schedule.objects.filter(client=client)
+	history_journey = Client_Journey.objects.filter(client=client)
+
+	
+	context = {
+		'client': client,
+		'history_followup': history_followup,
+		'history_schedule': history_schedule,
+		'history_journey':history_journey,
+		# 'history_schedule': client,
+		'id_client':id_client,
+	}
+	return render(request,template,context=context)
+
 def client_followup_list(request,id_client):
 	template = 'admin/client/client_followup_list.html'
 	cur_staff = Staff.objects.filter(profile__user=request.user).first()
