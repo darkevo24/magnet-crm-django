@@ -12,10 +12,74 @@
 		</div>
 
 		<div class="card-body">
+            <div class="row">
+                <div class="col-3">
+                    <div class="row" style="line-height: 1">
+                        
+                        <div class="col" style="white-space: nowrap;">
+                            <div style="display: inline-block;">
+                                <h1 style="color:green;font-size: 2.5em;">1500</h1>    
+                            </div>
+                            
+                            <div style="display: inline-block;">
+                                <p class="mb-0"><b>Total Conversation</b></p>
+                                <p class="mb-0" style="font-size: 0.8em;color:silver">1200 call 300 done</p>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row" style="line-height: 1">
+                        
+                        <div class="col" style="white-space: nowrap;">
+                            <div style="display: inline-block;">
+                                <h1 style="color:green;font-size: 2.5em;">1500</h1>    
+                            </div>
+                            
+                            <div style="display: inline-block;">
+                                <p class="mb-0"><b>Total Conversation</b></p>
+                                <p class="mb-0" style="font-size: 0.8em;color:silver">1200 call 300 done</p>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row" style="line-height: 1">
+                        
+                        <div class="col" style="white-space: nowrap;">
+                            <div style="display: inline-block;">
+                                <h1 style="color:green;font-size: 2.5em;">1500</h1>    
+                            </div>
+                            
+                            <div style="display: inline-block;">
+                                <p class="mb-0"><b>Served Conversation</b></p>
+                                <p class="mb-0" style="font-size: 0.8em;color:silver">1200 call 300 done</p>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row" style="line-height: 1">
+                        
+                        <div class="col" style="white-space: nowrap;">
+                            <div style="display: inline-block;">
+                                <h1 style="color:red;font-size: 2.5em;">1500</h1>    
+                            </div>
+                            
+                            <div style="display: inline-block;">
+                                <p class="mb-0"><b>Missed Conversation</b></p>
+                                <p class="mb-0" style="font-size: 0.8em;color:silver">1200 call 300 done</p>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 			<div class="row">
 				<div class="col-12">
 					<ul class="nav nav-tabs nav-tabs-highlight">
                                 <!-- <li class="nav-item"><a href="#highlighted-justified-tab1" class="nav-link active" data-toggle="tab">General Information</a></li> -->
+
                                 <li class="nav-item"><a href="#highlighted-justified-tab2" class="nav-link active" data-toggle="tab">Clients</a></li>
                                 <li id="calendar-tab" class="nav-item"><a href="#highlighted-justified-tab3" class="nav-link" data-toggle="tab">Callendar</a></li>
                                 <!-- <li class="nav-item dropdown">
@@ -52,9 +116,11 @@
                                                    <div class="align-self-center ml-3">
                                                         <i class="fab fa-whatsapp mr-3 whatsapp-button" data-client_id="{{client.id}}" data-journey_type="whatsapp" style="font-size:1.8em"></i>
                                                         
-                                                        <i class="fas fa-phone mr-3 call-button" style="font-size: 1.8em" data-client_id="{{client.id}}" data-journey_type="called">
-                                                        </i>
+                                                        <!-- <i class="fas fa-phone mr-3 call-button" style="font-size: 1.8em" data-client_id="{{client.id}}" data-journey_type="called">
+                                                        </i> -->
                                                         
+                                                        <a class="list-icons-item clickable" data-popup="tooltip" title="Call" data-toggle="modal" data-trigger="hover" data-target="#call"><i class="fas fa-phone mr-3" style="font-size: 1.8em"></i></a>
+
                                                         <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="far fa-calendar-plus mr-3" style="font-size: 1.8em"></i></a>
                                                         <div class="list-icons">
                                                             <div class="dropdown">
@@ -97,6 +163,36 @@
 	</div>
 	<!-- /typeahead -->
 </div>
+<!-- Phone call modal -->
+                    <div id="call" class="modal fade">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-body text-center">
+                                    <div class="card-img-actions d-inline-block mb-3">
+                                        <script src="{% static 'limitless/global_assets/js/plugins/forms/inputs/duallistbox/duallistbox.min.js' %}"></script>
+                                        <img class="rounded-circle" src="{% static 'limitless/global_assets/images/placeholders/placeholder.jpg' %}" width="160" height="160" alt="">
+                                        <div class="card-img-actions-overlay card-img rounded-circle">
+                                            <a href="#" class="btn btn-outline-white border-2 btn-icon rounded-pill">
+                                                <i class="icon-question7"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <h6 class="font-weight-semibold mb-0">Nathan Jacobson</h6>
+                                        <span class="d-block text-muted">Lead UX designer</span>
+                                    </div>
+
+                                    <ul class="list-inline mb-0">
+                                        <li class="list-inline-item"><a href="#" class="btn btn-success btn-float rounded-pill"><i class="icon-phone2"></i></a></li>
+                                        <li class="list-inline-item"><a href="#" class="btn btn-danger btn-float rounded-pill" data-dismiss="modal"><i class="icon-phone-slash"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /phone call modal -->
+
 <script type="text/javascript">
 	$( document ).ready(function() {
     	console.log( "ready!" );
