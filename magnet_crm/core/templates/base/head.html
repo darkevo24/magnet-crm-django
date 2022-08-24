@@ -345,6 +345,14 @@
 								</span>
 							</a>
 						</li>
+						<li class="nav-item">
+							<a href="{% url 'client_transfer'%}" class="nav-link ">
+								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff-level.png' %}">
+								<span>
+									Client Transfer
+								</span>
+							</a>
+						</li>
 						{% if request.user.is_staff == True %}
 						<li class="nav-item">
 							<a href="{% url 'followup-list' %}" class="nav-link ">

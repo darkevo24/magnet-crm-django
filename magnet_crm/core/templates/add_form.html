@@ -33,6 +33,7 @@
 
 										<div class="mb-4">
 											<h6 class="font-weight-semibold">Followup choices</h6>
+											<div class="card p-2">
 											{% for x in first_choices %}
 												<div class="form-check">
 												  <input class="form-check-input" type="radio" name="radio_1" value="{{x.followup_choice_code}}" onChange="toggle_choice_radio({{x.followup_choice_code}},1)">
@@ -41,7 +42,7 @@
 												  </label>
 												</div>
 											{% endfor %}
-
+											</div>
 
 											<!-- <select onChange="toggle_choice(this.options[this.selectedIndex].value,1)" class="form-control">
 												{% for x in first_choices %}
@@ -190,14 +191,15 @@
 
 					// string ="<select class='form-control' onChange='toggle_choice(this.options[this.selectedIndex].value,"+(urutan+1)+")'>";
 					// string+="<option value=''  class='form-control' > Pilih Salah Satu</option>"
-					string = ""
+					string = '<div class="card p-2 mt-3">'
 					$.each(res.next_tree_choices, function( index, value ) {
 					  console.log( value.choice_id + ": " + value.choice_text );
 
 					  string+='<div class="form-check"><input class="form-check-input" type="radio" name="radio_'+counter_div+'" value="'+value.choice_id+'" onChange="toggle_choice_radio(\''+value.choice_id+'\','+(urutan+1)+')"><label class="form-check-label" >'+value.choice_text+'</label></div>';
 					  textbox_dict[value.choice_id] = value.choice_textfield
 					});
-					// string+="</select>";
+
+					string+="</div>";
 					
 					console.log(textbox_dict)
 					$("#append_div_"+urutan).find('input[name="text_notes"').remove()

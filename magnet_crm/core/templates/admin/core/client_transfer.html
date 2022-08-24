@@ -56,7 +56,7 @@
                     
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
             </form>
         </div>
     </div>
@@ -67,12 +67,20 @@
 
     var dict_changes = new Object();
     var dict_all_client= new Object();
+    var dict_all_staff= new Object();
     var dict_ever_ajax = [];
 
     //buat simpen data id client namanya siapa
     {% for client in all_client %}
         dict_all_client[{{client.id}}] = '{{client.nama}} | {% if client.is_registred %} Registered {% else %} Not Registered{% endif %} | {{client.phone_no|default:"-"}} | {{client.email|default:"-"}}';
     {% endfor %}
+
+    //buat simpen data uid staff namanya siapa
+    {% for staff in all_staff %}
+        dict_all_staff['{{staff.uid}}'] = '{{staff.profile.full_name}}';
+    {% endfor %}
+    console.log("dict_all_staff",dict_all_staff)
+
 
     function onchange_real_select(){
         console.log("onchange_real_select")
@@ -250,7 +258,7 @@
         $("#input_container").empty()
         
         $.each(dict_changes,function(index,value){ 
-            $("#input_container").append('<input name="staff_uid_'+index+'" value="'+value+'">')
+            $("#input_container").append('<input name="staff_uid_'+index+'" value="'+value+'" hidden>')
         });
 
          this.submit();
@@ -320,11 +328,11 @@
         $("#info_div").empty()
         $.each(dict_changes,function(index,value){ 
             console.log("ini dict_changes", index)
-            $("#info_div").append("<p> id staff: "+index + " ini value "+ value)
-            // $.each(value, function(index2, value2) {
-            //     // alert(index2 + " : " + value2);
-            //     $("#info_div").append("|| id client: "+value2+"</p><br>")
-            // }); 
+            $("#info_div").append("<br> Nama staff : <br>"+dict_all_staff[index]+ ", List Client :<br>")
+            $.each(value, function(index2, value2) {
+                // alert(index2 + " : " + value2);
+                $("#info_div").append(dict_all_client[value2].split("|")[0]+" | ")
+            }); 
 
         });
         
