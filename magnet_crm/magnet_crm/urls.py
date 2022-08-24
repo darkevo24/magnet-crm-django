@@ -47,6 +47,7 @@ urlpatterns = [
     path('client', client_views.client_list, name='client-list'),
     path('client/add', client_views.client_add, name='client-add'),
     path('client/<str:id_client>/edit', client_views.client_edit, name='client-edit'),
+    path('client/<str:id_client>/edit/color/<str:color_str>', client_views.client_edit_color, name='client-edit-color'),
     path('client/<str:id_client>/delete', client_views.client_delete, name='client-delete'),
 
     path('client/<str:client_id>/client_schedule/add', client_views.client_schedule_add, name='client-schedule-add'),

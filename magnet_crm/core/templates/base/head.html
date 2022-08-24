@@ -339,7 +339,7 @@
 							<a href="{% url 'dashboard' %}" class="nav-link ">
 								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-dashboard.png' %}">
 								<span>
-									Dashboard
+									Dashboard {{request.user.is_superuser}}
 								</span>
 							</a>
 						</li>

@@ -18,17 +18,61 @@
 			<div class="col-6 ">
 				<h5>Client Info</h5>
 				<div class="card p-2" style="overflow: scroll;">
-					<p></p>
-					<p>Name : {{client.nama|default:"-"}}</p>
-					<p>Age : {{client.umur|default:"-"}}</p>
-					<p>Gender : {{client.gender|default:"-"}}</p>
-					<p>Job : {{client.pekerjaan|default:"-"}}</p>
-					<p>Domicile : {{client.domisili|default:"-"}}</p>
-					<p>Phone No : {{client.phone_no|default:"-"}}</p>
-					<p>Email : {{client.email|default:"-"}}</p>
-					<p>Registerd : {{client.is_registerd}}</p>
-					<p>Source : {{client.source|default:"-"}}</p>
-					
+					<table>
+						<tbody>
+							<tr>
+								<td>Name</td>
+								<td>:</td>
+								<td>{{client.nama|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Age</td>
+								<td>:</td>
+								<td>{{client.umur|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Gender</td>
+								<td>:</td>
+								<td>{{client.gender|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Job</td>
+								<td>:</td>
+								<td>{{client.pekerjaan|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Domicile</td>
+								<td>:</td>
+								<td>{{client.domisili|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Phone No</td>
+								<td>:</td>
+								<td>{{client.phone_no|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Email</td>
+								<td>:</td>
+								<td>{{client.email|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Registerd</td>
+								<td>:</td>
+								<td>
+									{% if client.is_registered == True %}
+										<span class="badge badge-danger">Not Registered</span>
+									{% else %}
+										<span class="badge badge-success">Registered</span>
+									{% endif %}
+								</td>
+							</tr>
+							<tr>
+								<td>Source</td>
+								<td>:</td>
+								<td>{{client.source|default:"-"}}</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 			<div class="col-6 ">
@@ -38,8 +82,8 @@
 					<div class="list-feed">
 						{% for journey in history_journey %}
 						<div class="list-feed-item">
-							<div class="text-muted">{{journey.created_at}}</div>
-							{{journey.staff.profile.full_name}} - {{journal.journal_type}}
+							<div class="text-muted">{{journey.created_at|date:"d-m-Y H:i"}}</div>
+							{{journey.staff.profile.full_name|title}} - {{journey.journal_type|title|default:'-'}}
 						</div>
 						{% endfor %}
 					</div>

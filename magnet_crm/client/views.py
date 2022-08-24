@@ -21,12 +21,23 @@ from client.utils import *
 CLEANR = re.compile('<.*?>') 
 
 def client_list(request):
-	template = 'admin/client/client_list.html'
-	client_list = Client.objects.filter(is_active=True).order_by("created_at")
+	
+	if request.user.is_superuser == False:
+		template = 'admin/client/client_list.html'
+		staff = Staff.objects.filter(is_active=True, profile__user__id=request.user.id).first()
+
+		client_staff_list = Client_Staff.objects.filter(staff__id=staff.id, is_active=True).order_by('-created_at')
+		client_list = Client.objects.none()
+	else:
+		template = 'admin/client/admin_client_list.html'
+		client_list = Client.objects.filter(is_active=True).order_by("created_at")
+		client_staff_list = Client_Staff.objects.none()
 
 	# messages.success(request, 'Profile details updated.')
 	context = {
 		'client_list': client_list,
+		'client_staff_list': client_staff_list,
+
 	}
 	return render(request,template,context=context)
 
@@ -89,6 +100,26 @@ def client_edit(request,id_client):
 
 	}
 	return render(request,template,context=context)
+
+def client_edit_color(request,id_client, color_str):
+	template = 'admin/client/client_add.html'
+
+	try:
+		with transaction.atomic():
+			client = Client.objects.filter(id=id_client,is_active=True).first()
+			staff = Staff.objects.filter(profile__user__id=request.user.id).first()
+			client_staff = Client_Staff.objects.filter(client__id=id_client, staff=staff.id, is_active=True).first()
+			client_staff.color = color_str
+			client_staff.updated_by = request.user
+
+			client_staff.save()
+			print(client_staff.color, color_str)
+	
+	except IntegrityError as e:
+		print(e)
+
+	return redirect(reverse('client-list')) 
+
 
 def client_delete(request,id_client):
 	
@@ -198,6 +229,7 @@ def client_schedule_add(request, client_id):
 	return render(request,template,context=context)
 
 def client_schedule_update(request, client_schedule_uid):
+	
 	template = 'admin/client/client_schedule/update.html'
 	client_schedule = Client_Schedule.objects.filter(uid=client_schedule_uid).prefetch_related('client').first()
 	print(client_schedule)

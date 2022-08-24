@@ -2,6 +2,8 @@ from django.db import models
 from core.models import Base_Model, Profile
 from staff.models import Staff
 from followup.models import Followup
+from colorfield.fields import ColorField
+
 
 import uuid
 
@@ -56,6 +58,7 @@ class Client_Staff(Base_Model):
 		null=False,
 		on_delete=models.CASCADE,
 	)
+	color = models.CharField(default='ff0000', max_length=255)
 
 
 class Client_Followup(Base_Model):
