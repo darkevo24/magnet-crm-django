@@ -1,4 +1,5 @@
 {% load static %}
+{% load core_extras %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -359,34 +360,36 @@
 								</span>
 							</a>
 						</li>
-						{% if request.user.is_staff == True %}
-						<li class="nav-item">
-							<a href="{% url 'followup-list' %}" class="nav-link ">
-								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
-								<span>
-									Feedback List
-								</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="{% url 'staff-list' %}" class="nav-link ">
-								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff.png' %}">
-								<span>
-									Staff
-								</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="{% url 'staff-level-list'%}" class="nav-link ">
-								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff-level.png' %}">
-								<span>
-									Staff Level
-								</span>
-							</a>
-						</li>
-						{% endif %}
-						<!-- /page kits -->
-
+						
+						{% with privilage=request.user|full_menu %} 
+							{% if privilage %}
+								<li class="nav-item">
+									<a href="{% url 'followup-list' %}" class="nav-link ">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+										<span>
+											Feedback List
+										</span>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="{% url 'staff-list' %}" class="nav-link ">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff.png' %}">
+										<span>
+											Staff
+										</span>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="{% url 'staff-level-list'%}" class="nav-link ">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff-level.png' %}">
+										<span>
+											Staff Level
+										</span>
+									</a>
+								</li>
+							{% endif %}
+							<!-- /page kits -->
+						{% endwith %}
 					</ul>
 				</div>
 				<!-- /main navigation -->
