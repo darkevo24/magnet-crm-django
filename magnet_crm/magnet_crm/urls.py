@@ -40,8 +40,11 @@ urlpatterns = [
 
     # Admin Dashboard
     path('dashboard', main_view.dashboard, name='dashboard'),
+
     path('client_transfer', main_view.client_transfer, name='client_transfer'),
     path('client_transfer_staff_ajax', main_view.client_transfer_staff_ajax, name='client_transfer_staff_ajax'),
+
+    path('client_transfer_new', main_view.client_transfer_new, name='client_transfer_new'),
 
     # Client
     path('client', client_views.client_list, name='client-list'),
