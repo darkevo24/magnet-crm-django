@@ -4,7 +4,9 @@
 {% load static %}
 {% load core_extras %}
 <style type="text/css">
-    
+    #DataTables_Table_1{
+            width: 100% !important;
+    }
 </style>
 <script src="{% static 'limitless/global_assets/js/plugins/ui/fullcalendar/main.min.js' %}"></script>
 <div class="row">
@@ -32,8 +34,8 @@
 
                                 
                     <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-12">
+                        <div class="row mb-3" style="position: relative;">
+                            <div class="col-8">
                                 <h5>Staff List</h5>
                                 <select id="staff_selection" class="form-control select-search" data-fouc onchange="staff_change(this)">
                                     {% for staff in all_staff %}
@@ -41,7 +43,12 @@
                                     {% endfor %}  
                                 </select>
                             </div>
+                            <div class="col-4" style="position: absolute;bottom: 0;right: 0">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_theme_primary">Staff Clients <i class="icon-play3 ml-2"></i></button>
+                            </div>
                         </div>
+                        
+                                        
                         <!-- <div class="btn-group mr-lg-3 mb-3">
                             <button onclick="select_all()" type="button" class="btn btn-light text-success"><i class="fas fa-check-double fa-1x"></i><span class="d-none d-lg-inline-block ml-2">Select All </span></button>
                             <button onclick="deselect_all()" type="button" class="btn btn-light text-danger"><i class="fas fa-check-double fa-1x"></i><span class="d-none d-lg-inline-block ml-2">Deselect All </span></button>
@@ -67,6 +74,9 @@
                                     <th>id</th>
                                     <th>No</th>
                                     <th>First Name</th>
+                                    <th>Register Status</th>
+                                    <th>Phone No</th>
+                                    <th>E-mail</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -77,80 +87,12 @@
                                         <td>{{client.id}}</td>
                                         <td>{{forloop.counter}}</td>
                                         <td>{{client.nama}}</td>
+                                        <td>{{client.is_registred}}</td>
+                                        <td>{{client.phone_no}}</td>
+                                        <td>{{client.email}}</td>
                                         
                                     </tr>
                                 {% endfor %}  
-                                
-                                <!-- <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Jackelyn</td>
-                                </tr> -->
-                                <!-- <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Aura</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Nathalie</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Sharan</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Maxine</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Sylvia</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Lizzee</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Kennedy</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Chantal</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Delma</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Roland</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Coy</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Maxwell</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>id</td>
-                                    <td>Cicely</td>
-                                </tr> -->
                             </tbody>
                         </table>
 
@@ -171,6 +113,41 @@
     </div>
     <!-- /typeahead -->
 </div>
+<!-- Primary modal -->
+    <div id="modal_theme_primary" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h6 class="modal-title">Staff Client</h6>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <table class="table table-staff-client" >
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id='Staffinactivelist' value="checked" checked /></th>
+                                    <th>id</th>
+                                    <th>No</th>
+                                    <th>First Name</th>
+                                    <th>Register Status</th>
+                                    <th>Phone No</th>
+                                    <th>E-mail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-primary" data-dismiss="modal">Finish</button> -->
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /primary modal -->
+
 <script type="text/javascript">
 
         var dict_changes = new Object();
@@ -215,8 +192,18 @@
                     deselect_all()
                   }
              });
+            $('#Staffinactivelist').change(function () {
+                var checked = $(this).is(':checked'); 
+
+                  if (checked) {
+                    select_all(false)
+                  }
+                  else{
+                    deselect_all(false)
+                  }
+             });
             
-            $('.datatable-select-checkbox').on( 'select.dt', function ( e, dt, type, indexes ) {
+            $('.datatable-select-checkbox,.table-staff-client').on( 'select.dt', function ( e, dt, type, indexes ) {
                    var data = dt.rows(indexes).data();
                    
                     
@@ -233,7 +220,7 @@
 
                     // dict_changes
             } );
-            $('.datatable-select-checkbox').on( 'deselect.dt', function ( e, dt, type, indexes ) {
+            $('.datatable-select-checkbox,.table-staff-client').on( 'deselect.dt', function ( e, dt, type, indexes ) {
                    var data = dt.rows(indexes).data();
                     if (data.length==1){
                         remove_from_dict(data[0][1])
@@ -246,6 +233,7 @@
 
                     update_info();
             } );
+            ajax_staff_client()
         });
 
 
@@ -278,7 +266,7 @@
         function staff_change(e){
             // mainTable.row.add([null, '.2', '.3']).draw(false);
             // console.log(e.value)
-            
+            dict_changes = new Object();
             ajax_staff_client()
 
             // $("#bootstrap-duallistbox-selected-list_").find('option').remove()
@@ -302,12 +290,28 @@
                 },
                 success: function(res) {
                     // print(res)
+
                     console.log(res)
                     if (res.client_list.length != 0){
+
+                        
+                        secondaryTable.clear()
                         $.each(res.client_list, function( index, value ) {
+
+                            if (current_staff in dict_changes){
+                                dict_changes[current_staff].push(value.id)
+                            }
+                            else{
+                                dict_changes[current_staff] = []
+                                dict_changes[current_staff].push(value.id)
+                            }    
+                            dict_all_client[value.id] = value.name
+                            dict_all_staff[value.id] = value.name
                             // mainTable.row.add([counter + '.1', counter + '.2', counter + '.3']).draw(false);
-                            mainTable.row.add([null, value.id, value.name]).draw(false);
+                            secondaryTable.row.add([null, value.id,index+1, value.name, value.is_registred, value.phone_no, value.email]).draw(false);
                         });
+                        secondaryTable.rows().select();
+                        update_info();
                     }
 
                 }
@@ -318,6 +322,8 @@
         }
 
 
+        
+        
         // Checkbox selection
         var mainTable =  $('.datatable-select-checkbox').DataTable({
             dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
@@ -347,12 +353,22 @@
 
         console.log(mainTable);
 
-        function select_all(){
-
-            mainTable.rows().select();
+        function select_all(primary=true){
+            if(primary){
+                mainTable.rows().select();    
+            }
+            else{
+                secondaryTable.rows().select();
+            }
+            
         }
-        function deselect_all(){
-            mainTable.rows().deselect();
+        function deselect_all(primary=true){
+            if(primary){
+                mainTable.rows().deselect();    
+            }
+            else{
+                secondaryTable.rows().deselect();
+            }
         }
 
         function select_first_x(){
@@ -409,6 +425,39 @@
 
              this.submit();
         });
+
+</script>
+
+
+<script type="text/javascript">
+    
+    // Checkbox selection table-staff-client
+        var secondaryTable =  $('.table-staff-client').DataTable({
+            dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+            language: {
+                search: '<span>Filter:</span> _INPUT_',
+                searchPlaceholder: 'Type to filter...',
+                lengthMenu: '<span>Show:</span> _MENU_',
+            },
+            columnDefs: [
+                
+                {
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets: 0
+                },
+                { 'visible': false, 'targets': [1] }
+            ],
+            // select: {
+            //     style: 'os',
+            //     selector: 'td:first-child'
+            // },
+            select: {
+                style: 'multi'
+            },
+            order: [[2, 'asc']]
+        });
+
 
 </script>
 {% endblock content %}
