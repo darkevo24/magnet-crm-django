@@ -212,7 +212,7 @@ def client_transfer_new(request):
 								client_staff.created_by = request.user
 								client_staff.save()
 				
-				return redirect(reverse('client_transfer'))			
+				return redirect(reverse('client_transfer_new'))			
 
 						
 
