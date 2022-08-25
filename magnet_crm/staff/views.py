@@ -154,6 +154,58 @@ def staff_add(request):
 	}
 	return render(request,template,context=context)
 
+def staff_edit(request,uid_staff):
+
+	# user = authenticate(request, username='super@admin.com', password='123123')
+	# print('user', user)
+	# login(request, user)
+	# print('-->', request.user)
+
+	template = 'admin/staff/staff_add.html'
+
+	staff = Staff.objects.filter(uid=uid_staff).first()
+	profile_form = ProfileForm(request.POST or None,instance=staff.profile)
+
+	staff_form = StaffForm(request.POST or None,instance=staff)
+
+
+	if request.POST:
+		selected_staff_parent_id = request.POST.get('staff_parent_id', None)
+		staff_form.fields['staff_parent_id'].choices = [(selected_staff_parent_id, selected_staff_parent_id)]
+		try:
+			with transaction.atomic():
+
+				if profile_form.is_valid() and staff_form.is_valid():
+					profile_form.updated_by  = request.user
+					profile_form.updated_at  = timezone.now()
+					profile_form.save()
+
+					staff = staff_form.save(commit=False)
+					if (selected_staff_parent_id!=None):
+						select_staff_parent = Staff.objects.filter(id=selected_staff_parent_id).first()
+						print(select_staff_parent, '<---')
+						staff.staff_parent = select_staff_parent
+					staff.updated_by = request.user
+					staff.updated_at = timezone.now()
+					staff.save()
+
+					return redirect(reverse('staff-list'))
+				else:
+					print(profile_form.errors )
+					print(staff_form.errors)
+
+		except IntegrityError as e:
+			print(e)
+
+	context = {
+		'staff_form': staff_form,
+		'profile_form': profile_form,
+		'is_edit':True,
+		'staff':staff,
+
+	}
+	return render(request,template,context=context)
+
 def staff_level_add(request):
 
 	# user = authenticate(request, username='super@admin.com', password='123123')

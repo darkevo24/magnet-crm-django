@@ -13,7 +13,7 @@
     <!-- Typeahead -->
     <div class="card col-12">
         <div class="card-header">
-            <h5 class="card-title">Dashboard</h5>
+            <h5 class="card-title">Staff - Client </h5>
         </div>
 
         <div class="card-body">
@@ -28,9 +28,9 @@
                 <input type="number" id="last_row"> -->
                 <!-- Checkbox selection -->
                 <div class="card">
-                    <div class="card-header">
+                    <!-- <div class="card-header">
                         <h5 class="card-title">Checkbox selection</h5>
-                    </div>
+                    </div> -->
 
                                 
                     <div class="card-body">
@@ -311,8 +311,9 @@
                             secondaryTable.row.add([null, value.id,index+1, value.name, value.is_registred, value.phone_no, value.email]).draw(false);
                         });
                         secondaryTable.rows().select();
-                        update_info();
+                        
                     }
+                    update_info();
 
                 }
             });   

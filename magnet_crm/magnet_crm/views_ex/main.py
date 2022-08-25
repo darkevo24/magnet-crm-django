@@ -21,6 +21,10 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+def admin_logout(request):
+	logout(request)
+	return redirect(reverse('admin-login'))
+
 def admin_login(request):
 	template = 'admin/core/login.html'
 	form = LoginForm(request.POST or None)
@@ -82,12 +86,15 @@ def index(request):
 
 def dashboard(request):
 	template = 'admin/core/dashboard.html'
-	client_list = Client.objects.filter(is_active=True)
+	
 
 	staff = Staff.objects.filter(profile__user=request.user).first()
 	print("staff",staff)
 	client_staff_list = Client_Staff.objects.filter(staff=staff, is_active=True).prefetch_related('client')
 	client_ids = []
+
+	client_list = Client.objects.filter(is_active=True,id__in=client_staff_list.values_list('client__id',flat=True))
+
 	for client_staff in client_staff_list:
 		client_ids.append(client_staff.client.id)
 	client_schedule_list = Client_Schedule.objects.filter(client__id__in=client_ids, is_active=True).order_by('schedule_date')
@@ -98,8 +105,21 @@ def dashboard(request):
 		temp_dict['start'] = client_schedule.schedule_date.strftime("%Y-%m-%dT%H:%M:%S")
 		client_schedule_list_json.append(temp_dict)
 
+	if staff.staff_level.level < 1:
+		total_client = Client.objects.filter(is_active=True).order_by("nama")
+		client_list = Client.objects.filter(is_active=True)
+	else:
+		total_client = client_staff_list.count()
+	total_upcomming_followup = client_schedule_list.filter(schedule_date__gt=timezone.now()).count()
+	total_feedback = Client_Followup.objects.filter(staff=staff,is_active=True).count()
+	total_followup = Client_Journey.objects.filter(staff=staff,is_active=True).count()
 
 	context = {
+		'total_client':total_client,
+		'total_upcomming_followup':total_upcomming_followup,
+		'total_feedback':total_feedback,
+		'total_followup':total_followup,
+
 		'all_client' : client_list,
 		'client_schedule_list_json': json.dumps(client_schedule_list_json),
 	}
@@ -167,12 +187,18 @@ def client_transfer(request):
 
 def client_transfer_new(request):
 	template = 'admin/core/client_transfer_new.html'
-
-	all_selected_client = Client_Staff.objects.filter(is_active=True).values_list('client__id',flat=True)
+	cur_staff = Staff.objects.filter(profile__user=request.user,is_active=True).first()
+	all_selected_client = Client_Staff.objects.filter(is_active=True,staff__staff_level__level__gt=cur_staff.staff_level.level).values_list('client__id',flat=True)
 	print("ini yang udah selected",all_selected_client)
 
-	client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("nama")
-	staff_list = Staff.objects.filter(is_active=True,is_locked = False).order_by("profile__full_name")
+
+	if cur_staff.staff_level.level > 1:
+		cur_staff_client = Client_Staff.objects.filter(is_active=True,staff=cur_staff).values_list('client__id',flat=True)
+		client_list = Client.objects.filter(is_active=True,is_locked = False,id__in=cur_staff_client).exclude(id__in=all_selected_client).order_by("nama")
+		print("cur_staff_client",cur_staff_client)
+	else:
+		client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("nama")
+	staff_list = Staff.objects.filter(is_active=True,is_locked=False,staff_level__level=cur_staff.staff_level.level+1).exclude(id=cur_staff.id).order_by("profile__full_name")
 
 	if request.POST:
 		try:

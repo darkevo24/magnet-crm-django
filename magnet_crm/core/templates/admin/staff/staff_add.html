@@ -53,7 +53,8 @@
 <script type="text/javascript">
 	$( document ).ready(function() {
     	console.log( "ready!" );
-    	
+    		
+    	var edit_first_load = 0;
     	var data = {
 		    id: 1,
 		    text: 'Barn owl'
@@ -92,11 +93,26 @@
 				    	console.log(123);
 				    });
 				    
+				    if ('True' == '{{is_edit}}' && edit_first_load == 0){
+				    	edit_first_load = 1
+				    	// $('#id_staff_level').change()
+				    	console.log({{staff.staff_parent.id}},"ini parent id")
+			    		$('#id_staff_parent_id').val("{{staff.staff_parent.id}}").trigger("change");
+			    		// $('#id_staff_parent_id').val(null).trigger('change');
+			    		// $('#id_staff_parent').change()
+			    	}
 	            	
 	            }
 	        });
 
 	    });
+
+	    if ('True' == '{{is_edit}}'){
+
+	    	$('#id_staff_level').change()
+	    	// console.log({{staff.staff_parent.id}},"ini parent id")
+    		// $('#id_staff_parent').val({{staff.staff_parent.id}})
+    	}
 	});
 
 	

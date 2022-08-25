@@ -27,6 +27,7 @@ from django.conf import settings
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', main_view.admin_login, name='admin-login'),
+    path('logout/', main_view.admin_logout, name='admin-logout'),
 
     # Core
     path('followup_list', main_view.index, name='followup-list'),
@@ -69,6 +70,7 @@ urlpatterns = [
     # Staff
     path('staff', staff_views.staff_list, name='staff-list'),
     path('staff/add', staff_views.staff_add, name='staff-add'),
+    path('staff/<str:uid_staff>/edit', staff_views.staff_edit, name='staff-edit'),
     path('staff/detail/<uuid:staff_uid>', staff_views.staff_detail, name='staff-detail'),
     path('staff/delete/<uuid:staff_uid>', staff_views.staff_delete, name='staff-delete'),
     

@@ -84,83 +84,16 @@
 			<!-- <span class="badge badge-success my-3 my-lg-0 ml-lg-3">Online</span> -->
 
 			<ul class="navbar-nav ml-lg-auto">
-				<li class="nav-item dropdown">
-					<a href="#" class="navbar-nav-link" data-toggle="dropdown">
-						<i class="icon-people"></i>
-						<span class="d-lg-none ml-3">Messages</span>
-					</a>
+				<li class="nav-item nav-item-dropdown-lg dropdown dropdown-user h-100">
+				<a href="#" class="navbar-nav-link navbar-nav-link-toggler dropdown-toggle d-inline-flex align-items-center h-100" data-toggle="dropdown">
 					
-					<div class="dropdown-menu dropdown-menu-right dropdown-content wmin-lg-300">
-						<div class="dropdown-content-header">
-							<span class="font-weight-semibold">Users online</span>
-							<a href="#" class="text-body"><i class="icon-search4 font-size-base"></i></a>
-						</div>
+					<span class="d-none d-lg-inline-block">More</span>
+				</a>
 
-						<div class="dropdown-content-body dropdown-scrollable">
-							<ul class="media-list">
-								<li class="media">
-									<div class="mr-3">
-										<img src="{% static 'limitless/global_assets/images/placeholders/placeholder.jpg" width="36" height="36" class="rounded-circle" alt="">
-									</div>
-									<div class="media-body">
-										<a href="#" class="media-title font-weight-semibold">Jordana Ansley</a>
-										<span class="d-block text-muted font-size-sm">Lead web developer</span>
-									</div>
-									<div class="ml-3 align-self-center"><span class="badge badge-mark border-success"></span></div>
-								</li>
-
-								<li class="media">
-									<div class="mr-3">
-										<img src="{% static 'limitless/global_assets/images/placeholders/placeholder.jpg" width="36" height="36" class="rounded-circle" alt="">
-									</div>
-									<div class="media-body">
-										<a href="#" class="media-title font-weight-semibold">Will Brason</a>
-										<span class="d-block text-muted font-size-sm">Marketing manager</span>
-									</div>
-									<div class="ml-3 align-self-center"><span class="badge badge-mark border-danger"></span></div>
-								</li>
-
-								<li class="media">
-									<div class="mr-3">
-										<img src="{% static 'limitless/global_assets/images/placeholders/placeholder.jpg" width="36" height="36" class="rounded-circle" alt="">
-									</div>
-									<div class="media-body">
-										<a href="#" class="media-title font-weight-semibold">Hanna Walden</a>
-										<span class="d-block text-muted font-size-sm">Project manager</span>
-									</div>
-									<div class="ml-3 align-self-center"><span class="badge badge-mark border-success"></span></div>
-								</li>
-
-								<li class="media">
-									<div class="mr-3">
-										<img src="{% static 'limitless/global_assets/images/placeholders/placeholder.jpg" width="36" height="36" class="rounded-circle" alt="">
-									</div>
-									<div class="media-body">
-										<a href="#" class="media-title font-weight-semibold">Dori Laperriere</a>
-										<span class="d-block text-muted font-size-sm">Business developer</span>
-									</div>
-									<div class="ml-3 align-self-center"><span class="badge badge-mark border-warning"></span></div>
-								</li>
-
-								<li class="media">
-									<div class="mr-3">
-										<img src="{% static 'limitless/global_assets/images/placeholders/placeholder.jpg" width="36" height="36" class="rounded-circle" alt="">
-									</div>
-									<div class="media-body">
-										<a href="#" class="media-title font-weight-semibold">Vanessa Aurelius</a>
-										<span class="d-block text-muted font-size-sm">UX expert</span>
-									</div>
-									<div class="ml-3 align-self-center"><span class="badge badge-mark border-secondary"></span></div>
-								</li>
-							</ul>
-						</div>
-
-						<div class="dropdown-content-footer bg-light">
-							<a href="#" class="text-body mr-auto">All users</a>
-							<a href="#" class="text-body"><i class="icon-gear"></i></a>
-						</div>
-					</div>
-				</li>
+				<div class="dropdown-menu dropdown-menu-right">
+					<a href="{% url 'admin-logout' %}" class="dropdown-item"><i class="icon-switch2"></i> Logout</a>
+				</div>
+			</li>
 			</ul>
 		</div>
 
@@ -340,7 +273,7 @@
 							<a href="{% url 'dashboard' %}" class="nav-link ">
 								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-dashboard.png' %}">
 								<span>
-									Dashboard {{request.user.is_superuser}}
+									Dashboard
 								</span>
 							</a>
 						</li>
@@ -353,17 +286,18 @@
 								</span>
 							</a>
 						</li>
-						<li class="nav-item">
-							<a href="{% url 'client_transfer'%}" class="nav-link ">
-								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff-level.png' %}">
-								<span>
-									Client Transfer
-								</span>
-							</a>
-						</li>
+						
 						
 						{% with privilage=request.user|full_menu %} 
 							{% if privilage %}
+								<li class="nav-item">
+									<a href="{% url 'client_transfer_new'%}" class="nav-link ">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff-level.png' %}">
+										<span>
+											Client Transfer
+										</span>
+									</a>
+								</li>
 								<li class="nav-item">
 									<a href="{% url 'followup-list' %}" class="nav-link ">
 										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
