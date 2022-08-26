@@ -13,6 +13,12 @@ import json
 from django.utils import timezone
 from django.db import IntegrityError, transaction
 
+
+def notif_check(request):
+	print("masuk sini")
+	return {'notification_context_list': "ini isi notif context"}
+	# return JsonResponse(response)
+
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
