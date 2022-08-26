@@ -15,8 +15,11 @@ def add_class(field, css):
 
 @register.filter(name='full_menu')
 def full_menu(user):
-   staff_level = Staff.objects.filter(profile__user=user).first().staff_level.level
-   return staff_level < 3
+	if user.is_superuser == True:
+		return True
+
+	staff_level = Staff.objects.filter(profile__user=user).first().staff_level.level
+	return staff_level < 3
 
 
 @register.filter(name='dict_get')

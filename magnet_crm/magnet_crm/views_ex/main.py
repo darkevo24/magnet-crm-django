@@ -105,11 +105,19 @@ def dashboard(request):
 		temp_dict['start'] = client_schedule.schedule_date.strftime("%Y-%m-%dT%H:%M:%S")
 		client_schedule_list_json.append(temp_dict)
 
-	if staff.staff_level.level < 1:
-		total_client = Client.objects.filter(is_active=True).order_by("nama")
+	get_all_user = False
+	if request.user.is_superuser == True:
+		get_all_user = True
+	elif staff.staff_level.level < 1:
+		get_all_user = True
+	
+
+	if get_all_user == True	:
+		total_client = Client.objects.filter(is_active=True).order_by("nama").count()
 		client_list = Client.objects.filter(is_active=True)
 	else:
 		total_client = client_staff_list.count()
+
 	total_upcomming_followup = client_schedule_list.filter(schedule_date__gt=timezone.now()).count()
 	total_feedback = Client_Followup.objects.filter(staff=staff,is_active=True).count()
 	total_followup = Client_Journey.objects.filter(staff=staff,is_active=True).count()

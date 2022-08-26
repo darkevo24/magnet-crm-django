@@ -34,6 +34,21 @@ class Staff(Base_Model):
 	def __str__(self):
 		return self.profile.full_name
 
+class Staff_Notification(Base_Model):
+	staff = models.ForeignKey(
+		Staff,
+		blank=False,
+		null=False,
+		on_delete=models.CASCADE,
+	)
+	NOTIFICATION_CHOICES = (
+		('notification_followup','Notification Followup'),
+		('birthday','Birthday'),
+	)
+
+	notification_type = models.CharField(choices=NOTIFICATION_CHOICES, max_length=255)
+	notes = models.TextField(default='')
+
 class Staff_History(Base_Model):
 	parent_staff = models.ForeignKey(
 		Staff,

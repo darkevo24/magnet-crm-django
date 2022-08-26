@@ -103,6 +103,7 @@ class Client_Schedule(Base_Model):
 		('whatsapp', 'Whatsapp'), 
 		('phone', 'Phone'), 
 		('email', 'Email'), 
+		('offfline_meeting', 'Offline Meeting'), 
 		('other', 'Others'), 
 	]
 	schedule_type = models.CharField(default='whatsapp', max_length=255, choices =SCHEDULE_TYPE )
@@ -142,5 +143,28 @@ class Client_Journey(Base_Model):
 	
 	def __str__(self):
 		return self.client.nama + ' ' + self.journal_type + ' at ' + self.created_at
+
+class Client_Staff_Request:
+	client = models.ForeignKey(
+		Client,
+		blank=False,
+		null=False,
+		on_delete=models.CASCADE,
+	)
+	staff = models.ForeignKey(
+		Staff,
+		blank=False,
+		null=False,
+		on_delete=models.CASCADE,
+	)
+	REQUEST_STATUS = [
+		('accpeted', 'Accpeted'), 
+		('pending', 'Pending'), 
+		('declined', 'Declined'), 
+	]
+	
+	request_status = models.CharField(max_length=255, choices=REQUEST_STATUS)
+	admin_notes = models.TextField(default='')
+	staff_notes = models.TextField(default='')
 
 	

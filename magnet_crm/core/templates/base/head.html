@@ -288,7 +288,7 @@
 						</li>
 						
 						
-						{% with privilage=request.user|full_menu %} 
+						{% with request.user|full_menu as privilage %} 
 							{% if privilage %}
 								<li class="nav-item">
 									<a href="{% url 'client_transfer_new'%}" class="nav-link ">
