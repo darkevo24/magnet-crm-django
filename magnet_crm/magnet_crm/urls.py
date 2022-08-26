@@ -21,7 +21,7 @@ from magnet_crm.views_ex import (
 )
 from staff import views as staff_views
 from client import views as client_views
-
+from notifications import views as notification_views
 from django.conf.urls.static import static
 from django.conf import settings
 urlpatterns = [
@@ -86,6 +86,7 @@ urlpatterns = [
 
 
     path('ajax-magnet/get_subdivison', staff_views.get_subdivison, name='ajax-get-subdivison'),
+    path('ajax-notification/get_notification', notification_views.get_notifications, name='ajax-get-subdivison'),
 
 
     

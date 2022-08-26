@@ -17,7 +17,7 @@ from staff.models import *
 from client.models import *
 from django.utils import timezone
 
-def get_staff_notification(request, staff=None):
+def get_notifications(request, staff=None):
 	notifications = Notification.objects.filter(is_active=True, staff__profile__user__id=request.user.id).prefetch_related('client_schedule__client').order_by('-crated_at')[:10]
 	notification_list = []
 	for notification in notifications:
