@@ -64,5 +64,12 @@ class Staff_History(Base_Model):
 		null=False,
 		on_delete=models.CASCADE,
 	)
+	staff_level = models.ForeignKey(
+		Staff_Level,
+		related_name="Staff_History_Staff_Level",
+		blank=True,
+		null=True,
+		on_delete=models.CASCADE,
+	)
 
 
