@@ -48,6 +48,7 @@ class Staff_Notification(Base_Model):
 
 	notification_type = models.CharField(choices=NOTIFICATION_CHOICES, max_length=255)
 	notes = models.TextField(default='')
+	is_opened = models.BooleanField(default=True)
 
 class Staff_History(Base_Model):
 	parent_staff = models.ForeignKey(
