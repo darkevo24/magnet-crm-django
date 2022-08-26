@@ -31,3 +31,20 @@ def create_client_journal(request, staff=None, client=None, journal_type=None):
 		print(e)
 
 	return False
+
+def create_client_notification(request, staff=None, client=None, journal_type=None):
+	try:
+		with transaction.atomic():
+			client_notification = Client_Notification()
+			client_journal.created_by = client_journal.updated_by = request.user
+			client_journal.staff = staff
+			client_journal.client = client
+			client_journal.journal_type = journal_type
+			client_journal.save()
+
+			return True
+
+	except IntegrityError as e:
+		print(e)
+
+	return False
