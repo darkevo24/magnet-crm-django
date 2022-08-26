@@ -13,7 +13,7 @@ class ClientForm(ModelForm):
 			'gender',
 			'pekerjaan',
 			'domisili',
-			'source',
+			# 'source',
 		]
 
 

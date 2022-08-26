@@ -30,15 +30,37 @@ class Client(Base_Model):
 	email = models.EmailField(null=True, blank=True)
 
 	SOURCE_STR = [
-		('0', 'Google'), 
-		('1', 'Facebook'), 
-		('2', 'External'), 
-		('3', 'Private Data'), 
+		('0', 'Fresh Data'), 
+		('1', 'Rolling Data'),
 	]
+
+	SOURCE_DETAIL_1_STR = [
+		('0', 'Leads Ads'), 
+		('1', 'Organic'),
+		('2', 'Pribadi Marketing'),
+		('3', 'IB'),
+
+		('4', 'Rolling Data Regis '),
+		('5', 'Rolling Data Inactive Client'),
+	]
+
+
+	SOURCE_DETAIL_2_STR = [
+		('0', 'Adwords'), 
+		('1', 'Facbook'),
+
+		('2', 'Social Media'),
+		('3', 'Email'),
+		('4', 'Google'),
+
+	]
+
 	
 	is_registred = models.BooleanField(default=False)
 	is_locked = models.BooleanField(default=False)
 	source = models.CharField(max_length=255, choices=SOURCE_STR, default='0')
+	source_detail_1 = models.CharField(max_length=255, choices=SOURCE_DETAIL_1_STR, default='3')
+	source_detail_2 = models.CharField(max_length=255, choices=SOURCE_DETAIL_2_STR, null=True,blank=True)
 	
 	def __str__(self):
 		return self.nama
