@@ -389,10 +389,10 @@
             $.each(dict_changes,function(index,value){ 
                 console.log("ini dict_changes", index)
 
-                $("#info_div").append("<br> Nama staff : <br>"+dict_all_staff[index]+ ", List Client :<br>")
+                $("#info_div").append("<br> Nama staff : <br>"+dict_all_staff[index]+ "<br>List Client :<br>")
                 
 
-
+                var temp_c = 1
                 $.each(value, function(index2, value2) {
                     // alert(index2 + " : " + value2);
                     // var indexes = mainTable
@@ -409,7 +409,8 @@
                     // console.log(mainTable.columns(1).search(value2).row().index())
                     // var data = mainTable.rows( indexes ).data().toArray();
                       
-                    $("#info_div").append(dict_all_client[value2]+",");
+                    $("#info_div").append(String(temp_c)+". "+dict_all_client[value2]+"<br>");
+                    temp_c++;
                 }); 
 
             });
