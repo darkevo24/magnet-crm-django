@@ -7,6 +7,19 @@
 	.btn-outline-primary{
 		width: 100%
 	}
+
+	{% for x in first_choices %}
+		.btn-outline-primary.background-{{x.id}}{
+			color:{{x.font_color}};
+			background-color: {{x.color}};
+			border-color: {{x.color}};
+		}
+		.btn-outline-primary.background-{{x.id}}.active{
+			background-color:{{x.font_color}}!important;
+			border-color: {{x.color}}!important;
+			color: {{x.color}} !important;
+		}
+	{% endfor %}
 </style>
 <div class="row">
 	<!-- Typeahead -->
@@ -44,7 +57,7 @@
 												<div class="row text-center" id="append_div_1">
 													{% for x in first_choices %}
 													<div class="col-3"> 
-														 <button type="button" class="btn btn-outline-primary" onclick="button_click('radio_1','{{x.followup_choice_code}}',this,'1')">{{x.followup_choices}}</button>
+														 <button type="button"  class="btn btn-outline-primary background-{{x.id}}" onclick="button_click('radio_1','{{x.followup_choice_code}}',this,'1')">{{x.followup_choices}}</button>
 													</div>
 													{% endfor %}
 												</div>
@@ -238,8 +251,14 @@
 						  console.log( value.choice_id + ": " + value.choice_text );
 
 						  string+='<div class="col-3">'
-						string+='<button type="button" class="btn btn-outline-primary mr-3" onclick="button_click(\'radio_'+counter_div+'\',\''+value.choice_id+'\',this,'+counter_div+')">'+value.choice_text+'</button>'
+						string+='<button type="button" class="btn btn-outline-primary background-'+value.id+' mr-3" onclick="button_click(\'radio_'+counter_div+'\',\''+value.choice_id+'\',this,'+counter_div+')">'+value.choice_text+'</button>'
 						string+='</div>'
+
+						$('<style>.btn-outline-primary.background-'+value.id+' { color:'+value.font_color+';background-color: '+value.color+'!important;border-color: '+value.color+'!important; }</style>').appendTo('body');
+
+						$('<style>.btn-outline-primary.background-'+value.id+'.active { background-color:'+value.font_color+'!important;border-color: '+value.color+'!important;color: '+value.color+' !important; }</style>').appendTo('body');
+
+						
 
 
 						});

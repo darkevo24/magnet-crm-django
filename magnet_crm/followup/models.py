@@ -7,6 +7,8 @@ class Followup(Base_Model):
 	followup_choice_code = models.TextField(default='')
 	followup_choice_head = models.TextField(default='')
 	followup_textfield = models.BooleanField(default=False)
+	color = models.CharField(default='#0c83e2', max_length=255)
+	font_color = models.CharField(default='#FFFFFF', max_length=255)
 	def __str__(self):
 		return self.followup_choices
 

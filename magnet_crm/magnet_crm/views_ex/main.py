@@ -299,6 +299,7 @@ def add_tree(request):
 		print("tree level sekarang", tree_level!= "")
 		print("tree level sekarang", tree_level!= None)
 		print("tree level sekarang", tree_level)
+
 		if tree_level == "" or tree_level == None:
 			instances = tree_form.save(commit=False)
 			instances.created_by = request.user
@@ -316,6 +317,12 @@ def add_tree(request):
 			instances.followup_choice_head = str(tree_level)
 			instances.save()
 		
+		color = request.POST['color']
+		font_color = request.POST['font_color']
+		if color is not None and color is not "":
+			instances.color = color
+			instances.font_color = font_color
+			instances.save()
 	
 		return redirect(reverse('followup-list'))
 
@@ -332,7 +339,12 @@ def edit_tree(request,tree_id):
 	tree_form = TreeForm(request.POST or None,instance=tree)
 
 	if tree_form.is_valid():
+		
 		instances = tree_form.save(commit=False)
+		color = request.POST['color']
+		font_color = request.POST['font_color']
+		instances.color = color
+		instances.font_color = font_color
 		instances.updated_by = request.user
 		instances.updated_at = timezone.now()
 		instances.save()
@@ -418,7 +430,7 @@ def ajax_form(request):
 		
 	arr_tree = []
 	for x in next_tree:
-		arr_tree.append({"choice_text":x.followup_choices,"choice_id":x.followup_choice_code,"choice_textfield":x.followup_textfield})
+		arr_tree.append({'id':x.id,"choice_text":x.followup_choices,"choice_id":x.followup_choice_code,"choice_textfield":x.followup_textfield,'color':x.color,'font_color':x.font_color})
 
 
 	

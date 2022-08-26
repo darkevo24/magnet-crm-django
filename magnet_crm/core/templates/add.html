@@ -19,8 +19,16 @@
 							<h6 class="font-weight-semibold">Followup choices</h6>
 							{{tree_form.followup_choices | add_class:"form-control"}}
 						</div>
-						<button type="submit" class="btn btn-primary">Submit</button>
-							
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Button Color</h6>
+							<input type="color" value="#0c83e2" class="form-control"  name="color" id="color">
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Text Color</h6>
+							<input type="color" value="#ffffff" class="form-control"  name="font_color" id="font-color">
+						</div>
+						
+						<button type="submit" class="btn btn-primary">Submit</button>	
 					</form>
 					
 				</div>
@@ -30,4 +38,6 @@
 	</div>
 	<!-- /typeahead -->
 </div>
+
+
 {% endblock content %}
