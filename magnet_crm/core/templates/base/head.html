@@ -92,16 +92,125 @@
 			<!-- <span class="badge badge-success my-3 my-lg-0 ml-lg-3">Online</span> -->
 
 			<ul class="navbar-nav ml-lg-auto">
-				<li class="nav-item nav-item-dropdown-lg dropdown dropdown-user h-100">
-				<a href="#" class="navbar-nav-link navbar-nav-link-toggler dropdown-toggle d-inline-flex align-items-center h-100" data-toggle="dropdown">
+				<li class="nav-item nav-item-dropdown-lg dropdown">
+					<a href="#" class="navbar-nav-link navbar-nav-link-toggler" data-toggle="dropdown" aria-expanded="false">
+						<i class="icon-bell3"></i>
+						<span class="badge badge-mark border-pink"></span>
+					</a>
 					
-					<span class="d-none d-lg-inline-block">More</span>
-				</a>
+					<div class="dropdown-menu dropdown-menu-right dropdown-content wmin-lg-350">
+						<div class="dropdown-content-header">
+							<h6 class="font-weight-semibold mb-0">Notifications</h6>
+							<!-- <a href="#" class="text-body"><i class="icon-compose"></i></a> -->
+						</div>
 
-				<div class="dropdown-menu dropdown-menu-right">
-					<a href="{% url 'admin-logout' %}" class="dropdown-item"><i class="icon-switch2"></i> Logout</a>
-				</div>
-			</li>
+						<div class="dropdown-content-body dropdown-scrollable">
+							<ul class="media-list">
+								<li class="media">
+									<div class="mr-3 position-relative">
+										<img src="../../../../global_assets/images/placeholders/placeholder.jpg" width="36" height="36" class="rounded-circle" alt="">
+									</div>
+
+									<div class="media-body">
+										<div class="media-title">
+											<a href="#">
+												<span class="font-weight-semibold">Schedule</span>
+												<span class="text-muted float-right font-size-sm">04:58</span>
+											</a>
+										</div>
+
+										<span class="text-muted">who knows, maybe that would be the best thing for me...</span>
+									</div>
+								</li>
+
+								<li class="media">
+									<div class="mr-3 position-relative">
+										<img src="../../../../global_assets/images/placeholders/placeholder.jpg" width="36" height="36" class="rounded-circle" alt="">
+									</div>
+
+									<div class="media-body">
+										<div class="media-title">
+											<a href="#">
+												<span class="font-weight-semibold">New Client</span>
+												<span class="text-muted float-right font-size-sm">12:16</span>
+											</a>
+										</div>
+
+										<span class="text-muted">That was something he was unable to do because...</span>
+									</div>
+								</li>
+
+								<li class="media">
+									<div class="mr-3">
+										<img src="../../../../global_assets/images/placeholders/placeholder.jpg" width="36" height="36" class="rounded-circle" alt="">
+									</div>
+									<div class="media-body">
+										<div class="media-title">
+											<a href="#">
+												<span class="font-weight-semibold">Jeremy Victorino</span>
+												<span class="text-muted float-right font-size-sm">22:48</span>
+											</a>
+										</div>
+
+										<span class="text-muted">But that would be extremely strained and suspicious...</span>
+									</div>
+								</li>
+
+								<li class="media">
+									<div class="mr-3">
+										<img src="../../../../global_assets/images/placeholders/placeholder.jpg" width="36" height="36" class="rounded-circle" alt="">
+									</div>
+									<div class="media-body">
+										<div class="media-title">
+											<a href="#">
+												<span class="font-weight-semibold">Beatrix Diaz</span>
+												<span class="text-muted float-right font-size-sm">Tue</span>
+											</a>
+										</div>
+
+										<span class="text-muted">What a strenuous career it is that I've chosen...</span>
+									</div>
+								</li>
+
+								<li class="media">
+									<div class="mr-3">
+										<img src="../../../../global_assets/images/placeholders/placeholder.jpg" width="36" height="36" class="rounded-circle" alt="">
+									</div>
+									<div class="media-body">
+										<div class="media-title">
+											<a href="#">
+												<span class="font-weight-semibold">Richard Vango</span>
+												<span class="text-muted float-right font-size-sm">Mon</span>
+											</a>
+										</div>
+										
+										<span class="text-muted">Other travelling salesmen live a life of luxury...</span>
+									</div>
+								</li>
+							</ul>
+						</div>
+
+						<div class="dropdown-content-footer bg-light">
+							<a href="#" class="text-body mr-auto">All messages</a>
+							<div>
+								<a href="#" class="text-body" data-popup="tooltip" title="" data-original-title="Mark all as read"><i class="icon-radio-unchecked"></i></a>
+								<a href="#" class="text-body ml-2" data-popup="tooltip" title="" data-original-title="Settings"><i class="icon-cog3"></i></a>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="nav-item nav-item-dropdown-lg dropdown dropdown-user h-100">
+
+					<a href="#" class="navbar-nav-link navbar-nav-link-toggler dropdown-toggle d-inline-flex align-items-center h-100" data-toggle="dropdown">
+						
+						<span class="d-none d-lg-inline-block">More</span>
+					</a>
+
+					<div class="dropdown-menu dropdown-menu-right">
+						<a href="{% url 'admin-logout' %}" class="dropdown-item"><i class="icon-switch2"></i> Logout</a>
+					</div>
+				</li>
+
 			</ul>
 		</div>
 
@@ -355,6 +464,7 @@
 						<div class="page-title d-flex">
 							<h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Home</span> - Dashboard</h4>
 							<a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+
 						</div>
 
 					</div>
@@ -366,7 +476,7 @@
 								<span class="breadcrumb-item active">Dashboard</span>
 							</div>
 
-							<a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+							<!-- <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a> -->
 						</div>
 
 						

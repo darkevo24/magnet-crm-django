@@ -31,3 +31,17 @@ def create_staff_notification(request, staff=None, data=None):
 		print(e)
 
 	return False
+
+def get_staff_notification(request, staff=None):
+	staff_notifications = Staff_Notification.objects.filter(is_active=True, staff__profile__user__id=request.user.id).order_by('-crated_at')[:10]
+	staff_notification_list = []
+	for staff_notification in staff_notifications:
+		temp = {}
+		temp['notification_id'] = staff_notification.id
+		temp['type'] = staff_notification.notification_type
+		temp['client_id'] = ''
+		temp['client_name'] = ''
+		temp[']
+		append(temp)
+
+

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'core',
     'staff',
     'client',
+    'notification',
 ]
 
 MIDDLEWARE = [
