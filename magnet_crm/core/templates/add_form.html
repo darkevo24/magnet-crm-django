@@ -9,12 +9,12 @@
 	}
 
 	{% for x in first_choices %}
-		.btn-outline-primary.background-{{x.id}}{
-			color:{{x.font_color}};
-			background-color: {{x.color}};
-			border-color: {{x.color}};
-		}
 		.btn-outline-primary.background-{{x.id}}.active{
+			color:{{x.font_color}}!important;
+			background-color: {{x.color}}!important;
+			border-color: {{x.color}}!important;
+		}
+		.btn-outline-primary.background-{{x.id}}{
 			background-color:{{x.font_color}}!important;
 			border-color: {{x.color}}!important;
 			color: {{x.color}} !important;
@@ -254,9 +254,9 @@
 						string+='<button type="button" class="btn btn-outline-primary background-'+value.id+' mr-3" onclick="button_click(\'radio_'+counter_div+'\',\''+value.choice_id+'\',this,'+counter_div+')">'+value.choice_text+'</button>'
 						string+='</div>'
 
-						$('<style>.btn-outline-primary.background-'+value.id+' { color:'+value.font_color+';background-color: '+value.color+'!important;border-color: '+value.color+'!important; }</style>').appendTo('body');
+						$('<style>.btn-outline-primary.background-'+value.id+'.active { color:'+value.font_color+'!important;background-color: '+value.color+'!important;border-color: '+value.color+'!important; }</style>').appendTo('body');
 
-						$('<style>.btn-outline-primary.background-'+value.id+'.active { background-color:'+value.font_color+'!important;border-color: '+value.color+'!important;color: '+value.color+' !important; }</style>').appendTo('body');
+						$('<style>.btn-outline-primary.background-'+value.id+' { background-color:'+value.font_color+'!important;border-color: '+value.color+'!important;color: '+value.color+'!important; }</style>').appendTo('body');
 
 						
 

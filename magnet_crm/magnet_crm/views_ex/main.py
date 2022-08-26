@@ -353,6 +353,8 @@ def edit_tree(request,tree_id):
 
 
 	context = {
+		'is_edit':True,
+		'tree':tree,
 		'tree_form' : tree_form
 	}
 

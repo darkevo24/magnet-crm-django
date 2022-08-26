@@ -21,11 +21,11 @@
 						</div>
 						<div class="mb-4">
 							<h6 class="font-weight-semibold">Button Color</h6>
-							<input type="color" value="#0c83e2" class="form-control"  name="color" id="color">
+							<input type="color" value="{% if is_edit %}{{tree.color}}{% else %} #0c83e2 {% endif %}" class="form-control"  name="color" id="color">
 						</div>
 						<div class="mb-4">
 							<h6 class="font-weight-semibold">Text Color</h6>
-							<input type="color" value="#ffffff" class="form-control"  name="font_color" id="font-color">
+							<input type="color" value="{% if is_edit %}{{tree.font_color}}{% else %} #ffffff {% endif %}" class="form-control"  name="font_color" id="font-color">
 						</div>
 						
 						<button type="submit" class="btn btn-primary">Submit</button>	
