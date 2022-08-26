@@ -552,7 +552,26 @@
 		//     $('#alert_model_close_btn').click();
 		// }, 1300);
 
+		function get_notification() {
+			$.ajax({
+				url: "{% url 'ajax-get-notification' %}",
+				type: 'GET',
+				// dataType: 'json',
+				// data: {
+				// 	csrfmiddlewaretoken:"{{csrf_token}}",
+				// 	tree_level: code,
+				// },
+				error: function() {
+					console.log("error")
+				},
+				success: function(res) {
+					console.log('sukses')
+					console.log(res)
 
+				}
+			});
+		}
+		get_notification();
 		{% if messages %}
 			$('#modal_theme_success').modal('show');
 		{% endif %}

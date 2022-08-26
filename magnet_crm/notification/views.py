@@ -11,15 +11,14 @@ from django.contrib import messages
 
 import json
 
-from staff.forms import *
-from core.forms.main import *
-from staff.models import *
-from client.models import *
+from notification.models import *
 from django.utils import timezone
 
-def get_notifications(request, staff=None):
-	notifications = Notification.objects.filter(is_active=True, staff__profile__user__id=request.user.id).prefetch_related('client_schedule__client').order_by('-crated_at')[:10]
-	notification_list = []
+def get_notifications(request):
+	notifications = Notification.objects.filter(is_active=True, staff__profile__user__id=request.user.id).prefetch_related('client_schedule__client').order_by('-created_at')[:10]
+	notification_list = {}
+	notification_list['notification_list'] = []
+	unread = 0
 	for notification in notifications:
 		temp = {}
 		temp['notification_id'] = notification.id
@@ -32,6 +31,11 @@ def get_notifications(request, staff=None):
 			temp['client_id'] = notification.client_schedule.client.id
 			temp['client_name'] = notification.client_schedule.client.nama
 			temp['client_schedule_id'] = notification.client_schedule.id
-		append(temp) 
+		if notification.is_opened:
+			unread += 0
+		
+		notification_list['notification_list'].append(temp) 
 
-	return JsonResponse(temp)
+	notification_list['unread'] = unread
+
+	return JsonResponse(notification_list)
