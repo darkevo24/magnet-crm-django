@@ -4,6 +4,7 @@ from django.shortcuts import render
 # # from referal.models import *
 from client.models import *
 from staff.models import *
+from notification.models import *
 from core.forms.main import *
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -12,11 +13,14 @@ from django.contrib.auth import authenticate, login,logout
 import json
 from django.utils import timezone
 from django.db import IntegrityError, transaction
-
+from notification.views import create_notification
 
 def notif_check(request):
 	print("masuk sini")
-	return {'notification_context_list': "ini isi notif context"}
+	if request.user != None:
+		staff = Staff.objects.filter(profile__user=request.user).first()
+		all_notif = Notification.objects.filter(is_active=True,is_opened=False,staff=staff)
+	return {'notification_context_list': all_notif}
 	# return JsonResponse(response)
 
 def get_client_ip(request):
@@ -229,7 +233,7 @@ def client_transfer_new(request):
 			with transaction.atomic():
 				print(request.POST)
 				all_keys = request.POST.keys()
-
+				create_notif = False
 				all_staff_uid = []
 				
 				for key in all_keys:
@@ -256,11 +260,20 @@ def client_transfer_new(request):
 
 						for client_id in request.POST['staff_uid_'+staff_uid].split(","):
 							if client_id != None and client_id != "" :
+								create_notif = True
 								client_staff = Client_Staff()
 								client_staff.client = Client.objects.filter(id=client_id).first()
 								client_staff.staff = Staff.objects.filter(uid=staff_uid).first()
 								client_staff.created_by = request.user
 								client_staff.save()
+
+					if create_notif:
+						ctx = {}
+						ctx['client_schedule'] = None
+						ctx['staff'] = cur_staff
+						ctx['notification_type'] = 'notification_followup'
+						ctx['notes'] = 'Anda Mendapatkan Client Baru'
+						create_notification(request,ctx)
 				
 				return redirect(reverse('client_transfer_new'))			
 
