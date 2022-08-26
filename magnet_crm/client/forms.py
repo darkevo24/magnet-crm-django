@@ -3,6 +3,7 @@ from client.models import *
 from django import forms
 
 class ClientForm(ModelForm):
+	birthday = forms.CharField(label='Birthday', max_length=100,required=False)
 	class Meta:
 		model = Client
 		fields = [
@@ -13,6 +14,7 @@ class ClientForm(ModelForm):
 			'gender',
 			'pekerjaan',
 			'domisili',
+			# 'birthday',
 			# 'source',
 		]
 

@@ -13,7 +13,7 @@
 		<div class="card-body">
 			<div class="row">
 				<div class="col-12">
-					<form method="POST"> 
+					<form method="POST" id="main-form"> 
 						{% csrf_token %}
 						<div class="mb-4">
 							<h6 class="font-weight-semibold">nama</h6>
@@ -28,20 +28,24 @@
 							{{client_form.email | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
-							<h6 class="font-weight-semibold">umur</h6>
+							<h6 class="font-weight-semibold">Age</h6>
 							{{client_form.umur | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
-							<h6 class="font-weight-semibold">gender</h6>
+							<h6 class="font-weight-semibold">Gender</h6>
 							{{client_form.gender | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
-							<h6 class="font-weight-semibold">pekerjaan</h6>
+							<h6 class="font-weight-semibold">Job</h6>
 							{{client_form.pekerjaan | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
-							<h6 class="font-weight-semibold">domisili</h6>
+							<h6 class="font-weight-semibold">Domicile</h6>
 							{{client_form.domisili | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Birthday</h6>
+							{{client_form.birthday | add_class:"form-control"}}
 						</div>
 						<button type="submit" class="btn btn-primary">Submit</button>
 							
@@ -55,6 +59,24 @@
 	<!-- /typeahead -->
 </div>
 <script type="text/javascript">
-	
+	$( document ).ready(function() {
+	    $('#id_birthday').pickadate(
+		    {
+		    	formatSubmit: 'yyyy-mm-dd',
+		    }
+    	);
+	});
+	var submited = 0
+
+	$("#main-form").submit(function(e){
+        e.preventDefault();
+
+        if (submited == 0){
+            submited = 1
+            this.submit();    
+        }
+        
+    });
+
 </script>
 {% endblock content %}

@@ -45,7 +45,7 @@ def client_add(request):
 	template = 'admin/client/client_add.html'
 	client_form = ClientForm(request.POST or None)
 
-
+	print(request.POST)
 	if request.POST:
 		try:
 			with transaction.atomic():
@@ -53,6 +53,8 @@ def client_add(request):
 				if client_form.is_valid() :
 					
 					client = client_form.save(commit=False)
+					birthday = request.POST['birthday_submit']
+					client.birthday = birthday
 					client.created_by = request.user
 					client.save()
 

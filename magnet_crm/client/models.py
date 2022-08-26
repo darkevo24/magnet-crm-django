@@ -28,6 +28,7 @@ class Client(Base_Model):
 	domisili = models.CharField(max_length=255, default='')
 	phone_no = models.CharField(max_length=255, default='')
 	email = models.EmailField(null=True, blank=True)
+	birthday = models.DateField(null=True, blank=True)
 
 	SOURCE_STR = [
 		('0', 'Fresh Data'), 
