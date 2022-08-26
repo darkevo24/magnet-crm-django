@@ -49,6 +49,9 @@ def get_notifications(request):
 			temp['client_id'] = notification.client_schedule.client.id
 			temp['client_name'] = notification.client_schedule.client.nama
 			temp['client_schedule_id'] = notification.client_schedule.id
+			temp['url'] = reverse('client-detail-list', kwargs={'id_client': notification.client_schedule.client.id})
+		else:
+			temp['url'] = reverse('client-list')
 		if notification.is_opened:
 			unread += 0
 		

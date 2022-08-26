@@ -105,12 +105,9 @@
 						</div>
 
 						<div class="dropdown-content-body dropdown-scrollable">
-							<ul class="media-list">
-								<li class="media">
-									<div class="mr-3 position-relative">
-										<img src="../../../../global_assets/images/placeholders/placeholder.jpg" width="36" height="36" class="rounded-circle" alt="">
-									</div>
+							<ul class="media-list" id="notification-list-container">
 
+								<li class="media">
 									<div class="media-body">
 										<div class="media-title">
 											<a href="#">
@@ -527,7 +524,34 @@
 
 	</div>
 	<!-- /page content -->
+<div id="notification-schedule-container">
+	<li class="media">
+		<div class="media-body">
+			<div class="media-title">
+				<a href="__url__">
+					<span class="font-weight-semibold">Followup Schedule for __client_name__</span>
+					<span class="text-muted float-right font-size-sm">__hour__</span>
+				</a>
+			</div>
 
+			<span class="text-muted">__notes__</span>
+		</div>
+	</li>
+</div>
+<div id="notification-new-client-container">
+	<li class="media">
+		<div class="media-body">
+			<div class="media-title">
+				<a href="__url__">
+					<span class="font-weight-semibold">New Client has been assigned for you</span>
+					<!-- <span class="text-muted float-right font-size-sm">04:58</span> -->
+				</a>
+			</div>
+
+			<span class="text-muted">__notes__</span>
+		</div>
+	</li>
+</div>
 </body>
 	{% if messages %}
 	    {% for message in messages %}
@@ -565,6 +589,22 @@
 					console.log("error")
 				},
 				success: function(res) {
+					$.each(res, function( index, value ) {
+						var contaienr_div = '';
+						if (res['index']['client_schedule'] == '') {
+							contaienr_div = $('#notification-new-client-container').html()
+							contaienr_div.replace(__notes__, res['index']['notes'])
+							contaienr_div.replace(__url__, res['index']['url'])
+						}	
+						else {
+							contaienr_div = $('#notification-schedule-container').html()
+							contaienr_div.replace(__notes__, res['index']['notes'])
+							contaienr_div.replace(__url__, res['index']['url'])
+							contaienr_div.replace(__hour__, res['index']['hour'])
+							contaienr_div.replace(__client_name__, res['index']['client_name'])
+						}
+						$('#notification-list-container').append(contaienr_div)
+					});
 					console.log('sukses')
 					console.log(res)
 
