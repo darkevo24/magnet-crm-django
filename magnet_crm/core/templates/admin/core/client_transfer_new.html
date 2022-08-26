@@ -270,7 +270,10 @@
         function staff_change(e){
             // mainTable.row.add([null, '.2', '.3']).draw(false);
             // console.log(e.value)
+            first_load_ajax= 0
+            secondaryTable.clear().draw()
             dict_changes = new Object();
+            dict_first_staff_data = []
             ajax_staff_client()
 
             // $("#bootstrap-duallistbox-selected-list_").find('option').remove()
@@ -316,10 +319,12 @@
                         });
                         secondaryTable.rows().select();
                         
-                    }
-                    if (first_load_ajax == 0 ){
-                        first_load_ajax = 1
-                        dict_first_staff_data = dict_changes[current_staff].slice();
+
+                        if (first_load_ajax == 0 ){
+                            first_load_ajax = 1
+                            dict_first_staff_data = dict_changes[current_staff].slice();
+                        }   
+
                     }
                     update_info();
 
@@ -394,41 +399,45 @@
 
         function update_info(){
             var selected_staff = $("#staff_selection").val()
-            console.log(dict_first_staff_data.length,"data awal")
-            console.log(dict_changes[selected_staff].length,"data changes")
-            console.log( dict_first_staff_data.filter(x => !dict_changes[selected_staff].includes(x)) ,"kurang");
-            console.log( dict_changes[selected_staff].filter(x => !dict_first_staff_data.includes(x)) ,"nambah");
+            // console.log(dict_first_staff_data.length,"data awal")
+            // console.log(dict_changes[selected_staff].length,"data changes")
+            // console.log( dict_first_staff_data.filter(x => !dict_changes[selected_staff].includes(x)) ,"kurang");
+            // console.log( dict_changes[selected_staff].filter(x => !dict_first_staff_data.includes(x)) ,"nambah");
 
             $("#info_div").empty()
-            $("#info_div").append("<br> Nama staff : <br>"+dict_all_staff[selected_staff]+ "<br>Client Removed:<br>")
+            
            
-            var temp_c = 1
-            var id_removed = dict_first_staff_data.filter(x => !dict_changes[selected_staff].includes(x))
-            console.log("id_removed",id_removed)
-            console.log(id_removed.length,"id_removed.length")
-            if (id_removed.length == 0){
-                $("#info_div").append("-");
+            if (selected_staff in dict_changes){
+                $("#info_div").append("<br> Nama staff : <br>"+dict_all_staff[selected_staff]+ "<br>Client Removed:<br>")
+                var temp_c = 1
+                var id_removed = dict_first_staff_data.filter(x => !dict_changes[selected_staff].includes(x))
+                // console.log("id_removed",id_removed)
+                // console.log(id_removed.length,"id_removed.length")
+                if (id_removed.length == 0){
+                    $("#info_div").append("-");
+                }
+                $.each(id_removed, function(index2, value2) {
+                    // console.log("ini value2",value2,index2)
+                    $("#info_div").append(String(temp_c)+". "+dict_all_client[value2]+"<br>");
+                    temp_c++;
+                }) 
+
+
+
+                $("#info_div").append("<br>Client Added:<br>")
+                var temp_c = 1
+                var id_added = dict_changes[selected_staff].filter(x => !dict_first_staff_data.includes(x))
+                // console.log("id_added",id_added)
+                if (id_added.length == 0){
+                    $("#info_div").append("-");
+                }
+                $.each(id_added, function(index2, value2) {
+                    // console.log("ini value2",value2,index2)
+                    $("#info_div").append(String(temp_c)+". "+dict_all_client[value2]+"<br>");
+                    temp_c++;
+                })     
             }
-            $.each(id_removed, function(index2, value2) {
-                console.log("ini value2",value2,index2)
-                $("#info_div").append(String(temp_c)+". "+dict_all_client[value2]+"<br>");
-                temp_c++;
-            }) 
-
-
-
-            $("#info_div").append("<br>Client Added:<br>")
-            var temp_c = 1
-            var id_added = dict_changes[selected_staff].filter(x => !dict_first_staff_data.includes(x))
-            console.log("id_added",id_added)
-            if (id_added.length == 0){
-                $("#info_div").append("-");
-            }
-            $.each(id_added, function(index2, value2) {
-                console.log("ini value2",value2,index2)
-                $("#info_div").append(String(temp_c)+". "+dict_all_client[value2]+"<br>");
-                temp_c++;
-            }) 
+            
 
             // $("#info_div").empty()
             // $.each(dict_changes,function(index,value){ 
