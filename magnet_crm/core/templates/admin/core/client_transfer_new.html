@@ -150,10 +150,14 @@
 
 <script type="text/javascript">
 
+        var submited = 0;
+        var dict_first_staff_data = []
+
         var dict_changes = new Object();
         var dict_all_staff= new Object();
         var dict_all_client= new Object();
 
+        var first_load_ajax = 0;
         {% for staff in all_staff %}
             dict_all_staff['{{staff.uid}}'] = '{{staff.profile.full_name}}';
         {% endfor %}
@@ -248,7 +252,7 @@
                 dict_changes[selected_staff] = []
                 dict_changes[selected_staff].push(id)
             }
-            console.log(dict_changes[selected_staff]);
+            // console.log(dict_changes[selected_staff]);
         }
 
         function remove_from_dict(id){
@@ -259,7 +263,7 @@
                       return value != id;
                     });
                 }
-                console.log(dict_changes[selected_staff]);
+                // console.log(dict_changes[selected_staff]);
             }
         }
 
@@ -312,6 +316,10 @@
                         });
                         secondaryTable.rows().select();
                         
+                    }
+                    if (first_load_ajax == 0 ){
+                        first_load_ajax = 1
+                        dict_first_staff_data = dict_changes[current_staff].slice();
                     }
                     update_info();
 
@@ -385,35 +393,73 @@
         }
 
         function update_info(){
-            $("#info_div").empty()
-            $.each(dict_changes,function(index,value){ 
-                console.log("ini dict_changes", index)
+            var selected_staff = $("#staff_selection").val()
+            console.log(dict_first_staff_data.length,"data awal")
+            console.log(dict_changes[selected_staff].length,"data changes")
+            console.log( dict_first_staff_data.filter(x => !dict_changes[selected_staff].includes(x)) ,"kurang");
+            console.log( dict_changes[selected_staff].filter(x => !dict_first_staff_data.includes(x)) ,"nambah");
 
-                $("#info_div").append("<br> Nama staff : <br>"+dict_all_staff[index]+ "<br>List Client :<br>")
+            $("#info_div").empty()
+            $("#info_div").append("<br> Nama staff : <br>"+dict_all_staff[selected_staff]+ "<br>Client Removed:<br>")
+           
+            var temp_c = 1
+            var id_removed = dict_first_staff_data.filter(x => !dict_changes[selected_staff].includes(x))
+            console.log("id_removed",id_removed)
+            console.log(id_removed.length,"id_removed.length")
+            if (id_removed.length == 0){
+                $("#info_div").append("-");
+            }
+            $.each(id_removed, function(index2, value2) {
+                console.log("ini value2",value2,index2)
+                $("#info_div").append(String(temp_c)+". "+dict_all_client[value2]+"<br>");
+                temp_c++;
+            }) 
+
+
+
+            $("#info_div").append("<br>Client Added:<br>")
+            var temp_c = 1
+            var id_added = dict_changes[selected_staff].filter(x => !dict_first_staff_data.includes(x))
+            console.log("id_added",id_added)
+            if (id_added.length == 0){
+                $("#info_div").append("-");
+            }
+            $.each(id_added, function(index2, value2) {
+                console.log("ini value2",value2,index2)
+                $("#info_div").append(String(temp_c)+". "+dict_all_client[value2]+"<br>");
+                temp_c++;
+            }) 
+
+            // $("#info_div").empty()
+            // $.each(dict_changes,function(index,value){ 
+            //     console.log("ini dict_changes", index)
+
+            //     $("update_info")
+            //     $("#info_div").append("<br> Nama staff : <br>"+dict_all_staff[index]+ "<br>List Client :<br>")
                 
 
-                var temp_c = 1
-                $.each(value, function(index2, value2) {
-                    // alert(index2 + " : " + value2);
-                    // var indexes = mainTable
-                    //       .rows()
-                    //       .indexes()
-                    //       .filter( function ( value3, index3 ) {
-                    //         if (value.includes(value3)){
-                    //             var temp_index_collection = []
-                    //             temp_index_collection.push(value3)
-                    //         }
-                    //         return value2 === mainTable.row(value3).data()[1];
-                    //       } );
-                    // console.log(value2)
-                    // console.log(mainTable.columns(1).search(value2).row().index())
-                    // var data = mainTable.rows( indexes ).data().toArray();
+            //     var temp_c = 1
+            //     $.each(value, function(index2, value2) {
+            //         // alert(index2 + " : " + value2);
+            //         // var indexes = mainTable
+            //         //       .rows()
+            //         //       .indexes()
+            //         //       .filter( function ( value3, index3 ) {
+            //         //         if (value.includes(value3)){
+            //         //             var temp_index_collection = []
+            //         //             temp_index_collection.push(value3)
+            //         //         }
+            //         //         return value2 === mainTable.row(value3).data()[1];
+            //         //       } );
+            //         // console.log(value2)
+            //         // console.log(mainTable.columns(1).search(value2).row().index())
+            //         // var data = mainTable.rows( indexes ).data().toArray();
                       
-                    $("#info_div").append(String(temp_c)+". "+dict_all_client[value2]+"<br>");
-                    temp_c++;
-                }); 
+            //         $("#info_div").append(String(temp_c)+". "+dict_all_client[value2]+"<br>");
+            //         temp_c++;
+            //     }); 
 
-            });
+            // });
             
         }
 
@@ -424,8 +470,11 @@
             $.each(dict_changes,function(index,value){ 
                 $("#input_container").append('<input name="staff_uid_'+index+'" value="'+value+'" hidden>')
             });
-
-             this.submit();
+            if (submited == 0){
+                submited = 1
+                this.submit();    
+            }
+            
         });
 
 </script>
