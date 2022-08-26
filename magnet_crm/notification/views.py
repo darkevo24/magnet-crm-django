@@ -14,6 +14,24 @@ import json
 from notification.models import *
 from django.utils import timezone
 
+def create_notification(request, data={}):
+	try: 
+		with transaction.atomic():
+
+			notification = Notification()
+			notification.created_by = notification.updated_by = request.user
+			notification.client = data['client_schedule']
+			notification.staff = data['staff']
+			notification.notification_type = data['notification_type']
+			notification.notes = data['notes']
+			notification.is_opened = False
+			notification.save()
+			return True
+	except IntegrityError as e:
+		print(e)
+
+	return False
+
 def get_notifications(request):
 	notifications = Notification.objects.filter(is_active=True, staff__profile__user__id=request.user.id).prefetch_related('client_schedule__client').order_by('-created_at')[:10]
 	notification_list = {}
