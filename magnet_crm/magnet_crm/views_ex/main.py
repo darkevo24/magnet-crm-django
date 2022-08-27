@@ -33,6 +33,7 @@ def get_client_ip(request):
 
 def admin_logout(request):
 	logout(request)
+
 	return redirect(reverse('admin-login'))
 
 def admin_login(request):
@@ -99,13 +100,14 @@ def dashboard(request):
 	
 
 	staff = Staff.objects.filter(profile__user=request.user).first()
-	print("staff",staff)
 	client_staff_list = Client_Staff.objects.filter(staff=staff, is_active=True).prefetch_related('client')
 	client_ids = []
 
 	client_list = Client.objects.filter(is_active=True,id__in=client_staff_list.values_list('client__id',flat=True))
-
+	client_color = {}
 	for client_staff in client_staff_list:
+		if client_staff.client.id not in client_color:
+			client_color[client_staff.client.id] = client_staff.color
 		client_ids.append(client_staff.client.id)
 	client_schedule_list = Client_Schedule.objects.filter(client__id__in=client_ids, is_active=True).order_by('schedule_date')
 	client_schedule_list_json = []
@@ -140,6 +142,7 @@ def dashboard(request):
 
 		'all_client' : client_list,
 		'client_schedule_list_json': json.dumps(client_schedule_list_json),
+		'client_color' : client_color,
 	}
 	return render(request,template,context=context)
 

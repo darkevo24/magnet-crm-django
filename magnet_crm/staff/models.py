@@ -58,4 +58,29 @@ class Staff_History(Base_Model):
 		on_delete=models.CASCADE,
 	)
 
+class Staff_Salary(Base_Model):
+	staff = models.ForeignKey(
+		Staff,
+		related_name="Staff_Salary_Staff",
+		blank=True,
+		null=True,
+		on_delete=models.CASCADE,
+	)
+	staff_level = models.ForeignKey(
+		Staff_Level,
+		related_name="Staff_Salary_Staff_Level",
+		blank=True,
+		null=True,
+		on_delete=models.CASCADE,
+	)
+	salary_amount = models.DecimalField(decimal_places=2, default=0, max_digits=20)
+
+class Staff_Salary_Montly(Base_Model):
+	salary_date = models.DateField(null=True, blank=True)
+	salary_amount = models.DecimalField(decimal_places=2, default=0, max_digits=20)
+	bonus_amount = models.DecimalField(decimal_places=2, default=0, max_digits=20)
+
+
+
+
 

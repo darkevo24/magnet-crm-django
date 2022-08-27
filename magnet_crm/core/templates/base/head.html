@@ -138,7 +138,7 @@
 							<a href="#" class="text-body mr-auto">All messages</a>
 							<div>
 								<a href="#" class="text-body" data-popup="tooltip" title="" data-original-title="Mark all as read"><i class="icon-radio-unchecked"></i></a>
-								<a href="#" class="text-body ml-2" data-popup="tooltip" title="" data-original-title="Settings"><i class="icon-cog3"></i></a>
+								<!-- <a href="#" class="text-body ml-2" data-popup="tooltip" title="" data-original-title="Settings"><i class="icon-cog3"></i></a> -->
 							</div>
 						</div>
 					</div>
@@ -386,6 +386,14 @@
 							{% endif %}
 							<!-- /page kits -->
 						{% endwith %}
+						<li class="nav-item">
+							<a href="{% url 'admin-logout' %}" class="nav-link ">
+								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-client.png' %}">
+								<span>
+									Logout
+								</span>
+							</a>
+						</li>
 					</ul>
 				</div>
 				<!-- /main navigation -->
