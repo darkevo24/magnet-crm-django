@@ -33,6 +33,7 @@ class Client(Base_Model):
 	SOURCE_STR = [
 		('0', 'Fresh Data'), 
 		('1', 'Rolling Data'),
+		('2', 'External Data'),
 	]
 
 	SOURCE_DETAIL_1_STR = [

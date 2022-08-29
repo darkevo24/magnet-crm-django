@@ -233,6 +233,18 @@ def client_transfer_new(request):
 	else:
 		staff_list = Staff.objects.filter(is_active=True,is_locked=False,staff_level__level=cur_staff.staff_level.level+1,staff_parent=cur_staff).exclude(id=cur_staff.id).order_by("profile__full_name")
 
+	filter_list = [
+		'Adwords',
+		'Facbook',
+		'Social Media',
+		'Email',
+		'Google',
+		'Pribadi Marketing',
+		'IB',
+		'Rolling Data Regis ',
+		'Rolling Data Inactive Client',
+		'External Data'
+	]
 	if request.POST:
 		try:
 			with transaction.atomic():
@@ -290,6 +302,7 @@ def client_transfer_new(request):
 	context = {
 		'all_client' : client_list,
 		'all_staff' : staff_list,
+		'filter_list':filter_list,
 	}
 	return render(request,template,context=context)
 

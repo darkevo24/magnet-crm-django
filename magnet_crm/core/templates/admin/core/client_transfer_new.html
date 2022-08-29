@@ -7,6 +7,13 @@
     #DataTables_Table_1{
             width: 100% !important;
     }
+    .no_vis{
+        visibility: hidden;
+        display: none;
+    }
+    #DataTables_Table_0{
+        width: 100%!important
+    }
 </style>
 <script src="{% static 'limitless/global_assets/js/plugins/ui/fullcalendar/main.min.js' %}"></script>
 <div class="row">
@@ -54,6 +61,21 @@
                             <button onclick="deselect_all()" type="button" class="btn btn-light text-danger"><i class="fas fa-check-double fa-1x"></i><span class="d-none d-lg-inline-block ml-2">Deselect All </span></button>
                         </div> -->
 
+                        <div class="row mb-3" style="position: relative;">
+                            <div class="col-8">
+                                <h5>Filter Source Customer</h5>
+                                <select id="filter_list" class="form-control select-search" data-fouc onchange="client_source_change(this)">
+                                    <option value="">Show all</option>
+                                    {% for list in filter_list %}
+                                        <option value="{{list}}">{{list}}</option>
+                                    {% endfor %}  
+                                </select>
+                            </div>
+                            <!-- <div class="col-4" style="position: absolute;bottom: 0;right: 0">
+                                <button type="button" class="btn btn-primary">Filter</i></button>
+                            </div> -->
+                        </div>
+
                         <div class="form-group row">
                             <label class="col-form-label col-lg-2">Select 1 to N Rows</label>
                             <div class="col-lg-4">
@@ -66,6 +88,9 @@
                             </div>
                         </div>
 
+                        
+                        
+                        
 
                         <table class="table datatable-select-checkbox">
                             <thead>
@@ -77,6 +102,7 @@
                                     <th>Register Status</th>
                                     <th>Phone No</th>
                                     <th>E-mail</th>
+                                    <th>Source</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -90,6 +116,17 @@
                                         <td>{{client.is_registred}}</td>
                                         <td>{{client.phone_no}}</td>
                                         <td>{{client.email}}</td>
+                                        <td>
+                                                {% if client.source_detail_2 is not None %}
+                                                    {{client.get_source_detail_2_display}}
+                                                {% elif client.source_detail_1 is not None %}
+                                                    {{client.get_source_detail_1_display}}
+                                                {% else %}
+                                                    {{client.get_source_display}}
+                                                {% endif %}
+
+                                            
+                                        </td>
                                         
                                     </tr>
                                 {% endfor %}  
@@ -364,7 +401,12 @@
 
 
         
-        
+        $('.datatable-select-checkbox thead tr')
+        .clone(true)
+        .addClass('filters no_vis')
+        .appendTo('.datatable-select-checkbox thead');
+ 
+
         // Checkbox selection
         var mainTable =  $('.datatable-select-checkbox').DataTable({
             dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
@@ -390,11 +432,65 @@
                 style: 'multi'
             },
             "pageLength": 100,
-            order: [[2, 'asc']]
+            order: [[2, 'asc']],
+            initComplete: function () {
+                    var api = this.api();
+         
+                    // For each column
+                    api
+                        .columns()
+                        .eq(0)
+                        .each(function (colIdx) {
+                            // Set the header cell to contain the input element
+                            var cell = $('.filters th').eq(
+                                $(api.column(colIdx).header()).index()
+                            );
+                            var title = $(cell).text();
+                            $(cell).html('<input type="text" placeholder="' + title + '" />');
+         
+                            // On every keypress in this input
+                            $(
+                                'input',
+                                $('.filters th').eq($(api.column(colIdx).header()).index())
+                            )
+                                .off('keyup change')
+                                .on('change', function (e) {
+                                    // Get the search value
+                                    $(this).attr('title', $(this).val());
+                                    var regexr = '({search})'; //$(this).parents('th').find('select').val();
+         
+                                    var cursorPosition = this.selectionStart;
+                                    // Search the column for that value
+                                    api
+                                        .column(colIdx)
+                                        .search(
+                                            this.value != ''
+                                                ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                                : '',
+                                            this.value != '',
+                                            this.value == ''
+                                        )
+                                        .draw();
+                                })
+                                .on('keyup', function (e) {
+                                    e.stopPropagation();
+         
+                                    $(this).trigger('change');
+                                    $(this)
+                                        .focus()[0]
+                                        .setSelectionRange(cursorPosition, cursorPosition);
+                                });
+                        });
+                },
         });
 
         console.log(mainTable);
 
+        function client_source_change(){
+            var current_cust_filter = $("#filter_list").val()
+            console.log(current_cust_filter)
+            $("#DataTables_Table_0 > thead > tr.filters > th:nth-child(7) > input[type=text]").val(current_cust_filter).change()
+        }
         function select_all(primary=true){
             if(primary){
                 mainTable.rows().select();    
