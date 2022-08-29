@@ -180,14 +180,23 @@ def staff_edit(request,uid_staff):
 					profile_form.updated_at  = timezone.now()
 					profile_form.save()
 
-					staff = staff_form.save(commit=False)
+					
+					cur_staff = staff_form.save(commit=False)
 					if (selected_staff_parent_id!=None):
 						select_staff_parent = Staff.objects.filter(id=selected_staff_parent_id).first()
 						print(select_staff_parent, '<---')
+						if staff.staff_parent != select_staff_parent:
+							all_cur_client = Client_Staff.objects.filter(is_active=True,staff = staff)
+							for cur_c_s in all_cur_client:
+								cur_c_s.is_active=False
+								cur_c_s.updated_by=request.user
+								cur_c_s.updated_at=timezone.now()
+								cur_c_s.save()
+
 						staff.staff_parent = select_staff_parent
-					staff.updated_by = request.user
-					staff.updated_at = timezone.now()
-					staff.save()
+					cur_staff.updated_by = request.user
+					cur_staff.updated_at = timezone.now()
+					cur_staff.save()
 
 					return redirect(reverse('staff-list'))
 				else:
