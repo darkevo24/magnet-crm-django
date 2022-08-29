@@ -22,7 +22,7 @@ def notif_check(request):
 	all_notif = None
 	if not request.user.is_anonymous:
 		staff = Staff.objects.filter(profile__user=request.user).first()
-		all_notif = Notification.objects.filter(is_active=True,is_opened=False,staff=staff)
+		all_notif = Notification.objects.filter(is_active=True,staff=staff)[:10]
 	return {'notification_context_list': all_notif}
 	# return JsonResponse(response)
 

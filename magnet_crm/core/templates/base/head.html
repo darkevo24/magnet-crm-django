@@ -112,14 +112,14 @@
 									{% for notif in notification_context_list %}
 									<li class="media">
 										<div class="mr-3 position-relative">
-						<img src="{% static 'limitless/global_assets/images/placeholders/placeholder.jpg' %}" width="36" height="36" class="rounded-circle" alt="">
+						
 										</div>
 
 										<div class="media-body">
 											<div class="media-title">
 												<a href="{% url 'open_notif' notif.id %}">
 													<span class="font-weight-semibold">{{notif.get_notification_type_display}}</span>
-													<span class="text-muted float-right font-size-sm">04:58</span>
+													<span class="text-muted float-right font-size-sm">{{notif.created_at|date:"d/m/Y h:i"}}</span>
 												</a>
 											</div>
 

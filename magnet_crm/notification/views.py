@@ -68,4 +68,12 @@ def open_notification(request,notification_id):
 	cur_notif.updated_by = request.user
 	cur_notif.save()
 
+	string_url = ''
+	if cur_notif.notification_type == 'new_clients':
+		string_url = reverse('client-list')
+	elif cur_notif.notification_type == 'birthday':
+		string_url = reverse('client-detail-list', kwargs={'id_client': cur_notif.client.id })
+	else:
+		string_url = reverse('client-detail-list', kwargs={'id_client': cur_notif.client_schedule.client.id })
+
 	return redirect(reverse('client_transfer_new'))

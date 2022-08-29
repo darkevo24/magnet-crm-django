@@ -14,9 +14,16 @@ class Notification(Base_Model):
 	NOTIFICATION_CHOICES = (
 		('notification_followup','Notification Followup'),
 		('birthday','Birthday'),
+		('new_clients','New Clients'),
 	)
 	client_schedule = models.ForeignKey(
 		Client_Schedule,
+		blank=True,
+		null=True,
+		on_delete=models.CASCADE,
+	)
+	client = models.ForeignKey(
+		Client,
 		blank=True,
 		null=True,
 		on_delete=models.CASCADE,
