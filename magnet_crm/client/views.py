@@ -23,7 +23,7 @@ CLEANR = re.compile('<.*?>')
 def client_list(request):
 		
 	staff = Staff.objects.filter(profile__user=request.user).first()
-	print(not request.user.is_superuser, staff.staff_level.level)
+
 	if not request.user.is_superuser and not staff.staff_level.level < 2:
 		template = 'admin/client/client_list.html'
 		# staff = Staff.objects.filter(is_active=True, profile__user__id=request.user.id).first()
