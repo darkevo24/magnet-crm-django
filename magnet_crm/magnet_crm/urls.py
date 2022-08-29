@@ -35,6 +35,7 @@ urlpatterns = [
     path('followup_edit/<str:tree_id>', main_view.edit_tree, name='followup-edit'),
     path('followup_delete/<str:tree_id>', main_view.delete_tree, name='followup-delete'),
 
+    path('client_feedback', client_views.feedback_list, name='client-feedback-list'),
 
     
     

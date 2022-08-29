@@ -361,6 +361,14 @@
 									</a>
 								</li>
 								<li class="nav-item">
+									<a href="{% url 'client-feedback-list' %}" class="nav-link ">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+										<span>
+											Client Feedback
+										</span>
+									</a>
+								</li>
+								<li class="nav-item">
 									<a href="{% url 'followup-list' %}" class="nav-link ">
 										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
 										<span>
@@ -393,14 +401,7 @@
 						{% endwith %}
 
 
-						<li class="nav-item">
-							<a href="{% url 'admin-logout' %}" class="nav-link ">
-								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-client.png' %}">
-								<span>
-									Logout
-								</span>
-							</a>
-						</li>
+						
 					</ul>
 				</div>
 				<!-- /main navigation -->

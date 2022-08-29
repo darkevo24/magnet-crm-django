@@ -18,7 +18,7 @@ from magnet_crm.task import *
 
 def notif_check(request):
 	print("masuk sini")
-	start_process.apply_async(_id='eta-testing')
+	# start_process.apply_async(_id='eta-testing')
 	all_notif = None
 	if not request.user.is_anonymous:
 		staff = Staff.objects.filter(profile__user=request.user).first()

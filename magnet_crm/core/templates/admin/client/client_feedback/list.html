@@ -1,0 +1,58 @@
+
+{% extends 'base/head.html' %}
+
+{% block content %}
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12">
+		
+		<div class="card-header">
+			<h5 class="card-title">Client Feedback</h5>
+		</div>
+
+		<div class="card-body">
+			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
+			<div class="btn-group mr-lg-3 mb-3">
+			</div>
+			<div class="row">
+				<div class="col-12">
+
+					<table class="table">
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">Staff</th>
+					      <th scope="col">Fullname</th>
+					      <th scope="col">Email</th>
+					      <th scope="col" class="text-center">Date</th>
+					      
+					    </tr>
+					  </thead>
+					  <tbody>
+					  	{% for client_feedback in client_feedback_list%}
+							<tr>
+						      <td scope="row">{{forloop.counter}}</td>
+						      <td scope="row">{{client_feedback.staff.profile.full_name}}</td>
+						      <td scope="row">{{client_feedback.client.nama}}</td>
+						      <td scope="row">{{client_feedback.client.email}}</td>
+						      <td scope="row">{{client_feedback.created_at}}</td>
+						    </tr>
+						{% endfor %}
+					    
+					    
+					  </tbody>
+					</table>
+
+					
+
+					
+
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- /typeahead -->
+</div>
+{% endblock content %}
