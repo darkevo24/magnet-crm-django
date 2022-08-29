@@ -290,7 +290,7 @@ def client_transfer_new(request):
 						ctx['staff'] = cur_staff
 						ctx['notification_type'] = 'notification_followup'
 						ctx['notes'] = 'Anda Mendapatkan Client Baru'
-						create_notification(request,ctx)
+						create_notification(request.user,ctx)
 				
 				return redirect(reverse('client_transfer_new'))			
 

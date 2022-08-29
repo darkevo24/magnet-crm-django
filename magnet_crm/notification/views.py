@@ -14,13 +14,14 @@ import json
 from notification.models import *
 from django.utils import timezone
 
-def create_notification(request, data={}):
+def create_notification(user, data={}):
 	try: 
 		with transaction.atomic():
 
 			notification = Notification()
-			notification.created_by = notification.updated_by = request.user
-			notification.client = data['client_schedule']
+			notification.created_by = notification.updated_by = user
+			notification.client_schedule = data['client_schedule']
+			notification.client = data['client']
 			notification.staff = data['staff']
 			notification.notification_type = data['notification_type']
 			notification.notes = data['notes']

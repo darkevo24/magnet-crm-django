@@ -18,7 +18,7 @@ from django.db import IntegrityError, transaction
 
 from celery import Celery
 from celery import shared_task  
-
+from notification.views import create_notification 
 
 
 
@@ -54,6 +54,23 @@ def start_process():
 			print("1")
 			print("2")
 			print("3")
+			
+	except IntegrityError as e:
+		print(e)
+
+@shared_task
+def birthday():
+	try:
+		with transaction.atomic():
+			now = timezone.now()
+			clients = Client.object.filter(birthday__month=now.month, birthday__day=now.day)
+			user = User.object.filter(is_superuser=True).first()
+			data = {}
+			for client in clients:
+				data['client'] = client
+				data['notification'] = 'birthday'
+				data['notes'] = 'Happy birthday to ' + client.nama
+				create_notification(user, data)
 			
 	except IntegrityError as e:
 		print(e)
