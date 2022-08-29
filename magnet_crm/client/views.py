@@ -303,10 +303,37 @@ def feedback_list(request):
 	# if sub_staff_list.count() == 0 >:
 
 
-	client_feedback_list = Client_Followup.objects.filter(is_active=True, staff=staff).prefetch_related('followup', 'client__profile', 'staff').order_by('-created_at')
+	client_feedback_list = Client_Followup.objects.filter(is_active=True, staff=staff).prefetch_related('followup', 'client', 'staff').order_by('-created_at')
+	dict_client_res = {}
+	for client_res in client_feedback_list:
+		if client_res.followup not in dict_client_res:
+			dict_client_res[client_res.followup] = 0
+		dict_client_res[client_res.followup] += 1
+
+	print(dict_client_res)
+
+	dict_client_res_sorted = {}
+	# dict_client_res = sorted(dict_client_res.items(), key=lambda x: x[1], reverse=True)
+	top_3_response = {}
+	counter = 0
+	for i in sorted(dict_client_res.items(), key=lambda x: x[1], reverse=True):
+		dict_client_res_sorted[i[0]] = i[1]
+		if counter < 3:
+			top_3_response[i[0]] = i[1]
+			counter+=1
+
+
+	
+
+	# [(dict_client_res_sorted[key] = value) for (key, value) in sorted(dict_client_res.items(), key=lambda x: x[1])]
+	# print(dict_client_res)
+
+
+
 	context = {}
 	context['client_feedback_list'] = client_feedback_list
-
+	context['dict_client_res'] = dict_client_res_sorted
+	context['top_3_response'] = top_3_response
 	context['staff'] = staff
 
 

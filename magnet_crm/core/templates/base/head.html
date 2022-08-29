@@ -50,7 +50,8 @@
 	<script src="{% static 'limitless/global_assets/js/plugins/tables/datatables/extensions/fixed_columns.min.js' %}"></script>
 	<script src="{% static 'limitless/global_assets/js/plugins/tables/datatables/extensions/select.min.js' %}"></script>
 	<script src="{% static 'limitless/global_assets/js/plugins/tables/datatables/extensions/buttons.min.js' %}"></script>
-
+	<script src="{% static 'limitless/global_assets/js/plugins/visualization/echarts/echarts.min.js' %}"></script>
+	<!-- <script src="../../../../global_assets/js/plugins/visualization/echarts/echarts.min.js"></script> -->
 	
 
 	<!-- /theme JS files -->
@@ -348,7 +349,14 @@
 							</a>
 						</li>
 						
-						
+						<li class="nav-item">
+							<a href="{% url 'client-feedback-list' %}" class="nav-link ">
+								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+								<span>
+									Client Feedback
+								</span>
+							</a>
+						</li>
 						{% with request.user|full_menu as is_privilage %}
 						 {% with request.user|is_admin as is_low_admin %} 
 							{% if is_privilage %}
@@ -360,14 +368,7 @@
 										</span>
 									</a>
 								</li>
-								<li class="nav-item">
-									<a href="{% url 'client-feedback-list' %}" class="nav-link ">
-										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
-										<span>
-											Client Feedback
-										</span>
-									</a>
-								</li>
+								
 								<li class="nav-item">
 									<a href="{% url 'followup-list' %}" class="nav-link ">
 										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
