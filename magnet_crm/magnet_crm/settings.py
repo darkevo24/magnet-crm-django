@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'staff',
     'client',
     'notification',
+    'celery',
 ]
 
 MIDDLEWARE = [
@@ -59,6 +60,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'magnet_crm.urls'
 
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -70,7 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-
+                'magnet_crm.views_ex.main.notif_check'
                 # 'context_processor.context_processors.general_context_processor',
             ],
         },
@@ -86,8 +89,8 @@ WSGI_APPLICATION = 'magnet_crm.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'magnet_crm_db',
-        'USER': 'ivan',
+        'NAME': 'magnet_crm',
+        'USER': 'postgres',
         'PASSWORD': '',
         'HOST': 'localhost',
         # 'HOST': '13.215.148.70',
@@ -143,3 +146,9 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+# BROKER_URL = 'django://'
+# INSTALLED_APPS += ('kombu.transport.django', )
+# CELERY_BROKER_URL = 'redis://localhost:6379/1'

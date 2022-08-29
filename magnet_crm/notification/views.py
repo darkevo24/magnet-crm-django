@@ -60,3 +60,12 @@ def get_notifications(request):
 	notification_list['unread'] = unread
 
 	return JsonResponse(notification_list)
+
+def open_notification(request,notification_id):
+	cur_notif = Notification.objects.filter(id=notification_id).first()
+	cur_notif.is_opened = True
+	cur_notif.updated_at = timezone.now()
+	cur_notif.updated_by = request.user
+	cur_notif.save()
+
+	return redirect(reverse('client_transfer_new'))

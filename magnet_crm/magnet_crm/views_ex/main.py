@@ -14,9 +14,11 @@ import json
 from django.utils import timezone
 from django.db import IntegrityError, transaction
 from notification.views import create_notification
+from magnet_crm.task import *
 
 def notif_check(request):
 	print("masuk sini")
+	start_process.apply_async(_id='eta-testing')
 	if request.user != None:
 		staff = Staff.objects.filter(profile__user=request.user).first()
 		all_notif = Notification.objects.filter(is_active=True,is_opened=False,staff=staff)

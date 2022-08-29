@@ -87,6 +87,7 @@ urlpatterns = [
 
     path('ajax-magnet/get_subdivison', staff_views.get_subdivison, name='ajax-get-subdivison'),
     path('ajax-notification/get_notification', notification_views.get_notifications, name='ajax-get-notification'),
+    path('notification/<str:notification_id>', notification_views.open_notification, name='open_notif'),
 
 
     
