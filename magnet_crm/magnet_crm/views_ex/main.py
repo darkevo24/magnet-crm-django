@@ -231,7 +231,7 @@ def client_transfer_new(request):
 	if request.user.is_superuser == True:
 		staff_list = Staff.objects.filter(is_active=True,is_locked=False).order_by("profile__full_name")
 	else:
-		staff_list = Staff.objects.filter(is_active=True,is_locked=False,staff_level__level=cur_staff.staff_level.level+1).exclude(id=cur_staff.id).order_by("profile__full_name")
+		staff_list = Staff.objects.filter(is_active=True,is_locked=False,staff_level__level=cur_staff.staff_level.level+1,staff_parent=cur_staff).exclude(id=cur_staff.id).order_by("profile__full_name")
 
 	if request.POST:
 		try:
