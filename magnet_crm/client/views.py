@@ -122,7 +122,8 @@ def client_edit_color(request,id_client, color_str):
 	except IntegrityError as e:
 		print(e)
 
-	return redirect(reverse('client-list')) 
+	return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
 
 
 def client_delete(request,id_client):
