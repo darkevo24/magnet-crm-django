@@ -19,7 +19,7 @@ from django.utils import timezone
 
 def staff_list(request):
 	template = 'admin/staff/staff_list.html'
-	staff_list = Staff.objects.filter(is_active=True)
+	staff_list = Staff.objects.filter(is_active=True).order_by('id')
 
 	
 	context = {

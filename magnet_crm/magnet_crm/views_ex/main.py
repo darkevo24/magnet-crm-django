@@ -19,7 +19,8 @@ from magnet_crm.task import *
 def notif_check(request):
 	print("masuk sini")
 	start_process.apply_async(_id='eta-testing')
-	if request.user != None:
+	all_notif = None
+	if not request.user.is_anonymous:
 		staff = Staff.objects.filter(profile__user=request.user).first()
 		all_notif = Notification.objects.filter(is_active=True,is_opened=False,staff=staff)
 	return {'notification_context_list': all_notif}
@@ -120,10 +121,9 @@ def dashboard(request):
 		client_schedule_list_json.append(temp_dict)
 
 	get_all_user = False
-	if request.user.is_superuser == True:
+	if request.user.is_superuser or staff.staff_level.level < 2:
 		get_all_user = True
-	elif staff.staff_level.level < 1:
-		get_all_user = True
+		print("masuk sini all user")
 	
 
 	if get_all_user == True	:
