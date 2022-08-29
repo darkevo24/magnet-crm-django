@@ -117,10 +117,10 @@
                                         <td>{{client.phone_no}}</td>
                                         <td>{{client.email}}</td>
                                         <td>
-                                                {% if client.source_detail_2 is not None %}
-                                                    {{client.get_source_detail_2_display}}
-                                                {% elif client.source_detail_1 is not None %}
-                                                    {{client.get_source_detail_1_display}}
+                                                {% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
+                                                    {{client.get_source_detail_2_display}} 
+                                                {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
+                                                    {{client.get_source_detail_1_display}} 
                                                 {% else %}
                                                     {{client.get_source_display}}
                                                 {% endif %}

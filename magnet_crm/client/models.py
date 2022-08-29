@@ -62,7 +62,7 @@ class Client(Base_Model):
 	is_locked = models.BooleanField(default=False)
 	source = models.CharField(max_length=255, choices=SOURCE_STR, default='0')
 	source_detail_1 = models.CharField(max_length=255, choices=SOURCE_DETAIL_1_STR, default='3')
-	source_detail_2 = models.CharField(max_length=255, choices=SOURCE_DETAIL_2_STR, null=True,blank=True)
+	source_detail_2 = models.CharField(max_length=255, choices=SOURCE_DETAIL_2_STR, null=True,blank=True,default=None)
 	
 	def __str__(self):
 		return self.nama
