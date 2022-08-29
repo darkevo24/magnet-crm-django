@@ -349,9 +349,9 @@
 						</li>
 						
 						
-						{% with request.user|full_menu as is_superuser %}
-						 {% with request.user|is_admin as is_high_admin %} 
-							{% if is_high_admin %}
+						{% with request.user|full_menu as is_privilage %}
+						 {% with request.user|is_admin as is_low_admin %} 
+							{% if is_privilage %}
 								<li class="nav-item">
 									<a href="{% url 'client_transfer_new'%}" class="nav-link ">
 										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff-level.png' %}">
@@ -368,24 +368,25 @@
 										</span>
 									</a>
 								</li>
-								{% if is_superuser %}
-									<li class="nav-item">
-										<a href="{% url 'staff-list' %}" class="nav-link ">
-											<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff.png' %}">
-											<span>
-												Staff
-											</span>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a href="{% url 'staff-level-list'%}" class="nav-link ">
-											<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff-level.png' %}">
-											<span>
-												Staff Level
-											</span>
-										</a>
-									</li>
+								{% if not is_low_admin %}
+								<li class="nav-item">
+									<a href="{% url 'staff-list' %}" class="nav-link ">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff.png' %}">
+										<span>
+											Staff
+										</span>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="{% url 'staff-level-list'%}" class="nav-link ">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff-level.png' %}">
+										<span>
+											Staff Level
+										</span>
+									</a>
+								</li>
 								{% endif %}
+
 							{% endif %}
 							<!-- /page kits -->
 							{% endwith %}
