@@ -277,17 +277,19 @@ def client_transfer_new(request):
 
 						for client_id in request.POST['staff_uid_'+staff_uid].split(","):
 							if client_id != None and client_id != "" :
+								selected_staff = Staff.objects.filter(uid=staff_uid).first()
 								create_notif = True
 								client_staff = Client_Staff()
 								client_staff.client = Client.objects.filter(id=client_id).first()
-								client_staff.staff = Staff.objects.filter(uid=staff_uid).first()
+								client_staff.staff = selected_staff
 								client_staff.created_by = request.user
 								client_staff.save()
+
 
 					if create_notif:
 						ctx = {}
 						ctx['client_schedule'] = None
-						ctx['staff'] = cur_staff
+						ctx['staff'] = selected_staff
 						ctx['notification_type'] = 'notification_followup'
 						ctx['notes'] = 'Anda Mendapatkan Client Baru'
 						create_notification(request.user,ctx)

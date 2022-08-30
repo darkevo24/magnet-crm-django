@@ -547,42 +547,43 @@
 		//     $('#alert_model_close_btn').click();
 		// }, 1300);
 
-		function get_notification() {
-			$.ajax({
-				url: "{% url 'ajax-get-notification' %}",
-				type: 'GET',
-				// dataType: 'json',
-				// data: {
-				// 	csrfmiddlewaretoken:"{{csrf_token}}",
-				// 	tree_level: code,
-				// },
-				error: function() {
-					console.log("error")
-				},
-				success: function(res) {
-					$.each(res, function( index, value ) {
-						var contaienr_div = '';
-						if (res['index']['client_schedule'] == '') {
-							contaienr_div = $('#notification-new-client-container').html()
-							contaienr_div.replace(__notes__, res['index']['notes'])
-							contaienr_div.replace(__url__, res['index']['url'])
-						}	
-						else {
-							contaienr_div = $('#notification-schedule-container').html()
-							contaienr_div.replace(__notes__, res['index']['notes'])
-							contaienr_div.replace(__url__, res['index']['url'])
-							contaienr_div.replace(__hour__, res['index']['hour'])
-							contaienr_div.replace(__client_name__, res['index']['client_name'])
-						}
-						$('#notification-list-container').append(contaienr_div)
-					});
-					console.log('sukses')
-					console.log(res)
+		// function get_notification() {
+		// 	$.ajax({
+		// 		url: "{% url 'ajax-get-notification' %}",
+		// 		type: 'GET',
+		// 		// dataType: 'json',
+		// 		// data: {
+		// 		// 	csrfmiddlewaretoken:"{{csrf_token}}",
+		// 		// 	tree_level: code,
+		// 		// },
+		// 		error: function() {
+		// 			console.log("error")
+		// 		},
+		// 		success: function(res) {
+		// 			$.each(res, function( index, value ) {
+		// 				var contaienr_div = '';
+		// 				if (res['index']['client_schedule'] == '') {
+		// 					contaienr_div = $('#notification-new-client-container').html()
+		// 					contaienr_div.replace(__notes__, res['index']['notes'])
+		// 					contaienr_div.replace(__url__, res['index']['url'])
+		// 				}	
+		// 				else {
+		// 					contaienr_div = $('#notification-schedule-container').html()
+		// 					contaienr_div.replace(__notes__, res['index']['notes'])
+		// 					contaienr_div.replace(__url__, res['index']['url'])
+		// 					contaienr_div.replace(__hour__, res['index']['hour'])
+		// 					contaienr_div.replace(__client_name__, res['index']['client_name'])
+		// 				}
+		// 				$('#notification-list-container').append(contaienr_div)
+		// 			});
+		// 			console.log('sukses')
+		// 			console.log(res)
 
-				}
-			});
-		}
-		get_notification();
+		// 		}
+		// 	});
+		// }
+		
+		// get_notification();
 		{% if messages %}
 			$('#modal_theme_success').modal('show');
 		{% endif %}

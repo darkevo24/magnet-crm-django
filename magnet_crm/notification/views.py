@@ -20,8 +20,8 @@ def create_notification(user, data={}):
 
 			notification = Notification()
 			notification.created_by = notification.updated_by = user
-			notification.client_schedule = data['client_schedule']
-			notification.client = data['client']
+			notification.client_schedule = data['client_schedule'] if 'client_schedule' in data else None 
+			notification.client = data['client'] if 'client' in data else None
 			notification.staff = data['staff']
 			notification.notification_type = data['notification_type']
 			notification.notes = data['notes']
@@ -34,6 +34,7 @@ def create_notification(user, data={}):
 	return False
 
 def get_notifications(request):
+	pritn("ini profile id staff skg",request.id)
 	notifications = Notification.objects.filter(is_active=True, staff__profile__user__id=request.user.id).prefetch_related('client_schedule__client').order_by('-created_at')[:10]
 	notification_list = {}
 	notification_list['notification_list'] = []
