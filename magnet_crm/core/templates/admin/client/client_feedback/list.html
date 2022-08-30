@@ -10,12 +10,23 @@
 			<h5 class="card-title">Client Feedback</h5>
 			<div class="chart has-fixed-height" id="pie_basic"></div>
 
-			<p>Top 3 Responses:
-				{% for x in top_3_response %}
-				<br>
-            		"{{x}}" : {{dict_client_res|dict_get:x}}
-            	{% endfor %}
-			</p>
+			
+			<div class="card card-body border-top-info">
+				<div class="text-center">
+					<h6 class="mb-0 font-weight-semibold">Top 3 Responses:</h6>
+				</div>
+				
+				<div class="border rounded p-3">
+                    <ol class="list mb-0">
+                    	{% for x in top_3_response %}
+							<li><h6 class="mb-0">
+					                    <span class="font-weight-semibold">{{x}}<span class="badge badge-success badge-pill align-top ml-2">{{dict_client_res|dict_get:x}}</span>
+					                    
+				                    </h6></li>
+		            	{% endfor %}
+					</ol>
+				</div>
+			</div>
 		</div>
 
 		<div class="card-body">
@@ -25,7 +36,7 @@
 			<div class="row">
 				<div class="col-12">
 
-					<table class="table">
+					<table class="table" id="table-main">
 					  <thead>
 					    <tr>
 					      <th scope="col">#</th>
@@ -100,6 +111,33 @@
 
 		            // Options
 		            pie_basic.setOption({
+		            	// title: {
+		             //        text: 'Are you happy?',
+		             //        subtext: 'Utrecht, Netherlands',
+		             //        left: 'center',
+		             //        top: '45%',
+		             //        textStyle: {
+		             //            color: '#fff',
+		             //            fontSize: 19,
+		             //            fontWeight: 500
+		             //        },
+		             //        subtextStyle: {
+		             //            fontSize: 12,
+		             //            color: '#fff'
+		             //        }
+		             //    },
+	                legend: {
+	                    orient: 'vertical',
+	                    top: '5%',
+	                    // left: (pie_basic.offsetWidth / 2) + 20,
+	                    data: ['60% Definitely yes','30% Could be better','10% Not at the moment'],
+	                    itemHeight: 8,
+	                    itemWidth: 8,
+	                    itemGap: 15,
+	                    textStyle: {
+	                        color: '#000000'
+	                    }
+	                },
 
 		                // Colors
 		                color: [
@@ -217,7 +255,32 @@
 		        }
 		    }
 	}();
-
 	EchartsPieBasicDark.init();
+
+	
+    $(function() {
+		$("#table-main").DataTable({
+	    	dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+			language: {
+	            search: '<span>Filter:</span> _INPUT_',
+	            searchPlaceholder: 'Type to filter...',
+	            lengthMenu: '<span>Show:</span> _MENU_',
+	        },
+	        scrollX: true,
+	        // scrollY: '350px',
+	        scrollCollapse: true,
+	        fixedColumns: {
+	            leftColumns: 2,
+	            // rightColumns: 1
+	        }
+	    });
+
+	});
+
+	$(".table-row").click(function() {
+	 	var link = $(this).data('href');
+	 	window.location.href = link;
+	});
+
 </script>
 {% endblock content %}

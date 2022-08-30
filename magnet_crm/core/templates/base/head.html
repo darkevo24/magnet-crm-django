@@ -82,8 +82,9 @@
 
 		<div class="navbar-brand text-center text-lg-left">
 			<a href="index.html" class="d-inline-block">
-				<img src="{% static 'limitless/global_assets/images/logo_light.png" class="d-none d-sm-block" alt="">
-				<img src="{% static 'limitless/global_assets/images/logo_icon_light.png" class="d-sm-none" alt="">
+				asd
+				<img src="{% static 'magnet/images/magnet.png' %}" class="d-none d-sm-block" alt="">
+				<img src="{% static 'magnet/images/magnet.png' %}" class="d-sm-none" alt="">
 			</a>
 		</div>
 
@@ -96,7 +97,9 @@
 				<li class="nav-item nav-item-dropdown-lg dropdown">
 					<a href="#" class="navbar-nav-link navbar-nav-link-toggler" data-toggle="dropdown" aria-expanded="false">
 						<i class="icon-bell3"></i>
-						<span class="badge badge-mark border-pink"></span>
+						{% if notification_context_list|length != 0 %}
+							<span class="badge badge-mark border-pink"></span>
+						{% endif %}
 					</a>
 					
 					<div class="dropdown-menu dropdown-menu-right dropdown-content wmin-lg-350">
@@ -298,7 +301,8 @@
 					<div class="sidebar-section-body">
 						<div class="media">
 							<a href="#" class="mr-3">
-								<img src="" class="rounded-circle" alt="">
+
+								<img src="{% static 'magnet/images/favicon_magnet.ico' %}" class="" alt="">
 							</a>
 
 							<div class="media-body">

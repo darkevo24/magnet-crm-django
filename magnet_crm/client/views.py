@@ -298,12 +298,15 @@ def client_journey_add(request, client_id, journey_type):
 def feedback_list(request):
 	template = 'admin/client/client_feedback/list.html'
 
+	
 	staff = Staff.objects.filter(profile__user__id=request.user.id, is_active=True).first()
 	# sub_staff_list = Staff.objects.filter(staff_parent__id=staff.id, is_active=True)
 	# if sub_staff_list.count() == 0 >:
 
-
-	client_feedback_list = Client_Followup.objects.filter(is_active=True, staff=staff).prefetch_related('followup', 'client', 'staff').order_by('-created_at')
+	if request.user.is_superuser:
+		client_feedback_list = Client_Followup.objects.filter(is_active=True).prefetch_related('followup', 'client', 'staff').order_by('-created_at')
+	else:
+		client_feedback_list = Client_Followup.objects.filter(is_active=True, staff=staff).prefetch_related('followup', 'client', 'staff').order_by('-created_at')
 	dict_client_res = {}
 	for client_res in client_feedback_list:
 		if client_res.followup not in dict_client_res:
