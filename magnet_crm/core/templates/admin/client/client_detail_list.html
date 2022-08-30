@@ -3,7 +3,15 @@
 
 {% block content %}
 
+<style type="text/css">
+	#table_followup tr{
+		height: 80px
+	}
 
+	#table_schedule tr{
+		height: 80px
+	}
+</style>
 <div class="row">
 	<!-- Typeahead -->
 	<div class="card col-12">
@@ -59,10 +67,10 @@
 								<td>Registerd</td>
 								<td>:</td>
 								<td>
-									{% if client.is_registered == True %}
-										<span class="badge badge-danger">Not Registered</span>
-									{% else %}
+									{% if client.is_registered %}
 										<span class="badge badge-success">Registered</span>
+									{% else %}
+										<span class="badge badge-danger">Not Registered</span>
 									{% endif %}
 								</td>
 							</tr>
@@ -100,9 +108,9 @@
 			
 			<div class="col-6 ">
 				<h5>History Followup</h5>
-					<div class="card p-2" style=";overflow: scroll">
+					<div class="card p-2" style="">
 				
-						<table class="table" id="table_followup">
+						<table class="table" id="table_followup" style="max-height: 100vh">
 						  <thead>
 						    <tr>
 						      <th scope="col">#</th>
@@ -149,46 +157,6 @@
 						  <tbody>
 						  	{% for followup in history_schedule %}
 								<tr>
-							      <td scope="row">{{forloop.counter}}</td>
-							      <td scope="row">{{followup.client.nama}}</td>
-							      <td scope="row">{{followup.schedule_date}}</td>
-							      <td scope="row">{{followup.staff.profile.full_name}}</td>
-							      <td scope="row">{{followup.schedule_type}}</td>
-							      <td scope="row">{{followup.status|default:"-"}}</td>
-							      <td scope="row">{{followup.notes|default:"-"}}</td>
-							      <td scope="row">{{followup.answer|default:"-"}}</td>
-							    </tr>
-							    <tr>
-							      <td scope="row">{{forloop.counter}}</td>
-							      <td scope="row">{{followup.client.nama}}</td>
-							      <td scope="row">{{followup.schedule_date}}</td>
-							      <td scope="row">{{followup.staff.profile.full_name}}</td>
-							      <td scope="row">{{followup.schedule_type}}</td>
-							      <td scope="row">{{followup.status|default:"-"}}</td>
-							      <td scope="row">{{followup.notes|default:"-"}}</td>
-							      <td scope="row">{{followup.answer|default:"-"}}</td>
-							    </tr>
-							    <tr>
-							      <td scope="row">{{forloop.counter}}</td>
-							      <td scope="row">{{followup.client.nama}}</td>
-							      <td scope="row">{{followup.schedule_date}}</td>
-							      <td scope="row">{{followup.staff.profile.full_name}}</td>
-							      <td scope="row">{{followup.schedule_type}}</td>
-							      <td scope="row">{{followup.status|default:"-"}}</td>
-							      <td scope="row">{{followup.notes|default:"-"}}</td>
-							      <td scope="row">{{followup.answer|default:"-"}}</td>
-							    </tr>
-							    <tr>
-							      <td scope="row">{{forloop.counter}}</td>
-							      <td scope="row">{{followup.client.nama}}</td>
-							      <td scope="row">{{followup.schedule_date}}</td>
-							      <td scope="row">{{followup.staff.profile.full_name}}</td>
-							      <td scope="row">{{followup.schedule_type}}</td>
-							      <td scope="row">{{followup.status|default:"-"}}</td>
-							      <td scope="row">{{followup.notes|default:"-"}}</td>
-							      <td scope="row">{{followup.answer|default:"-"}}</td>
-							    </tr>
-							    <tr>
 							      <td scope="row">{{forloop.counter}}</td>
 							      <td scope="row">{{followup.client.nama}}</td>
 							      <td scope="row">{{followup.schedule_date}}</td>
