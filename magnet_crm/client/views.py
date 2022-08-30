@@ -303,10 +303,16 @@ def feedback_list(request):
 	# sub_staff_list = Staff.objects.filter(staff_parent__id=staff.id, is_active=True)
 	# if sub_staff_list.count() == 0 >:
 
-	if request.user.is_superuser:
+	if request.user.is_superuser or staff.staff_level.level < 2 :
 		client_feedback_list = Client_Followup.objects.filter(is_active=True).prefetch_related('followup', 'client', 'staff').order_by('-created_at')
 	else:
-		client_feedback_list = Client_Followup.objects.filter(is_active=True, staff=staff).prefetch_related('followup', 'client', 'staff').order_by('-created_at')
+		child_staff = Staff.objects.filter(staff_parent = staff,is_active=True)
+		if child_staff is None:
+			client_feedback_list = Client_Followup.objects.filter(is_active=True, staff=staff).prefetch_related('followup', 'client', 'staff').order_by('-created_at')
+		else:
+			client_feedback_list = Client_Followup.objects.filter(is_active=True, staff__in=child_staff.values_list('id',flat=True)).prefetch_related('followup', 'client', 'staff').order_by('-created_at')
+			
+
 	dict_client_res = {}
 	for client_res in client_feedback_list:
 		if client_res.followup not in dict_client_res:
