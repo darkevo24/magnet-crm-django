@@ -37,6 +37,8 @@ urlpatterns = [
 
     path('client_feedback', client_views.feedback_list, name='client-feedback-list'),
 
+    path('client_import', client_views.client_import, name='client-import'),
+
     
     
 

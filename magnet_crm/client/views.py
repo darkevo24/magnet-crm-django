@@ -18,7 +18,42 @@ from client.models import *
 from staff.models import *
 from client.forms import *
 from client.utils import *
+from xlrd import open_workbook ,xldate_as_tuple
+
 CLEANR = re.compile('<.*?>') 
+
+def client_import(request):
+	template = 'admin/client/client_import.html'
+	import_form = ClientImportForm(request.POST or None, request.FILES or None)
+
+	print(request.POST)
+	if request.POST:
+		try:
+			with transaction.atomic():
+
+				if import_form.is_valid():
+					print("import valid")
+					excel_file = import_form.cleaned_data['file']
+					rb = open_workbook(file_contents=excel_file.read())
+					sheet = rb.sheet_by_index(0)
+					print(sheet.nrows)
+					for x in range(sheet.nrows):
+						print(sheet.row_values(x)[0])
+					# asd
+					return redirect(reverse('client-import'))
+				else:
+					print(import_form.errors)
+					print(import_form.errors)
+
+		except IntegrityError as e:
+			print(e)
+
+	context = {
+		'import_form': import_form,
+
+	}
+	return render(request,template,context=context)
+
 
 def client_list(request):
 		
