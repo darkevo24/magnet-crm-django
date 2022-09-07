@@ -218,20 +218,23 @@ def client_transfer_new(request):
 
 	print("ini yang udah selected",all_selected_client)
 
-	if request.user.is_superuser:
-		cur_staff_client = Client_Staff.objects.filter(is_active=True).values_list('client__id',flat=True)
-		client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("nama")
-	elif cur_staff.staff_level.level > 1:
-		cur_staff_client = Client_Staff.objects.filter(is_active=True,staff=cur_staff).values_list('client__id',flat=True)
-		client_list = Client.objects.filter(is_active=True,is_locked = False,id__in=cur_staff_client).exclude(id__in=all_selected_client).order_by("nama")
-		print("cur_staff_client",cur_staff_client)
-	else:
-		client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("nama")
+	# if request.user.is_superuser:
+	# 	cur_staff_client = Client_Staff.objects.filter(is_active=True).values_list('client__id',flat=True)
+	# 	client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("nama")
+	# elif cur_staff.staff_level.level > 1:
+	# 	cur_staff_client = Client_Staff.objects.filter(is_active=True,staff=cur_staff).values_list('client__id',flat=True)
+	# 	client_list = Client.objects.filter(is_active=True,is_locked = False,id__in=cur_staff_client).exclude(id__in=all_selected_client).order_by("nama")
+	# 	print("cur_staff_client",cur_staff_client)
+	# else:
+		# client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("nama")
+	client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("nama")
 
-	if request.user.is_superuser == True:
-		staff_list = Staff.objects.filter(is_active=True,is_locked=False).order_by("profile__full_name")
-	else:
-		staff_list = Staff.objects.filter(is_active=True,is_locked=False,staff_level__level=cur_staff.staff_level.level+1,staff_parent=cur_staff).exclude(id=cur_staff.id).order_by("profile__full_name")
+	# if request.user.is_superuser == True:
+	# 	staff_list = Staff.objects.filter(is_active=True,is_locked=False).order_by("profile__full_name")
+	# else:
+	# 	staff_list = Staff.objects.filter(is_active=True,is_locked=False,staff_level__level=cur_staff.staff_level.level+1,staff_parent=cur_staff).exclude(id=cur_staff.id).order_by("profile__full_name")
+
+	staff_list = Staff.objects.filter(is_active=True,is_locked=False,staff_level__level=3).order_by("profile__full_name")
 
 	filter_list = [
 		'Adwords',
