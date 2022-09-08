@@ -111,7 +111,7 @@
                                     <tr>
                                         <td></td>
                                         <td>{{client.id}}</td>
-                                        <td>{{forloop.counter}}</td>
+                                        <td><!-- {{forloop.counter}} --></td>
                                         <td>{{client.nama}}</td>
                                         <td>{{client.is_registred}}</td>
                                         <td>{{client.phone_no}}</td>
@@ -410,6 +410,7 @@
         // Checkbox selection
         var mainTable =  $('.datatable-select-checkbox').DataTable({
             dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+            
             language: {
                 search: '<span>Filter:</span> _INPUT_',
                 searchPlaceholder: 'Type to filter...',
@@ -483,6 +484,14 @@
                         });
                 },
         });
+
+        mainTable.on('order.dt search.dt', function () {
+            let i = 1;
+     
+            mainTable.cells(null, 2, { search: 'applied', order: 'applied' }).every(function (cell) {
+                this.data(i++);
+            });
+        }).draw();
 
         console.log(mainTable);
 
