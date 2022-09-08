@@ -75,7 +75,7 @@ class Staff_Salary(Base_Model):
 	)
 	salary_amount = models.DecimalField(decimal_places=2, default=0, max_digits=20)
 
-class Staff_Salary_Montly(Base_Model):
+class Staff_Salary_Monthly(Base_Model):
 	salary_date = models.DateField(null=True, blank=True)
 	salary_amount = models.DecimalField(decimal_places=2, default=0, max_digits=20)
 	bonus_amount = models.DecimalField(decimal_places=2, default=0, max_digits=20)

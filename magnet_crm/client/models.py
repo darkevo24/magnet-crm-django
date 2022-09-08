@@ -60,12 +60,35 @@ class Client(Base_Model):
 	
 	is_registred = models.BooleanField(default=False)
 	is_locked = models.BooleanField(default=False)
+	is_suspect = models.BooleanField(default=False)
+	magnet_id = models.CharField(max_length=255, default='')
 	source = models.CharField(max_length=255, choices=SOURCE_STR, default='0')
 	source_detail_1 = models.CharField(max_length=255, choices=SOURCE_DETAIL_1_STR, default='3')
 	source_detail_2 = models.CharField(max_length=255, choices=SOURCE_DETAIL_2_STR, null=True,blank=True,default=None)
 	
 	def __str__(self):
 		return self.nama
+
+	def save(self, *args, **kwargs):
+		
+		check_clients = Client.objects.filter((Q(nama=self.name) | Q(email=self.email)))
+		user = User.objects.filter(is_superuser=True).first()
+		if check_clients.count() > 0 :
+			self.is_suspect = True
+			try:
+				with transaction.atomic():
+					for check_client in check_clients:
+						client_duplicate_suspect = Client_Duplicate_Suspect()
+						client_duplicate_suspect.client_old = check_client
+						client_duplicate_suspect.client_new = client
+						client_duplicate_suspect.created_by = client_duplicate_suspect.updated_by = user
+						client_duplicate_suspect.save()
+			except IntegrityError as e:
+				print(e)
+
+
+		return super(Client, self).save(*args, **kwargs)
+
 
 
 class Client_Staff(Base_Model):
@@ -192,3 +215,19 @@ class Client_Staff_Request:
 	staff_notes = models.TextField(default='')
 
 	
+class Client_Duplicate_Suspect:
+	client_old = models.ForeignKey(
+		Client,
+		related_name="Client_Duplicate_Suspect_Client_Old",
+		blank=False,
+		null=False,
+		on_delete=models.CASCADE,
+	)
+	client_new = models.ForeignKey(
+		Client,
+		related_name="Client_Duplicate_Suspect_Client_New",
+		blank=False,
+		null=False,
+		on_delete=models.CASCADE,
+	)
+	is_checked = models.BooleanField(default=False)

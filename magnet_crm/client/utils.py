@@ -14,6 +14,7 @@ from client.models import *
 from datetime import datetime
 from django.utils import timezone
 import re
+from django.db.models import Q
 
 def create_client_journal(request, staff=None, client=None, journal_type=None):
 	try:
@@ -48,3 +49,23 @@ def create_client_notification(request, staff=None, client=None, journal_type=No
 		print(e)
 
 	return False
+
+def check_client_duplicate(client, name, email):
+
+	check_clients = Client.objects.filter((Q(nama=name) | Q(email=email)))
+	check = False
+	user = User.objects.filter(is_superuser=True).first()
+	if check_clients.count() > 0 :
+		check = True
+		try:
+			with transaction.atomic():
+				for check_client in check_clients:
+					client_duplicate_suspect = Client_Duplicate_Suspect()
+					client_duplicate_suspect.client_old = check_client
+					client_duplicate_suspect.client_new = client
+					client_duplicate_suspect.created_by = client_duplicate_suspect.updated_by = user
+					client_duplicate_suspect.save()
+		except IntegrityError as e:
+			print(e)
+
+	return check
