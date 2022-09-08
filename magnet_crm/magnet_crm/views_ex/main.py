@@ -99,6 +99,10 @@ def index(request):
 	return render(request,template,context=context)
 
 def dashboard(request):
+	# notification_time = timezone.now() + timedelta(seconds=3)
+	# birthday = timezone.now().replace(minute=57,second=59)
+	# print(birthday,"birthday")
+	# start_process.apply_async(_id='eta-testing',eta=birthday)
 	template = 'admin/core/dashboard.html'
 	
 

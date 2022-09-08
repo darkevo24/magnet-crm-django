@@ -19,6 +19,10 @@ from staff.models import *
 from client.forms import *
 from client.utils import *
 from xlrd import open_workbook ,xldate_as_tuple
+from magnet_crm.task import *
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
+
 
 CLEANR = re.compile('<.*?>') 
 
@@ -247,8 +251,14 @@ def client_schedule_add(request, client_id):
 					messages.success(request, message_str)
 					message_str = ('Staff %s (%s) has been unlocked'%(staff.profile.full_name, staff.staff_level.level_name) )
 			
+					# start_process.apply_async(_id='eta-testing')
+					# schedule_date_reminder = timezone.now()
+					# reminder_date = schedule_date - timedelta(hours=0, minutes=1)
+					# schedule_date_reminder = schedule_date_reminder.replace(day=reminder_date.day,month=reminder_date.month,year=reminder_date.year,hour=reminder_date.hour,minute=reminder_date.minute,second=reminder_date.second) 
+					# print(schedule_date_reminder,"schedule_date_reminder",timezone.now(),"timezone.now()",schedule_date_reminder-timezone.now())
+					print(make_aware(schedule_date - timedelta(hours=0, minutes=9))-timezone.now())
+					start_process.apply_async(_id='eta-testing',eta=make_aware(schedule_date))
 
-			
 					return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 					
 				else:
