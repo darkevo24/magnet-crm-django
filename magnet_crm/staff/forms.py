@@ -25,7 +25,7 @@ class StaffForm(ModelForm):
 class StaffSalaryForm(ModelForm):
 	class Meta:
 		model = Staff_Salary_Monthly
-		fields = ['salary_date','salary_amount','bonus_amount']
+		fields = ['salary_amount','bonus_amount']
 
 
 

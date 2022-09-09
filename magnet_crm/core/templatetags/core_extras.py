@@ -15,7 +15,9 @@ def add_class(field, css):
 
 @register.filter(name='sum')
 def sum(amount1, amount2):
-   return amount1 + amount1
+	print(amount1,amount2)
+	total = (amount1+amount2)
+	return total
 
 
 @register.filter(name='full_menu')

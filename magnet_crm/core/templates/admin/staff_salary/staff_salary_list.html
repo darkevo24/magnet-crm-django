@@ -27,7 +27,7 @@
 					      <th scope="col">Salary Amount</th>
 					      <th scope="col">Salary Bonus</th>
 					      <th scope="col">Total Amount</th>
-					      <th scope="col">Salary Month</th>
+					      <th scope="col">Month</th>
 					      <th scope="col" class="text-center">Action</th>
 					    </tr>
 					  </thead>
@@ -36,9 +36,10 @@
 							<tr>
 						      <td scope="row">{{forloop.counter}}</td>
 						      <td scope="row">{{salary.staff.profile.full_name}}</td>
-						      <td scope="row">{{salary.amount}}</td>
-						      <td scope="row"><{{salary.bonus_amount}}/td>
-						      <td scope="row">{{salary.bonus_amount|sum:salary.amount}}</td>
+						      <td scope="row">{{salary.salary_amount}}</td>
+						      <td scope="row">{{salary.bonus_amount}}</td>
+						      <td scope="row">{{salary.salary_amount|sum:salary.bonus_amount}}</td>
+						      <td scope="row">{{salary.salary_date}}</td>
 						      <td class="text-center">
 									<div class="list-icons">
 										<div class="dropdown">
@@ -47,14 +48,7 @@
 											</a>
 
 											<div class="dropdown-menu dropdown-menu-right">
-												<a href="{% url 'staff-edit' staff.uid %}" class="dropdown-item"><i class="icon-pencil7"></i> Edit</a>
-												{% if staff.is_locked == False %}
-													<a href="{% url 'staff-lock' staff.uid %}" class="dropdown-item"><i class="icon-lock2"></i>Lock</a>
-												{% else %}
-													<a href="{% url 'staff-unlock' staff.uid %}" class="dropdown-item"><i class="icon-unlocked2"></i>Unlock</a>
-												{% endif %}
-												
-												<a href="{% url 'staff-delete' staff.uid %}" class="dropdown-item"><i class="icon-trash"></i> Delete</a>
+												<a href="{% url 'staff-salary-edit' salary.staff.uid salary.id %}" class="dropdown-item"><i class="icon-pencil7"></i> Edit</a>
 											</div>
 										</div>
 									</div>

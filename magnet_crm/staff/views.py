@@ -453,7 +453,7 @@ def staff_supervisor_select_clients(request):
 
 def staff_salary_list(request,staff_uid):
 	template = 'admin/staff_salary/staff_salary_list.html'
-	staff_salary_list = Staff_Salary_Montly.objects.filter(is_active=True).order_by('id')
+	staff_salary_list = Staff_Salary_Monthly.objects.filter(is_active=True).order_by('id')
 	context = {
 		'staff_salary_list': staff_salary_list,
 	}
@@ -463,8 +463,6 @@ def staff_salary_add(request,staff_uid):
 
 	template = 'admin/staff_salary/staff_salary_add.html'
 	staff_salary_form = StaffSalaryForm(request.POST or None)
-
-
 	if request.POST:
 		staff = Staff.objects.filter(uid=staff_uid).first()
 		try:
@@ -472,21 +470,51 @@ def staff_salary_add(request,staff_uid):
 
 				if staff_salary_form.is_valid():
 					salary = staff_salary_form.save(commit=False)
+					salary_date = request.POST['salary_date_submit']
 					salary.staff = staff
-					salary.created_by = salary.updated_by = user
+					salary.salary_date = salary_date
+					salary.created_by = salary.updated_by = request.user
 					salary.save()
 					return redirect(reverse('staff-salary-list', kwargs={'staff_uid': staff_uid}))
 				else:
-					print(profile_form.errors )
-					print(staff_form.errors)
+					print(staff_salary_form.errors)
 
 		except IntegrityError as e:
 			print(e)
 
 	context = {
-		'staff_form': staff_form,
+		'staff_salary_form': staff_salary_form,
 
-		'profile_form': profile_form,
+	}
+	return render(request,template,context=context)
+
+def staff_salary_edit(request,staff_uid,salary_id):
+
+	template = 'admin/staff_salary/staff_salary_edit.html'
+	salary = Staff_Salary_Monthly.objects.filter(id=salary_id).first()
+	staff_salary_form = StaffSalaryForm(request.POST or None,instance=salary)
+	if request.POST:
+		staff = Staff.objects.filter(uid=staff_uid).first()
+		try:
+			with transaction.atomic():
+
+				if staff_salary_form.is_valid():
+					salary = staff_salary_form.save(commit=False)
+					salary_date = request.POST['salary_date_submit']
+					salary.staff = staff
+					salary.salary_date = salary_date
+					salary.created_by = salary.updated_by = request.user
+					salary.save()
+					return redirect(reverse('staff-salary-list', kwargs={'staff_uid': staff_uid}))
+				else:
+					print(staff_salary_form.errors)
+
+		except IntegrityError as e:
+			print(e)
+
+	context = {
+		'salary':salary,
+		'staff_salary_form': staff_salary_form,
 
 	}
 	return render(request,template,context=context)
