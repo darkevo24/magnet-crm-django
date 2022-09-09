@@ -7,7 +7,7 @@
 	<!-- Typeahead -->
 	<div class="card col-12">
 		<div class="card-header">
-			<h5 class="card-title">New Staff</h5>
+			<h5 class="card-title">New Staff Salary</h5>
 		</div>
 
 		<div class="card-body">
@@ -17,28 +17,17 @@
 						{% csrf_token %}
 						<div class="mb-4">
 							<h6 class="font-weight-semibold">Name</h6>
-							{{profile_form.full_name | add_class:"form-control"}}
+							{{profile_form.salary_date | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
 							<h6 class="font-weight-semibold">Email</h6>
-							{{profile_form.email | add_class:"form-control"}}
+							{{profile_form.salary_amount | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
 							<h6 class="font-weight-semibold">Phone Number</h6>
-							{{profile_form.phone_no | add_class:"form-control"}}
+							{{profile_form.bonus_amount | add_class:"form-control"}}
 						</div>
-						<div class="mb-4">
-							<h6 class="font-weight-semibold">No KTP</h6>
-							{{profile_form.no_ktp | add_class:"form-control"}}
-						</div>
-						<div class="mb-4">
-							<h6 class="font-weight-semibold">Staff Level</h6>
-							{{staff_form.staff_level | add_class:"form-control"}}
-						</div>
-						<div class="mb-4">
-							<h6 class="font-weight-semibold">Atasan</h6>
-							{{staff_form.staff_parent_id | add_class:"form-control"}}
-						</div>
+
 						<button type="submit" class="btn btn-primary">Submit</button>
 							
 					</form>

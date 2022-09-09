@@ -459,7 +459,7 @@ def staff_salary_list(request,staff_uid):
 	}
 	return render(request,template,context=context)
 
-def staff_add(request,staff_uid):
+def staff_salary_add(request,staff_uid):
 
 	template = 'admin/staff_salary/staff_salary_add.html'
 	staff_salary_form = StaffSalaryForm(request.POST or None)
