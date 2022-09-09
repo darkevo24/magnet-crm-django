@@ -22,3 +22,13 @@ class StaffForm(ModelForm):
 		fields = ['staff_level',]
 
 
+class StaffSalaryForm(ModelForm):
+	class Meta:
+		model = Staff_Salary_Montly
+		fields = ['salary_date','salary_amount','bonus_amount']
+
+
+
+
+
+

@@ -1,0 +1,120 @@
+
+{% extends 'base/head.html' %}
+
+{% block content %}
+{% load core_extras %}
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12">
+		<div class="card-header">
+			<h5 class="card-title">New Staff</h5>
+		</div>
+
+		<div class="card-body">
+			<div class="row">
+				<div class="col-12">
+					<form method="POST"> 
+						{% csrf_token %}
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Name</h6>
+							{{profile_form.full_name | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Email</h6>
+							{{profile_form.email | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Phone Number</h6>
+							{{profile_form.phone_no | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">No KTP</h6>
+							{{profile_form.no_ktp | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Staff Level</h6>
+							{{staff_form.staff_level | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Atasan</h6>
+							{{staff_form.staff_parent_id | add_class:"form-control"}}
+						</div>
+						<button type="submit" class="btn btn-primary">Submit</button>
+							
+					</form>
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- /typeahead -->
+</div>
+<script type="text/javascript">
+	$( document ).ready(function() {
+    	console.log( "ready!" );
+    		
+    	var edit_first_load = 0;
+    	var data = {
+		    id: 1,
+		    text: 'Barn owl'
+		};
+    	var newOption = new Option(data.text, data.id, false, false);
+    	$('#id_staff_parent_id').select2();
+		$('#id_staff_parent_id').append(newOption).trigger('change');
+		$('#id_staff_parent_id').val(null).trigger('change');
+		console.log(123);
+
+    	$('#id_staff_level').change(function () {
+	        var end = this.value;
+	        // var firstDropVal = $('#pick').val();
+	        console.log(end)
+	        $.ajax({
+	            url: "{% url 'ajax-get-subdivison' %}",
+	            type: 'POST',
+	            dataType: 'json',
+	            data: {
+	                staff_level_id: end,
+	            },
+	            error: function() {
+	                console.log("error");
+	                
+	            },
+	            success: function(res) {
+	            	console.log("search");
+	            	var data_staff_dict = res['data']
+	            	console.log(data_staff_dict);
+	            	$('#id_staff_parent_id').empty().trigger("change");
+	            	$.each(data_staff_dict, function(key, value){
+	            		console.log(value['uid'], value['name'])
+	            		
+				    	var newOption = new Option(value['name'], value['uid'], false, false);
+				    	$('#id_staff_parent_id').append(newOption);
+				    	console.log(123);
+				    });
+				    
+				    if ('True' == '{{is_edit}}' && edit_first_load == 0){
+				    	edit_first_load = 1
+				    	// $('#id_staff_level').change()
+				    	console.log('{{staff.staff_parent.id}}',"ini parent id")
+			    		$('#id_staff_parent_id').val("{{staff.staff_parent.id}}").trigger("change");
+			    		// $('#id_staff_parent_id').val(null).trigger('change');
+			    		// $('#id_staff_parent').change()
+			    	}
+	            	
+	            }
+	        });
+
+	    });
+
+	    if ('True' == '{{is_edit}}'){
+
+	    	$('#id_staff_level').change()
+	    	// console.log({{staff.staff_parent.id}},"ini parent id")
+    		// $('#id_staff_parent').val({{staff.staff_parent.id}})
+    	}
+	});
+
+	
+</script>
+{% endblock content %}

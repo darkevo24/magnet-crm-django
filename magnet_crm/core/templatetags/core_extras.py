@@ -13,6 +13,11 @@ def add_class(field, css):
    return field.as_widget(attrs={"class":css})
 
 
+@register.filter(name='sum')
+def sum(amount1, amount2):
+   return amount1 + amount1
+
+
 @register.filter(name='full_menu')
 def full_menu(user):
 	if user.is_superuser == True:

@@ -22,7 +22,8 @@ from xlrd import open_workbook ,xldate_as_tuple
 from magnet_crm.task import *
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
-
+import csv
+from io import StringIO
 
 CLEANR = re.compile('<.*?>') 
 
@@ -37,13 +38,33 @@ def client_import(request):
 
 				if import_form.is_valid():
 					print("import valid")
-					excel_file = import_form.cleaned_data['file']
-					rb = open_workbook(file_contents=excel_file.read())
-					sheet = rb.sheet_by_index(0)
-					print(sheet.nrows)
-					for x in range(sheet.nrows):
-						print(sheet.row_values(x)[0])
-					# asd
+					csv_file = import_form.cleaned_data['file']
+					file = csv_file.read().decode('utf-8').splitlines()
+					# print(file)
+					counter = 0 
+					for row in file:
+						# print(row)
+						if counter == 0:
+							counter+=1
+							pass
+						else:
+							temp = row.split(";")
+							print(temp[0])
+					
+
+
+
+
+					
+								# ini kalo pake xls / xlsx
+								# excel_file = import_form.cleaned_data['file']
+								# rb = open_workbook(file_contents=excel_file.read())
+								# sheet = rb.sheet_by_index(0)
+								# print(sheet.nrows)
+								# for x in range(sheet.nrows):
+								# 	print(sheet.row_values(x)[0])
+
+
 					return redirect(reverse('client-import'))
 				else:
 					print(import_form.errors)
@@ -256,7 +277,7 @@ def client_schedule_add(request, client_id):
 					# reminder_date = schedule_date - timedelta(hours=0, minutes=1)
 					# schedule_date_reminder = schedule_date_reminder.replace(day=reminder_date.day,month=reminder_date.month,year=reminder_date.year,hour=reminder_date.hour,minute=reminder_date.minute,second=reminder_date.second) 
 					# print(schedule_date_reminder,"schedule_date_reminder",timezone.now(),"timezone.now()",schedule_date_reminder-timezone.now())
-					print(make_aware(schedule_date - timedelta(hours=0, minutes=9))-timezone.now())
+					print(make_aware(schedule_date - timedelta(hours=0, minutes=5))-timezone.now())
 					start_process.apply_async(_id='eta-testing',eta=make_aware(schedule_date))
 
 					return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -2,18 +2,19 @@
 {% extends 'base/head.html' %}
 
 {% block content %}
+{% load core_extras %}
 <div class="row">
 	<!-- Typeahead -->
 	<div class="card col-12">
 		
 		<div class="card-header">
-			<h5 class="card-title">Staff List</h5>
+			<h5 class="card-title">Staff Salary List</h5>
 		</div>
 
 		<div class="card-body">
 			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
 			<div class="btn-group mr-lg-3 mb-3">
-				<a href="{% url 'staff-add' %}"><button type="Staff" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Staff</span></button></a>
+				<a href="{% url 'staff-add' %}"><button type="Staff" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Staff Salary</span></button></a>
 			</div>
 			<div class="row">
 				<div class="col-12">
@@ -22,33 +23,22 @@
 					  <thead>
 					    <tr>
 					      <th scope="col">#</th>
-					      <th scope="col">Fullname</th>
-					      <th scope="col">Email</th>
-					      <th scope="col">Level</th>
-					      <th scope="col">Supervisor</th>
-					      <th scope="col" class="text-center">Lock Status</th>
-					      <th scope="col">Last Login</th>
+					      <th scope="col">Staff Name</th>
+					      <th scope="col">Salary Amount</th>
+					      <th scope="col">Salary Bonus</th>
+					      <th scope="col">Total Amount</th>
+					      <th scope="col">Salary Month</th>
 					      <th scope="col" class="text-center">Action</th>
 					    </tr>
 					  </thead>
 					  <tbody>
-					  	{% for staff in staff_list%}
+					  	{% for salary in staff_salary_list %}
 							<tr>
 						      <td scope="row">{{forloop.counter}}</td>
-						      <td scope="row">{{staff.profile.full_name}}</td>
-						      <td scope="row">{{staff.profile.email}}</td>
-
-						      <td scope="row">{{staff.staff_level.level_name}}</td>
-						      <td scope="row">{{staff.staff_parent.profile.full_name}}</td>
-						      <td scope="row" class="text-center">
-						      	{% if staff.is_locked == True %}
-									<i class="icon-lock2" style="color: red"></i>
-								{% else %}
-									<i class="icon-unlocked2" style="color: green"></i>
-								{% endif %}
-
-						      </td>
-						      <td></td>
+						      <td scope="row">{{salary.staff.profile.full_name}}</td>
+						      <td scope="row">{{salary.amount}}</td>
+						      <td scope="row"><{{salary.bonus_amount}}/td>
+						      <td scope="row">{{salary.bonus_amount|sum:salary.amount}}</td>
 						      <td class="text-center">
 									<div class="list-icons">
 										<div class="dropdown">
@@ -58,7 +48,6 @@
 
 											<div class="dropdown-menu dropdown-menu-right">
 												<a href="{% url 'staff-edit' staff.uid %}" class="dropdown-item"><i class="icon-pencil7"></i> Edit</a>
-												<a href="{% url 'staff-salary-list' staff.uid %}" class="dropdown-item"><i class="icon-pencil7"></i> Salary</a>
 												{% if staff.is_locked == False %}
 													<a href="{% url 'staff-lock' staff.uid %}" class="dropdown-item"><i class="icon-lock2"></i>Lock</a>
 												{% else %}

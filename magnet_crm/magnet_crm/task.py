@@ -21,6 +21,7 @@ from celery import shared_task
 from notification.views import create_notification 
 
 
+from celery.schedules import crontab
 
 # # from celery import Celery
 # # from celery import task  
@@ -45,7 +46,35 @@ from notification.views import create_notification
 # def debug_task(self):
 #     print(f'Request: {self.request!r}')
 
+app = Celery()
+app.conf.beat_schedule = {
+    # Executes every Monday morning at 7:30 a.m.
+    'add-every-monday-morning': {
+        'task': 'tasks.add',
+        'schedule': crontab(minute='*/1'),
+        'args': (16, 16),
+    },
+}
 
+
+# app = Celery()
+# @app.on_after_configure.connect
+# def setup_periodic_tasks(sender, **kwargs):
+#     # Calls test('hello') every 10 seconds.
+#     sender.add_periodic_task(1.0, test.s('hello'), name='add every 10')
+
+#     # Calls test('world') every 30 seconds
+#     sender.add_periodic_task(30.0, test.s('world'), expires=10)
+
+#     # Executes every Monday morning at 7:30 a.m.
+#     sender.add_periodic_task(
+#         crontab(hour=7, minute=30, day_of_week=1),
+#         test.s('Happy Mondays!'),
+#     )
+
+@app.task
+def test(arg):
+    print(arg)
 
 @shared_task
 def start_process():
