@@ -22,59 +22,49 @@ from notification.views import create_notification
 
 
 from celery.schedules import crontab
+from django_celery_beat.models import PeriodicTask, IntervalSchedule
 
-# # from celery import Celery
-# # from celery import task  
+import json
+from datetime import datetime, timedelta
+from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
+# schedule, created = IntervalSchedule.objects.get_or_create(
+#     every=1,
+#     period=IntervalSchedule.SECONDS,
+# )
 
-# # Set the default Django settings module for the 'celery' program.
-# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'magnet_crm.settings')
-
-# # app = Celery('magnet_crm')
-# app = Celery('tasks', broker='amqp://guest@localhost//')
-# # Using a string here means the worker doesn't have to serialize
-# # the configuration object to child processes.
-# # - namespace='CELERY' means all celery-related configuration keys
-# #   should have a `CELERY_` prefix.
-# app.config_from_object('django.conf:settings')
-
-# # Load task modules from all registered Django apps.
-# app.autodiscover_tasks(settings.INSTALLED_APPS)
-# print("masuk init celery")
-
-# @app.task(bind=True)
-# def debug_task(self):
-#     print(f'Request: {self.request!r}')
-
-app = Celery()
-app.conf.beat_schedule = {
-    # Executes every Monday morning at 7:30 a.m.
-    'add-every-monday-morning': {
-        'task': 'tasks.add',
-        'schedule': crontab(minute='*/1'),
-        'args': (16, 16),
-    },
-}
+# PeriodicTask.objects.create(
+#     interval=schedule,
+#     name='news',          # simply describes this periodic task.
+#     task='magnet_crm.tasks.test',
+#     # args="ini dari periodic"  # name of task.
+# )
 
 
-# app = Celery()
-# @app.on_after_configure.connect
-# def setup_periodic_tasks(sender, **kwargs):
-#     # Calls test('hello') every 10 seconds.
-#     sender.add_periodic_task(1.0, test.s('hello'), name='add every 10')
+schedule, _ = CrontabSchedule.objects.get_or_create(
+    minute='0',
+    hour='0',
+    timezone="Asia/Jakarta"
+    # day_of_week='*',
+    # day_of_month='*',
+    # month_of_year='*',
+)
 
-#     # Calls test('world') every 30 seconds
-#     sender.add_periodic_task(30.0, test.s('world'), expires=10)
+PeriodicTask.objects.create(
+    crontab=schedule,                  # we created this above.
+    name='Birthday1',          # simply describes this periodic task.
+    task='magnet_crm.task.test',  # name of task.
+    # args=json.dumps(['arg1', 'arg2']),
+    # kwargs=json.dumps({
+    #    'be_careful': True,
+    # }),
+    # expires=datetime.utcnow() + timedelta(seconds=30)
+)
 
-#     # Executes every Monday morning at 7:30 a.m.
-#     sender.add_periodic_task(
-#         crontab(hour=7, minute=30, day_of_week=1),
-#         test.s('Happy Mondays!'),
-#     )
 
-@app.task
-def test(arg):
-    print(arg)
+@shared_task
+def test():
+    print("ini dari task")
 
 @shared_task
 def start_process():

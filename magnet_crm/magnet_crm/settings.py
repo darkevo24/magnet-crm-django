@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'client',
     'notification',
     'celery',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -129,6 +130,8 @@ STATICFILES_DIRS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Jakarta'
+CELERY_TIMEZONE = 'Asia/Jakarta'
+CELERY_ENABLE_UTC = False
 
 USE_I18N = True
 
