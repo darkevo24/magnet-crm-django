@@ -43,25 +43,25 @@ from django.contrib.auth.models import User
 # )
 
 
-schedule, _ = CrontabSchedule.objects.get_or_create(
-    minute='0',
-    hour='0',
-    timezone="Asia/Jakarta"
-    # day_of_week='*',
-    # day_of_month='*',
-    # month_of_year='*',
-)
+# schedule, _ = CrontabSchedule.objects.get_or_create(
+#     minute='0',
+#     hour='0',
+#     timezone="Asia/Jakarta"
+#     # day_of_week='*',
+#     # day_of_month='*',
+#     # month_of_year='*',
+# )
 
-PeriodicTask.objects.create(
-    crontab=schedule,                  # we created this above.
-    name='BirthdayCheck',          # simply describes this periodic task.
-    task='magnet_crm.task.birthday_check',  # name of task.
-    # args=json.dumps(['arg1', 'arg2']),
-    # kwargs=json.dumps({
-    #    'be_careful': True,
-    # }),
-    # expires=datetime.utcnow() + timedelta(seconds=30)
-)
+# PeriodicTask.objects.create(
+#     crontab=schedule,                  # we created this above.
+#     name='BirthdayCheck',          # simply describes this periodic task.
+#     task='magnet_crm.task.birthday_check',  # name of task.
+#     # args=json.dumps(['arg1', 'arg2']),
+#     # kwargs=json.dumps({
+#     #    'be_careful': True,
+#     # }),
+#     # expires=datetime.utcnow() + timedelta(seconds=30)
+# )
 
 
 

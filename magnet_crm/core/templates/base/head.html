@@ -365,6 +365,14 @@
 						 {% with request.user|is_admin as is_low_admin %} 
 							{% if is_privilage %}
 								<li class="nav-item">
+									<a href="{% url 'client-import'%}" class="nav-link ">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-client.png' %}">
+										<span>
+											Client Import
+										</span>
+									</a>
+								</li>
+								<li class="nav-item">
 									<a href="{% url 'client_transfer_new'%}" class="nav-link ">
 										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff-level.png' %}">
 										<span>

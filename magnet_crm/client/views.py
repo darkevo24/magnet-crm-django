@@ -49,7 +49,12 @@ def client_import(request):
 							pass
 						else:
 							temp = row.split(";")
-							print(temp[0])
+							new_client = Client()
+							new_client.nama = temp[0]
+							new_client.phone_no = temp[1] if 1 in temp else 0
+							new_client.created_by = request.user
+							new_client.save()
+							# print(temp[0])
 					
 
 
@@ -78,6 +83,7 @@ def client_import(request):
 
 	}
 	return render(request,template,context=context)
+
 
 
 def client_list(request):

@@ -4,8 +4,12 @@ from staff.models import Staff
 from followup.models import Followup
 from colorfield.fields import ColorField
 
-
+from django.db.models import Q
 import uuid
+from django.contrib.auth.models import User
+from django.db import IntegrityError, transaction
+
+
 
 class Client(Base_Model):
 	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
@@ -70,21 +74,33 @@ class Client(Base_Model):
 		return self.nama
 
 	def save(self, *args, **kwargs):
-		
-		check_clients = Client.objects.filter((Q(nama=self.name) | Q(email=self.email)))
-		user = User.objects.filter(is_superuser=True).first()
-		if check_clients.count() > 0 :
-			self.is_suspect = True
-			try:
-				with transaction.atomic():
-					for check_client in check_clients:
-						client_duplicate_suspect = Client_Duplicate_Suspect()
-						client_duplicate_suspect.client_old = check_client
-						client_duplicate_suspect.client_new = client
-						client_duplicate_suspect.created_by = client_duplicate_suspect.updated_by = user
-						client_duplicate_suspect.save()
-			except IntegrityError as e:
-				print(e)
+
+		new_client = super(Client, self).save(*args, **kwargs)
+		print(self.pk)
+
+		if self.nama != None and self.nama != "":
+			print(self.nama,"self.nama")
+			check_clients = Client.objects.filter(Q(nama=self.nama)).exclude(id=self.pk)
+			print(check_clients,"check_clients 1")
+			if self.email != None and self.email != "" :
+				print(self.email,"self.email")
+				check_clients.filter(Q(email=self.email)).exclude(id=self.pk)
+			print(check_clients,"check_clients 2")
+			user = User.objects.filter(is_superuser=True).first()
+			if self.pk:
+				if check_clients.count() > 0 :
+					self.is_suspect = True
+					try:
+						with transaction.atomic():
+							for check_client in check_clients:
+								print("masuk suspect ",check_client.nama, self.nama)
+								client_duplicate_suspect = Client_Duplicate_Suspect()
+								client_duplicate_suspect.client_old = check_client
+								client_duplicate_suspect.client_new = self
+								client_duplicate_suspect.created_by = client_duplicate_suspect.updated_by = user
+								client_duplicate_suspect.save()
+					except IntegrityError as e:
+						print(e)
 
 
 		return super(Client, self).save(*args, **kwargs)
@@ -214,17 +230,16 @@ class Client_Staff_Request:
 	admin_notes = models.TextField(default='')
 	staff_notes = models.TextField(default='')
 
-	
-class Client_Duplicate_Suspect:
+class Client_Duplicate_Suspect(Base_Model):
 	client_old = models.ForeignKey(
-		Client,
+		'Client',
 		related_name="Client_Duplicate_Suspect_Client_Old",
 		blank=False,
 		null=False,
 		on_delete=models.CASCADE,
 	)
 	client_new = models.ForeignKey(
-		Client,
+		'Client',
 		related_name="Client_Duplicate_Suspect_Client_New",
 		blank=False,
 		null=False,
