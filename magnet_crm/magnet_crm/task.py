@@ -27,7 +27,9 @@ from django_celery_beat.models import PeriodicTask, IntervalSchedule
 import json
 from datetime import datetime, timedelta
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
-
+from client.models import *
+from notification.models import *
+from django.contrib.auth.models import User
 # schedule, created = IntervalSchedule.objects.get_or_create(
 #     every=1,
 #     period=IntervalSchedule.SECONDS,
@@ -52,14 +54,34 @@ schedule, _ = CrontabSchedule.objects.get_or_create(
 
 PeriodicTask.objects.create(
     crontab=schedule,                  # we created this above.
-    name='Birthday1',          # simply describes this periodic task.
-    task='magnet_crm.task.test',  # name of task.
+    name='BirthdayCheck',          # simply describes this periodic task.
+    task='magnet_crm.task.birthday_check',  # name of task.
     # args=json.dumps(['arg1', 'arg2']),
     # kwargs=json.dumps({
     #    'be_careful': True,
     # }),
     # expires=datetime.utcnow() + timedelta(seconds=30)
 )
+
+
+
+
+@shared_task
+def birthday_check():
+	today = timezone.now()
+	birthday_list = Client_Staff.objects.filter(client__birthday__month=today.month,client__birthday__day=today.day)
+	# print("ini yang ultah hari ini ", birthday_list)
+
+	superadmin = User.objects.filter(id=1).first()
+
+	for x in birthday_list:
+		new_notif = Notification()
+		new_notif.staff = x.staff
+		new_notif.client = x.client
+		new_notif.notification_type = 'birthday'
+		new_notif.notes = x.client.nama+' Berulang Tahun Hari ini.'
+		new_notif.created_by = superadmin
+		new_notif.save()
 
 
 @shared_task
