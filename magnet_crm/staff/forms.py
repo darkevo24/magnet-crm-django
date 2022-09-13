@@ -22,10 +22,10 @@ class StaffForm(ModelForm):
 		fields = ['staff_level',]
 
 
-class StaffSalaryForm(ModelForm):
-	class Meta:
-		model = Staff_Salary_Monthly
-		fields = ['salary_amount','bonus_amount']
+class StaffSalaryForm(forms.Form):
+	salary_amount = forms.CharField(required=True)
+	bonus_amount = forms.CharField(required=True)
+	
 
 
 

@@ -455,6 +455,7 @@ def staff_salary_list(request,staff_uid):
 	template = 'admin/staff_salary/staff_salary_list.html'
 	staff_salary_list = Staff_Salary_Monthly.objects.filter(is_active=True).order_by('id')
 	context = {
+		'staff_uid':staff_uid,
 		'staff_salary_list': staff_salary_list,
 	}
 	return render(request,template,context=context)
@@ -469,7 +470,19 @@ def staff_salary_add(request,staff_uid):
 			with transaction.atomic():
 
 				if staff_salary_form.is_valid():
-					salary = staff_salary_form.save(commit=False)
+					# salary = staff_salary_form.save(commit=False)
+					salary = Staff_Salary_Monthly()
+					salary_amount = staff_salary_form.cleaned_data["salary_amount"]
+					salary_amount = salary_amount.replace(".","")
+					salary_amount = salary_amount.replace(",",".")
+
+					bonus_amount = staff_salary_form.cleaned_data["bonus_amount"]
+					bonus_amount = bonus_amount.replace(".","")
+					bonus_amount = bonus_amount.replace(",",".")
+
+					salary.salary_amount = salary_amount
+					salary.bonus_amount = bonus_amount
+
 					salary_date = request.POST['salary_date_submit']
 					salary.staff = staff
 					salary.salary_date = salary_date
@@ -492,14 +505,25 @@ def staff_salary_edit(request,staff_uid,salary_id):
 
 	template = 'admin/staff_salary/staff_salary_edit.html'
 	salary = Staff_Salary_Monthly.objects.filter(id=salary_id).first()
-	staff_salary_form = StaffSalaryForm(request.POST or None,instance=salary)
+	staff_salary_form = StaffSalaryForm(request.POST or None,initial={'salary_amount': salary.salary_amount,'bonus_amount': salary.bonus_amount})
 	if request.POST:
 		staff = Staff.objects.filter(uid=staff_uid).first()
 		try:
 			with transaction.atomic():
 
 				if staff_salary_form.is_valid():
-					salary = staff_salary_form.save(commit=False)
+					# salary = staff_salary_form.save(commit=False)
+
+					salary_amount = staff_salary_form.cleaned_data["salary_amount"]
+					salary_amount = salary_amount.replace(".","")
+					salary_amount = salary_amount.replace(",",".")
+
+					bonus_amount = staff_salary_form.cleaned_data["bonus_amount"]
+					bonus_amount = bonus_amount.replace(".","")
+					bonus_amount = bonus_amount.replace(",",".")
+
+					salary.salary_amount = salary_amount
+					salary.bonus_amount = bonus_amount
 					salary_date = request.POST['salary_date_submit']
 					salary.staff = staff
 					salary.salary_date = salary_date

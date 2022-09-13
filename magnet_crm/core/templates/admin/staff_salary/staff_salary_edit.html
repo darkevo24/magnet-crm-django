@@ -41,6 +41,23 @@
 </div>
 <script type="text/javascript">
 	$( document ).ready(function() {
+
+		$("#id_salary_amount").priceFormat({
+			clearPrefix: true,
+    		clearSuffix: true,
+    		prefix:"Rp. ",
+    		thousandsSeparator:".",
+    		centsSeparator:","
+    	});
+
+    	$("#id_bonus_amount").priceFormat({
+			clearPrefix: true,
+    		clearSuffix: true,
+    		prefix:"Rp. ",
+    		thousandsSeparator:".",
+    		centsSeparator:","
+    	});
+    	
     	$('#id_salary_date').pickadate({
             // parentEl: '.content-inner',
             // singleDatePicker: true,
