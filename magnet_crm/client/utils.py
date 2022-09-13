@@ -69,3 +69,39 @@ def check_client_duplicate(client, name, email):
 			print(e)
 
 	return check
+
+	
+import mysql.connector
+from mysql.connector import errorcode
+def check_user_list():
+
+
+	try:
+		cnx = mysql.connector.connect(
+			host="3.1.223.222",
+			user='ivan',
+			password='MajuBersama123',
+			database='vifx'
+		)
+		mycursor = cnx.cursor()
+		mycursor.execute("Show tables;")
+		myresult = mycursor.fetchall()
+
+		for x in myresult:
+			print(x)
+
+		mycursor.execute("SHOW COLUMNS FROM vif_cabinet_legal_form_decleration;")
+		myresult = mycursor.fetchall()
+
+		for x in myresult:
+			print(x)
+
+	except mysql.connector.Error as err:
+		if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+			print("Something is wrong with your user name or password")
+		elif err.errno == errorcode.ER_BAD_DB_ERROR:
+			print("Database does not exist")
+		else:
+			print(err)
+	else:
+		cnx.close()

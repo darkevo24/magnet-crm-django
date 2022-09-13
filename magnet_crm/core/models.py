@@ -35,3 +35,11 @@ class Profile(Base_Model):
 	last_login_ip = models.CharField(max_length=255, default="")
 	def __str__(self):
 		return self.full_name
+
+class Sync_Data_Magnet(Base_Model):
+	current_user_count =  models.DecimalField(decimal_places=2, default=0, max_digits=20)
+	last_user_id = models.IntegerField(default=0)
+
+class History_SyncData_Magnet(Base_Model):
+	last_current_user_count = models.DecimalField(decimal_places=2, default=0, max_digits=20)
+	last_user_id = models.IntegerField(default=0)

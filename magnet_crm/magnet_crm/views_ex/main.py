@@ -14,7 +14,7 @@ import json
 from django.utils import timezone
 from django.db import IntegrityError, transaction
 from notification.views import create_notification
-from magnet_crm.task import *
+# from magnet_crm.task import *
 
 def notif_check(request):
 	print("masuk sini")

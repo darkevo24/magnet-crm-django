@@ -22,6 +22,21 @@ class Client(Base_Model):
 	# )
 
 	nama = models.CharField(max_length=255)
+	first_name = models.CharField(max_length=255) 
+	last_name = models.CharField(max_length=255)
+	middle_name = models.CharField(max_length=255)
+	city = models.CharField(max_length=100)
+	address = models.CharField(max_length=255)
+
+	MAGNET_STATUS = [
+		('active', 'Active'), 
+		('inactive', 'Inactive'),
+		('deleted', 'Deleted'),
+	]
+	magnet_status = models.CharField(max_length=255, choices=MAGNET_STATUS, default='active')
+	id_verification_status = models.IntegerField(default=0)
+	legal_status = models.IntegerField(default=0)
+	magnet_created_by = 
 	umur = models.CharField(max_length=255, default='')
 	GENDER_CHOICES = (
 		('male', 'Male'),

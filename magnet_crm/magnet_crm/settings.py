@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'celery',
     'bonus',
     'django_celery_beat',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
