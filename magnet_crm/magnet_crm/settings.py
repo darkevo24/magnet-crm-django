@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'client',
     'notification',
     'celery',
+    'bonus',
     'django_celery_beat',
 ]
 
@@ -90,8 +91,8 @@ WSGI_APPLICATION = 'magnet_crm.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'magnet_crm',
-        'USER': 'postgres',
+        'NAME': 'magnet_crm_db',
+        'USER': 'ivan',
         'PASSWORD': '',
         'HOST': 'localhost',
         # 'HOST': '13.215.148.70',
