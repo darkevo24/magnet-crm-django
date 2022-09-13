@@ -177,13 +177,14 @@ def client_edit_color(request,id_client, color_str):
 	try:
 		with transaction.atomic():
 			client = Client.objects.filter(id=id_client,is_active=True).first()
-			staff = Staff.objects.filter(profile__user__id=request.user.id).first()
-			client_staff = Client_Staff.objects.filter(client__id=id_client, staff=staff.id, is_active=True).first()
-			client_staff.color = color_str
-			client_staff.updated_by = request.user
+			# staff = Staff.objects.filter(profile__user__id=request.user.id).first()
+			# print('id_client',id_client,' staff.id',staff.id)
+			# client_staff = Client_Staff.objects.filter(client__id=id_client, is_active=True).first()
+			client.color = color_str
+			client.updated_by = request.user
 
-			client_staff.save()
-			print(client_staff.color, color_str)
+			client.save()
+			# print(client_staff.color, color_str)
 	
 	except IntegrityError as e:
 		print(e)

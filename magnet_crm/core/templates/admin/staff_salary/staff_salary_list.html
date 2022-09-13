@@ -3,6 +3,9 @@
 
 {% block content %}
 {% load core_extras %}
+
+
+
 <div class="row">
 	<!-- Typeahead -->
 	<div class="card col-12">
@@ -36,9 +39,9 @@
 							<tr>
 						      <td scope="row">{{forloop.counter}}</td>
 						      <td scope="row">{{salary.staff.profile.full_name}}</td>
-						      <td scope="row">{{salary.salary_amount}}</td>
-						      <td scope="row">{{salary.bonus_amount}}</td>
-						      <td scope="row">{{salary.salary_amount|sum:salary.bonus_amount}}</td>
+						      <td scope="row">{{salary.salary_amount|str_currency }}</td>
+						      <td scope="row">{{salary.bonus_amount|str_currency}}</td>
+						      <td scope="row">{{salary.salary_amount|sum:salary.bonus_amount|str_currency}}</td>
 						      <td scope="row">{{salary.salary_date}}</td>
 						      <td class="text-center">
 									<div class="list-icons">

@@ -76,6 +76,7 @@ class Client(Base_Model):
 
 	]
 
+	color = models.CharField(default='ff0000', max_length=255)
 	
 	is_registred = models.BooleanField(default=False)
 	is_locked = models.BooleanField(default=False)
@@ -136,7 +137,7 @@ class Client_Staff(Base_Model):
 		null=False,
 		on_delete=models.CASCADE,
 	)
-	color = models.CharField(default='ff0000', max_length=255)
+	
 
 
 class Client_Followup(Base_Model):

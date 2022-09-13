@@ -3,11 +3,21 @@ from django.template.defaultfilters import stringfilter
 from django.conf import settings
 import urllib.parse
 from staff.models import *
+from django.contrib.humanize.templatetags.humanize import intcomma
 
 register = template.Library()
 
 
 
+@register.filter(name='str_currency')
+def str_currency(string_value):
+	if string_value is None:
+		return ''
+
+	try:
+		return '{:,}'.format(int(string_value)).replace(',', '.')
+	except ValueError as e:
+		return '-'
 @register.filter(name='add_class')
 def add_class(field, css):
    return field.as_widget(attrs={"class":css})

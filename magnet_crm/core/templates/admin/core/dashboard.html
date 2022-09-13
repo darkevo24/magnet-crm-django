@@ -143,12 +143,12 @@
                                         
                                             
                                             {% for client in all_client %}
-                                                {% with client_color|dict_get:client.id as color %}
+                                                
                                                 <li class="media">
                                                     <div class="media-body ">
                                                         <div class="media-title font-weight-semibold">
-                                                            <i style="display: inline-block;color: #{{color}}" class="icon-circle2 mr-1"></i>
-                                                            {{client.nama}}
+                                                            <i style="display: inline-block;color: #{{client.color}}" class="icon-circle2 mr-1"></i>
+                                                            {{client.nama}} 
                                                         </div>
                                                         <div class="pl-1 text-muted">{{client.phone_no}}</div>
                                                         <div class="pl-1 text-muted">{{client.email}}</div>
@@ -202,7 +202,7 @@
                                                     </div>
 
                                                 </li>
-                                                {% endwith %}
+                                                
                                             {% endfor %}
 
                                         
