@@ -21,12 +21,12 @@ class Client(Base_Model):
 	# 	on_delete=models.CASCADE,
 	# )
 
-	nama = models.CharField(max_length=255, default='')
-	first_name = models.CharField(max_length=255, default='') 
-	last_name = models.CharField(max_length=255, default='')
-	middle_name = models.CharField(max_length=255, default='')
-	city = models.CharField(max_length=100, default='')
-	address = models.CharField(max_length=255, default='')
+	nama = models.CharField(max_length=255)
+	first_name = models.CharField(max_length=255) 
+	last_name = models.CharField(max_length=255)
+	middle_name = models.CharField(max_length=255)
+	city = models.CharField(max_length=100)
+	address = models.CharField(max_length=255)
 
 	MAGNET_STATUS = [
 		('active', 'Active'), 
@@ -36,7 +36,18 @@ class Client(Base_Model):
 	magnet_status = models.CharField(max_length=255, choices=MAGNET_STATUS, default='active')
 	id_verification_status = models.IntegerField(default=0)
 	legal_status = models.IntegerField(default=0)
-	# magnet_created_by = 
+	magnet_created_by = models.IntegerField(default=0)
+	aecode = models.CharField(max_length=25, default='')
+	demologin = models.IntegerField(default=0)
+	cdd = models.BooleanField(default=False)
+	create_ip = models.CharField(max_length=32, default='')
+	medium = models.CharField(max_length=50, default='')
+	campaign = models.CharField(max_length=50, default='')
+	term = models.CharField(max_length=50, default='')
+	content = models.CharField(max_length=50, default='')
+	gclid = models.CharField(max_length=128, default='')
+	magnet_created_at = models.DateTimeField(null=True, blank=True)
+	magnet_update_at = models.DateTimeField(null=True, blank=True)
 	umur = models.CharField(max_length=255, default='')
 	GENDER_CHOICES = (
 		('male', 'Male'),
@@ -76,7 +87,6 @@ class Client(Base_Model):
 
 	]
 
-	color = models.CharField(default='ff0000', max_length=255)
 	
 	is_registred = models.BooleanField(default=False)
 	is_locked = models.BooleanField(default=False)
@@ -109,7 +119,6 @@ class Client(Base_Model):
 					try:
 						with transaction.atomic():
 							for check_client in check_clients:
-								print("masuk suspect ",check_client.nama, self.nama)
 								client_duplicate_suspect = Client_Duplicate_Suspect()
 								client_duplicate_suspect.client_old = check_client
 								client_duplicate_suspect.client_new = self
@@ -137,7 +146,7 @@ class Client_Staff(Base_Model):
 		null=False,
 		on_delete=models.CASCADE,
 	)
-	
+	color = models.CharField(default='ff0000', max_length=255)
 
 
 class Client_Followup(Base_Model):
