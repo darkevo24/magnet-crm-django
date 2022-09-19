@@ -86,6 +86,58 @@ def client_import(request):
 
 
 
+def client_suspect_list(request):
+		
+	staff = Staff.objects.filter(profile__user=request.user).first()
+	template = 'admin/client/suspect/client_list.html'
+	client_list = Client.objects.filter(is_active=True,is_suspect=True).order_by("created_at")
+
+	context = {
+		'client_list': client_list,
+	}
+	return render(request,template,context=context)
+
+def client_suspect_detail(request,id_client):
+	template = 'admin/client/suspect/client_detail.html'
+	# cur_staff = Staff.objects.filter(profile__user=request.user).first()
+	
+	client = Client.objects.filter(id=id_client).first()
+
+	check_clients = Client.objects.filter(Q(nama=client.nama)).exclude(id=client.pk)
+	if client.email != None and client.email != "" :
+		check_clients.filter(Q(email=client.email)).exclude(id=client.pk)
+
+	client_exist = check_clients.first()
+
+
+	if request.POST:
+		action = request.POST['action']
+		if action == 'accept':
+			print("accept")
+			client.is_suspect = False
+		else:
+			print("reject")
+			client.is_active = False
+
+		client.updated_by = request.user
+		client.save()
+
+		return redirect(reverse('client-suspect-list'))
+	# history_followup = Client_Followup.objects.filter(client=client)
+	# history_schedule = Client_Schedule.objects.filter(client=client)
+	# history_journey = Client_Journey.objects.filter(client=client)
+
+	
+	context = {
+		'client': client,
+		'client_exist':client_exist,
+		# 'history_followup': history_followup,
+		# 'history_schedule': history_schedule,
+		# 'history_journey':history_journey,
+		# 'history_schedule': client,
+		'id_client':id_client,
+	}
+	return render(request,template,context=context)
 def client_list(request):
 		
 	staff = Staff.objects.filter(profile__user=request.user).first()

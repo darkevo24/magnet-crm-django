@@ -1,0 +1,212 @@
+
+{% extends 'base/head.html' %}
+
+{% block content %}
+
+<style type="text/css">
+	#table_followup tr{
+		height: 80px
+	}
+
+	#table_schedule tr{
+		height: 80px
+	}
+</style>
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12">
+		
+	<div class="card-header">
+		<h5 class="card-title">Client Suspect Detail</h5>
+	</div>
+
+	<div class="card-body">
+		
+		<div class="row">
+			<div class="col-6 ">
+				<h5>Client Info (Exist in DB)</h5>
+				<div class="card p-2" style="overflow: scroll;">
+					<table>
+						<tbody>
+							<tr>
+								<td>Name</td>
+								<td>:</td>
+								<td>{{client_exist.nama|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Age</td>
+								<td>:</td>
+								<td>{{client_exist.umur|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Gender</td>
+								<td>:</td>
+								<td>{{client_exist.gender|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Job</td>
+								<td>:</td>
+								<td>{{client_exist.pekerjaan|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Domicile</td>
+								<td>:</td>
+								<td>{{client_exist.domisili|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Phone No</td>
+								<td>:</td>
+								<td>{{client_exist.phone_no|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Email</td>
+								<td>:</td>
+								<td>{{client_exist.email|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Registerd</td>
+								<td>:</td>
+								<td>
+									{% if client_exist.is_registered %}
+										<span class="badge badge-success">Registered</span>
+									{% else %}
+										<span class="badge badge-danger">Not Registered</span>
+									{% endif %}
+								</td>
+							</tr>
+							<tr>
+								<td>Source</td>
+								<td>:</td>
+								<td>{{client.source|default:"-"}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="col-6 ">
+				<h5>Client Info (New Suspected)</h5>
+				<div class="card p-2" style="overflow: scroll;">
+					<table>
+						<tbody>
+							<tr>
+								<td>Name</td>
+								<td>:</td>
+								<td>{{client.nama|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Age</td>
+								<td>:</td>
+								<td>{{client.umur|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Gender</td>
+								<td>:</td>
+								<td>{{client.gender|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Job</td>
+								<td>:</td>
+								<td>{{client.pekerjaan|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Domicile</td>
+								<td>:</td>
+								<td>{{client.domisili|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Phone No</td>
+								<td>:</td>
+								<td>{{client.phone_no|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Email</td>
+								<td>:</td>
+								<td>{{client.email|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Registerd</td>
+								<td>:</td>
+								<td>
+									{% if client.is_registered %}
+										<span class="badge badge-success">Registered</span>
+									{% else %}
+										<span class="badge badge-danger">Not Registered</span>
+									{% endif %}
+								</td>
+							</tr>
+							<tr>
+								<td>Source</td>
+								<td>:</td>
+								<td>{{client.source|default:"-"}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div class="col-12 ">
+				<form method="POST" id="main_form">
+						{% csrf_token %}
+					<input type="text" name="action" id="action_input" hidden>
+				</form>
+				<h5>Aksi : </h5>
+				<a class="btn btn-primary" onclick="form_submit('accept')">Accept</a>
+				<a class="btn btn-danger" onclick="form_submit('reject')">Reject</a>
+			</div>
+		</div>
+
+
+
+	</div>
+
+
+
+
+
+	<!-- /typeahead -->
+</div>
+<script type="text/javascript">
+	function form_submit(action){
+		$("#action_input").val(action)
+		$("#main_form").submit()
+	}
+	$(function() {
+		$("#table_schedule").DataTable({
+        	dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+			language: {
+	            search: '<span>Filter:</span> _INPUT_',
+	            searchPlaceholder: 'Type to filter...',
+	            lengthMenu: '<span>Show:</span> _MENU_',
+	        },
+	        scrollX: true,
+	        // scrollY: '350px',
+	        scrollCollapse: true,
+	        fixedColumns: {
+	            leftColumns: 2,
+	            // rightColumns: 1
+	        }
+        });
+        
+		$(".table-row").click(function() {
+		 	var link = $(this).data('href');
+		 	window.location.href = link;
+		});
+
+	});
+	$("#table_followup").DataTable({
+		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+		language: {
+            search: '<span>Filter:</span> _INPUT_',
+            searchPlaceholder: 'Type to filter...',
+            lengthMenu: '<span>Show:</span> _MENU_',
+        },
+        scrollX: true,
+        // scrollY: '350px',
+        scrollCollapse: true,
+        fixedColumns: {
+            leftColumns: 2,
+            // rightColumns: 1
+        }
+    });
+</script>
+{% endblock content %}

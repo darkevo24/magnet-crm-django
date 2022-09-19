@@ -103,6 +103,7 @@ class Client(Base_Model):
 
 		new_client = super(Client, self).save(*args, **kwargs)
 		print(self.pk)
+		print(self.is_suspect)
 
 		if self.nama != None and self.nama != "":
 			print(self.nama,"self.nama")
