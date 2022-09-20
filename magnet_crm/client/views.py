@@ -94,6 +94,7 @@ def client_suspect_list(request):
 
 	context = {
 		'client_list': client_list,
+		'menu':'client_suspect'
 	}
 	return render(request,template,context=context)
 
@@ -132,6 +133,7 @@ def client_suspect_detail(request,id_client_sus):
 	
 	context = {
 		'client_sus': client_sus,
+		'menu':'client_suspect',
 		# 'client_exist':client_exist,
 		# 'history_followup': history_followup,
 		# 'history_schedule': history_schedule,
