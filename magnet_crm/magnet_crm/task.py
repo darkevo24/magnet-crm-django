@@ -274,6 +274,7 @@ def update_client_data(mycursor, last_id, user):
 		# print(new_client[23],'new_client[23]')
 		client.content = new_client[23]
 		client.gclid = new_client[24]
+		client.is_registered = True
 		client.source = None
 		client.source_detail_1 = None
 		client.source_detail_2 = None
