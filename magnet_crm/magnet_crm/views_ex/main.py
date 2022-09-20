@@ -108,6 +108,7 @@ def dashboard(request):
 	template = 'admin/core/dashboard.html'
 	
 
+	form_color = ColorForm(None)
 	staff = Staff.objects.filter(profile__user=request.user).first()
 	client_staff_list = Client_Staff.objects.filter(staff=staff, is_active=True).prefetch_related('client')
 	client_ids = []
@@ -147,11 +148,13 @@ def dashboard(request):
 		'total_upcomming_followup':total_upcomming_followup,
 		'total_feedback':total_feedback,
 		'total_followup':total_followup,
-
+		'own_user':not get_all_user,
 		'all_client' : client_list,
 		'client_schedule_list_json': json.dumps(client_schedule_list_json),
 		'client_color' : client_color,
+		'form_color':form_color,
 		'menu':'dashboard',
+
 	}
 	return render(request,template,context=context)
 

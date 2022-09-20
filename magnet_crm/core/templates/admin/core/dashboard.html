@@ -151,7 +151,7 @@
                                                 <li class="media">
                                                     <div class="media-body ">
                                                         <div class="media-title font-weight-semibold">
-                                                            <i style="display: inline-block;color: #{{client.color}}" class="icon-circle2 mr-1"></i>
+                                                            <i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="icon-circle2 mr-1"></i>
                                                             {{client.nama}} 
                                                         </div>
                                                         <div class="pl-1 text-muted">{{client.phone_no}}</div>
@@ -198,7 +198,9 @@
                                                                     <a href="{% url 'client-schedule-add' client.id  %}" class="dropdown-item">
                                                                         <i class="fas fa-calendar-plus"></i> Add Schedule
                                                                     </a>
-                                                                    <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client.id}}"><i class="icon-pencil7"></i> Edit Color</span>
+                                                                    {% if own_user %}
+                                                                        <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
+                                                                    {% endif %}
 
                                                                 </div>
                                                             </div>
@@ -269,10 +271,10 @@
             <div class="modal-body">
                 <!-- <h6 class="font-weight-semibold">Text in a modal</h6> -->
                 <input type="color" class="form-control"  name="client-color" id="client-color">
-                
+                {{form_color.color}}
             </div>
 
-            <div class="modal-footer">
+            <div class="modal-focoloroter">
                 <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="color-button-save">Save changes</button>
             </div>
@@ -333,7 +335,8 @@
         // $('#client-color').colorpicker();
         $('#color-button-save').click(function(){
             console.log(123);
-            var color_value = $('#client-color').val()
+            var color_value = $('#id_color').val()
+            console.log(color_value,'color_value');
             color_value = color_value.replace('#', '')
             var string_color_url = "{% url 'client-edit-color' 0 '!99' %}";
             string_color_url = string_color_url.replace(0, client_id)

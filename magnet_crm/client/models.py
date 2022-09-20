@@ -149,13 +149,13 @@ class Client_Staff(Base_Model):
 	)
 
 	COLOR_LISTS = [
-		('#008000', 'Hijau'), 
-		('#ff0000', 'Merah'), 
-		('#e7ff00', 'Kuning'), 
-		('#000000', 'Hitam'), 
-		('#0066ff', 'Biru'), 
+		('008000', 'Hijau'), 
+		('ff0000', 'Merah'), 
+		('e7ff00', 'Kuning'), 
+		('000000', 'Hitam'), 
+		('0066ff', 'Biru'), 
 	]
-	color = models.CharField(default='#000000',max_length=255, choices=COLOR_LISTS)
+	color = models.CharField(default='000000',max_length=255, choices=COLOR_LISTS)
 
 
 
