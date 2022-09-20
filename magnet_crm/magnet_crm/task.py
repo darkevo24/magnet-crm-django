@@ -154,19 +154,21 @@ def scramble_clients():
 def birthday():
 	try:
 		with transaction.atomic():
-			now = timezone.now()
+			now = timezone.localtime(timezone.now())
 			clients = Client.objects.filter(birthday__month=now.month, birthday__day=now.day)
 
-
-			all_clients = Client_Staff.objects.filter(client__in=clients.values_list('id',flat=True),is_active=True)
+			print("ini clients",clients)
+			print(now.month,now.day)
+			all_clients = Client_Staff.objects.filter(client_id__in=clients.values_list('id',flat=True),is_active=True)
 			user = User.objects.filter(is_superuser=True).first()
 			data = {}
-			print("masuk birthday",clients)
+			print("masuk birthday",all_clients)
 			for client_staff in all_clients:
 				data['client'] = client_staff.client
 				data['notification_type'] = 'birthday'
 				data['notes'] = 'Today ' + client_staff.client.nama + " Birthday"
 				data['staff'] = client_staff.staff
+				print("mu")
 				create_notification(user, data)
 			
 	except IntegrityError as e:
