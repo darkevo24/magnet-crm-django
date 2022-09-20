@@ -21,12 +21,12 @@ class Client(Base_Model):
 	# 	on_delete=models.CASCADE,
 	# )
 
-	nama = models.CharField(max_length=255)
-	first_name = models.CharField(max_length=255) 
-	last_name = models.CharField(max_length=255)
-	middle_name = models.CharField(max_length=255)
-	city = models.CharField(max_length=100)
-	address = models.CharField(max_length=255)
+	nama = models.CharField(max_length=255, default='')
+	first_name = models.CharField(max_length=255, default='') 
+	last_name = models.CharField(max_length=255, default='')
+	middle_name = models.CharField(max_length=255, default='')
+	city = models.CharField(max_length=100, default='')
+	address = models.CharField(max_length=255, default='')
 
 	MAGNET_STATUS = [
 		('active', 'Active'), 
