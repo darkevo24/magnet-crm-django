@@ -160,6 +160,37 @@ class Client_Staff(Base_Model):
 
 
 
+class Client_Scramble(Base_Model):
+	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+	client = models.ForeignKey(
+		Client,
+		blank=False,
+		null=False,
+		on_delete=models.CASCADE,
+	)
+	staff_parent = models.ForeignKey(
+		Staff,
+		related_name="Client_Scramble_Staff_Parent",
+		blank=False,
+		null=False,
+		on_delete=models.CASCADE,
+	)
+	from_staff = models.ForeignKey(
+		Staff,
+		related_name="Client_Scramble_From_Staff",
+		blank=False,
+		null=False,
+		on_delete=models.CASCADE,
+	)
+	to_staff = models.ForeignKey(
+		Staff,
+		related_name="Client_Scramble_To_Staff",
+		blank=False,
+		null=False,
+		on_delete=models.CASCADE,
+	)
+
+
 class Client_Followup(Base_Model):
 	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	client = models.ForeignKey(

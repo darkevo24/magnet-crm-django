@@ -97,6 +97,59 @@ def start_process():
 # 	except IntegrityError as e:
 # 		print(e)
 
+
+@shared_task
+def scramble_clients():
+	try:
+		with transaction.atomic():
+			# random staff
+			user = User.objects.filter(is_superuser=True).first()
+			staff = Client_Staff.objects.filter(is_active=True).first()
+			all_staff_client = Client_Staff.objects.filter(is_active=True,staff=staff.staff)
+
+
+			for x in all_staff_client:
+				x.is_active=False
+				x.updated_at=timezone.now()
+				x.save()
+
+				all_prev_parents = Client_Scramble.objects.filter(is_active=True,client=x.client)
+				prev_parents=[]
+				print(prev_parents,'prev_parents')
+				for y in all_prev_parents:
+					print('all_prev_parents',y.staff_parent.id)
+					prev_parents.append(y.staff_parent.id)
+				prev_parents.append(x.staff.staff_parent)
+
+				print("prev blocked",prev_parents)
+				next_staff = Staff.objects.filter(is_active=True,staff_level__level=3).exclude(staff_parent__in=prev_parents).first()
+				scramble = Client_Scramble()
+				scramble.client = x.client
+				scramble.staff_parent = x.staff.staff_parent
+				scramble.from_staff = x.staff
+				scramble.to_staff = next_staff
+				scramble.created_by = user
+				scramble.save()
+
+				client_staff = Client_Staff()
+				client_staff.client = x.client
+				client_staff.staff = next_staff
+				client_staff.created_by = user
+				client_staff.save()
+
+
+				data={}
+				data['client'] = x.client
+				data['notification_type'] = 'new_clients'
+				data['notes'] = 'New Scrambled Client ' + x.client.nama
+				data['staff'] = next_staff
+				create_notification(user, data)
+			
+	except IntegrityError as e:
+		print(e)
+
+
+
 @shared_task
 def birthday():
 	try:
