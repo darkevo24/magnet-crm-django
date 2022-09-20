@@ -234,7 +234,7 @@ def update_client_data(mycursor, last_id, user):
 		client.magnet_id = new_client[0]
 		client.updated_by = client.created_by = user
 		# client.create_ip = '127.0.0.1'
-		client.nama = new_client[1]
+		client.nama = new_client[1] if new_client[1] != "" else (new_client[2] + new_client[3] + new_client[4])
 		client.first_name = new_client[2] 
 		client.last_name = new_client[4]
 		client.middle_name = new_client[3]
