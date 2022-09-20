@@ -80,7 +80,7 @@ def client_import(request):
 
 	context = {
 		'import_form': import_form,
-
+		'menu':'client_import',
 	}
 	return render(request,template,context=context)
 
@@ -157,7 +157,7 @@ def client_list(request):
 	context = {
 		'client_list': client_list,
 		'client_staff_list': client_staff_list,
-
+		'menu':'client',
 	}
 	return render(request,template,context=context)
 
@@ -188,7 +188,7 @@ def client_add(request):
 
 	context = {
 		'client_form': client_form,
-
+		'menu':'client',
 	}
 	return render(request,template,context=context)
 
@@ -219,7 +219,7 @@ def client_edit(request,id_client):
 
 	context = {
 		'client_form': client_form,
-
+		'menu':'client',
 	}
 	return render(request,template,context=context)
 
@@ -469,6 +469,7 @@ def feedback_list(request):
 	context['dict_client_res'] = dict_client_res_sorted
 	context['top_3_response'] = top_3_response
 	context['staff'] = staff
+	context['menu'] = 'client_feedback'
 
 
 	return render(request,template,context=context)

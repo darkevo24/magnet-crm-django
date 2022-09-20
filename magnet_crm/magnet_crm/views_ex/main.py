@@ -94,7 +94,9 @@ def index(request):
 		all_choices = Followup.objects.filter(followup_choice_head=tree_level,is_active=True).exclude(followup_choice_code=tree_level)
 	
 	context = {
-		'all_choices' : all_choices
+		'all_choices' : all_choices,
+		'menu':'feedback_list',
+
 	}
 	return render(request,template,context=context)
 
@@ -149,6 +151,7 @@ def dashboard(request):
 		'all_client' : client_list,
 		'client_schedule_list_json': json.dumps(client_schedule_list_json),
 		'client_color' : client_color,
+		'menu':'dashboard',
 	}
 	return render(request,template,context=context)
 
@@ -209,6 +212,7 @@ def client_transfer(request):
 	context = {
 		'all_client' : client_list,
 		'all_staff' : staff_list,
+		'menu':'client_transfer',
 	}
 	return render(request,template,context=context)
 
@@ -312,6 +316,7 @@ def client_transfer_new(request):
 		'all_client' : client_list,
 		'all_staff' : staff_list,
 		'filter_list':filter_list,
+		'menu':'client_transfer',
 	}
 	return render(request,template,context=context)
 

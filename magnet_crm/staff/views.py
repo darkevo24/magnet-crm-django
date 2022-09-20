@@ -24,6 +24,7 @@ def staff_list(request):
 	
 	context = {
 		'staff_list': staff_list,
+		'menu':'staff_list',
 	}
 	return render(request,template,context=context)
 
@@ -43,6 +44,7 @@ def staff_level_list(request):
 	context = {
 		'staff_level_list': staff_level_list,
 		'staff_dict': staff_dict,
+		'menu':'staff_level_list',
 	}
 	return render(request,template,context=context)
 
