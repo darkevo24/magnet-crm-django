@@ -278,6 +278,14 @@ def update_client_data(mycursor, last_id, user):
 		client.source_detail_1 = None
 		client.source_detail_2 = None
 		client.save()
+
+		regis = Client_Journey()
+		regis.client = client
+		regis.journal_type = 'registered'
+		regis.updated_by = regis.created_by = user
+		regis.save()
+
+		
 		counter+=1
 		print("client ke" + str(counter) + " client id :"+str(client.id))
 		# print(client.id)

@@ -90,28 +90,25 @@ def client_suspect_list(request):
 		
 	staff = Staff.objects.filter(profile__user=request.user).first()
 	template = 'admin/client/suspect/client_list.html'
-	client_list = Client.objects.filter(is_active=True,is_suspect=True).order_by("created_at")
+	client_list = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False).order_by("created_at")
 
 	context = {
 		'client_list': client_list,
 	}
 	return render(request,template,context=context)
 
-def client_suspect_detail(request,id_client):
+def client_suspect_detail(request,id_client_sus):
 	template = 'admin/client/suspect/client_detail.html'
 	# cur_staff = Staff.objects.filter(profile__user=request.user).first()
 	
-	client = Client.objects.filter(id=id_client).first()
-
-	check_clients = Client.objects.filter(Q(nama=client.nama)).exclude(id=client.pk)
-	if client.email != None and client.email != "" :
-		check_clients.filter(Q(email=client.email)).exclude(id=client.pk)
-
-	client_exist = check_clients.first()
-
+	# client = Client.objects.filter(id=id_client).first()
+	client_sus = Client_Duplicate_Suspect.objects.filter(id=id_client_sus).first()
+	
+	print(client_sus,'client_sus')
 
 	if request.POST:
 		action = request.POST['action']
+		client = client_sus.client_new
 		if action == 'accept':
 			print("accept")
 			client.is_suspect = False
@@ -122,6 +119,10 @@ def client_suspect_detail(request,id_client):
 
 		client.updated_by = request.user
 		client.save()
+		client_sus.is_checked = True
+		client_sus.updated_by = request.user
+		client_sus.updated_at = timezone.now()
+		client_sus.save()
 
 		return redirect(reverse('client-suspect-list'))
 	# history_followup = Client_Followup.objects.filter(client=client)
@@ -130,13 +131,13 @@ def client_suspect_detail(request,id_client):
 
 	
 	context = {
-		'client': client,
-		'client_exist':client_exist,
+		'client_sus': client_sus,
+		# 'client_exist':client_exist,
 		# 'history_followup': history_followup,
 		# 'history_schedule': history_schedule,
 		# 'history_journey':history_journey,
 		# 'history_schedule': client,
-		'id_client':id_client,
+		# 'id_client':id_client,
 	}
 	return render(request,template,context=context)
 def client_sync(request):

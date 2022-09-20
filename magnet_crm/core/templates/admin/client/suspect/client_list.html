@@ -34,8 +34,8 @@
 					  <tbody>
 					  	{% for client in client_list %}
 					  		{% comment %}
-					  		{% if client.color != 'ff0000'%}
-							<tr style="color: white;background-color: #{{client.color}}">
+					  		{% if client.client_new.color != 'ff0000'%}
+							<tr style="color: white;background-color: #{{client.client_new.color}}">
 							{% else %}
 							<tr>
 							{% endif %}
@@ -43,15 +43,15 @@
 							<tr>
 						      <td scope="row">{{forloop.counter}}</td>
 						      <td>
-						      	<span style="display: inline-block;" >{{client.nama}}</span>
+						      	<span style="display: inline-block;" >{{client.client_new.nama}}</span>
 						      </td>
 						      <td>
 						      	<i style="display: inline-block;color: #{{client_staff.color}}" class="icon-circle2 mr-3"></i>
 						      </td>
-						      <td scope="row">{{client.umur}}</td>
-						      <td scope="row">{{client.gender}}</td>
-						      <td scope="row">{{client.pekerjaan}}</td>
-						      <td scope="row">{{client.domisili}}</td>
+						      <td scope="row">{{client.client_new.umur}}</td>
+						      <td scope="row">{{client.client_new.gender}}</td>
+						      <td scope="row">{{client.client_new.pekerjaan}}</td>
+						      <td scope="row">{{client.client_new.domisili}}</td>
 						      <td scope="row" class="text-center">
 						      	<a href="{% url 'client-suspect-detail' client.id %}"><i class="icon-file-eye"></i></a>
 						      </td>
@@ -63,10 +63,10 @@
 											</a>
 
 											<div class="dropdown-menu dropdown-menu-right">
-												<a href="{% url 'client-edit' client.id %}" class="dropdown-item"><i class="icon-pencil7"></i> Edit</a>
-												<span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client.id}}"><i class="icon-pencil7"></i> Edit Color</span>
+												<a href="{% url 'client-edit' client.client_new.id %}" class="dropdown-item"><i class="icon-pencil7"></i> Edit</a>
+												<span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client.client_new.id}}"><i class="icon-pencil7"></i> Edit Color</span>
 
-												<a href="{% url 'client-delete' client.id %}" class="dropdown-item"><i class="icon-trash"></i> Delete</a>
+												<a href="{% url 'client-delete' client.client_new.id %}" class="dropdown-item"><i class="icon-trash"></i> Delete</a>
 											</div>
 										</div>
 									</div>

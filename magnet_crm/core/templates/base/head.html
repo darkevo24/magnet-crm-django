@@ -466,6 +466,14 @@
 										</span>
 									</a>
 								</li>
+								<li class="nav-item {% if menu == 'client_suspect' %} active {% endif %}">
+									<a href="{% url 'client-suspect-list'%}" class="nav-link {% if menu == 'client_suspect' %} inverted-border-radius {% endif %}">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-client.png' %}">
+										<span>
+											Client Suspect
+										</span>
+									</a>
+								</li>
 								<li class="nav-item {% if menu == 'client_transfer' %} active {% endif %}">
 									<a href="{% url 'client_transfer_new'%}" class="nav-link {% if menu == 'client_transfer' %} inverted-border-radius {% endif %}">
 										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff-level.png' %}">

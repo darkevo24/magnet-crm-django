@@ -24,50 +24,50 @@
 		
 		<div class="row">
 			<div class="col-6 ">
-				<h5>Client Info (Exist in DB)</h5>
+				<h5>Client Info (Exist in DB) {{client_sus.client_old}}</h5>
 				<div class="card p-2" style="overflow: scroll;">
 					<table>
 						<tbody>
 							<tr>
 								<td>Name</td>
 								<td>:</td>
-								<td>{{client_exist.nama|default:"-"}}</td>
+								<td>{{client_sus.client_old.nama|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Age</td>
 								<td>:</td>
-								<td>{{client_exist.umur|default:"-"}}</td>
+								<td>{{client_sus.client_old.umur|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Gender</td>
 								<td>:</td>
-								<td>{{client_exist.gender|default:"-"}}</td>
+								<td>{{client_sus.client_old.gender|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Job</td>
 								<td>:</td>
-								<td>{{client_exist.pekerjaan|default:"-"}}</td>
+								<td>{{client_sus.client_old.pekerjaan|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Domicile</td>
 								<td>:</td>
-								<td>{{client_exist.domisili|default:"-"}}</td>
+								<td>{{client_sus.client_old.domisili|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Phone No</td>
 								<td>:</td>
-								<td>{{client_exist.phone_no|default:"-"}}</td>
+								<td>{{client_sus.client_old.phone_no|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Email</td>
 								<td>:</td>
-								<td>{{client_exist.email|default:"-"}}</td>
+								<td>{{client_sus.client_old.email|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Registerd</td>
 								<td>:</td>
 								<td>
-									{% if client_exist.is_registered %}
+									{% if client_sus.client_old.is_registered %}
 										<span class="badge badge-success">Registered</span>
 									{% else %}
 										<span class="badge badge-danger">Not Registered</span>
@@ -77,7 +77,7 @@
 							<tr>
 								<td>Source</td>
 								<td>:</td>
-								<td>{{client.source|default:"-"}}</td>
+								<td>{{client_sus.client_old.source|default:"-"}}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -91,43 +91,43 @@
 							<tr>
 								<td>Name</td>
 								<td>:</td>
-								<td>{{client.nama|default:"-"}}</td>
+								<td>{{client_sus.client_new.nama|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Age</td>
 								<td>:</td>
-								<td>{{client.umur|default:"-"}}</td>
+								<td>{{client_sus.client_new.umur|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Gender</td>
 								<td>:</td>
-								<td>{{client.gender|default:"-"}}</td>
+								<td>{{client_sus.client_new.gender|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Job</td>
 								<td>:</td>
-								<td>{{client.pekerjaan|default:"-"}}</td>
+								<td>{{client_sus.client_new.pekerjaan|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Domicile</td>
 								<td>:</td>
-								<td>{{client.domisili|default:"-"}}</td>
+								<td>{{client_sus.client_new.domisili|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Phone No</td>
 								<td>:</td>
-								<td>{{client.phone_no|default:"-"}}</td>
+								<td>{{client_sus.client_new.phone_no|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Email</td>
 								<td>:</td>
-								<td>{{client.email|default:"-"}}</td>
+								<td>{{client_sus.client_new.email|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>Registerd</td>
 								<td>:</td>
 								<td>
-									{% if client.is_registered %}
+									{% if client_sus.client_new.is_registered %}
 										<span class="badge badge-success">Registered</span>
 									{% else %}
 										<span class="badge badge-danger">Not Registered</span>
@@ -137,7 +137,7 @@
 							<tr>
 								<td>Source</td>
 								<td>:</td>
-								<td>{{client.source|default:"-"}}</td>
+								<td>{{client_sus.client_new.source|default:"-"}}</td>
 							</tr>
 						</tbody>
 					</table>

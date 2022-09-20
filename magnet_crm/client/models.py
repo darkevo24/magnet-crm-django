@@ -221,8 +221,8 @@ class Client_Journey(Base_Model):
 	)
 	staff = models.ForeignKey(
 		Staff,
-		blank=False,
-		null=False,
+		blank=True,
+		null=True,
 		on_delete=models.CASCADE,
 	)
 	

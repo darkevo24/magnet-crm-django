@@ -92,9 +92,10 @@ def check_user_list():
 		for x in myresult:
 			print(x)
 
-		mycursor.execute("SHOW COLUMNS FROM vif_cabinet_legal_form_decleration;")
+		mycursor.execute("SHOW COLUMNS FROM v_users;")
 		myresult = mycursor.fetchall()
 
+		print("ini kolumnya ======")
 		for x in myresult:
 			print(x)
 
