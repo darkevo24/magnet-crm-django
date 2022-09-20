@@ -72,6 +72,12 @@
                                         <option value="{{list}}">{{list}}</option>
                                     {% endfor %}  
                                 </select>
+                                <h5>Filter Status Register</h5>
+                                <select id="filter_register" class="form-control select-search" data-fouc onchange="client_source_change_register(this)">
+                                    <option value="">Show all</option>
+                                    <option value="True">True</option>
+                                    <option value="False">False</option>
+                                </select>
                             </div>
                             <!-- <div class="col-4" style="position: absolute;bottom: 0;right: 0">
                                 <button type="button" class="btn btn-primary">Filter</i></button>
@@ -114,17 +120,17 @@
                                         <td></td>
                                         <td>{{client.id}}</td>
                                         <td><!-- {{forloop.counter}} --></td>
-                                        <td>{{client.nama}}</td>
-                                        <td>{{client.is_registred}}</td>
-                                        <td>{{client.phone_no}}</td>
-                                        <td>{{client.email}}</td>
+                                        <td>{{client.nama|default:'-'}}</td>
+                                        <td>{{client.is_registered}}</td>
+                                        <td>{{client.phone_no|default:'-'}}</td>
+                                        <td>{{client.email|default:'-'}}</td>
                                         <td>
                                                 {% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
                                                     {{client.get_source_detail_2_display}} 
                                                 {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
                                                     {{client.get_source_detail_1_display}} 
                                                 {% else %}
-                                                    {{client.get_source_display}}
+                                                    {{client.get_source_display|default:'-'}}
                                                 {% endif %}
 
                                             
@@ -501,6 +507,10 @@
             var current_cust_filter = $("#filter_list").val()
             console.log(current_cust_filter)
             $("#DataTables_Table_0 > thead > tr.filters > th:nth-child(7) > input[type=text]").val(current_cust_filter).change()
+        }
+        function client_source_change_register(){
+            var current_cust_filter = $("#filter_register").val()
+            $("#DataTables_Table_0 > thead > tr.filters > th:nth-child(4) > input[type=text]").val(current_cust_filter).change()
         }
         function select_all(primary=true){
             if(primary){

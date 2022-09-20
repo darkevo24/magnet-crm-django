@@ -22,7 +22,7 @@
 					    <tr>
 					      <th scope="col">#</th>
 					      <th scope="col">Nama</th>
-					      <th scope="col">Color</th>
+					      <!-- <th scope="col">Color</th> -->
 					      <th scope="col">Umur</th>
 					      <th scope="col">Gender</th>
 					      <th scope="col">Pekerjaan</th>
@@ -33,20 +33,11 @@
 					  </thead>
 					  <tbody>
 					  	{% for client in client_list %}
-					  		{% comment %}
-					  		{% if client.client_new.color != 'ff0000'%}
-							<tr style="color: white;background-color: #{{client.client_new.color}}">
-							{% else %}
-							<tr>
-							{% endif %}
-							{% endcomment %}
+					  		
 							<tr>
 						      <td scope="row">{{forloop.counter}}</td>
 						      <td>
 						      	<span style="display: inline-block;" >{{client.client_new.nama}}</span>
-						      </td>
-						      <td>
-						      	<i style="display: inline-block;color: #{{client_staff.color}}" class="icon-circle2 mr-3"></i>
 						      </td>
 						      <td scope="row">{{client.client_new.umur|default:'-'}}</td>
 						      <td scope="row">{{client.client_new.gender|default:'-'}}</td>
