@@ -2,6 +2,22 @@ from django.forms import ModelForm
 from client.models import *
 from django import forms
 
+class ClientForm(ModelForm):
+	birthday = forms.CharField(label='Birthday', max_length=100,required=False)
+	class Meta:
+		model = Client
+		fields = [
+			'nama',
+			'phone_no',
+			'email',
+			'umur',
+			'gender',
+			'pekerjaan',
+			'domisili',
+			# 'birthday',
+			# 'source',
+		]
+		
 class ClientImportForm(forms.Form):
 	file = forms.FileField()
 
