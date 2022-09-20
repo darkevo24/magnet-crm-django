@@ -115,6 +115,7 @@ def client_suspect_detail(request,id_client):
 		if action == 'accept':
 			print("accept")
 			client.is_suspect = False
+			client.is_suspect_bypass = True
 		else:
 			print("reject")
 			client.is_active = False

@@ -91,6 +91,7 @@ class Client(Base_Model):
 	is_registred = models.BooleanField(default=False)
 	is_locked = models.BooleanField(default=False)
 	is_suspect = models.BooleanField(default=False)
+	is_suspect_bypass = models.BooleanField(default=False)
 	magnet_id = models.CharField(max_length=255, default='')
 	source = models.CharField(max_length=255, choices=SOURCE_STR, default='0')
 	source_detail_1 = models.CharField(max_length=255, choices=SOURCE_DETAIL_1_STR, default='3')
@@ -102,31 +103,30 @@ class Client(Base_Model):
 	def save(self, *args, **kwargs):
 
 		new_client = super(Client, self).save(*args, **kwargs)
-		print(self.pk)
-		print(self.is_suspect)
-
-		if self.nama != None and self.nama != "":
-			print(self.nama,"self.nama")
-			check_clients = Client.objects.filter(Q(nama=self.nama)).exclude(id=self.pk)
-			print(check_clients,"check_clients 1")
-			if self.email != None and self.email != "" :
-				print(self.email,"self.email")
-				check_clients.filter(Q(email=self.email)).exclude(id=self.pk)
-			print(check_clients,"check_clients 2")
-			user = User.objects.filter(is_superuser=True).first()
-			if self.pk:
-				if check_clients.count() > 0 :
-					self.is_suspect = True
-					try:
-						with transaction.atomic():
-							for check_client in check_clients:
-								client_duplicate_suspect = Client_Duplicate_Suspect()
-								client_duplicate_suspect.client_old = check_client
-								client_duplicate_suspect.client_new = self
-								client_duplicate_suspect.created_by = client_duplicate_suspect.updated_by = user
-								client_duplicate_suspect.save()
-					except IntegrityError as e:
-						print(e)
+		
+		if not self.is_suspect_bypass:
+			if self.nama != None and self.nama != "":
+				print(self.nama,"self.nama")
+				check_clients = Client.objects.filter(Q(nama=self.nama)).exclude(id=self.pk)
+				print(check_clients,"check_clients 1")
+				if self.email != None and self.email != "" :
+					print(self.email,"self.email")
+					check_clients.filter(Q(email=self.email)).exclude(id=self.pk)
+				print(check_clients,"check_clients 2")
+				user = User.objects.filter(is_superuser=True).first()
+				if self.pk:
+					if check_clients.count() > 0 :
+						self.is_suspect = True
+						try:
+							with transaction.atomic():
+								for check_client in check_clients:
+									client_duplicate_suspect = Client_Duplicate_Suspect()
+									client_duplicate_suspect.client_old = check_client
+									client_duplicate_suspect.client_new = self
+									client_duplicate_suspect.created_by = client_duplicate_suspect.updated_by = user
+									client_duplicate_suspect.save()
+						except IntegrityError as e:
+							print(e)
 
 
 		return super(Client, self).save(*args, **kwargs)
