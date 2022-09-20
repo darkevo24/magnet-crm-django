@@ -88,7 +88,7 @@ class Client(Base_Model):
 	]
 
 	
-	is_registred = models.BooleanField(default=False)
+	is_registered = models.BooleanField(default=False)
 	is_locked = models.BooleanField(default=False)
 	is_suspect = models.BooleanField(default=False)
 	is_suspect_bypass = models.BooleanField(default=False)
