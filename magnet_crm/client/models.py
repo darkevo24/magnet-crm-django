@@ -107,11 +107,11 @@ class Client(Base_Model):
 		if not self.is_suspect_bypass:
 			if self.nama != None and self.nama != "":
 				# print(self.nama,"self.nama")
-				check_clients = Client.objects.filter(Q(nama=self.nama)).exclude(id=self.pk)
+				check_clients = Client.objects.filter(Q(nama=self.nama)).order_by("id").exclude(id=self.pk)
 				# print(check_clients,"check_clients 1")
 				if self.email != None and self.email != "" :
 					# print(self.email,"self.email")
-					check_clients.filter(Q(email=self.email)).exclude(id=self.pk)
+					check_clients.filter(Q(email=self.email)).order_by("id").exclude(id=self.pk)
 				# print(check_clients,"check_clients 2")
 				user = User.objects.filter(is_superuser=True).first()
 				if self.pk:
@@ -125,6 +125,7 @@ class Client(Base_Model):
 									client_duplicate_suspect.client_new = self
 									client_duplicate_suspect.created_by = client_duplicate_suspect.updated_by = user
 									client_duplicate_suspect.save()
+									break
 						except IntegrityError as e:
 							print(e)
 
