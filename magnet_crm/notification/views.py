@@ -34,8 +34,10 @@ def create_notification(user, data={}):
 	return False
 
 def get_notifications(request):
-	pritn("ini profile id staff skg",request.id)
+	staff = Staff.objects.filter(profile__user__id=request.user.id).first()
+	print(staff.id, 'staff')
 	notifications = Notification.objects.filter(is_active=True, staff__profile__user__id=request.user.id).prefetch_related('client_schedule__client').order_by('-created_at')[:10]
+	print('count', notifications.count())
 	notification_list = {}
 	notification_list['notification_list'] = []
 	unread = 0
@@ -45,20 +47,34 @@ def get_notifications(request):
 		temp['type'] = notification.notification_type
 
 		temp['client_id'] = ''
+		
+
 		temp['client_name'] = ''
 		temp['client_schedule_id'] = ''
+
+		
+
+		temp['notes'] = notification.notes
 		if notification.client_schedule != None:
 			temp['client_id'] = notification.client_schedule.client.id
 			temp['client_name'] = notification.client_schedule.client.nama
 			temp['client_schedule_id'] = notification.client_schedule.id
+			temp['client_no'] = notification.client_schedule.client.phone_no
 			temp['url'] = reverse('client-detail-list', kwargs={'id_client': notification.client_schedule.client.id})
+		elif notification.notification_type == 'birthday':
+			temp['client_id'] = notification.client.id
+			temp['client_name'] = notification.client.first_name + ' ' + notification.client.middle_name + ' ' + notification.client.last_name
+			temp['client_name'] = temp['client_name'].strip()
+			temp['client_no'] = notification.client.phone_no
 		else:
 			temp['url'] = reverse('client-list')
+			
+
 		if notification.is_opened:
 			unread += 0
 		
 		notification_list['notification_list'].append(temp) 
-
+		print(notification_list)
 	notification_list['unread'] = unread
 
 	return JsonResponse(notification_list)

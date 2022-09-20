@@ -657,54 +657,157 @@
 
 	    {% endfor %}
 	{% endif %}
-
+ <div id="modal-notification" class="modal fade" tabindex="-1" style="color: white">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header bg-success">
+				<h6 class="modal-title" >Happy Birthday to <span>XXXXX</span></h6>
+				<button type="button" class="close" id="alert_model_close_btn" data-dismiss="modal">×</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="modal-birthday" class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+    	<div class="modal-content bg-success" style="color: white">
+      		<div class="modal-header">
+        		<h5 class="modal-title">Happy Birthday to <span id="birthday-name">XXXX</span></h5>
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          			<span aria-hidden="true">&times;</span>
+        		</button>
+      		</div>
+      		<!-- <div class="modal-body">
+        		<p>Modal body text goes here.</p>
+      		</div> -->
+      		<div class="modal-footer">
+        		<button id="birthday-wa-btn" type="button" class="btn btn-primary" style="background-color: white;color: green" data-no_wa="xxxxxxxxx">WA</button>
+        		<button type="button" class="btn btn-secondary">Call</button>
+      		</div>
+    	</div>
+	</div>
+</div>
+<div id="modal-new-client" class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+    	<div class="modal-content bg-warning" style="color: white">
+      		<div class="modal-header">
+        		<h5 class="modal-title">New Client Added</h5>
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          			<span aria-hidden="true">&times;</span>
+        		</button>
+      		</div>
+      		<!-- <div class="modal-body">
+        		<p>Modal body text goes here.</p>
+      		</div> -->
+      		<div class="modal-footer">
+      			<a href="{% url 'client-list'%}">
+        			<button id="new-client-button" type="button" class="btn btn-primary" style="background-color: white;color: orange" >Go</button>
+        		</a>
+      		</div>
+    	</div>
+	</div>
+</div>
 <script type="text/javascript">
 	$(function() {
-		
-		// setInterval(function() {
-		//     $('#alert_model_close_btn').click();
-		// }, 1300);
+		// $('#new-client-birthday').modal('show');
+		// setInterval(function () {console.log(123)}, 1000);
+		setInterval(function() {
+			get_notification();
+		    $('#alert_model_close_btn').click();
+		}, 5000);
 
-		// function get_notification() {
-		// 	$.ajax({
-		// 		url: "{% url 'ajax-get-notification' %}",
-		// 		type: 'GET',
-		// 		// dataType: 'json',
-		// 		// data: {
-		// 		// 	csrfmiddlewaretoken:"{{csrf_token}}",
-		// 		// 	tree_level: code,
-		// 		// },
-		// 		error: function() {
-		// 			console.log("error")
-		// 		},
-		// 		success: function(res) {
-		// 			$.each(res, function( index, value ) {
-		// 				var contaienr_div = '';
-		// 				if (res['index']['client_schedule'] == '') {
-		// 					contaienr_div = $('#notification-new-client-container').html()
-		// 					contaienr_div.replace(__notes__, res['index']['notes'])
-		// 					contaienr_div.replace(__url__, res['index']['url'])
-		// 				}	
-		// 				else {
-		// 					contaienr_div = $('#notification-schedule-container').html()
-		// 					contaienr_div.replace(__notes__, res['index']['notes'])
-		// 					contaienr_div.replace(__url__, res['index']['url'])
-		// 					contaienr_div.replace(__hour__, res['index']['hour'])
-		// 					contaienr_div.replace(__client_name__, res['index']['client_name'])
-		// 				}
-		// 				$('#notification-list-container').append(contaienr_div)
-		// 			});
-		// 			console.log('sukses')
-		// 			console.log(res)
+		$(document).on('click', '#birthday-wa-btn', function(){
+			console.log(123);
+			let wa_number = $(this).data('no_wa');
+			let wa_link = 'https://wa.me/' + wa_number.toString() + '?text=Happy%20Birthday%20' + 'ivan satrija';
+			wa_link = wa_link.replace(" ", '%20');
+			
+			console.log('https://wa.me/62817076045?text=happy%20birthday%20ivan%20satrija');
+			
+			window.open(wa_link).focus();
+		});
+		function get_notification() {
+			$.ajax({
+				url: "{% url 'ajax-get-notification' %}",
+				type: 'GET',
+				error: function() {
+					console.log("error")
+				},
+				success: function(res) {
+					$.each(res['notification_list'], function( index, value ) {
+						// console.log(value);
+						console.log('>>>>', value);
+						if (value['client_schedule_id'] == '') {
+							contaienr_div = $('#notification-new-client-container').html()
+							contaienr_div.replace('__notes__', value['notes'])
+							contaienr_div.replace('__url__', value['url'])
+						}	
+						else {
+							contaienr_div = $('#notification-schedule-container').html()
+							contaienr_div.replace('__notes__', value['notes'])
+							contaienr_div.replace('__url__', value['url'])
+							contaienr_div.replace('__hour__', value['hour'])
+							contaienr_div.replace('__client_name__', value['client_name'])
+						}
+						$('#notification-list-container').append(contaienr_div)
+						// console.log(value, 'birthday');
+						if (value['type'] == 'birthday') {
+							$('#birthday-name').html(value['client_name']);
+							$('#birthday-wa-btn').data('no_wa',value['client_no']);
+							$('#modal-birthday').modal('show');
+							
 
-		// 		}
-		// 	});
-		// }
+
+						}
+						else if(value['type'] == 'new_clients') {
+							$('#modal-new-client').modal('show');
+						}
+					});
+					
+
+				}
+			});
+			// $('#birthday-wa-btn').click(function(){
+				
+			// });
+
+
+			// $(document).on("click", '#deleteModal button.delBtn', function(e) {
+		 //        e.preventDefault();
+		 //        var rowId = $(this).data('row-id');
+		 //        alert("you returned" + rowId);
+		 //        $('#deleteModal').modal('toggle');
+		 //    });
+
+
+		}
 		
 		// get_notification();
 		{% if messages %}
 			$('#modal_theme_success').modal('show');
 		{% endif %}
 	});
+</script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXck1AxIjyJmLnoxquENDo-aDHBBizP3E",
+    authDomain: "magnet-crm.firebaseapp.com",
+    projectId: "magnet-crm",
+    storageBucket: "magnet-crm.appspot.com",
+    messagingSenderId: "107709135760",
+    appId: "1:107709135760:web:24fe7782595ab2890ad115",
+    measurementId: "G-KL3BHXJQP8"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 </script>
 </html>
