@@ -103,12 +103,17 @@ def birthday():
 		with transaction.atomic():
 			now = timezone.now()
 			clients = Client.objects.filter(birthday__month=now.month, birthday__day=now.day)
+
+
+			all_clients = Client_Staff.objects.filter(client__in=clients.values_list('id',flat=True),is_active=True)
 			user = User.objects.filter(is_superuser=True).first()
 			data = {}
-			for client in clients:
-				data['client'] = client
-				data['notification'] = 'birthday'
-				data['notes'] = 'Today ' + client.nama + " Birthday"
+			print("masuk birthday",clients)
+			for client_staff in all_clients:
+				data['client'] = client_staff.client
+				data['notification_type'] = 'birthday'
+				data['notes'] = 'Today ' + client_staff.client.nama + " Birthday"
+				data['staff'] = client_staff.staff
 				create_notification(user, data)
 			
 	except IntegrityError as e:

@@ -21,6 +21,7 @@ class Command(BaseCommand):
 	
 	def handle(self, *args, **kwargs):
 		print("Trigger birthday")
+		birthday()
 
 		
 

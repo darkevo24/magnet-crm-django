@@ -78,4 +78,4 @@ def open_notification(request,notification_id):
 	else:
 		string_url = reverse('client-detail-list', kwargs={'id_client': cur_notif.client_schedule.client.id })
 
-	return redirect(reverse('client_transfer_new'))
+	return redirect(string_url)
