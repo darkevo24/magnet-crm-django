@@ -76,6 +76,8 @@ urlpatterns = [
     path('ajax_form', main_view.ajax_form, name='ajax_form'),
     path('client/followup/<str:id_client>/<str:id_followup>/delete', main_view.delete_form, name='followup-form-delete'),
 
+    path('client/position/<str:client_id>', client_views.client_position, name='client-position'),
+
     # Staff
     path('staff', staff_views.staff_list, name='staff-list'),
     path('staff/add', staff_views.staff_add, name='staff-add'),

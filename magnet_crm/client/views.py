@@ -483,5 +483,20 @@ def feedback_list(request):
 
 
 	return render(request,template,context=context)
+
+def client_position(request, client_id):
+	client = Client.objects.filter(id=client_id).first()
+	print(client.magnet_id)
+	client_position_list = get_client_position(client.id)
+	print(client)
+
+	context = {
+		'client_position_list': client_position_list,
+		'client': client,
+	}
+	template = 'admin/client/position.html'
+	# template = 'admin/client/client_schedule/list.html'
+	return render(request, template, context)
+	
 	
 

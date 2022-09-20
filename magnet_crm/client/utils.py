@@ -108,3 +108,76 @@ def check_user_list():
 			print(err)
 	else:
 		cnx.close()
+
+def get_client_position(user_id):
+	print('user_id', user_id, 26965)
+	client = Client.objects.filter(id=user_id).first()
+	magnet_user_id = client.magnet_id
+	try:
+
+		cnx = mysql.connector.connect(
+			host="18.143.147.140",
+			user='ivan',
+			password='MajuBersama123',
+			database='vifx'
+		)
+
+		mycursor = cnx.cursor()
+		mycursor.execute("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id="+ str(magnet_user_id)+ " ORDER BY 'id' DESC LIMIT 2")
+		login_mt5_ids = []
+		myresult = mycursor.fetchall()
+		
+		for myresult in myresult:
+			login_mt5_ids.append(myresult[2])
+
+		print('login_mt5_ids', login_mt5_ids)
+
+		print('connect to another db')
+		pos_cnx = mysql.connector.connect(
+				host="52.221.225.32",
+				user='ivan',
+				password='Keluarga999',
+				database='position'
+		)
+
+		mycursor = pos_cnx.cursor()
+
+		mycursor.execute("SHOW COLUMNS FROM pos;")
+		count = 0
+		myresult = mycursor.fetchall()
+		for x in myresult:
+			print(count, x)
+			count += 1
+
+
+
+		in_params = ','.join(['%s'] * len(login_mt5_ids))
+		print('in_params', in_params)
+		sql = "SELECT * FROM pos WHERE login IN (%s)" % in_params
+		mycursor.execute(sql, login_mt5_ids)
+		my_pos_list = mycursor.fetchall()
+
+		print('my_pos_list', len(my_pos_list))
+		# print(my_pos_list)
+		for x in my_pos_list:
+			count = 0
+			for y in x:
+				print(count, type(y), y)
+				count +=1
+		# mycursor.execute("SELECT * FROM pos ORDER BY id DESC LIMIT 1;")
+		# myresult = mycursor.fetchall()
+		# for x in myresult:
+		# 		print(x)
+
+		pos_cnx.close()
+		return my_pos_list
+
+	except mysql.connector.Error as err:
+		if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+				print("Something is wrong with your user name or password")
+		elif err.errno == errorcode.ER_BAD_DB_ERROR:
+				print("Database does not exist")
+		else:
+				print(err)
+	else:
+		cnx.close()
