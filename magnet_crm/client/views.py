@@ -139,6 +139,9 @@ def client_suspect_detail(request,id_client):
 		'id_client':id_client,
 	}
 	return render(request,template,context=context)
+def client_sync(request):
+	sync_data_magnet()
+
 def client_list(request):
 		
 	staff = Staff.objects.filter(profile__user=request.user).first()

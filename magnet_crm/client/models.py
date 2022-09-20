@@ -38,14 +38,14 @@ class Client(Base_Model):
 	legal_status = models.IntegerField(default=0)
 	magnet_created_by = models.IntegerField(default=0)
 	aecode = models.CharField(max_length=25, default='')
-	demologin = models.IntegerField(default=0)
+	demologin = models.IntegerField(default=0,null=True, blank=True)
 	cdd = models.BooleanField(default=False)
-	create_ip = models.CharField(max_length=32, default='')
-	medium = models.CharField(max_length=50, default='')
-	campaign = models.CharField(max_length=50, default='')
-	term = models.CharField(max_length=50, default='')
-	content = models.CharField(max_length=50, default='')
-	gclid = models.CharField(max_length=128, default='')
+	create_ip = models.CharField(max_length=32, default='',null=True, blank=True)
+	medium = models.CharField(max_length=50, default='',null=True, blank=True)
+	campaign = models.CharField(max_length=50, default='',null=True, blank=True)
+	term = models.CharField(max_length=50, default='',null=True, blank=True)
+	content = models.CharField(max_length=50, default='',null=True, blank=True)
+	gclid = models.CharField(max_length=128, default='',null=True, blank=True)
 	magnet_created_at = models.DateTimeField(null=True, blank=True)
 	magnet_update_at = models.DateTimeField(null=True, blank=True)
 	umur = models.CharField(max_length=255, default='')
@@ -93,8 +93,8 @@ class Client(Base_Model):
 	is_suspect = models.BooleanField(default=False)
 	is_suspect_bypass = models.BooleanField(default=False)
 	magnet_id = models.CharField(max_length=255, default='')
-	source = models.CharField(max_length=255, choices=SOURCE_STR, default='0')
-	source_detail_1 = models.CharField(max_length=255, choices=SOURCE_DETAIL_1_STR, default='3')
+	source = models.CharField(max_length=255, choices=SOURCE_STR, default='0',null=True, blank=True)
+	source_detail_1 = models.CharField(max_length=255, choices=SOURCE_DETAIL_1_STR, default='3',null=True, blank=True)
 	source_detail_2 = models.CharField(max_length=255, choices=SOURCE_DETAIL_2_STR, null=True,blank=True,default=None)
 	
 	def __str__(self):
@@ -106,13 +106,13 @@ class Client(Base_Model):
 		
 		if not self.is_suspect_bypass:
 			if self.nama != None and self.nama != "":
-				print(self.nama,"self.nama")
+				# print(self.nama,"self.nama")
 				check_clients = Client.objects.filter(Q(nama=self.nama)).exclude(id=self.pk)
-				print(check_clients,"check_clients 1")
+				# print(check_clients,"check_clients 1")
 				if self.email != None and self.email != "" :
-					print(self.email,"self.email")
+					# print(self.email,"self.email")
 					check_clients.filter(Q(email=self.email)).exclude(id=self.pk)
-				print(check_clients,"check_clients 2")
+				# print(check_clients,"check_clients 2")
 				user = User.objects.filter(is_superuser=True).first()
 				if self.pk:
 					if check_clients.count() > 0 :

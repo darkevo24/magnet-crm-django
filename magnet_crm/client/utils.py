@@ -77,16 +77,18 @@ def check_user_list():
 
 
 	try:
+		print('start')
 		cnx = mysql.connector.connect(
-			host="3.1.223.222",
+			host="18.143.147.140",
 			user='ivan',
 			password='MajuBersama123',
 			database='vifx'
 		)
+		print('start')
 		mycursor = cnx.cursor()
 		mycursor.execute("Show tables;")
 		myresult = mycursor.fetchall()
-
+		print(myresult,'myresult')
 		for x in myresult:
 			print(x)
 

@@ -27,7 +27,7 @@ from django_celery_beat.models import PeriodicTask, IntervalSchedule
 import json
 from datetime import datetime, timedelta
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
-
+from client.models import *
 # schedule, created = IntervalSchedule.objects.get_or_create(
 #     every=1,
 #     period=IntervalSchedule.SECONDS,
@@ -61,6 +61,8 @@ from django_celery_beat.models import CrontabSchedule, PeriodicTask
 #     # }),
 #     # expires=datetime.utcnow() + timedelta(seconds=30)
 # )
+import mysql.connector
+from mysql.connector import errorcode
 
 
 @shared_task
@@ -83,8 +85,8 @@ def birthday():
 	try:
 		with transaction.atomic():
 			now = timezone.now()
-			clients = Client.object.filter(birthday__month=now.month, birthday__day=now.day)
-			user = User.object.filter(is_superuser=True).first()
+			clients = Client.objects.filter(birthday__month=now.month, birthday__day=now.day)
+			user = User.objects.filter(is_superuser=True).first()
 			data = {}
 			for client in clients:
 				data['client'] = client
@@ -100,8 +102,8 @@ def birthday():
 	try:
 		with transaction.atomic():
 			now = timezone.now()
-			clients = Client.object.filter(birthday__month=now.month, birthday__day=now.day)
-			user = User.object.filter(is_superuser=True).first()
+			clients = Client.objects.filter(birthday__month=now.month, birthday__day=now.day)
+			user = User.objects.filter(is_superuser=True).first()
 			data = {}
 			for client in clients:
 				data['client'] = client
@@ -119,7 +121,7 @@ def sync_data_magnet():
 			now = timezone.now()
 
 			cnx = mysql.connector.connect(
-				host="3.1.223.222",
+				host="18.143.147.140",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -128,17 +130,18 @@ def sync_data_magnet():
 			mycursor.execute("SELECT COUNT(*) from v_users")
 			user_count = mycursor.fetchone()
 			print(user_count[0], '????')
-			user = User.object.filter(is_superuser=True).firsrt()
+			user = User.objects.filter(is_superuser=True).first()
 
 			mycursor.execute("SELECT * FROM v_users ORDER BY ID DESC LIMIT 1")
 			last_user_id = mycursor.fetchone()
 
 			update = False
-			sync_data_magnet = Sync_Data_Magnet.object.all().first()
+			sync_data_magnet = Sync_Data_Magnet.objects.all().first()
 			if sync_data_magnet == None :
 				update = True
 			elif last_user_id != sync_data_magnet.last_user_id:
 				update = True
+
 			if sync_data_magnet == None:
 				sync_data_magnet = Sync_Data_Magnet()
 				sync_data_magnet.current_user_count = user_count[0]
@@ -146,11 +149,15 @@ def sync_data_magnet():
 				sync_data_magnet.created_by = user
 				sync_data_magnet.updated_by = user
 				sync_data_magnet.save()
+				start_from = 0
 			else:
+				if update:
+					start_from = sync_data_magnet.last_user_id
 				sync_data_magnet.current_user_count = user_count[0]
 				sync_data_magnet.last_user_id = last_user_id[0]
 				sync_data_magnet.updated_by = user
 				sync_data_magnet.save()
+				
 
 			history_syncdata_magnet = History_SyncData_Magnet()
 			history_syncdata_magnet.updated_by = history_syncdata_magnet.created_by = user
@@ -159,8 +166,8 @@ def sync_data_magnet():
 			history_syncdata_magnet.save()
 
 			if update == True:
-				update_client_data(mycursor, last_user_id, user)
-			print('---->',myresult[0])
+				update_client_data(mycursor, start_from, user)
+	
 
 			
 			
@@ -215,21 +222,38 @@ def sync_data_magnet():
 # ('gclid', 'varchar(128)', 'YES', '', None, '')
 
 def update_client_data(mycursor, last_id, user):
+	# print(last_id,"last_id")
 	string_sql = "SELECT * FROM v_users Where ID > " + str(last_id) + " ORDER BY ID ASC"
 	mycursor.execute(string_sql)
 	new_client_list = mycursor.fetchall()
+	counter = 0
 	for new_client in new_client_list:
+		
+		# print("add client baru dari task")
 		client = Client()
 		client.magnet_id = new_client[0]
-		client.updated_by = new_client.created_by = user
+		client.updated_by = client.created_by = user
+		# client.create_ip = '127.0.0.1'
 		client.nama = new_client[1]
 		client.first_name = new_client[2] 
 		client.last_name = new_client[4]
 		client.middle_name = new_client[3]
-		client.email - new_client[5]
+		client.email = new_client[5]
 		client.city = new_client[6]
 		client.address = new_client[7]
-		client.birthday = new_client[8]
+		if "/" in new_client[8]: 
+			print(new_client[8],"new_client[8]")
+			temp = new_client[8].split("/")
+			client.birthday = temp[2]+"-"+temp[0]+"-"+temp[1]
+		else:
+			print(new_client[8],"else_new_client[8] ")
+			if (new_client[8] == "1990-04-31"):
+				client.birthday = "1990-04-30"
+			else:
+				client.birthday = new_client[8]	if new_client[8] != "" else None
+			
+		
+		
 		client.magnet_status = new_client[9]
 		client.phone_no = new_client[10]
 		client.id_verification_status = new_client[11]
@@ -241,20 +265,27 @@ def update_client_data(mycursor, last_id, user):
 		client.cdd = new_client[17]
 		client.create_ip = new_client[18]
 		client.source = new_client[19]
+		# print(new_client[20],'new_client[20]')
 		client.medium = new_client[20]
+		# print(new_client[21],'new_client[21]')
 		client.campaign = new_client[21]
+		# print(new_client[22],'new_client[22]')
 		client.term = new_client[22]
+		# print(new_client[23],'new_client[23]')
 		client.content = new_client[23]
 		client.gclid = new_client[24]
+		client.source = None
+		client.source_detail_1 = None
+		client.source_detail_2 = None
 		client.save()
+		counter+=1
+		print("client ke" + str(counter) + " client id :"+str(client.id))
+		# print(client.id)
+
+	print("total nambah "+str(counter))
 
 
 
 
-
-
-
-
-		new_client.save()
 		
 
