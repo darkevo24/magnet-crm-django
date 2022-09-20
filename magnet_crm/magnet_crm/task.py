@@ -53,7 +53,7 @@ from client.models import *
 
 # PeriodicTask.objects.create(
 #     crontab=schedule,                  # we created this above.
-#     name='Birthday1',          # simply describes this periodic task.
+#     name='Birthday',          # simply describes this periodic task.
 #     task='magnet_crm.task.test',  # name of task.
 #     # args=json.dumps(['arg1', 'arg2']),
 #     # kwargs=json.dumps({
@@ -80,22 +80,22 @@ def start_process():
 	except IntegrityError as e:
 		print(e)
 
-@shared_task
-def birthday():
-	try:
-		with transaction.atomic():
-			now = timezone.now()
-			clients = Client.objects.filter(birthday__month=now.month, birthday__day=now.day)
-			user = User.objects.filter(is_superuser=True).first()
-			data = {}
-			for client in clients:
-				data['client'] = client
-				data['notification'] = 'birthday'
-				data['notes'] = 'Happy birthday to ' + client.nama
-				create_notification(user, data)
+# @shared_task
+# def birthday():
+# 	try:
+# 		with transaction.atomic():
+# 			now = timezone.now()
+# 			clients = Client.objects.filter(birthday__month=now.month, birthday__day=now.day)
+# 			user = User.objects.filter(is_superuser=True).first()
+# 			data = {}
+# 			for client in clients:
+# 				data['client'] = client
+# 				data['notification'] = 'birthday'
+# 				data['notes'] = 'Happy birthday to ' + client.nama
+# 				create_notification(user, data)
 			
-	except IntegrityError as e:
-		print(e)
+# 	except IntegrityError as e:
+# 		print(e)
 
 @shared_task
 def birthday():
@@ -108,7 +108,7 @@ def birthday():
 			for client in clients:
 				data['client'] = client
 				data['notification'] = 'birthday'
-				data['notes'] = 'Happy birthday to ' + client.nama
+				data['notes'] = 'Today ' + client.nama + " Birthday"
 				create_notification(user, data)
 			
 	except IntegrityError as e:
@@ -284,6 +284,8 @@ def update_client_data(mycursor, last_id, user):
 		regis.client = client
 		regis.journal_type = 'registered'
 		regis.updated_by = regis.created_by = user
+		regis.save()
+		regis.created_at = client.magnet_created_at
 		regis.save()
 
 		

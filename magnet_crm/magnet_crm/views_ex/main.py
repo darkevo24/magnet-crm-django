@@ -304,7 +304,7 @@ def client_transfer_new(request):
 						ctx = {}
 						ctx['client_schedule'] = None
 						ctx['staff'] = selected_staff
-						ctx['notification_type'] = 'notification_followup'
+						ctx['notification_type'] = 'new_clients'
 						ctx['notes'] = 'Anda Mendapatkan Client Baru'
 						create_notification(request.user,ctx)
 				
