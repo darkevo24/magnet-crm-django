@@ -147,7 +147,16 @@ class Client_Staff(Base_Model):
 		null=False,
 		on_delete=models.CASCADE,
 	)
-	color = models.CharField(default='ff0000', max_length=255)
+
+	COLOR_LISTS = [
+		('#008000', 'Hijau'), 
+		('#ff0000', 'Merah'), 
+		('#e7ff00', 'Kuning'), 
+		('#000000', 'Hitam'), 
+		('#0066ff', 'Biru'), 
+	]
+	color = models.CharField(default='#000000',max_length=255, choices=COLOR_LISTS)
+
 
 
 class Client_Followup(Base_Model):
