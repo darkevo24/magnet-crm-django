@@ -51,7 +51,10 @@ def client_import(request):
 							temp = row.split(";")
 							new_client = Client()
 							new_client.nama = temp[0]
-							new_client.phone_no = temp[1] if 1 in temp else 0
+							try:
+								new_client.phone_no = temp[1]
+							except:
+								new_client.phone_no = 0
 							new_client.created_by = request.user
 							new_client.save()
 							# print(temp[0])
