@@ -6,7 +6,7 @@ class Staff_Level(Base_Model):
 	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	level = models.IntegerField(default=0)
 	level_name = models.CharField(default='Financial Consultant', max_length=255)
-	salary = models.IntegerField(default=0)
+	salary = models.DecimalField(decimal_places=2, default=0, max_digits=20)
 	
 	def __str__(self):
 		return self.level_name

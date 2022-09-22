@@ -468,7 +468,7 @@ def staff_salary_add(request,staff_uid):
 	
 	staff = Staff.objects.filter(uid=staff_uid).first()
 	default_salary = Staff_Level.objects.filter(id=staff.staff_level.id).first().salary
-	staff_salary_form = StaffSalaryForm(request.POST or None,initial={'salary_amount': (default_salary * 100)})
+	staff_salary_form = StaffSalaryForm(request.POST or None,initial={'salary_amount': (default_salary)})
 	if request.POST:
 		try:
 			with transaction.atomic():
