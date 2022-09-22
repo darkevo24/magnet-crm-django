@@ -5,7 +5,7 @@ from django import forms
 class StaffLevelForm(ModelForm):
 	class Meta:
 		model = Staff_Level
-		fields = ['level', 'level_name',]
+		fields = ['level', 'level_name','salary']
 
 class StaffForm(ModelForm):
 	SUPERVISOR_CHOICES =(

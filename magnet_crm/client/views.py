@@ -101,6 +101,16 @@ def client_suspect_list(request):
 	}
 	return render(request,template,context=context)
 
+def client_suspect_history_list(request):
+		
+	template = 'admin/client/suspect/history_list.html'
+	history_list = Client_Duplicate_Suspect_History.objects.filter(is_active=True).order_by("created_at")
+	context = {
+		'history_list': history_list,
+		'menu':'client_suspect'
+	}
+	return render(request,template,context=context)
+
 def client_suspect_detail(request,id_client_sus):
 	template = 'admin/client/suspect/client_detail.html'
 	# cur_staff = Staff.objects.filter(profile__user=request.user).first()

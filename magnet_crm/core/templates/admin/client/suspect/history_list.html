@@ -1,0 +1,97 @@
+
+{% extends 'base/head.html' %}
+
+{% block content %}
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12 card_cus">
+		<div class="card-header">
+			<h5 class="card-title">Client Suspect History List</h5>
+		</div>
+
+		<div class="card-body">
+			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
+			<!-- <div class="btn-group mr-lg-3 mb-3">
+				<a href="{% url 'client-add' %}"><button type="button" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Data Pribadi</span></button></a>
+			</div> -->
+			<div class="row ">
+				<div class="col-12">
+
+					<table class="table">
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">Nama</th>
+					      <th scope="col">Email</th>
+					      <th scope="col">No Telp</th>
+					      <th scope="col">Aksi</th>
+					      
+					    </tr>
+					  </thead>
+					  <tbody>
+					  	{% for history in history_list %}
+					  		
+							<tr>
+						      <td scope="row">{{forloop.counter}}</td>
+						      <td>
+						      	<span style="display: inline-block;" >{{history.duplicate_suspect.client_new.nama}}</span>
+						      </td>
+						      <td scope="row">{{history.duplicate_suspect.client_new.email|default:'-'}}</td>
+						      <td scope="row">{{history.duplicate_suspect.client_new.phone_no|default:'-'}}</td>
+						      <td scope="row">{{history.action}}</td>
+						      
+						      
+						    </tr>
+						{% endfor %}
+					    
+					    
+					  </tbody>
+					</table>
+
+					
+
+					
+
+					
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- /typeahead -->
+</div>
+<!-- Mini modal -->
+<div id="modal_mini" class="modal fade" tabindex="-1">
+	<div class="modal-dialog modal-xs">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Pick Color</h5>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+
+			<div class="modal-body">
+				<!-- <h6 class="font-weight-semibold">Text in a modal</h6> -->
+				<input type="color" class="form-control"  name="client-color" id="client-color">
+				
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" id="color-button-save">Save changes</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /mini modal -->
+<script type="text/javascript">
+	$(function() {
+		
+		$(".table-row").click(function() {
+		 	var link = $(this).data('href');
+		 	window.location.href = link;
+		});
+
+	});
+</script>
+{% endblock content %}

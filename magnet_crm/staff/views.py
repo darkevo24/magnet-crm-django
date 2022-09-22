@@ -465,9 +465,11 @@ def staff_salary_list(request,staff_uid):
 def staff_salary_add(request,staff_uid):
 
 	template = 'admin/staff_salary/staff_salary_add.html'
-	staff_salary_form = StaffSalaryForm(request.POST or None)
+	
+	staff = Staff.objects.filter(uid=staff_uid).first()
+	default_salary = Staff_Level.objects.filter(id=staff.staff_level.id).first().salary
+	staff_salary_form = StaffSalaryForm(request.POST or None,initial={'salary_amount': (default_salary * 100)})
 	if request.POST:
-		staff = Staff.objects.filter(uid=staff_uid).first()
 		try:
 			with transaction.atomic():
 
@@ -499,7 +501,7 @@ def staff_salary_add(request,staff_uid):
 
 	context = {
 		'staff_salary_form': staff_salary_form,
-
+		'default_salary':default_salary,
 	}
 	return render(request,template,context=context)
 
