@@ -313,3 +313,16 @@ class Client_Duplicate_Suspect(Base_Model):
 		on_delete=models.CASCADE,
 	)
 	is_checked = models.BooleanField(default=False)
+
+
+class Client_Duplicate_Suspect_History(Base_Model):
+	duplicate_suspect = models.ForeignKey(
+		'Client_Duplicate_Suspect',
+		on_delete=models.CASCADE,
+	)
+	REQUEST_STATUS = [
+		('accepted', 'Accpeted'), 
+		('rejected', 'Rejected'), 
+	]
+	
+	action = models.CharField(max_length=255, choices=REQUEST_STATUS)

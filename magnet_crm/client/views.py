@@ -117,8 +117,20 @@ def client_suspect_detail(request,id_client_sus):
 			print("accept")
 			client.is_suspect = False
 			client.is_suspect_bypass = True
+
+			new_his = Client_Duplicate_Suspect_History()
+			new_his.duplicate_suspect = client_sus
+			new_his.action = "accepted"
+			new_his.created_by = request.user
+			new_his.save()
+
 		else:
 			print("reject")
+			new_his = Client_Duplicate_Suspect_History()
+			new_his.duplicate_suspect = client_sus
+			new_his.action = "rejected"
+			new_his.created_by = request.user
+			new_his.save()
 			client.is_active = False
 
 		client.updated_by = request.user
