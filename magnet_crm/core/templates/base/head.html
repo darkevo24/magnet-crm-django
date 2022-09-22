@@ -733,20 +733,21 @@
 					console.log("error")
 				},
 				success: function(res) {
+					$('#notification-list-container').empty()
 					$.each(res['notification_list'], function( index, value ) {
 						// console.log(value);
 						console.log('>>>>', value);
 						if (value['client_schedule_id'] == '') {
 							contaienr_div = $('#notification-new-client-container').html()
-							contaienr_div.replace('__notes__', value['notes'])
-							contaienr_div.replace('__url__', value['url'])
+							contaienr_div = contaienr_div.replace('__notes__', value['notes'])
+							contaienr_div = contaienr_div.replace('__url__', value['url'])
 						}	
 						else {
 							contaienr_div = $('#notification-schedule-container').html()
-							contaienr_div.replace('__notes__', value['notes'])
-							contaienr_div.replace('__url__', value['url'])
-							contaienr_div.replace('__hour__', value['hour'])
-							contaienr_div.replace('__client_name__', value['client_name'])
+							contaienr_div = contaienr_div.replace('__notes__', value['notes'])
+							contaienr_div = contaienr_div.replace('__url__', value['url'])
+							contaienr_div = contaienr_div.replace('__hour__', value['hour'])
+							contaienr_div = contaienr_div.replace('__client_name__', value['client_name'])
 						}
 						$('#notification-list-container').append(contaienr_div)
 						// console.log(value, 'birthday');

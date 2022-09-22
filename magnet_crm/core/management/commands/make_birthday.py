@@ -31,7 +31,7 @@ class Command(BaseCommand):
 		# print('-----')
 		# print(cek_user.__dict__)
 		# print(cek_user.username)
-		client_staffclient_staff = Client_Staff.objects.filter(staff__id=136).first()
+		client_staff = Client_Staff.objects.filter(staff__id=143).first()
 		try:
 			with transaction.atomic():
 				notification = Notification()

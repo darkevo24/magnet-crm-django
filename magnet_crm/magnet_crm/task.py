@@ -80,6 +80,26 @@ def start_process():
 	except IntegrityError as e:
 		print(e)
 
+
+@shared_task
+def notif_schedule():
+	try:
+		with transaction.atomic():
+			user = User.objects.filter(is_superuser=True).first()
+			data = {}
+			
+			for client_staff in all_clients:
+				data['client'] = client_staff.client
+				data['notification_type'] = 'notification_followup'
+				data['notes'] = 'Today Schedule with ' + client_staff.client.nama
+				data['staff'] = client_staff.staff
+				create_notification(user, data)
+			
+			
+	except IntegrityError as e:
+		print(e)
+
+
 # @shared_task
 # def birthday():
 # 	try:
