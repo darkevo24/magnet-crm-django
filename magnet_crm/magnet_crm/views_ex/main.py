@@ -135,7 +135,7 @@ def dashboard(request):
 
 	if get_all_user == True	:
 		total_client = Client.objects.filter(is_active=True).order_by("nama").count()
-		client_list = Client.objects.filter(is_active=True)
+		client_list = Client.objects.filter(is_active=True).order_by('created_at')
 	else:
 		total_client = client_staff_list.count()
 
@@ -238,7 +238,7 @@ def client_transfer_new(request):
 	# 	print("cur_staff_client",cur_staff_client)
 	# else:
 		# client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("nama")
-	client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("nama")
+	client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("created_at")
 
 	# if request.user.is_superuser == True:
 	# 	staff_list = Staff.objects.filter(is_active=True,is_locked=False).order_by("profile__full_name")
