@@ -725,6 +725,13 @@
 			
 			window.open(wa_link).focus();
 		});
+		existing_notif_id=[]
+		{% for notif in notification_context_list %}
+			existing_notif_id.push({{notif.id}})
+		{% endfor %}
+
+		console.log(existing_notif_id)
+		
 		function get_notification() {
 			$.ajax({
 				url: "{% url 'ajax-get-notification' %}",
@@ -751,17 +758,19 @@
 						}
 						$('#notification-list-container').append(contaienr_div)
 						// console.log(value, 'birthday');
-						if (value['type'] == 'birthday') {
-							$('#birthday-name').html(value['client_name']);
-							$('#birthday-wa-btn').data('no_wa',value['client_no']);
-							$('#modal-birthday').modal('show');
-							
 
-
+						if (!existing_notif_id.includes(value['notification_id'])){
+							if (value['type'] == 'birthday') {
+								$('#birthday-name').html(value['client_name']);
+								$('#birthday-wa-btn').data('no_wa',value['client_no']);
+								$('#modal-birthday').modal('show');
+							}
+							else if(value['type'] == 'new_clients') {
+								$('#modal-new-client').modal('show');
+							}
+							existing_notif_id.push(value['notification_id']);	
 						}
-						else if(value['type'] == 'new_clients') {
-							$('#modal-new-client').modal('show');
-						}
+						
 					});
 					
 

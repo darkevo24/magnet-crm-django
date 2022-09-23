@@ -41,7 +41,7 @@
 
                         <select id="client_box" multiple="multiple" class="form-control listbox-no-selection" data-fouc onchange="onchange_real_select()">
                             {% for client in all_client %}
-                                <option value="{{client.id}}" >{{client.nama}} | {% if client.is_registred %} Registered {% else %} Not Registered{% endif %} | {{client.phone_no|default:"-"}} | {{client.email|default:"-"}} </option>
+                                <option value="{{client.id}}" >{{client.nama}} | {% if client.is_registered %} Registered {% else %} Not Registered{% endif %} | {{client.phone_no|default:"-"}} | {{client.email|default:"-"}} </option>
                             {% endfor %}  
                         </select>
 
@@ -72,7 +72,7 @@
 
     //buat simpen data id client namanya siapa
     {% for client in all_client %}
-        dict_all_client[{{client.id}}] = '{{client.nama}} | {% if client.is_registred %} Registered {% else %} Not Registered{% endif %} | {{client.phone_no|default:"-"}} | {{client.email|default:"-"}}';
+        dict_all_client[{{client.id}}] = '{{client.nama}} | {% if client.is_registered %} Registered {% else %} Not Registered{% endif %} | {{client.phone_no|default:"-"}} | {{client.email|default:"-"}}';
     {% endfor %}
 
     //buat simpen data uid staff namanya siapa
@@ -190,7 +190,7 @@
                         $.each(res.client_list, function( index, value ) {
                             
                             var temp_naming = value.name +" | ";
-                            if (value.is_registred){
+                            if (value.is_registered){
                                 temp_naming += "Registered | "
                             }
                             else{

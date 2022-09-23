@@ -35,9 +35,7 @@ def create_notification(user, data={}):
 
 def get_notifications(request):
 	staff = Staff.objects.filter(profile__user__id=request.user.id).first()
-	print(staff.id, 'staff')
-	notifications = Notification.objects.filter(is_active=True, staff__profile__user__id=request.user.id).prefetch_related('client_schedule__client').order_by('-created_at')[:10]
-	print('count', notifications.count())
+	notifications = Notification.objects.filter(is_active=True,is_opened=False, staff__profile__user__id=request.user.id).prefetch_related('client_schedule__client').order_by('-created_at')
 	notification_list = {}
 	notification_list['notification_list'] = []
 	unread = 0

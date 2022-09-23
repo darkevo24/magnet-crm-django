@@ -22,7 +22,7 @@ def notif_check(request):
 	all_notif = None
 	if not request.user.is_anonymous:
 		staff = Staff.objects.filter(profile__user=request.user).first()
-		all_notif = Notification.objects.filter(is_active=True,staff=staff)[:10]
+		all_notif = Notification.objects.filter(is_active=True,staff=staff,is_opened=False)
 	return {'notification_context_list': all_notif}
 	# return JsonResponse(response)
 
@@ -334,7 +334,7 @@ def client_transfer_staff_ajax(request):
 		
 		arr_client = []
 		for x in staff_client:
-			arr_client.append({"name":x.client.nama,"id":x.client.id,'is_registred':x.client.is_registred,'phone_no':x.client.phone_no,'email':x.client.email})
+			arr_client.append({"name":x.client.nama,"id":x.client.id,'is_registered':x.client.is_registered,'phone_no':x.client.phone_no,'email':x.client.email})
 
 
 		response["client_list"] = arr_client

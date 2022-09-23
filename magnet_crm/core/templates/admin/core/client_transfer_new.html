@@ -115,7 +115,6 @@
                             </thead>
                             <tbody>
                                 {% for client in all_client %}
-                                    <!-- <option value="{{client.id}}" >{{client.nama}} | {% if client.is_registred %} Registered {% else %} Not Registered{% endif %} | {{client.phone_no|default:"-"}} | {{client.email|default:"-"}} </option> -->
                                     <tr>
                                         <td></td>
                                         <td>{{client.id}}</td>
@@ -387,7 +386,7 @@
                             dict_all_client[value.id] = value.name
                             dict_all_staff[value.id] = value.name
                             // mainTable.row.add([counter + '.1', counter + '.2', counter + '.3']).draw(false);
-                            secondaryTable.row.add([null, value.id,index+1, value.name, value.is_registred, value.phone_no, value.email]).draw(false);
+                            secondaryTable.row.add([null, value.id,index+1, value.name, value.is_registered, value.phone_no, value.email]).draw(false);
                         });
                         secondaryTable.rows().select();
                         
