@@ -18,15 +18,17 @@
 		<div class="card-header">
 			<h5 class="card-title">Client List</h5>
 		</div>
+		
 
 		<div class="card-body">
 			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
 			<div class="btn-group mr-lg-3 mb-3">
 				<a href="{% url 'client-add' %}"><button type="button" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Data Pribadi</span></button></a>
 			</div>
+
 			<div class="row ">
 				<div class="col-12">
-
+					<input type="text" id="search_input"  class="form-control mb-3" placeholder="Search Text">
 					
 
 					<ul class="media-list">
@@ -158,6 +160,13 @@
 		$(".table-row").click(function() {
 		 	var link = $(this).data('href');
 		 	window.location.href = link;
+		});
+
+		$("#search_input").on("keyup", function() {
+		  var value = this.value.toLowerCase().trim();
+		  $(".media-list li").show().filter(function() {
+		    return $(this).text().toLowerCase().trim().indexOf(value) == -1;
+		  }).hide();
 		});
 
 	});
