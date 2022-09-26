@@ -307,6 +307,21 @@ def client_transfer_new(request):
 						ctx['notification_type'] = 'new_clients'
 						ctx['notes'] = 'Anda Mendapatkan Client Baru'
 						create_notification(request.user,ctx)
+						# start_process.apply_async(_id='eta-testing',eta=make_aware(schedule_date))
+
+						# one_month = make_aware(timezone.now()+timedelta(days=30))
+						# one_h_month = make_aware(timezone.now()+timedelta(days=45))
+						# seven_d = make_aware(timezone.now()+timedelta(days=53))
+						# one_d = make_aware(timezone.now()+timedelta(days=59))
+
+						# start_process.apply_async(_id='eta-testing',eta=make_aware(schedule_date))
+
+
+						# print(make_aware(schedule_date - timedelta(hours=0, minutes=5))-timezone.now())
+						# print(make_aware(schedule_date - timedelta(hours=0, minutes=5))-timezone.now())
+						# print(make_aware(schedule_date - timedelta(hours=0, minutes=5))-timezone.now())
+						# print(make_aware(schedule_date - timedelta(hours=0, minutes=5))-timezone.now())
+
 				
 				return redirect(reverse('client_transfer_new'))			
 

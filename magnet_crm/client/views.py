@@ -176,22 +176,36 @@ def client_list(request):
 		
 	staff = Staff.objects.filter(profile__user=request.user).first()
 
+	client_color = {}
+
 	if not request.user.is_superuser and not staff.staff_level.level < 2:
 		template = 'admin/client/client_list.html'
 		# staff = Staff.objects.filter(is_active=True, profile__user__id=request.user.id).first()
 
 		client_staff_list = Client_Staff.objects.filter(staff__id=staff.id, is_active=True).order_by('-created_at','client__created_at')
 		client_list = Client.objects.none()
+
+		
+		
+		for client_staff in client_staff_list:
+			if client_staff.client.id not in client_color:
+				client_color[client_staff.client.id] = client_staff.color
+			
+
 	else:
 		template = 'admin/client/admin_client_list.html'
 		client_list = Client.objects.filter(is_active=True).order_by("created_at")
 		client_staff_list = Client_Staff.objects.none()
+
+		
 
 	# messages.success(request, 'Profile details updated.')
 	context = {
 		'client_list': client_list,
 		'client_staff_list': client_staff_list,
 		'menu':'client',
+		'client_color':client_color,
+
 	}
 	return render(request,template,context=context)
 

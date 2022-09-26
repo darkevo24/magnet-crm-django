@@ -104,17 +104,33 @@
                     </div>
                 </div>
                 <div class="col-3">
-                    <div class="row" style="line-height: 1">
-                        <div class="col py-2 px-3 gadget_green" style="background-color:#f5e0e1">
-                            <div style="display: inline-block;" class="mr-3">
-                                <h1 class="p-0 m-0" style="color:red;font-size: 2.5em;line-height:1">{{total_upcomming_followup}}</h1>
-                                <p class="mb-0">Upcomming Followup</p>
-                            </div>
-                            <div style="display: inline-grid;position: absolute;right: 20px">
-                                <img src="{% static 'magnet/images/icon_list.png' %}" style="height: 50px;background-color: #f3c2c7!important" class="icon_green">
+                    {% if total_upcomming_followup > 0 %}
+                        <div class="row" style="line-height: 1">
+                            <div class="col py-2 px-3 gadget_green" style="background-color:#f5e0e1">
+                                <div style="display: inline-block;" class="mr-3">
+                                    <h1 class="p-0 m-0" style="color:red;font-size: 2.5em;line-height:1">{{total_upcomming_followup}}</h1>
+                                    <p class="mb-0">Upcomming Followup</p>
+                                </div>
+                                <div style="display: inline-grid;position: absolute;right: 20px">
+                                    <img src="{% static 'magnet/images/icon_list.png' %}" style="height: 50px;background-color: #f3c2c7!important" class="icon_green">
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% else %}
+                        <div class="row" style="line-height: 1">
+                            <div class="col py-2 px-3 gadget_green" >
+                                <div style="display: inline-block;" class="mr-3">
+                                    <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_upcomming_followup}}</h1>
+                                    <p class="mb-0">Upcomming Followup</p>
+                                </div>
+                                <div style="display: inline-grid;position: absolute;right: 20px">
+                                    <img src="{% static 'magnet/images/icon_list.png' %}" style="height: 50px;" class="icon_green">
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    
 
                     
                 </div>
