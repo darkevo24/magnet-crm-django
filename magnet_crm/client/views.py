@@ -313,13 +313,15 @@ def detail_list(request,id_client):
 	history_followup = Client_Followup.objects.filter(client=client)
 	history_schedule = Client_Schedule.objects.filter(client=client)
 	history_journey = Client_Journey.objects.filter(client=client)
-
+	client_position_list = get_client_position(client.id)
+	print(client_position_list,'client_position_list')
 	
 	context = {
 		'client': client,
 		'history_followup': history_followup,
 		'history_schedule': history_schedule,
 		'history_journey':history_journey,
+		'client_position_list':client_position_list,
 		# 'history_schedule': client,
 		'id_client':id_client,
 	}
