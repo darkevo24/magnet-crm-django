@@ -37,7 +37,7 @@ def client_import(request):
 			with transaction.atomic():
 
 				if import_form.is_valid():
-					print("import valid")
+					
 					csv_file = import_form.cleaned_data['file']
 					file = csv_file.read().decode('utf-8').splitlines()
 					# print(file)
@@ -62,20 +62,26 @@ def client_import(request):
 							new_client.created_by = request.user
 							new_client.save()
 
-							# print(temp[0])
-					
+							selected_staff = Staff.objects.filter(id=import_form.cleaned_data['staff']).first()
+							if selected_staff is not None and selected_staff is not "":
+								
+								c_staff = Client_Staff()
+								c_staff.client = new_client
+								c_staff.staff =	selected_staff
+								c_staff.created_by = request.user				
+								c_staff.save()
 
 
 
 
 					
-								# ini kalo pake xls / xlsx
-								# excel_file = import_form.cleaned_data['file']
-								# rb = open_workbook(file_contents=excel_file.read())
-								# sheet = rb.sheet_by_index(0)
-								# print(sheet.nrows)
-								# for x in range(sheet.nrows):
-								# 	print(sheet.row_values(x)[0])
+					# 			ini kalo pake xls / xlsx
+					# 			excel_file = import_form.cleaned_data['file']
+					# 			rb = open_workbook(file_contents=excel_file.read())
+					# 			sheet = rb.sheet_by_index(0)
+					# 			print(sheet.nrows)
+					# 			for x in range(sheet.nrows):
+					# 				print(sheet.row_values(x)[0])
 
 
 					return redirect(reverse('client-import'))

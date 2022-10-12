@@ -19,7 +19,19 @@ class ClientForm(ModelForm):
 		]
 		
 class ClientImportForm(forms.Form):
+	staff = forms.ChoiceField(choices=[])
 	file = forms.FileField()
+	def __init__(self, *args, **kwargs):
+		super(ClientImportForm, self).__init__(*args, **kwargs)
+
+		self.fields['staff'].required = False
+		
+		employee_choices = []
+		employees = Staff.objects.filter(is_active=True,staff_level__level=3)
+		for data in employees:
+			employee_choices.append((data.id, data.profile.full_name))
+
+		self.fields['staff'].choices = employee_choices
 
 
 class DateTimeForm(forms.Form):
