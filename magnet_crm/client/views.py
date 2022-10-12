@@ -48,15 +48,20 @@ def client_import(request):
 							counter+=1
 							pass
 						else:
+							print("temp",row)
+
 							temp = row.split(";")
+							print("temp",temp)
 							new_client = Client()
-							new_client.nama = temp[0]
+							new_client.nama = temp[2]
 							try:
-								new_client.phone_no = temp[1]
+								new_client.phone_no = temp[3]
 							except:
 								new_client.phone_no = 0
+							new_client.email = temp[4]
 							new_client.created_by = request.user
 							new_client.save()
+
 							# print(temp[0])
 					
 
