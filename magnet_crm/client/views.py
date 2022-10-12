@@ -101,10 +101,21 @@ def client_import(request):
 
 
 def client_suspect_list(request):
-		
+	
+	month = request.GET.get('month')
+	print(month,"month")
+
+	now = timezone.now()
+
+
 	staff = Staff.objects.filter(profile__user=request.user).first()
 	template = 'admin/client/suspect/client_list.html'
-	client_list = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False).order_by("created_at")
+	if month != "" and month != None:
+		client_list = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False,created_at__year=now.year,created_at__month=month).order_by("created_at")
+	else:
+		client_list = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False).order_by("created_at")
+
+	
 
 	context = {
 		'client_list': client_list,
