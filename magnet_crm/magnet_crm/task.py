@@ -28,6 +28,7 @@ import json
 from datetime import datetime, timedelta
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
 from client.models import *
+from django.utils.timezone import make_aware
 # schedule, created = IntervalSchedule.objects.get_or_create(
 #     every=1,
 #     period=IntervalSchedule.SECONDS,
@@ -133,8 +134,8 @@ def scramble_clients():
 				x.updated_at=timezone.now()
 				x.save()
 
-				all_prev_parents = Client_Scramble.objects.filter(is_active=True,client=x.client)
-				prev_parents=[]
+                all_prev_parents = Client_Scramble.objects.filter(is_active=True,client=x.client)
+				prev_parents=[]	
 				print(prev_parents,'prev_parents')
 				for y in all_prev_parents:
 					print('all_prev_parents',y.staff_parent.id)
@@ -165,6 +166,82 @@ def scramble_clients():
 				data['staff'] = next_staff
 				create_notification(user, data)
 			
+	except IntegrityError as e:
+		print(e)
+
+
+@shared_task
+def new_scramble_clients():
+	try:
+		with transaction.atomic():
+			# random staff
+			user = User.objects.filter(is_superuser=True).first()
+			
+			three_month_ago = timezone.now()-timedelta(days=90)
+			print(three_month_ago)
+
+			selected_client = Client_Staff.objects.filter(is_active=True,created_at__lt=three_month_ago)			
+			print(selected_client)
+
+
+			for x in selected_client:
+				x.is_active=False
+				x.updated_at=timezone.now()
+				x.save()
+
+				all_prev_parents = Client_Scramble.objects.filter(is_active=True,client=x.client)
+				prev_parents=[]
+				prev_staffs=[]
+				prev_parent_dict={}
+				print(prev_parents,'prev_parents')
+				for y in all_prev_parents:
+					print('all_prev_parents',y.staff_parent.id)
+
+					if y.staff_parent.id not in prev_parent_dict:
+						prev_parent_dict[y.staff_parent.id] = 0 
+					else:
+						prev_parent_dict[y.staff_parent.id]+=1
+
+					prev_parents.append(y.staff_parent.id)
+					prev_staffs.append(y.from_staff.id)
+					prev_staffs.append(y.to_staff.id)
+
+				prev_parents.append(x.staff.staff_parent)
+				if x.staff.staff_parent.id not in prev_parent_dict:
+					prev_parent_dict[x.staff.staff_parent.id] = 0 
+				else:
+					prev_parent_dict[x.staff.staff_parent.id]+=1
+
+				print("prev blocked",prev_parents)
+				next_staff = Staff.objects.filter(is_active=True,staff_level__level=3).exclude(staff_parent__in=prev_parents).first()
+
+				if next_staff == None:
+					next_staff = Staff.objects.filter(is_active=True,staff_level__level=3).exclude(staff_in=prev_staffs,staff_parent=x.staff_parent).first()
+				
+				scramble = Client_Scramble()
+				scramble.client = x.client
+				scramble.staff_parent = x.staff.staff_parent
+				scramble.from_staff = x.staff
+				scramble.to_staff = next_staff
+				scramble.created_by = user
+				scramble.save()
+
+				client_staff = Client_Staff()
+				client_staff.client = x.client
+				client_staff.staff = next_staff
+				client_staff.created_by = user
+				client_staff.save()
+					
+
+
+				data={}
+				data['client'] = x.client
+				data['notification_type'] = 'new_clients'
+				data['notes'] = 'New Scrambled Client ' + x.client.nama
+				data['staff'] = next_staff
+				create_notification(user, data)
+
+
 	except IntegrityError as e:
 		print(e)
 

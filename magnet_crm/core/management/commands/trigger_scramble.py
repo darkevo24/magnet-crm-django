@@ -21,7 +21,7 @@ class Command(BaseCommand):
 	
 	def handle(self, *args, **kwargs):
 		print("Trigger Scramble")
-		scramble_clients()
+		new_scramble_clients()
 
 		
 
