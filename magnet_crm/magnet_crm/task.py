@@ -68,7 +68,7 @@ from mysql.connector import errorcode
 
 @shared_task
 def test():
-    print("ini dari task")
+	print("ini dari task")
 
 @shared_task
 def start_process():
@@ -134,7 +134,7 @@ def scramble_clients():
 				x.updated_at=timezone.now()
 				x.save()
 
-                all_prev_parents = Client_Scramble.objects.filter(is_active=True,client=x.client)
+				all_prev_parents = Client_Scramble.objects.filter(is_active=True,client=x.client)
 				prev_parents=[]	
 				print(prev_parents,'prev_parents')
 				for y in all_prev_parents:
