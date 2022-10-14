@@ -191,6 +191,7 @@ def client_suspect_detail(request,id_client_sus):
 	return render(request,template,context=context)
 def client_sync(request):
 	sync_data_magnet()
+	# check_user_deposit()
 	
 	return redirect(reverse('client-list'))
 

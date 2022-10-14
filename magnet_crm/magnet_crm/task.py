@@ -278,7 +278,7 @@ def sync_data_magnet():
 			now = timezone.now()
 
 			cnx = mysql.connector.connect(
-				host="18.143.147.140",
+				host="13.229.114.255",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -324,7 +324,45 @@ def sync_data_magnet():
 
 			if update == True:
 				update_client_data(mycursor, start_from, user)
-	
+			
+			check_user_deposit()
+
+			
+			
+	except IntegrityError as e:
+		print(e)
+
+
+@shared_task
+def check_user_deposit():
+	try:
+		with transaction.atomic():
+			user = User.objects.filter(is_superuser=True).first()
+
+			now = timezone.now()
+			cnx = mysql.connector.connect(
+				host="13.229.114.255",
+				user='ivan',
+				password='MajuBersama123',
+				database='vifx'
+			)
+			mycursor = cnx.cursor()
+			string_sql = "SELECT user_id FROM vif_cabinet_legal_form_decleration"
+			mycursor.execute(string_sql)
+			all_data = mycursor.fetchall()
+			arr_id = []
+			print(all_data)
+			for data in all_data:
+				print("ini data ", data[0])
+				arr_id.append(data[0])
+
+			all_client = Client.objects.filter(is_active=True,magnet_id__in=arr_id,is_deposit=False)
+			print("ini all client",all_client)
+			for client in all_client:
+				client.is_deposit = True
+				client.updated_by = user
+				client.save()
+
 
 			
 			

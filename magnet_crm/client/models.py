@@ -88,6 +88,7 @@ class Client(Base_Model):
 	]
 
 	
+	is_deposit = models.BooleanField(default=False)
 	is_registered = models.BooleanField(default=False)
 	is_locked = models.BooleanField(default=False)
 	is_suspect = models.BooleanField(default=False)
