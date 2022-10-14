@@ -32,7 +32,7 @@
 			<div class="row ">
 				<div class="col-12">
 
-					<table class="table">
+					<table class="table" id="table-main">
 					  <thead>
 					    <tr>
 					      <th scope="col">#</th>
@@ -121,6 +121,8 @@
 </div>
 <!-- /mini modal -->
 <script type="text/javascript">
+	
+
 	$(function() {
 		var client_id = '';
 		$('.change-color-button').click(function(){
@@ -144,6 +146,21 @@
 		 	var link = $(this).data('href');
 		 	window.location.href = link;
 		});
+		$("#table-main").DataTable({
+	    	dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+			language: {
+	            search: '<span>Filter:</span> _INPUT_',
+	            searchPlaceholder: 'Type to filter...',
+	            lengthMenu: '<span>Show:</span> _MENU_',
+	        },
+	        scrollX: true,
+	        // scrollY: '350px',
+	        scrollCollapse: true,
+	        fixedColumns: {
+	            leftColumns: 2,
+	            // rightColumns: 1
+	        }
+	    });
 
 	});
 

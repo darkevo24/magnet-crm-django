@@ -159,6 +159,7 @@
                                 </div> -->
 
                                 <div class="tab-pane fade active show" id="highlighted-justified-tab2">
+                                    <input type="text" id="search_input"  class="form-control mb-3" placeholder="Search Client">
                                     <ul class="media-list">
                                         
                                             
@@ -410,6 +411,12 @@
 
 	});
 
+$("#search_input").on("keyup", function() {
+          var value = this.value.toLowerCase().trim();
+          $(".media-list li").show().filter(function() {
+            return $(this).text().toLowerCase().trim().indexOf(value) == -1;
+          }).hide();
+        });
 	
 </script>
 {% endblock content %}
