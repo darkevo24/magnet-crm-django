@@ -31,9 +31,14 @@
 
 		<div class="card-body">
 			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
-			<div class="btn-group mr-lg-3 mb-3">
-			</div>
+
 			<div class="row">
+				<!-- <h5>Filter Source</h5> -->
+				<!-- <select id="filter_register" class="form-control select-search" data-fouc onchange="client_source_change_register(this)">
+                    <option value="">Show all</option>
+                    <option value="True">True</option>
+                    <option value="False">False</option>
+                </select> -->
 				<div class="col-12">
 
 					<table class="table" id="table-main">
@@ -44,6 +49,7 @@
 					      <th scope="col">Fullname</th>
 					      <th scope="col">Response</th>
 					      <th scope="col">Email</th>
+					      <!-- <th scope="col">Source</th> -->
 					      <th scope="col" class="text-center">Date</th>
 					      
 					    </tr>
@@ -56,6 +62,15 @@
 						      <td scope="row">{{client_feedback.client.nama}}</td>
 						      <td scope="row">{{client_feedback.followup.followup_choices}}</td>
 						      <td scope="row">{{client_feedback.client.email}}</td>
+						      <!-- <td>
+                                    {% if client_feedback.client.source_detail_2 is not None and client_feedback.client.source_detail_2 != '' %}
+                                        {{client_feedback.client.get_source_detail_2_display}} 
+                                    {% elif client_feedback.client.source_detail_1 is not None and client_feedback.client.source_detail_1 != '' %}
+                                        {{client.get_source_detail_1_display}} 
+                                    {% else %}
+                                        {{client_feedback.client.get_source_display|default:'-'}}
+                                    {% endif %} 
+                            </td> -->
 						      <td scope="row">{{client_feedback.created_at}}</td>
 						    </tr>
 						{% endfor %}
