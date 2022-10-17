@@ -116,7 +116,7 @@ def get_client_position(user_id):
 	try:
 
 		cnx = mysql.connector.connect(
-			host="18.143.147.140",
+			host="13.229.114.255",
 			user='ivan',
 			password='MajuBersama123',
 			database='vifx'

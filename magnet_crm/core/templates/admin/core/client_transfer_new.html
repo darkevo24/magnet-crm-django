@@ -78,6 +78,12 @@
                                     <option value="True">True</option>
                                     <option value="False">False</option>
                                 </select>
+                                <h5>Filter Status Deposit</h5>
+                                <select id="filter_deposit" class="form-control select-search" data-fouc onchange="client_source_change_deposit(this)">
+                                    <option value="">Show all</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
                             </div>
                             <!-- <div class="col-4" style="position: absolute;bottom: 0;right: 0">
                                 <button type="button" class="btn btn-primary">Filter</i></button>
@@ -111,6 +117,7 @@
                                     <th>Phone No</th>
                                     <th>E-mail</th>
                                     <th>Source</th>
+                                    <th>Deposit</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -130,6 +137,15 @@
                                                     {{client.get_source_detail_1_display}} 
                                                 {% else %}
                                                     {{client.get_source_display|default:'-'}}
+                                                {% endif %}
+
+                                            
+                                        </td>
+                                         <td>
+                                                {% if client.is_deposit %}
+                                                    Yes
+                                                {% else %}
+                                                    No
                                                 {% endif %}
 
                                             
@@ -510,6 +526,10 @@
         function client_source_change_register(){
             var current_cust_filter = $("#filter_register").val()
             $("#DataTables_Table_0 > thead > tr.filters > th:nth-child(4) > input[type=text]").val(current_cust_filter).change()
+        }
+        function client_source_change_deposit(){
+            var current_cust_filter = $("#filter_deposit").val()
+            $("#DataTables_Table_0 > thead > tr.filters > th:nth-child(8) > input[type=text]").val(current_cust_filter).change()
         }
         function select_all(primary=true){
             if(primary){
