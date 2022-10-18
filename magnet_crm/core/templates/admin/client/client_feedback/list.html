@@ -2,6 +2,7 @@
 {% extends 'base/head.html' %}
 {% load core_extras %}
 {% block content %}
+
 <div class="row">
 	<!-- Typeahead -->
 	<div class="card col-12 card_cus">
@@ -281,6 +282,7 @@
 	            searchPlaceholder: 'Type to filter...',
 	            lengthMenu: '<span>Show:</span> _MENU_',
 	        },
+	        autoWidth: true,
 	        scrollX: true,
 	        // scrollY: '350px',
 	        scrollCollapse: true,
