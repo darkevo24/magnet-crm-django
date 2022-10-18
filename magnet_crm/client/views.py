@@ -411,6 +411,10 @@ def client_schedule_add(request, client_id):
 					# schedule_date_reminder = schedule_date_reminder.replace(day=reminder_date.day,month=reminder_date.month,year=reminder_date.year,hour=reminder_date.hour,minute=reminder_date.minute,second=reminder_date.second) 
 					# print(schedule_date_reminder,"schedule_date_reminder",timezone.now(),"timezone.now()",schedule_date_reminder-timezone.now())
 					print(make_aware(schedule_date - timedelta(hours=0, minutes=5))-timezone.now())
+					# make_aware(schedule_date - timedelta(days=30))
+					# make_aware(schedule_date - timedelta(days=14))
+					# make_aware(schedule_date - timedelta(days=7))
+					# make_aware(schedule_date - timedelta(days=1))
 					start_process.apply_async(_id='eta-testing',eta=make_aware(schedule_date))
 
 					return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
