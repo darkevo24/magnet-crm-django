@@ -187,8 +187,19 @@
                                                 <i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="icon-circle2 mr-1"></i>
                                                 {{client.nama}} 
                                             </div>
-                                            <div class="pl-1 text-muted">{{client.phone_no}}</div>
                                             <div class="pl-1 text-muted">{{client.email}}</div>
+                                            
+                                            <div class="pl-1 text-muted">
+                                                {% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
+                                                    {{client.get_source_detail_2_display}} 
+                                                {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
+                                                    {{client.get_source_detail_1_display}} 
+                                                {% else %}
+                                                    {{client.get_source_display|default:'-'}}
+                                                {% endif %}
+                                            </div>
+
+                                        
 
                                             
 
@@ -267,8 +278,16 @@
                                                 <i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="icon-circle2 mr-1"></i>
                                                 {{client.nama}} 
                                             </div>
-                                            <div class="pl-1 text-muted">{{client.phone_no}}</div>
                                             <div class="pl-1 text-muted">{{client.email}}</div>
+                                            <div class="pl-1 text-muted">
+                                                {% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
+                                                    {{client.get_source_detail_2_display}} 
+                                                {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
+                                                    {{client.get_source_detail_1_display}} 
+                                                {% else %}
+                                                    {{client.get_source_display|default:'-'}}
+                                                {% endif %}
+                                            </div>
 
                                             
 
