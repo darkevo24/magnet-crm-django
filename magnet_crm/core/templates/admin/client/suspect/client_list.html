@@ -6,7 +6,7 @@
 	<!-- Typeahead -->
 	<div class="card col-12 card_cus">
 		<div class="card-header">
-			<h5 class="card-title">Client Suspect List </h5>
+			<h5 class="card-title pb-2">Client Suspect List </h5>
 			<select class="form-control" onchange="change_filter()" id="suspect_filter" style="max-width: 200px;">
 			  <option {% if request.GET.month == '' %} selected {% endif %} value="">Month Select</option>
 			  <option {% if request.GET.month == '1' %} selected {% endif %} value="1">January</option>
@@ -22,13 +22,14 @@
 			  <option {% if request.GET.month == '11' %} selected {% endif %} value="11">November</option>
 			  <option {% if request.GET.month == '12' %} selected {% endif %} value="12">December</option>
 			</select>
+
 		</div>
 
 		<div class="card-body">
 			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
-			<!-- <div class="btn-group mr-lg-3 mb-3">
-				<a href="{% url 'client-add' %}"><button type="button" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Data Pribadi</span></button></a>
-			</div> -->
+			<div class="btn-group mr-lg-3 mb-3">
+				<a href="{% url 'client-suspect-history-list' %}"><button type="button" class="btn btn-light"><span class="d-none d-lg-inline-block ">History Suspect</span></button></a>
+			</div>
 			<div class="row ">
 				<div class="col-12">
 

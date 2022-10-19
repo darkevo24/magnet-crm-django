@@ -103,7 +103,7 @@ def client_import(request):
 def client_suspect_list(request):
 	
 	month = request.GET.get('month')
-	print(month,"month")
+	
 
 	now = timezone.now()
 
