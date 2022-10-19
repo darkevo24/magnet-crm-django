@@ -158,6 +158,7 @@ class Client_Staff(Base_Model):
 		('0066ff', 'Biru'), 
 	]
 	color = models.CharField(default='000000',max_length=255, choices=COLOR_LISTS)
+	is_hot = models.BooleanField(default=False)
 
 
 

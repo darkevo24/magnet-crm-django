@@ -315,6 +315,27 @@ def client_edit_color(request,id_client, color_str):
 
 	return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+def client_set_hot(request,id_client, action):
+
+
+	try:
+		with transaction.atomic():
+			
+			staff = Staff.objects.filter(profile__user__id=request.user.id).first()
+			client_staff = Client_Staff.objects.filter(client__id=id_client, is_active=True).first()
+
+			if action == "true":
+				client_staff.is_hot = True
+			else:
+				client_staff.is_hot = False
+			client_staff.updated_by = request.user
+			client_staff.save()
+	
+	except IntegrityError as e:
+		print(e)
+
+	return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
 
 
 def client_delete(request,id_client):
