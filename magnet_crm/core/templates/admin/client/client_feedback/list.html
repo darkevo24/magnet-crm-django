@@ -35,11 +35,20 @@
 
 			<div class="row">
 				<!-- <h5>Filter Source</h5> -->
-				<!-- <select id="filter_register" class="form-control select-search" data-fouc onchange="client_source_change_register(this)">
+				<select id="filter_register" class="form-control select-search" data-fouc onchange="client_source_change_register()">
                     <option value="">Show all</option>
-                    <option value="True">True</option>
-                    <option value="False">False</option>
-                </select> -->
+                    <option value="Google">Google</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="Rolling Data Regis">Rolling Data Regis</option>
+                    <option value="Rolling Data Inactive Client">Rolling Data Inactive Client</option>
+                    <option value="External Data">External Data</option>
+                    <option value="Pribadi Marketing">Pribadi Marketing</option>
+                    <option value="IB">IB</option>
+                    <option value="Adwords">Adwords</option>
+                    <option value="Social Media">Social Media</option>
+                    <option value="Email">Email</option>
+                </select>
+
 				<div class="col-12">
 
 					<table class="table" id="table-main">
@@ -50,7 +59,7 @@
 					      <th scope="col">Fullname</th>
 					      <th scope="col">Response</th>
 					      <th scope="col">Email</th>
-					      <!-- <th scope="col">Source</th> -->
+					      <th scope="col">Source</th>
 					      <th scope="col" class="text-center">Date</th>
 					      
 					    </tr>
@@ -63,7 +72,7 @@
 						      <td scope="row">{{client_feedback.client.nama}}</td>
 						      <td scope="row">{{client_feedback.followup.followup_choices}}</td>
 						      <td scope="row">{{client_feedback.client.email}}</td>
-						      <!-- <td>
+						      <td>
                                     {% if client_feedback.client.source_detail_2 is not None and client_feedback.client.source_detail_2 != '' %}
                                         {{client_feedback.client.get_source_detail_2_display}} 
                                     {% elif client_feedback.client.source_detail_1 is not None and client_feedback.client.source_detail_1 != '' %}
@@ -71,7 +80,7 @@
                                     {% else %}
                                         {{client_feedback.client.get_source_display|default:'-'}}
                                     {% endif %} 
-                            </td> -->
+                            </td>
 						      <td scope="row">{{client_feedback.created_at}}</td>
 						    </tr>
 						{% endfor %}
@@ -95,7 +104,15 @@
 
 
 <script type="text/javascript">
-	
+	function client_source_change_register(){
+	    var current_cust_filter = $("#filter_register").val()
+	    $("#table-main > thead > tr > th:nth-child(5) ").val(current_cust_filter).change()
+	    // console.log($("#table-main > thead > tr > th:nth-child(5) > input[type=text]"));
+	    maintable
+	        .column(5)
+	        .search(current_cust_filter, true)
+	        .draw();
+	}
 	var EchartsPieBasicDark = function() {
 
 
@@ -275,7 +292,7 @@
 
 	
     $(function() {
-		$("#table-main").DataTable({
+		maintable = $("#table-main").DataTable({
 	    	dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
 			language: {
 	            search: '<span>Filter:</span> _INPUT_',
@@ -293,6 +310,33 @@
 	    });
 
 	});
+
+ //    $(document).ready( function () {
+	//   var table = $('#example').DataTable();
+	//   $('#select-input').on('keyup change', function(){
+
+	//     var item	= $(this)
+
+	//     if($(this).find('option:selected').val() === "1"){
+	//       table
+	//         .column(5)
+	//         .search('^(?!0.00$).*', true)
+	//         .draw();
+	//     } else if($(this).find('option:selected').val() === "0"){
+
+	//       table
+	//       .column(5)
+	//       .search( '^(0.00$).*', true )
+	//       .draw();
+	//     } else {
+	//       table
+	//       .search( '' )
+	//       .columns().search( '' )
+	//       .draw();
+	//     }
+	//   })
+	// } );
+
 
 	$(".table-row").click(function() {
 	 	var link = $(this).data('href');

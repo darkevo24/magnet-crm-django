@@ -72,7 +72,7 @@ class Client(Base_Model):
 		('2', 'Pribadi Marketing'),
 		('3', 'IB'),
 
-		('4', 'Rolling Data Regis '),
+		('4', 'Rolling Data Regis'),
 		('5', 'Rolling Data Inactive Client'),
 	]
 
