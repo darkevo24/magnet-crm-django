@@ -132,7 +132,7 @@ def get_client_position(user_id):
 			login_mt5_ids.append(myresult[2])
 		print('connect to another db')
 		pos_cnx = mysql.connector.connect(
-				host="52.221.225.32",
+				host="54.151.138.128",
 				user='ivan',
 				password='Keluarga999',
 				database='position'
@@ -207,6 +207,41 @@ def get_login_trades(user_id):
 			}
 			print("ini data")
 			res = requests.post('http://13.229.114.255/getLoginState', data=data)
+			json_data = json.loads(res.text)
+			# print(json_data['data'],"json_data['data']")
+			return json_data
+
+	except IntegrityError as e:
+		print(e)
+
+def get_login_trades_history(user_id):
+	client = Client.objects.filter(id=user_id).first()
+	magnet_user_id = client.magnet_id
+	try:
+		with transaction.atomic():
+
+			cnx = mysql.connector.connect(
+				host="13.229.114.255",
+				user='ivan',
+				password='MajuBersama123',
+				database='vifx'
+			)
+
+			mycursor = cnx.cursor()
+			mycursor.execute("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id="+ str(magnet_user_id)+ " ORDER BY 'id' DESC LIMIT 2")
+			login_mt5_ids = []
+			myresult = mycursor.fetchall()
+			print(myresult,"myresult")
+			for myresult in myresult:
+				login_mt5_ids.append(myresult[2])
+			data = {
+				# 'logins': login_mt5_ids,
+				'logins': '5700013',
+				'from':'2022-07-01',
+                'to':'2022-10-31',
+			}
+			print("ini data")
+			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print(json_data['data'],"json_data['data']")
 			return json_data

@@ -1,0 +1,234 @@
+
+{% extends 'base/head.html' %}
+{% block content %}
+{% load static %}
+{% load core_extras %}
+<style type="text/css">
+    .icon_green{
+        background-color: #cbdfcd;
+        border-radius: 50%;
+    }
+    .gadget_green{
+        white-space: nowrap;background-color: #e8f5eb;border-radius: 10px;position: relative;   
+    }
+    .nav-tabs-highlight .nav-link.active{
+        background-color: green!important;
+        color: white!important;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+    .nav-tabs{
+        border-bottom: 2px solid green;
+        margin: 0;
+        padding: 0;
+    }
+    .nav-tabs-highlight .nav-link{
+        /*background-color: green!important;*/
+        /*color: !important;*/
+        border:1px solid green!important;
+        border-top-left-radius: 5px!important;
+        border-top-right-radius: 5px!important;
+        padding-top: 3px;
+        padding-bottom: 3px;
+        margin-right: 10px;
+    }
+    .nav-tabs-highlight .nav-link.active:before{
+        background-color:transparent!important;
+    }
+    .nav-tabs-highlight .nav-item:first-child {
+        margin-left: 20px;
+    }
+    .media{
+        border: 1px solid silver;
+        border-radius: 15px;
+        padding: 10px;
+    }
+
+    .tab-content{
+        border: 1px solid green;
+        padding: 10px;
+        padding-left: 15px;
+        padding-right: 20px;
+    }
+
+</style>
+<script src="{% static 'limitless/global_assets/js/plugins/ui/fullcalendar/main.min.js' %}"></script>
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12">
+		<div class="card-header">
+			<h5 class="card-title">{{client.nama}} Trades</h5>
+		</div>
+
+		<div class="card-body">
+            <!-- <div class="row pb-3">
+                <div class="col-3 px-3">
+                    <div class="row" style="line-height: 1">
+                        <div class="col py-2 px-3 gadget_green" >
+                            <div style="display: inline-block;" class="mr-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_client}}</h1>
+                                <p class="mb-0">Total Client</p>
+                            </div>
+                            <div style="display: inline-grid;position: absolute;right: 20px">
+                                <img src="{% static 'magnet/images/icon_list.png' %}" style="height: 50px" class="icon_green">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 pr-3">
+                    <div class="row" style="line-height: 1">
+                        <div class="col py-2 px-3 gadget_green" >
+                            <div style="display: inline-block;" class="mr-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_followup}}</h1>
+                                <p class="mb-0">Total Followup</p>
+                            </div>
+                            <div style="display: inline-grid;position: absolute;right: 20px">
+                                <img src="{% static 'magnet/images/icon_list.png' %}" style="height: 50px" class="icon_green">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 pr-3">
+                    <div class="row" style="line-height: 1">
+                        <div class="col py-2 px-3 gadget_green" >
+                            <div style="display: inline-block;" class="mr-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_feedback}}</h1>
+                                <p class="mb-0">Total Feedback</p>
+                            </div>
+                            <div style="display: inline-grid;position: absolute;right: 20px">
+                                <img src="{% static 'magnet/images/icon_list.png' %}" style="height: 50px" class="icon_green">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row" style="line-height: 1">
+                        <div class="col py-2 px-3 gadget_green" style="background-color:#f5e0e1">
+                            <div style="display: inline-block;" class="mr-3">
+                                <h1 class="p-0 m-0" style="color:red;font-size: 2.5em;line-height:1">{{total_upcomming_followup}}</h1>
+                                <p class="mb-0">Upcomming Followup</p>
+                            </div>
+                            <div style="display: inline-grid;position: absolute;right: 20px">
+                                <img src="{% static 'magnet/images/icon_list.png' %}" style="height: 50px;background-color: #f3c2c7!important" class="icon_green">
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </div>
+ -->
+			<div class="row">
+				<div class="col-12">
+					<ul class="nav nav-tabs nav-tabs-highlight">
+                                <!-- <li class="nav-item"><a href="#highlighted-justified-tab1" class="nav-link active" data-toggle="tab">General Information</a></li> -->
+
+                                <li class="nav-item"><a href="#highlighted-justified-tab2" class="nav-link active" data-toggle="tab">Trades</a></li>
+                                <!-- <li class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Calendars</a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a href="#highlighted-justified-tab3" class="dropdown-item" data-toggle="tab">Dropdown tab</a>
+                                        <a href="#highlighted-justified-tab4" class="dropdown-item" data-toggle="tab">Another tab</a>
+                                    </div>
+                                </li> -->
+                            </ul>
+
+                            <div class="tab-content">
+                                <!-- <div class="tab-pane fade show active" id="highlighted-justified-tab1">
+                                    
+
+                                </div> -->
+
+                                <div class="tab-pane fade active show" id="highlighted-justified-tab2" style="overflow:scroll;">
+                                    <ul class="media-list">
+                                        
+                                            
+                                        <table class="table" id="table-main">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">login</th>
+                                                    <th scope="col">deal</th>
+                                                    <th scope="col">posid</th>
+                                                    <th scope="col">action</th>
+                                                    <th scope="col">entry</th>
+                                                    <th scope="col">symbol</th>
+                                                    <th scope="col">lot</th>
+                                                    <th scope="col">time</th>
+                                                    <th scope="col">price</th>
+                                                    <th scope="col">digits</th>
+                                                    <th scope="col">profit</th>
+                                                    <th scope="col">comm</th>
+                                                    <th scope="col">swaps</th>
+                                                    <th scope="col">comment</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            
+                                                {% for x in client_position_history %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{x|dict_get:'login'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'deal'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'posid'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'action'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'entry'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'symbol'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'lot'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'time'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'price'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'digits'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'profit'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'comm'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'swaps'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'comment'|default:"-"}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                        
+                                            </tbody>
+                                        </table>
+
+                                        
+                                    </ul>
+                                </div>
+                                <!-- <div class="tab-pane fade" id="highlighted-justified-tab4">
+                                    Aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthet.
+                                </div> -->
+                            </div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /typeahead -->
+</div>
+<script type="text/javascript">
+	$( document ).ready(function() {
+        maintable = $("#table-main").DataTable({
+            dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+            language: {
+                search: '<span>Filter:</span> _INPUT_',
+                searchPlaceholder: 'Type to filter...',
+                lengthMenu: '<span>Show:</span> _MENU_',
+            },
+            autoWidth: true,
+            scrollX: true,
+            // scrollY: '350px',
+            scrollCollapse: true,
+            fixedColumns: {
+                leftColumns: 2,
+                // rightColumns: 1
+            }
+        });
+      
+
+	});
+
+	
+</script>
+{% endblock content %}
+
+							
+						

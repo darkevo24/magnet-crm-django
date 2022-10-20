@@ -600,6 +600,20 @@ def client_position(request, client_id):
 	template = 'admin/client/position.html'
 	# template = 'admin/client/client_schedule/list.html'
 	return render(request, template, context)
+
+def client_position_history(request, client_id):
+	client = Client.objects.filter(id=client_id).first()
+	print(client.magnet_id)
+	client_position_history = get_login_trades_history(client.id)
+	print(client)
+
+	context = {
+		'client_position_history': client_position_history['data'] if 'data' in client_position_history else [] ,
+		'client': client,
+	}
+	template = 'admin/client/position_history.html'
+	# template = 'admin/client/client_schedule/list.html'
+	return render(request, template, context)
 	
 	
 

@@ -79,6 +79,7 @@ urlpatterns = [
     path('client/followup/<str:id_client>/<str:id_followup>/delete', main_view.delete_form, name='followup-form-delete'),
 
     path('client/position/<str:client_id>', client_views.client_position, name='client-position'),
+    path('client/position/history/<str:client_id>', client_views.client_position_history, name='client-position-history'),
 
     # Staff
     path('staff', staff_views.staff_list, name='staff-list'),
