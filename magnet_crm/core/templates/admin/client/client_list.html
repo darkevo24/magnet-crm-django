@@ -40,6 +40,9 @@
 					  <li class="nav-item">
 					    <a class="nav-link" data-toggle="tab" href="#menu1">Client</a>
 					  </li>
+                      <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#menu2">HOT Client</a>
+                      </li>
 					</ul>
 
 					<!-- Tab panes -->
@@ -47,12 +50,12 @@
 					  <div class="tab-pane active" id="home">
 					  		
 					  		<!-- start -->
-					  							<ul class="media-list">
+  							<ul class="media-list">
                                         
                                             
                                 {% for client_staff in client_staff_list %}
                                     
-                                    {% if not client_staff.client.is_deposit %}
+                                    {% if not client_staff.client.is_deposit and not client_staff.is_hot %}
                                     <li class="media">
                                         <div class="media-body ">
                                             <div class="media-title font-weight-semibold">
@@ -114,7 +117,7 @@
                                                         <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client_staff.client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
 
 
-                                                        <span  class="dropdown-item" onclick="set_hot({{client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Toggle Hot Client</span>
+                                                        <span  class="dropdown-item" onclick="set_hot({{client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Hot Client</span>
 
                                                     </div>
                                                 </div>
@@ -139,7 +142,7 @@
                                         
                                 
                              {% for client_staff in client_staff_list %}
-                                 {% if client_staff.client.is_deposit %}
+                                 {% if client_staff.client.is_deposit and not client_staff.is_hot %}
 
                                     
                                     
@@ -203,7 +206,7 @@
                                                         </a>
                                                         <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client_staff.client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
 
-                                                        <span  class="dropdown-item" onclick="set_hot({{client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Toggle Hot Client</span>
+                                                        <span  class="dropdown-item" onclick="set_hot({{client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Hot Client</span>
 
                                                     </div>
                                                 </div>
@@ -220,6 +223,92 @@
 		
 
 					  </div>
+                      <div class="tab-pane fade" id="menu2">
+                                            <ul class="media-list">
+                                        
+                                
+                             {% for client_staff in client_staff_list %}
+                                 {% if client_staff.is_hot %}
+
+                                    
+                                    
+                                    <li class="media">
+                                        <div class="media-body ">
+                                            <div class="media-title font-weight-semibold">
+                                                <i style="display: inline-block;color: #{{client_color|dict_get:client_staff.client.id}}" class="icon-circle2 mr-1"></i>
+                                                {{client_staff.client.nama}} {% if client_staff.is_hot %} <i style="color:red"><b>(Hot Client)</b></i> {% endif %}
+                                            </div>
+                                            <div class="pl-1 text-muted">{{client_staff.client.email}}</div>
+                                            <div class="pl-1 text-muted">
+                                                {% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
+                                                    {{client.get_source_detail_2_display}} 
+                                                {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
+                                                    {{client.get_source_detail_1_display}} 
+                                                {% else %}
+                                                    {{client.get_source_display|default:'-'}}
+                                                {% endif %}
+                                            </div>
+
+                                            
+
+                                        </div>
+
+                                       <div class="align-self-center ml-3">
+                                            <!-- <i class="fab fa-whatsapp mr-3 whatsapp-button" data-client_id="{{client_staff.client.id}}" data-journey_type="whatsapp" style="font-size:1.8em"></i> -->
+                                            <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client_staff.client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
+                                            
+                                            <!-- <i class="fas fa-phone mr-3 call-button" style="font-size: 1.8em" data-client_id="{{client_staff.client.id}}" data-journey_type="called">
+                                            </i> -->
+                                            
+                                            <!-- <a class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client_staff.client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call"><i class="fas fa-phone mr-3" style="font-size: 1.8em"></i></a> -->
+
+                                            <img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client_staff.client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
+
+
+                                            <!-- <a class="list-icons-item" href="{% url 'client-followup-list' client_staff.client.id  %}"><i class="far fa-calendar-plus mr-3" style="font-size: 1.8em"></i></a> -->
+
+                                            <a href="{% url 'client-followup-list' client_staff.client.id  %}"><img class="list-icons-item"  data-popup="tooltip" title="Feedback" src="{% static 'magnet/images/admin-feedback.png' %}" style="height:2.4em" ></a>
+
+
+                                            <div class="list-icons">
+                                                <div class="dropdown">
+                                                    <a href="#" class="list-icons-item" data-toggle="dropdown">
+                                                        <i class="icon-menu9" style="font-size: 1.8em"></i>
+                                                    </a>
+
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a href="{% url 'client-detail-list' client_staff.client.id  %}" class="dropdown-item">
+                                                            <i class="icon-file-eye"></i> Client Detail
+                                                        </a>
+                                                        <a href="{% url 'client-edit' client_staff.client.id  %}" class="dropdown-item">
+                                                            <i class="fas fa-edit"></i> Client Edit
+                                                        </a>
+
+                                                        <a href="{% url 'client-schedule-list' client_staff.client.id  %}" class="dropdown-item">
+                                                            <i class="fas fa-calendar-alt"></i> List Schedule
+                                                        </a>
+                                                        <a href="{% url 'client-schedule-add' client_staff.client.id  %}" class="dropdown-item">
+                                                            <i class="fas fa-calendar-plus"></i> Add Schedule
+                                                        </a>
+                                                        <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client_staff.client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
+
+                                                        <span  class="dropdown-item" onclick="set_hot({{client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Hot Client</span>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </li>
+                                    
+                                 {% endif %}
+                                {% endfor %}
+
+                            
+                        </ul>
+        
+
+                      </div>
 					</div>
 
 
