@@ -112,17 +112,18 @@ def client_import(request):
 
 
 def client_suspect_list(request):
-	
+	now = timezone.now()
 	month = request.GET.get('month')
+	year = request.GET.get('year') or now.year
 	
 
-	now = timezone.now()
+	
 
 
 	staff = Staff.objects.filter(profile__user=request.user).first()
 	template = 'admin/client/suspect/client_list.html'
 	if month != "" and month != None:
-		client_list = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False,created_at__year=now.year,created_at__month=month).order_by("created_at")
+		client_list = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False,created_at__year=year,created_at__month=month).order_by("created_at")
 	else:
 		client_list = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False).order_by("created_at")
 
@@ -369,6 +370,7 @@ def detail_list(request,id_client):
 	history_schedule = Client_Schedule.objects.filter(client=client)
 	history_journey = Client_Journey.objects.filter(client=client)
 	client_position_list = get_client_position(client.id)
+	client_eq_bal = get_login_trades(client.id)
 	print(client_position_list,'client_position_list')
 	
 	context = {

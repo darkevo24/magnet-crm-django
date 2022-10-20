@@ -2,12 +2,13 @@
 {% extends 'base/head.html' %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <div class="row">
 	<!-- Typeahead -->
 	<div class="card col-12 card_cus">
 		<div class="card-header">
 			<h5 class="card-title pb-2">Client Suspect List </h5>
-			<select class="form-control" onchange="change_filter()" id="suspect_filter" style="max-width: 200px;">
+			<!-- <select class="form-control" onchange="change_filter()" id="suspect_filter" style="max-width: 200px;">
 			  <option {% if request.GET.month == '' %} selected {% endif %} value="">Month Select</option>
 			  <option {% if request.GET.month == '1' %} selected {% endif %} value="1">January</option>
 			  <option {% if request.GET.month == '2' %} selected {% endif %} value="2">February</option>
@@ -21,7 +22,17 @@
 			  <option {% if request.GET.month == '10' %} selected {% endif %} value="10">October</option>
 			  <option {% if request.GET.month == '11' %} selected {% endif %} value="11">November</option>
 			  <option {% if request.GET.month == '12' %} selected {% endif %} value="12">December</option>
-			</select>
+			</select> -->
+
+			<div class='input-group date datepicker' id='date-pick' onchange="change_filter()">
+			  <input type='text' name="tgl" id="date-val" class="form-control" />
+			  <span class="input-group-addon">
+			    <span class="glyphicon glyphicon-calendar"></span>
+			  </span>
+			</div>
+
+
+
 
 		</div>
 
@@ -120,11 +131,50 @@
 		</div>
 	</div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <!-- /mini modal -->
 <script type="text/javascript">
 	
 
 	$(function() {
+
+// 		$('.datepicker').datepicker({
+//     format: 'mm/yyyy',
+//     startDate: '-3d'
+// });
+
+
+		// $(".datepicker").datepicker( {
+		//     format: "mm-yyyy",
+		//     startView: "months", 
+		//     minViewMode: "months"
+		// });
+
+		$('#date-pick').datepicker({
+		  format: 'mm-yyyy',
+		  icons: {
+		    time: 'fa fa-time',
+		    date: 'fa fa-calendar',
+		    up: 'fa fa-chevron-up',
+		    down: 'fa fa-chevron-down',
+		    previous: 'fa fa-chevron-left',
+		    next: 'fa fa-chevron-right',
+		    today: 'fa fa-screenshot',
+		    clear: 'fa fa-trash',
+		    close: 'fa fa-remove'
+		  },
+		  startView: "months",
+		  minViewMode: "months"
+		});
+
+
+		// $(".datepicker").datepicker( {
+		//     format: "mm-yyyy",
+		//     viewMode: "months", 
+		//     minViewMode: "months"
+		// });
 		var client_id = '';
 		$('.change-color-button').click(function(){
 			client_id = $(this).data('client_id');
@@ -167,8 +217,9 @@
 
 
 	function change_filter(){
-		var id = $("#suspect_filter").val();
-		window.location = "{% url 'client-suspect-list' %}"+"?month="+id
+		console.log($("#date-val").val())
+		var tgl = $("#date-val").val().split('-');
+		window.location = "{% url 'client-suspect-list' %}"+"?month="+tgl[0]+"&year="+tgl[1]
 	}
 </script>
 {% endblock content %}
