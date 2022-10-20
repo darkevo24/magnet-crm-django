@@ -59,6 +59,17 @@ def client_import(request):
 							except:
 								new_client.phone_no = 0
 							new_client.email = temp[4]
+
+							if temp[5] == "google":
+
+								new_client.source_detail_1 = None
+								new_client.source_detail_2 = "4"
+							elif temp[5] == "fb / ig":
+								new_client.source_detail_1 = None
+								new_client.source_detail_2 = "1"
+							else:
+								new_client.source_detail_1 = None
+
 							new_client.created_by = request.user
 							new_client.save()
 
@@ -83,7 +94,7 @@ def client_import(request):
 					# 			for x in range(sheet.nrows):
 					# 				print(sheet.row_values(x)[0])
 
-
+					messages.success(request, 'Berhasil Impor Data.')
 					return redirect(reverse('client-import'))
 				else:
 					print(import_form.errors)
@@ -436,7 +447,7 @@ def client_schedule_add(request, client_id):
 					# make_aware(schedule_date - timedelta(days=14))
 					# make_aware(schedule_date - timedelta(days=7))
 					# make_aware(schedule_date - timedelta(days=1))
-					start_process.apply_async(_id='eta-testing',eta=make_aware(schedule_date))
+					# start_process.apply_async(_id='eta-testing',eta=make_aware(schedule_date))
 
 					return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 					
