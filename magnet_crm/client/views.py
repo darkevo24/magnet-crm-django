@@ -379,6 +379,7 @@ def detail_list(request,id_client):
 		'history_schedule': history_schedule,
 		'history_journey':history_journey,
 		'client_position_list':client_position_list,
+		'client_eq_bal':client_eq_bal['data'][0] if 'data' in client_eq_bal else [],
 		# 'history_schedule': client,
 		'id_client':id_client,
 	}

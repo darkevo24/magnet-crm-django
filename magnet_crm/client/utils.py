@@ -15,6 +15,9 @@ from datetime import datetime
 from django.utils import timezone
 import re
 from django.db.models import Q
+import requests
+import json
+
 
 def create_client_journal(request, staff=None, client=None, journal_type=None):
 	try:
@@ -110,13 +113,12 @@ def check_user_list():
 		cnx.close()
 
 def get_client_position(user_id):
-	print('user_id', user_id, 26965)
 	client = Client.objects.filter(id=user_id).first()
 	magnet_user_id = client.magnet_id
 	try:
 
 		cnx = mysql.connector.connect(
-			host="18.143.147.140",
+			host="13.229.114.255",
 			user='ivan',
 			password='MajuBersama123',
 			database='vifx'
@@ -126,12 +128,8 @@ def get_client_position(user_id):
 		mycursor.execute("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id="+ str(magnet_user_id)+ " ORDER BY 'id' DESC LIMIT 2")
 		login_mt5_ids = []
 		myresult = mycursor.fetchall()
-		
 		for myresult in myresult:
 			login_mt5_ids.append(myresult[2])
-
-		print('login_mt5_ids', login_mt5_ids)
-
 		print('connect to another db')
 		pos_cnx = mysql.connector.connect(
 				host="52.221.225.32",
@@ -146,7 +144,6 @@ def get_client_position(user_id):
 		count = 0
 		myresult = mycursor.fetchall()
 		for x in myresult:
-			print(count, x)
 			count += 1
 
 
@@ -181,3 +178,38 @@ def get_client_position(user_id):
 				print(err)
 	else:
 		cnx.close()
+
+
+def get_login_trades(user_id):
+	client = Client.objects.filter(id=user_id).first()
+	magnet_user_id = client.magnet_id
+	try:
+		with transaction.atomic():
+
+			cnx = mysql.connector.connect(
+				host="13.229.114.255",
+				user='ivan',
+				password='MajuBersama123',
+				database='vifx'
+			)
+
+			mycursor = cnx.cursor()
+			mycursor.execute("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id="+ str(magnet_user_id)+ " ORDER BY 'id' DESC LIMIT 2")
+			login_mt5_ids = []
+			myresult = mycursor.fetchall()
+			print(myresult,"myresult")
+			for myresult in myresult:
+				login_mt5_ids.append(myresult[2])
+
+
+			data = {
+				'logins': login_mt5_ids
+			}
+			print("ini data")
+			res = requests.post('http://13.229.114.255/getLoginState', data=data)
+			json_data = json.loads(res.text)
+			# print(json_data['data'],"json_data['data']")
+			return json_data
+
+	except IntegrityError as e:
+		print(e)
