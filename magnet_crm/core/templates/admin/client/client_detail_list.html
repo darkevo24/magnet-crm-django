@@ -28,6 +28,9 @@
 		{% if client_position_list|length > 0 or client.is_deposit %}
 		<div class="row">
 			<dir class="col-12" style="text-align: right;">
+				<a href="{% url 'client-position-history' client.id %}">
+					<button class="btn green-btn">Client History</button>
+				</a>
 				<a href="{% url 'client-position' client.id %}">
 					<button class="btn green-btn">Client Position</button>
 				</a>

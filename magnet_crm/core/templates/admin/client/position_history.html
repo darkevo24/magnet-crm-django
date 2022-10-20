@@ -140,6 +140,30 @@
                                     
 
                                 </div> -->
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="p-0 m-0">Start date</h5>
+                                        <div class='input-group date datepicker' id='date-pick-from' onchange="change_filter()">
+                                          <input type='text' name="tgl" id="date-from-val" class="form-control" value="{{request.GET.from}}" />
+                                          <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                          </span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <h5 class="p-0 m-0">End date</h5>
+                                        <div class='input-group date datepicker' id='date-pick-to' onchange="change_filter()">
+                                          <input type='text' name="tgl" id="date-to-val" class="form-control" value="{{request.GET.to}}" />
+                                          <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                          </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+
+                                
+
 
                                 <div class="tab-pane fade active show" id="highlighted-justified-tab2" style="overflow:scroll;">
                                     <ul class="media-list">
@@ -205,7 +229,46 @@
 	<!-- /typeahead -->
 </div>
 <script type="text/javascript">
+
+    function change_filter(){
+        from = $("#date-from-val").val()
+        to = $("#date-to-val").val()
+        window.location = "{% url 'client-position-history' client.id %}"+"?from="+from+"&to="+to
+    }
 	$( document ).ready(function() {
+
+        $('#date-pick-from').datepicker({
+          format: 'yyyy-mm-dd',
+          icons: {
+            time: 'fa fa-time',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-screenshot',
+            clear: 'fa fa-trash',
+            close: 'fa fa-remove'
+          },
+        });
+
+        $('#date-pick-to').datepicker({
+          format: 'yyyy-mm-dd',
+          icons: {
+            time: 'fa fa-time',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-screenshot',
+            clear: 'fa fa-trash',
+            close: 'fa fa-remove'
+          },
+        });
+
+
+
         maintable = $("#table-main").DataTable({
             dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
             language: {

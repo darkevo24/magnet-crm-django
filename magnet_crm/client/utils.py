@@ -214,7 +214,7 @@ def get_login_trades(user_id):
 	except IntegrityError as e:
 		print(e)
 
-def get_login_trades_history(user_id):
+def get_login_trades_history(user_id,from_date=None,to_date=None):
 	client = Client.objects.filter(id=user_id).first()
 	magnet_user_id = client.magnet_id
 	try:
@@ -234,11 +234,13 @@ def get_login_trades_history(user_id):
 			print(myresult,"myresult")
 			for myresult in myresult:
 				login_mt5_ids.append(myresult[2])
+
+			now = timezone.now()
 			data = {
 				# 'logins': login_mt5_ids,
 				'logins': '5700013',
-				'from':'2022-07-01',
-                'to':'2022-10-31',
+				'from':from_date,
+                'to':to_date if to_date is not None else str(now.year)+"-"+str(now.month)+'-'+str(now.day),
 			}
 			print("ini data")
 			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
