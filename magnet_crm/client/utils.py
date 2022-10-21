@@ -238,7 +238,7 @@ def get_login_trades_history(user_id,from_date=None,to_date=None):
 			now = timezone.now()
 			data = {
 				# 'logins': login_mt5_ids,
-				'logins': '5700013',
+				'logins': login_mt5_ids,
 				'from':from_date,
                 'to':to_date if to_date is not None else str(now.year)+"-"+str(now.month)+'-'+str(now.day),
 			}

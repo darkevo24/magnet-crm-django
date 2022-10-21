@@ -24,12 +24,8 @@
 			  <option {% if request.GET.month == '12' %} selected {% endif %} value="12">December</option>
 			</select> -->
 
-			<div class='input-group date datepicker' id='date-pick' onchange="change_filter()">
-			  <input type='text' name="tgl" id="date-val" class="form-control" />
-			  <span class="input-group-addon">
-			    <span class="glyphicon glyphicon-calendar"></span>
-			  </span>
-			</div>
+
+
 
 
 
@@ -41,6 +37,23 @@
 			<div class="btn-group mr-lg-3 mb-3">
 				<a href="{% url 'client-suspect-history-list' %}"><button type="button" class="btn btn-light"><span class="d-none d-lg-inline-block ">History Suspect</span></button></a>
 			</div>
+			<div class="row">
+				<div class="col-2">
+					<h5>Filter By Date</h5>		
+				</div>
+				<div class="col-10">
+					<div class='input-group date datepicker' id='date-pick' onchange="change_filter()">
+					  <input type='text' name="tgl" id="date-val" class="form-control" value="{{request.GET.month}}-{{request.GET.year}}" />
+					  <span class="input-group-addon">
+					    <span class="glyphicon glyphicon-calendar"></span>
+					  </span>
+					</div>		
+				</div>
+			</div>
+
+			
+			
+
 			<div class="row ">
 				<div class="col-12">
 
