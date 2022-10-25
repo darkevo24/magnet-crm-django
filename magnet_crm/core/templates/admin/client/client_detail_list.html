@@ -31,13 +31,15 @@
 				<a href="{% url 'client-position-history' client.id %}">
 					<button class="btn green-btn">Client History</button>
 				</a>
-				<a href="{% url 'client-position' client.id %}">
+				<!-- <a href="{% url 'client-position' client.id %}">
 					<button class="btn green-btn">Client Position</button>
-				</a>
+				</a> -->
 			</dir>
 		</div>	
 		{% endif %}
 		<div class="row">
+
+
 			<div class="col-12">
 				<div class="row mb-3" style="line-height: 1">
                         <div class="col py-2 px-3 " >
@@ -49,9 +51,69 @@
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_eq_bal|dict_get:'equity'|default:"-"}}</h1>
                                 <p class="mb-0">Current Equity</p>
                             </div>
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_eq_bal|dict_get:'margin'|default:"-"}}</h1>
+                                <p class="mb-0">Margin</p>
+                            </div>
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_eq_bal|dict_get:'margin_free'|default:"-"}}</h1>
+                                <p class="mb-0">Margin Free</p>
+                            </div>
                         </div>
                     </div>
 			</div>
+						<div class="col-12 ">
+				<h5>Client Position</h5>
+					<div class="card p-2" style="">
+				
+						<table class="table" id="table_position" style="max-height: 100vh">
+						  <thead>
+	                            <tr>
+	                                <th scope="col">#</th>
+	                                <th scope="col">Product</th>
+	                                <th scope="col">Symbol</th>
+	                                <th scope="col">Pos Buy</th>
+	                                <th scope="col">Pos Sell</th>
+	                                <th scope="col">Profit Buy</th>
+	                                <th scope="col">Profit Sell</th>
+	                                <th scope="col">Time</th>
+	                            </tr>
+	                        </thead>
+						  <tbody>
+                            {% for x in client_position_list%}
+	                            
+	                                <tr>
+	                                    <th scope="row">{{forloop.counter}}</th>
+	                                    <th scope="row">{{x.2}}</th>
+	                                    <td>
+	                                       {{x.6}}
+	                                    </td>
+	                                    <td>
+	                                        {{x.8}}
+	                                    </td>
+	                                    <td>
+	                                        {{x.9}}
+	                                    </td>
+	                                    <td style="{% if x.16 == 0.0 %} {% elif x.16 < 0%} color: red {% else %} color: green {% endif%}">
+	                                       {{x.16}}
+	                                    </td>
+	                                    <td style="{% if x.17 == 0.0 %} {% elif x.17 < 0%} color: red {% else %} color: green {% endif%}">
+	                                       {{x.17}}
+	                                    </td>
+	                                    <td>
+	                                       {{x.29}}
+	                                    </td>
+	                                   
+
+
+	                                </tr>
+	                        {% endfor %}
+                        
+                            </tbody>
+						</table>
+					</div>
+			</div>
+			
 			<div class="col-6 ">
 				<div class="card p-2" style="overflow: scroll;">
 					<table>

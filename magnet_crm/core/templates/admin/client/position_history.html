@@ -182,7 +182,6 @@
                                                     <th scope="col">lot</th>
                                                     <th scope="col">time</th>
                                                     <th scope="col">price</th>
-                                                    <th scope="col">digits</th>
                                                     <th scope="col">profit</th>
                                                     <th scope="col">comm</th>
                                                     <th scope="col">swaps</th>
@@ -202,12 +201,20 @@
                                                     <td>{{x|dict_get:'symbol'|default:"-"}}</td>
                                                     <td>{{x|dict_get:'lot'|default:"-"}}</td>
                                                     <td>{{x|dict_get:'time'|default:"-"}}</td>
-                                                    <td>{{x|dict_get:'price'|default:"-"}}</td>
-                                                    <td>{{x|dict_get:'digits'|default:"-"}}</td>
+                                                    
+                                                    {% with dig=x.digits %}
+                                                        <td>{{x|dict_get:'price'|floatformat:dig|default:"-"}}</td>
+                                                    {% endwith %}
+
+                                                    
+
+                                                    
+                                                    
                                                     <td>{{x|dict_get:'profit'|default:"-"}}</td>
                                                     <td>{{x|dict_get:'comm'|default:"-"}}</td>
                                                     <td>{{x|dict_get:'swaps'|default:"-"}}</td>
                                                     <td>{{x|dict_get:'comment'|default:"-"}}</td>
+                                                    
                                                 </tr>
                                                 {% endfor %}
                                         
