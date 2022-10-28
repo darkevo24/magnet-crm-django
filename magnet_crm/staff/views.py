@@ -565,8 +565,11 @@ def staff_report_detail(request,staff_uid):
 	all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True)
 
 	all_client = ""
+	client_dict = {}
 	for x in all_client_staff:
 		all_client += x.client.magnet_id + ","
+		client_dict[x.client.magnet_id] = x.client
+
 	all_so = get_so_list(all_client[:-1])
 
 	total_client = 0
@@ -594,6 +597,7 @@ def staff_report_detail(request,staff_uid):
 		'bonus_per_ft': bonus_per_ft,
 		'total_amount' : amount,
 		'total_client' :  total_client,
+		'client_dict':client_dict,
 
 	}
 	return render(request,template,context=context)

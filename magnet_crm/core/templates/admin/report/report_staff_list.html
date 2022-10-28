@@ -1,0 +1,85 @@
+
+{% extends 'base/head.html' %}
+
+{% block content %}
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12 card_cus">
+		
+		<div class="card-header">
+			<h5 class="card-title">Staff List</h5>
+		</div>
+
+		<div class="card-body">
+			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
+			<div class="row">
+				<div class="col-12">
+
+					<table class="table" id="table-main">
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">Fullname</th>
+					      <th scope="col">Email</th>
+					      <th scope="col">Level</th>
+					      
+					      
+					      
+					      <th scope="col" class="text-center">Action</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					  	{% for staff in staff_list%}
+							<tr>
+						      <td scope="row">{{forloop.counter}}</td>
+						      <td scope="row">{{staff.profile.full_name}}</td>
+						      <td scope="row">{{staff.profile.email}}</td>
+
+						      <td scope="row">{{staff.staff_level.level_name}}</td>
+						      
+						      
+						      <td class="text-center">
+									<a href="{% url 'staff-report-detail' staff.uid %}">Report</a>
+								</td>
+						    </tr>
+						{% endfor %}
+					    
+					    
+					  </tbody>
+					</table>
+
+					
+
+					
+
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- /typeahead -->
+</div>
+
+<script type="text/javascript">
+$(function() {
+		$("#table-main").DataTable({
+	    	dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+			language: {
+	            search: '<span>Filter:</span> _INPUT_',
+	            searchPlaceholder: 'Type to filter...',
+	            lengthMenu: '<span>Show:</span> _MENU_',
+	        },
+	        scrollX: true,
+	        // scrollY: '350px',
+	        scrollCollapse: true,
+	        fixedColumns: {
+	            leftColumns: 2,
+	            // rightColumns: 1
+	        }
+	    });
+
+	});	
+</script>
+{% endblock content %}
+
