@@ -250,3 +250,25 @@ def get_login_trades_history(user_id,from_date=None,to_date=None):
 
 	except IntegrityError as e:
 		print(e)
+
+
+def get_so_list(client_ids):
+	
+	try:
+		with transaction.atomic():
+
+			print(client_ids)
+			data = {
+				# 'logins': login_mt5_ids,
+				# 'userids': "20001,150023,151535,151533",
+				'userids': client_ids,
+			}
+			print("ini data")
+			res = requests.post('http://13.229.114.255/getUserFTD', data=data)
+			json_data = json.loads(res.text)
+			print(res.text)
+			# print(json_data['data'],"json_data['data']")
+			return json_data
+
+	except IntegrityError as e:
+		print(e)

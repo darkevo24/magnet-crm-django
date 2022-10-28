@@ -505,6 +505,14 @@
 									</a>
 								</li>
 								{% if not is_low_admin %}
+								<li class="nav-item {% if menu == 'feedback_list' %} active {% endif %}">
+									<a href="{% url 'followup-list' %}" class="nav-link {% if menu == 'feedback_list' %} inverted-border-radius {% endif %}">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+										<span>
+											Report
+										</span>
+									</a>
+								</li>
 								<li class="nav-item {% if menu == 'staff_list' %} active {% endif %}">
 									<a href="{% url 'staff-list' %}" class="nav-link {% if menu == 'staff_list' %} inverted-border-radius {% endif %}">
 										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff.png' %}">

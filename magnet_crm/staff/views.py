@@ -10,7 +10,7 @@ from django.db import IntegrityError, transaction
 from django.contrib import messages
 
 import json
-
+from client.utils import *
 from staff.forms import *
 from core.forms.main import *
 from staff.models import *
@@ -544,5 +544,35 @@ def staff_salary_edit(request,staff_uid,salary_id):
 		'salary':salary,
 		'staff_salary_form': staff_salary_form,
 
+	}
+	return render(request,template,context=context)
+
+def staff_report(request):
+	template = 'admin/report/report_staff_list.html'
+	staff_list = Staff.objects.filter(is_active=True)
+
+	
+	context = {
+		'staff_list': staff_list,
+		'menu':'staff_list',
+	}
+	return render(request,template,context=context)
+
+def staff_report_detail(request,staff_uid):
+	template = 'admin/report/report_staff_detail.html'
+	staff = Staff.objects.filter(uid=staff_uid,is_active=True).first()
+
+	all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True)
+
+	all_client = ""
+	for x in all_client_staff:
+		all_client += x.client.magnet_id + ","
+	all_so = get_so_list(all_client[:-1])
+
+	
+	context = {
+		'staff_list': staff_list,
+		'menu':'staff_list',
+		'all_so':all_so['data'],
 	}
 	return render(request,template,context=context)
