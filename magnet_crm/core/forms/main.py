@@ -12,6 +12,11 @@ class LoginForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}), required=True)
 	
 
+class SettingsForm(ModelForm):
+	class Meta:
+		model = Settings
+		fields = ['top_client_feedback']
+
 class ProfileForm(ModelForm):
 	class Meta:
 		model = Profile

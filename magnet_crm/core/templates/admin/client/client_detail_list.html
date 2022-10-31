@@ -70,6 +70,7 @@
 						  <thead>
 	                            <tr>
 	                                <th scope="col">#</th>
+	                                <th scope="col">login</th>
 	                                <th scope="col">Product</th>
 	                                <th scope="col">Symbol</th>
 	                                <th scope="col">Pos Buy</th>
@@ -84,7 +85,8 @@
 	                            
 	                                <tr>
 	                                    <th scope="row">{{forloop.counter}}</th>
-	                                    <th scope="row">{{x.2}}</th>
+	                                    <td>{{x.1}}</td>
+	                                    <td scope="row">{{x.2}}</td>
 	                                    <td>
 	                                       {{x.6}}
 	                                    </td>

@@ -47,6 +47,7 @@ urlpatterns = [
 
     path('client_transfer', main_view.client_transfer, name='client_transfer'),
     path('client_transfer_staff_ajax', main_view.client_transfer_staff_ajax, name='client_transfer_staff_ajax'),
+    path('settings', main_view.settings, name='settings'),
 
     path('client_transfer_new', main_view.client_transfer_new, name='client_transfer_new'),
 

@@ -14,6 +14,7 @@ import json
 from django.utils import timezone
 from django.db import IntegrityError, transaction
 from notification.views import create_notification
+from django.contrib import messages
 # from magnet_crm.task import *
 
 def notif_check(request):
@@ -510,3 +511,35 @@ def ajax_form(request):
 
 
 	return JsonResponse(response)
+
+
+def settings(request):
+	template = 'admin/core/settings.html'
+	settings_instance = Settings.objects.filter(is_active=True).first()
+	settings_form = SettingsForm(request.POST or None,instance=settings_instance)
+
+	print(request.POST)
+	if request.POST:
+		try:
+			with transaction.atomic():
+
+				if settings_form.is_valid() :
+					
+					client = settings_form.save(commit=False)
+					client.updated_by = request.user
+					client.updated_at = timezone.now()
+					client.save()
+					messages.success(request, 'Settings updated.')
+					return redirect(reverse('settings'))
+				else:
+					print(settings_form.errors)
+					print(settings_form.errors)
+
+		except IntegrityError as e:
+			print(e)
+
+	context = {
+		'settings_form': settings_form,
+		'menu':'settings',
+	}
+	return render(request,template,context=context)
