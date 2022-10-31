@@ -163,7 +163,22 @@
                                 
 
                                 
-
+                                <div class="row mb-3" style="line-height: 1">
+                                    <div class="col py-2 px-3 " >
+                                        <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                            <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1" id="ttl_lot">-</h1>
+                                            <p class="mb-0">Total Lot</p>
+                                        </div>
+                                        <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                            <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1" id="ttl_prof"></h1>
+                                            <p class="mb-0">Total Profit</p>
+                                        </div>
+                                        <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                            <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1" id="ttl_com"></h1>
+                                            <p class="mb-0">Total Commision</p>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="tab-pane fade active show" id="highlighted-justified-tab2" style="overflow:scroll;">
                                     <ul class="media-list">
@@ -275,7 +290,7 @@
         });
 
 
-
+        
         maintable = $("#table-main").DataTable({
             dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
             language: {
@@ -290,7 +305,59 @@
             fixedColumns: {
                 leftColumns: 2,
                 // rightColumns: 1
-            }
+            },
+            footerCallback: function (row, data, start, end, display) {
+                var api = this.api();
+     
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                };
+     
+                // Total over all pages
+                total_lot = api
+                    .column(7)
+                    .data()
+                    .reduce(function (a, b) {
+                        console.log(a,b)
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+
+                total_prof = api
+                    .column(10)
+                    .data()
+                    .reduce(function (a, b) {
+                        console.log(a,b)
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                total_com = api
+                    .column(11)
+                    .data()
+                    .reduce(function (a, b) {
+                        console.log(a,b)
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                
+                // Total over this page
+                // pageTotal = api
+                //     .column(7, { page: 'current' })
+                //     .data()
+                //     .reduce(function (a, b) {
+                //         return intVal(a) + intVal(b);
+                //     }, 0);
+
+                $("#ttl_lot").html(total_lot.toFixed(2))
+                $("#ttl_prof").html(total_prof.toFixed(2))
+                $("#ttl_com").html(total_com.toFixed(2))
+     
+                // Update footer
+                // console.log(api.column(7).footer())
+                // $(api.column(7).footer()).html('$' + pageTotal + ' ( $' + total + ' total)');
+
+            },
+
         });
       
 
