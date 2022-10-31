@@ -526,6 +526,8 @@ def settings(request):
 				if settings_form.is_valid() :
 					
 					client = settings_form.save(commit=False)
+					if settings_instance == None:
+						client.created_by = request.user
 					client.updated_by = request.user
 					client.updated_at = timezone.now()
 					client.save()

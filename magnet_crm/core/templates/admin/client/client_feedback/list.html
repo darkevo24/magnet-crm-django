@@ -14,15 +14,14 @@
 			
 			<div class="card card-body border-top-info">
 				<div class="text-center">
-					<h6 class="mb-0 font-weight-semibold">Top 3 Responses:</h6>
+					<h6 class="mb-0 font-weight-semibold">Top {{total_top}} Responses:</h6>
 				</div>
 				
 				<div class="border rounded p-3">
                     <ol class="list mb-0">
-                    	{% for x in top_3_response %}
+                    	{% for x in top_response %}
 							<li><h6 class="mb-0">
 					                    <span class="font-weight-semibold">{{x}}<span class="badge badge-success badge-pill align-top ml-2">{{dict_client_res|dict_get:x}}</span>
-					                    
 				                    </h6></li>
 		            	{% endfor %}
 					</ol>
@@ -113,6 +112,111 @@
 	        .search(current_cust_filter, true)
 	        .draw();
 	}
+
+	var colors = ['#764548',
+'#F2941A',
+'#26B5D5',
+'#D02507',
+'#A7FEAE',
+'#8BE662',
+'#AB0C11',
+'#6862A2',
+'#907AF5',
+'#C7A47A',
+'#91C01D',
+'#8E314C',
+'#0B4C48',
+'#C2C41D',
+'#286D09',
+'#6602EC',
+'#310C51',
+'#9E8C93',
+'#96BFEA',
+'#4A3E35',
+'#70FDF9',
+'#7B0079',
+'#BA091D',
+'#7A7D99',
+'#FCBA37',
+'#51FDA2',
+'#A83DB9',
+'#FD64A0',
+'#084DDE',
+'#F24C45',
+'#527531',
+'#46FB48',
+'#88F495',
+'#84BB31',
+'#8C35D9',
+'#36EAE1',
+'#864800',
+'#95A261',
+'#F32315',
+'#8FC076',
+'#6CBA59',
+'#3F28DB',
+'#438AFD',
+'#E858B7',
+'#C9B137',
+'#D31713',
+'#698AB1',
+'#D5901B',
+'#DD1D46',
+'#89A168',
+'#2117DD',
+'#311E4E',
+'#DB3575',
+'#15B1E7',
+'#2BE857',
+'#79F9C4',
+'#4EDEA8',
+'#6C474B',
+'#CB53E7',
+'#84B7E7',
+'#3707A6',
+'#C9D70C',
+'#8E1139',
+'#CD1F50',
+'#D8202C',
+'#C61350',
+'#765BB8',
+'#567F04',
+'#8098B7',
+'#15F9A6',
+'#4A3A45',
+'#349668',
+'#FDF51E',
+'#628AA9',
+'#FC57FE',
+'#6D994B',
+'#E78847',
+'#ABC49B',
+'#2F41F2',
+'#C82C4F',
+'#69B045',
+'#C544E7',
+'#9260CB',
+'#BF4BAA',
+'#122F6B',
+'#16AF0A',
+'#5AAA30',
+'#23EFAF',
+'#AD6D82',
+'#6F157B',
+'#9D5F66',
+'#4EFBFA',
+'#83FE33',
+'#9653E0',
+'#76EF68',
+'#10D499',
+'#D4AB98',
+'#C04E68',
+'#F54C03',
+'#5E47D3']
+
+	// colors = colors.slice(1, {{total_top}})
+
+
 	var EchartsPieBasicDark = function() {
 
 
@@ -173,13 +277,7 @@
 	                },
 
 		                // Colors
-		                color: [
-		                    '#2ec7c9','#b6a2de','#5ab1ef','#ffb980','#d87a80',
-		                    '#8d98b3','#e5cf0d','#97b552','#95706d','#dc69aa',
-		                    '#07a2a4','#9a7fd1','#588dd5','#f5994e','#c05050',
-		                    '#59678c','#c9ab00','#7eb00a','#6f5553','#c14089',
-		                    '#66bb6a'
-		                ],
+		                color: colors,
 
 		                // Global text styles
 		                textStyle: {
@@ -342,6 +440,9 @@
 	 	var link = $(this).data('href');
 	 	window.location.href = link;
 	});
+
+
+	
 
 </script>
 {% endblock content %}

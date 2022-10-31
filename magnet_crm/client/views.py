@@ -536,19 +536,19 @@ def client_journey_add(request, client_id, journey_type):
 def feedback_list(request):
 	template = 'admin/client/client_feedback/list.html'
 
-	
+	total_top = Settings.objects.filter(is_active=True).first().top_client_feedback or 3
 	staff = Staff.objects.filter(profile__user__id=request.user.id, is_active=True).first()
 	# sub_staff_list = Staff.objects.filter(staff_parent__id=staff.id, is_active=True)
 	# if sub_staff_list.count() == 0 >:
 
 	if request.user.is_superuser or staff.staff_level.level < 2 :
-		client_feedback_list = Client_Followup.objects.filter(is_active=True).prefetch_related('followup', 'client', 'staff').order_by('-created_at')
+		client_feedback_list = Client_Followup.objects.filter(is_active=True).prefetch_related('followup', 'client', 'staff').order_by('-created_at')[:total_top]
 	else:
 		child_staff = Staff.objects.filter(staff_parent = staff,is_active=True)
 		if child_staff is None:
-			client_feedback_list = Client_Followup.objects.filter(is_active=True, staff=staff).prefetch_related('followup', 'client', 'staff').order_by('-created_at')
+			client_feedback_list = Client_Followup.objects.filter(is_active=True, staff=staff).prefetch_related('followup', 'client', 'staff').order_by('-created_at')[:total_top]
 		else:
-			client_feedback_list = Client_Followup.objects.filter(is_active=True, staff__in=child_staff.values_list('id',flat=True)).prefetch_related('followup', 'client', 'staff').order_by('-created_at')
+			client_feedback_list = Client_Followup.objects.filter(is_active=True, staff__in=child_staff.values_list('id',flat=True)).prefetch_related('followup', 'client', 'staff').order_by('-created_at')[:total_top]
 			
 
 	dict_client_res = {}
@@ -561,12 +561,12 @@ def feedback_list(request):
 
 	dict_client_res_sorted = {}
 	# dict_client_res = sorted(dict_client_res.items(), key=lambda x: x[1], reverse=True)
-	top_3_response = {}
+	top_response = {}
 	counter = 0
 	for i in sorted(dict_client_res.items(), key=lambda x: x[1], reverse=True):
 		dict_client_res_sorted[i[0]] = i[1]
-		if counter < 3:
-			top_3_response[i[0]] = i[1]
+		if counter < total_top:
+			top_response[i[0]] = i[1]
 			counter+=1
 
 
@@ -580,8 +580,10 @@ def feedback_list(request):
 	context = {}
 	context['client_feedback_list'] = client_feedback_list
 	context['dict_client_res'] = dict_client_res_sorted
-	context['top_3_response'] = top_3_response
+	context['top_response'] = top_response
 	context['staff'] = staff
+	context['total_top'] = total_top
+
 	context['menu'] = 'client_feedback'
 
 

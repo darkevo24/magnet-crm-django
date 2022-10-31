@@ -149,11 +149,11 @@ def get_client_position(user_id):
 
 
 		in_params = ','.join(['%s'] * len(login_mt5_ids))
-		print('in_params', in_params)
+		print('in_params', login_mt5_ids)
 		sql = "SELECT * FROM pos WHERE login IN (%s)" % in_params
 		mycursor.execute(sql, login_mt5_ids)
 		my_pos_list = mycursor.fetchall()
-
+		print(my_pos_list,"my_pos_list")
 		print('my_pos_list', len(my_pos_list))
 		# print(my_pos_list)
 		for x in my_pos_list:
