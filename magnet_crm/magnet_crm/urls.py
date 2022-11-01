@@ -24,6 +24,7 @@ from client import views as client_views
 from notification import views as notification_views
 from django.conf.urls.static import static
 from django.conf import settings
+from api import views as api_views
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', main_view.admin_login, name='admin-login'),
@@ -112,6 +113,10 @@ urlpatterns = [
     path('ajax-notification/get_notification', notification_views.get_notifications, name='ajax-get-notification'),
     path('notification/<str:notification_id>', notification_views.open_notification, name='open_notif'),
 
+    path('notification/<str:notification_id>', notification_views.open_notification, name='open_notif'),
+
+    path('push-void-detail', api_views.voip_push_detail, name='open_notif'),
+    
 
     
 

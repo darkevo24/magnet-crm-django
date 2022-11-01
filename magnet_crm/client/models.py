@@ -328,3 +328,15 @@ class Client_Duplicate_Suspect_History(Base_Model):
 	]
 	
 	action = models.CharField(max_length=255, choices=REQUEST_STATUS)
+
+class Client_Staff_Voip(Base_Model):
+	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+	client_staff = models.ForeignKey(
+		Client_Staff,
+		blank=False,
+		null=False,
+		on_delete=models.CASCADE,
+	)
+	called_date = models.DateTimeField(null=True, blank=True)
+	callend_end_date = models.DateField(null=True, blank=True)
+	is_answer = models.BooleanField(default=False)
