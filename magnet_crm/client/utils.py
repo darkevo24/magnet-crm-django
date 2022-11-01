@@ -334,6 +334,9 @@ def get_all_clinet_bonus(clients):
 			print(login_dict,"login_dict") 
 
 
+
+			display_bonus_dict = {}
+
 			total_bonus = 0
 			for data_lot in login_dict:
 				print("data_lot",data_lot,login_dict[data_lot],account_type_dict[data_lot])				
@@ -455,10 +458,62 @@ def get_all_clinet_bonus(clients):
 						elif pos == "SPV":
 							bonus = 0.5
 				total_bonus += bonus
-				print("bonus", bonus)
 
-			print("total bonus", total_bonus)
-			return json_data
+
+				display_bonus_dict[data_lot] = {}
+				display_bonus_dict[data_lot]['account_type'] = account_type_dict[data_lot].lower()
+				display_bonus_dict[data_lot]['bonus'] = bonus
+				display_bonus_dict[data_lot]['lot'] = lot
+				
+				# print("bonus", bonus)
+
+			# print("total bonus", total_bonus)
+
+			# FINISH BONUS 2
+
+			#START BONUS 3
+			total_bonus_3 = 0 
+			display_bonus_3_dict = {}
+			for data_lot in login_dict:
+				# print("data_lot",data_lot,login_dict[data_lot],account_type_dict[data_lot])
+				account_type = account_type_dict[data_lot].lower()
+				pos = "FC"
+				bonus = 0 
+				if pos == "IB":
+					if account_type == "magneto":
+						bonus = 4
+					elif account_type == "elektro":
+						bonus = 1
+					elif account_type == "elastico":
+						bonus = 2
+				elif pos == "FC":
+					if account_type == "magneto":
+						bonus = 0.35
+					elif account_type == "elektro":
+						bonus = 0.5
+					elif account_type == "elastico":
+						bonus = 1
+				elif pos == "SPV":
+					if account_type == "magneto":
+						bonus = 0.15
+					elif account_type == "elektro":
+						bonus = 0.25
+					elif account_type == "elastico":
+						bonus = 0.5
+
+				display_bonus_3_dict[data_lot] = {}
+				display_bonus_3_dict[data_lot]['account_type'] = account_type
+				display_bonus_3_dict[data_lot]['bonus'] = bonus
+
+				print("bonus",bonus)
+				total_bonus_3 += bonus
+
+			# print("total_bonus_3",total_bonus_3)
+
+			# FINISH BONUS 2
+			print("display_bonus_3_dict", display_bonus_3_dict)
+			print("display_bonus_dict", display_bonus_dict)
+			return total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict
 
 	except IntegrityError as e:
 		print(e)

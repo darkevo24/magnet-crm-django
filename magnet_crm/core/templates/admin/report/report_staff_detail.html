@@ -96,6 +96,98 @@
 						</table>
 					</div>
 			</div>
+
+
+			<div class="col-12">
+				<div class="row mb-3" style="line-height: 1">
+                        <div class="col py-2 px-3 " >
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus|default:"-"}}</h1>
+                                <p class="mb-0">Total Bonus</p>
+                            </div>
+                    </div>
+			</div>
+			<div class="col-12 ">
+				<h5>Bonus</h5>
+					<div class="card p-2" style="">
+
+						<table class="table" id="table_bonus" style="max-height: 100vh">
+						  <thead>
+	                            <tr>
+	                                <th scope="col">#</th>
+	                                <th scope="col">Login</th>
+	                                <th scope="col">Account Type</th>
+	                                <th scope="col">Bonus</th>
+	                                <th scope="col">Lot</th>
+	                            </tr>
+	                        </thead>
+						  <tbody>
+                            {% for x in display_bonus_dict %}
+	                            
+	                                <tr>
+	                                    <th scope="row">{{forloop.counter}}</th>
+	                                    {% with x|stringformat:"s" as x_str %}
+                                    	<th scope="row">{{x}}</th>
+                                    	
+	                                    <td >{{display_bonus_dict|dict_get:x_str|dict_get:'account_type' }}</td>
+	                                    <td>
+	                                       {{display_bonus_dict|dict_get:x_str|dict_get:'bonus' }}
+	                                    </td>
+	                                    <td>
+	                                        {{display_bonus_dict|dict_get:x_str|dict_get:'lot' }}
+	                                    </td>
+	                                    {% endwith %}
+	                                </tr>
+	                        {% endfor %}
+                        
+                            </tbody>
+						</table>
+					</div>
+			</div>
+
+
+
+			<div class="col-12">
+				<div class="row mb-3" style="line-height: 1">
+                        <div class="col py-2 px-3 " >
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus_3|default:"-"}}</h1>
+                                <p class="mb-0">Total Bonus</p>
+                            </div>
+                    </div>
+			</div>
+			<div class="col-12 ">
+				<h5>Bonus 2</h5>
+
+					<div class="card p-2" style="">
+
+						<table class="table" id="table_bonus_2" style="max-height: 100vh">
+						  <thead>
+	                            <tr>
+	                                <th scope="col">#</th>
+	                                <th scope="col">Login</th>
+	                                <th scope="col">Account Type</th>
+	                                <th scope="col">Bonus</th>
+	                            </tr>
+	                        </thead>
+						  <tbody>
+                            {% for x in display_bonus_3_dict %}
+	                            
+	                                <tr>
+	                                    <th scope="row">{{forloop.counter}}</th>
+	                                    <td >{{x}}</td>
+	                                    {% with x|stringformat:"s" as x_str %}
+                                    	<td >{{display_bonus_dict|dict_get:x_str|dict_get:'account_type' }}</td>
+                                    	<td >{{display_bonus_dict|dict_get:x_str|dict_get:'bonus' }}</td>
+	                                    
+	                                    {% endwith %}
+	                                </tr>
+	                        {% endfor %}
+                        
+                            </tbody>
+						</table>
+					</div>
+			</div>
 			
 			
 
@@ -108,5 +200,52 @@
 </div>
 <script type="text/javascript">
 	
+	$("#table_position").DataTable({
+		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+		language: {
+            search: '<span>Filter:</span> _INPUT_',
+            searchPlaceholder: 'Type to filter...',
+            lengthMenu: '<span>Show:</span> _MENU_',
+        },
+        scrollX: true,
+        // scrollY: '350px',
+        scrollCollapse: true,
+        fixedColumns: {
+            leftColumns: 2,
+            // rightColumns: 1
+        }
+    });
+
+    $("#table_bonus").DataTable({
+		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+		language: {
+            search: '<span>Filter:</span> _INPUT_',
+            searchPlaceholder: 'Type to filter...',
+            lengthMenu: '<span>Show:</span> _MENU_',
+        },
+        scrollX: true,
+        // scrollY: '350px',
+        scrollCollapse: true,
+        fixedColumns: {
+            leftColumns: 2,
+            // rightColumns: 1
+        }
+    });
+
+    $("#table_bonus_2").DataTable({
+		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+		language: {
+            search: '<span>Filter:</span> _INPUT_',
+            searchPlaceholder: 'Type to filter...',
+            lengthMenu: '<span>Show:</span> _MENU_',
+        },
+        scrollX: true,
+        // scrollY: '350px',
+        scrollCollapse: true,
+        fixedColumns: {
+            leftColumns: 2,
+            // rightColumns: 1
+        }
+    });
 </script>
 {% endblock content %}
