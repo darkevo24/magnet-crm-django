@@ -575,11 +575,13 @@ def staff_report_detail(request,staff_uid):
 	total_client = 0
 	total_client = len(all_so['data'])
 
+
+	# Calculate Skema Bonus FTD
 	amount = 0 
 	for y in all_so['data']:
 		amount += int(float(y['ftd']))
 
-	print(total_client,"total_client")
+	
 	bonus_per_ft = 0
 	for y in all_so['data']:
 		if total_client > 15 and amount > 15000:
@@ -588,6 +590,13 @@ def staff_report_detail(request,staff_uid):
 			bonus_per_ft = 15
 		elif total_client >= 5 and total_client <= 9 and amount > 2500:
 			bonus_per_ft = 10
+	# Finish Calculate Skema Bonus FTD
+
+	# Bonus OR Marketing
+	all_clinet_instance = Client.objects.filter(id__in=all_client_staff.values_list('client',flat=True))
+	print(all_clinet_instance,"all_clinet_instance")
+	all_client_bonus = get_all_clinet_bonus(all_clinet_instance)
+
 
 
 	context = {

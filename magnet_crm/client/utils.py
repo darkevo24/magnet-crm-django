@@ -257,7 +257,7 @@ def get_so_list(client_ids):
 	try:
 		with transaction.atomic():
 
-			print(client_ids)
+			
 			data = {
 				# 'logins': login_mt5_ids,
 				# 'userids': "20001,150023,151535,151533",
@@ -266,8 +266,174 @@ def get_so_list(client_ids):
 			print("ini data")
 			res = requests.post('http://13.229.114.255/getUserFTD', data=data)
 			json_data = json.loads(res.text)
-			print(res.text)
+			
 			# print(json_data['data'],"json_data['data']")
+			return json_data
+
+	except IntegrityError as e:
+		print(e)
+
+
+def get_all_clinet_bonus(clients):
+	clients = Client.objects.filter(id__in=clients)
+	
+	try:
+		with transaction.atomic():
+
+			cnx = mysql.connector.connect(
+				host="13.229.114.255",
+				user='ivan',
+				password='MajuBersama123',
+				database='vifx'
+			)
+
+			magnet_user_ids = []
+			for x in clients:
+				magnet_user_ids.append(x.magnet_id)
+			print(magnet_user_ids,'magnet_user_ids')
+			# print("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_user_ids)[:-1][1:]+ ") ORDER BY 'id' DESC LIMIT 2")
+
+			mycursor = cnx.cursor()
+			mycursor.execute("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_user_ids)[:-1][1:]+ ") ORDER BY 'id' DESC ")
+			login_mt5_ids = []
+			myresult = mycursor.fetchall()
+			# print(myresult,"myresult")
+			account_type_dict = {}
+			for myresult in myresult:
+				login_mt5_ids.append(myresult[2])
+				account_type_dict[str(myresult[2])] = myresult[3]
+
+			# print("login_mt5_ids",login_mt5_ids)
+			now = timezone.now()
+			data = {
+				# 'logins': login_mt5_ids,
+				'logins': login_mt5_ids,
+				'from':2022-11-1,
+                'to':str(now.year)+"-"+str(now.month)+'-'+str(now.day),
+			}
+			# print("ini data")
+			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
+			json_data = json.loads(res.text)
+			# print(json_data['data'],"json_data['data']")
+			# print(account_type_dict)
+			print(json_data['data'][0]['login'],account_type_dict[json_data['data'][0]['login']])
+
+			# Start
+			data_kantor = True
+			pos = "FC`"
+			account_type = "ELASTICO"
+			month = 0 
+			bonus = 0
+			commision = 0
+			if data_kantor:
+				lot = 0
+				tier_1 = True
+				if account_type == "ELASTICO":
+					if lot >= 0 and lot <=30:
+						tier_1 = True
+					else:
+						tier_1 = False
+
+					if tier_1:
+						if pos == "FC":
+							if month >= 0 and month <= 2:
+								bonus = 1
+							else:
+								bonus = 0.5
+						elif pos == "SPV":
+							if month >= 0 and month <= 2:
+								bonus = 0.5
+							else:
+								bonus = 1
+					else:
+						if pos == "FC":
+							if month >= 0 and month <= 2:
+								bonus = 1.75
+							else:
+								bonus = 0.75
+						elif pos == "SPV":
+							if month >= 0 and month <= 2:
+								bonus = 0.75
+							else:
+								bonus = 1.75
+					commision = 5
+
+				elif account_type == "ELECTRO":
+					if lot >= 0 and lot <=50:
+						tier_1 = True
+					else:
+						tier_1 = False
+
+					if tier_1:
+						if pos == "FC":
+							if month >= 0 and month <= 2:
+								bonus = 0.75
+							else:
+								bonus = 0.25
+						elif pos == "SPV":
+							if month >= 0 and month <= 2:
+								bonus = 0.25
+							else:
+								bonus = 0.75
+					else:
+						if pos == "FC":
+							if month >= 0 and month <= 2:
+								bonus = 1
+							else:
+								bonus = 0.5
+						elif pos == "SPV":
+							if month >= 0 and month <= 2:
+								bonus = 0.5
+							else:
+								bonus = 1
+					commision = 3
+
+				elif account_type == "MAGNETO":
+					if lot >= 0 and lot <=100:
+						tier_1 = True
+					else:
+						tier_1 = False
+
+					if tier_1:
+						if pos == "FC":
+							if month >= 0 and month <= 2:
+								bonus = 2
+							else:
+								bonus = 1
+						elif pos == "SPV":
+							if month >= 0 and month <= 2:
+								bonus = 1
+							else:
+								bonus = 2
+					else:
+						if pos == "FC":
+							if month >= 0 and month <= 2:
+								bonus = 3
+							else:
+								bonus = 2
+						elif pos == "SPV":
+							if month >= 0 and month <= 2:
+								bonus = 2
+							else:
+								bonus = 3
+					commision = 10
+
+			else:
+				if account_type == "ELASTICO":
+					if pos == "FC":
+						bonus = 3
+					elif pos == "SPV":
+						bonus = 0.5
+				elif account_type == "ELECTRO":
+					if pos == "FC":
+						bonus = 1
+					elif pos == "SPV":
+						bonus = 0.5
+				elif account_type == "MAGNETO":
+					if pos == "FC":
+						bonus = 4
+					elif pos == "SPV":
+						bonus = 0.5
 			return json_data
 
 	except IntegrityError as e:
