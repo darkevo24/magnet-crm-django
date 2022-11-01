@@ -32,6 +32,11 @@ class Staff(Base_Model):
 		on_delete=models.CASCADE,
 	)
 	is_locked = models.BooleanField(default=False)
+
+
+	is_ib= models.BooleanField(default=False)
+	is_fc = models.BooleanField(default=False)
+	is_spv = models.BooleanField(default=False)
 	def __str__(self):
 		return self.profile.full_name
 
