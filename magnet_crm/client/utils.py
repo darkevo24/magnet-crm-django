@@ -17,6 +17,8 @@ import re
 from django.db.models import Q
 import requests
 import json
+import pprint
+
 
 
 def create_client_journal(request, staff=None, client=None, journal_type=None):
@@ -290,7 +292,7 @@ def get_all_clinet_bonus(clients):
 			magnet_user_ids = []
 			for x in clients:
 				magnet_user_ids.append(x.magnet_id)
-			print(magnet_user_ids,'magnet_user_ids')
+			# print(magnet_user_ids,'magnet_user_ids')
 			# print("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_user_ids)[:-1][1:]+ ") ORDER BY 'id' DESC LIMIT 2")
 
 			mycursor = cnx.cursor()
@@ -300,10 +302,14 @@ def get_all_clinet_bonus(clients):
 			# print(myresult,"myresult")
 			account_type_dict = {}
 			for myresult in myresult:
-				login_mt5_ids.append(myresult[2])
-				account_type_dict[str(myresult[2])] = myresult[3]
+				if myresult[2] != 'None' and myresult[2] != None:
+					login_mt5_ids.append(myresult[2])
+					account_type_dict[str(myresult[2])] = myresult[3]
 
+			
+			login_mt5_ids = (str(login_mt5_ids)[:-1][1:]).replace(" ","")
 			# print("login_mt5_ids",login_mt5_ids)
+
 			now = timezone.now()
 			data = {
 				# 'logins': login_mt5_ids,
@@ -311,129 +317,147 @@ def get_all_clinet_bonus(clients):
 				'from':2022-11-1,
                 'to':str(now.year)+"-"+str(now.month)+'-'+str(now.day),
 			}
-			# print("ini data")
 			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
-			# print(json_data['data'],"json_data['data']")
-			# print(account_type_dict)
-			print(json_data['data'][0]['login'],account_type_dict[json_data['data'][0]['login']])
+			# print("json_data['data']",json_data['data'])
 
-			# Start
-			data_kantor = True
-			pos = "FC`"
-			account_type = "ELASTICO"
-			month = 0 
-			bonus = 0
-			commision = 0
-			if data_kantor:
-				lot = 0
-				tier_1 = True
-				if account_type == "ELASTICO":
-					if lot >= 0 and lot <=30:
-						tier_1 = True
+
+			login_dict = {}
+			for data in json_data['data']:
+				if data['action'] == 'buy':
+					if data['login'] not in login_dict:
+						login_dict[data['login']] = float(data['lot'])
 					else:
-						tier_1 = False
+						login_dict[data['login']] += float(data['lot'])
+				
 
-					if tier_1:
-						if pos == "FC":
-							if month >= 0 and month <= 2:
-								bonus = 1
-							else:
-								bonus = 0.5
-						elif pos == "SPV":
-							if month >= 0 and month <= 2:
-								bonus = 0.5
-							else:
-								bonus = 1
-					else:
-						if pos == "FC":
-							if month >= 0 and month <= 2:
-								bonus = 1.75
-							else:
-								bonus = 0.75
-						elif pos == "SPV":
-							if month >= 0 and month <= 2:
-								bonus = 0.75
-							else:
-								bonus = 1.75
-					commision = 5
+			print(login_dict,"login_dict") 
 
-				elif account_type == "ELECTRO":
-					if lot >= 0 and lot <=50:
-						tier_1 = True
-					else:
-						tier_1 = False
 
-					if tier_1:
-						if pos == "FC":
-							if month >= 0 and month <= 2:
-								bonus = 0.75
-							else:
-								bonus = 0.25
-						elif pos == "SPV":
-							if month >= 0 and month <= 2:
-								bonus = 0.25
-							else:
-								bonus = 0.75
-					else:
-						if pos == "FC":
-							if month >= 0 and month <= 2:
-								bonus = 1
-							else:
-								bonus = 0.5
-						elif pos == "SPV":
-							if month >= 0 and month <= 2:
-								bonus = 0.5
-							else:
-								bonus = 1
-					commision = 3
+			total_bonus = 0
+			for data_lot in login_dict:
+				print("data_lot",data_lot,login_dict[data_lot],account_type_dict[data_lot])				
 
-				elif account_type == "MAGNETO":
-					if lot >= 0 and lot <=100:
-						tier_1 = True
-					else:
-						tier_1 = False
+				# Start
+				data_kantor = True
+				pos = "FC"
+				account_type = account_type_dict[data_lot].lower()
+				month = 0 
+				bonus = 0
+				commision = 0
+				if data_kantor:
+					lot = login_dict[data_lot]
+					tier_1 = True
+					if account_type == "elastico":
+						if lot >= 0 and lot <=30:
+							tier_1 = True
+						else:
+							tier_1 = False
 
-					if tier_1:
-						if pos == "FC":
-							if month >= 0 and month <= 2:
-								bonus = 2
-							else:
-								bonus = 1
-						elif pos == "SPV":
-							if month >= 0 and month <= 2:
-								bonus = 1
-							else:
-								bonus = 2
-					else:
-						if pos == "FC":
-							if month >= 0 and month <= 2:
-								bonus = 3
-							else:
-								bonus = 2
-						elif pos == "SPV":
-							if month >= 0 and month <= 2:
-								bonus = 2
-							else:
-								bonus = 3
-					commision = 10
+						if tier_1:
+							if pos == "FC":
+								if month >= 0 and month <= 2:
+									bonus = 1
+								else:
+									bonus = 0.5
+							elif pos == "SPV":
+								if month >= 0 and month <= 2:
+									bonus = 0.5
+								else:
+									bonus = 1
+						else:
+							if pos == "FC":
+								if month >= 0 and month <= 2:
+									bonus = 1.75
+								else:
+									bonus = 0.75
+							elif pos == "SPV":
+								if month >= 0 and month <= 2:
+									bonus = 0.75
+								else:
+									bonus = 1.75
+						commision = 5
 
-			else:
-				if account_type == "ELASTICO":
-					if pos == "FC":
-						bonus = 3
-					elif pos == "SPV":
-						bonus = 0.5
-				elif account_type == "ELECTRO":
-					if pos == "FC":
-						bonus = 1
-					elif pos == "SPV":
-						bonus = 0.5
-				elif account_type == "MAGNETO":
-					if pos == "FC":
-						bonus = 4
-					elif pos == "SPV":
-						bonus = 0.5
+					elif account_type == "elektro":
+						if lot >= 0 and lot <=50:
+							tier_1 = True
+						else:
+							tier_1 = False
+
+						if tier_1:
+							if pos == "FC":
+								if month >= 0 and month <= 2:
+									bonus = 0.75
+								else:
+									bonus = 0.25
+							elif pos == "SPV":
+								if month >= 0 and month <= 2:
+									bonus = 0.25
+								else:
+									bonus = 0.75
+						else:
+							if pos == "FC":
+								if month >= 0 and month <= 2:
+									bonus = 1
+								else:
+									bonus = 0.5
+							elif pos == "SPV":
+								if month >= 0 and month <= 2:
+									bonus = 0.5
+								else:
+									bonus = 1
+						commision = 3
+
+					elif account_type == "magneto":
+						if lot >= 0 and lot <=100:
+							tier_1 = True
+						else:
+							tier_1 = False
+
+						if tier_1:
+							if pos == "FC":
+								if month >= 0 and month <= 2:
+									bonus = 2
+								else:
+									bonus = 1
+							elif pos == "SPV":
+								if month >= 0 and month <= 2:
+									bonus = 1
+								else:
+									bonus = 2
+						else:
+							if pos == "FC":
+								if month >= 0 and month <= 2:
+									bonus = 3
+								else:
+									bonus = 2
+							elif pos == "SPV":
+								if month >= 0 and month <= 2:
+									bonus = 2
+								else:
+									bonus = 3
+						commision = 10
+
+				else:
+					if account_type == "elastico":
+						if pos == "FC":
+							bonus = 3
+						elif pos == "SPV":
+							bonus = 0.5
+					elif account_type == "elektro":
+						if pos == "FC":
+							bonus = 1
+						elif pos == "SPV":
+							bonus = 0.5
+					elif account_type == "magneto":
+						if pos == "FC":
+							bonus = 4
+						elif pos == "SPV":
+							bonus = 0.5
+				total_bonus += bonus
+				print("bonus", bonus)
+
+			print("total bonus", total_bonus)
 			return json_data
 
 	except IntegrityError as e:
