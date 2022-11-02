@@ -8,7 +8,6 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 register = template.Library()
 
 
-
 @register.filter(name='str_currency')
 def str_currency(string_value):
 	if string_value is None:
@@ -61,4 +60,12 @@ def dict_get(dict_obj, key):
 		return dict_obj[key]
 	else:
 		return None
+
+
+@register.filter(name='num_format')
+def num_format(value):
+	return (f'{value:,}').replace(","," ")
+	# return ' '.join(str(value)[i:i+3] for i in range(0, len(str(value)), 3))
+
+
 		
