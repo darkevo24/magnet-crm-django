@@ -101,24 +101,6 @@ def notif_schedule():
 		print(e)
 
 
-# @shared_task
-# def birthday():
-# 	try:
-# 		with transaction.atomic():
-# 			now = timezone.now()
-# 			clients = Client.objects.filter(birthday__month=now.month, birthday__day=now.day)
-# 			user = User.objects.filter(is_superuser=True).first()
-# 			data = {}
-# 			for client in clients:
-# 				data['client'] = client
-# 				data['notification'] = 'birthday'
-# 				data['notes'] = 'Happy birthday to ' + client.nama
-# 				create_notification(user, data)
-			
-# 	except IntegrityError as e:
-# 		print(e)
-
-
 @shared_task
 def scramble_clients():
 	try:
@@ -327,6 +309,8 @@ def sync_data_magnet():
 			
 			check_user_deposit()
 
+			check_aecode(mycursor, start_from, user)
+
 			
 			
 	except IntegrityError as e:
@@ -489,6 +473,29 @@ def update_client_data(mycursor, last_id, user):
 		# print(client.id)
 
 	print("total nambah "+str(counter))
+
+
+def check_aecode(mycursor, start_from, user):
+
+
+	string_sql = "SELECT user_id, aecode FROM v_users Where aecode <> '991-000000' and  aecode <> '-000000' and aecode <> '0-00' ORDER BY ID ASC"
+	mycursor.execute(string_sql)
+	new_client_list = mycursor.fetchall()
+
+	for new_client in new_client_list:
+		client_staff = Client_Staff.objects.filter(staff__aecode=new_client[1], client__magnet_id=new_client[0], is_active=True).first()
+		if client_staff == None:
+			client = Client.objects.filter(magnet_id=new_client[0], is_active=True).first()
+			staff = Staff.objects.filter(aecode=new_client[1], is_active=False).first()
+			if client != None and staff != None:
+				client_staff = Client_Staff()
+				client_staff.client = client
+				client_staff.staff = staff
+				client_staff.created_by = client_staff.updated_by = user
+				client_staff.save()
+				print('new client sync for staff', client, staff.profile.full_name )
+
+
 
 
 
