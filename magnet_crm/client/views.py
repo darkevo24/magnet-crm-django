@@ -177,6 +177,50 @@ def client_suspect_detail(request,id_client_sus):
 			new_his.save()
 			client.is_active = False
 
+			rejected_client_followup = Client_Followup.objects.filter(is_active=True,client=client)
+			for x in rejected_client_followup:
+				follow = Client_Followup()
+				follow.client = x.client
+				follow.followup = x.followup
+				follow.staff = x.staff
+				follow.answer = x.answer
+				follow.created_by = request.user
+				follow.created_at = timezone.now() 
+				follow.save()
+
+			rejected_client_schedule = Client_Schedule.objects.filter(is_active=True,client=client)
+			for x in rejected_client_schedule:
+				schedule = Client_Schedule()
+				schedule.schedule_date = x.schedule_date
+				schedule.client = x.client
+				schedule.staff = x.staff
+				schedule.schedule_type = x.schedule_type
+				schedule.status = x.status
+				schedule.notes = x.notes
+				schedule.answer = x.answer
+				schedule.created_by = request.user
+				schedule.created_at = timezone.now() 
+				schedule.save()
+			
+			
+			rejected_client_journey = Client_Journey.objects.filter(is_active=True,client=client)
+			for x in rejected_client_journey:
+				if x.journal_type != 'registered':
+					journey = Client_Journey()
+					journey.schedule_date = x.schedule_date
+					journey.client = x.client
+					journey.staff = x.staff
+					journey.journal_type = x.journal_type
+					journey.created_by = request.user
+					journey.created_at = timezone.now() 
+					journey.save()
+			
+
+
+
+
+
+
 		client.updated_by = request.user
 		client.save()
 		client_sus.is_checked = True
