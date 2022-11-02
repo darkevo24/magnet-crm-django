@@ -93,7 +93,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'magnet_crm_db',
-        'USER': 'ivan',
+        'USER': 'aristo',
         'PASSWORD': '',
         'HOST': 'localhost',
         # 'HOST': '13.215.148.70',

@@ -477,23 +477,21 @@ def update_client_data(mycursor, last_id, user):
 
 def check_aecode(mycursor, start_from, user):
 
-
-	string_sql = "SELECT user_id, aecode FROM v_users Where aecode <> '991-000000' and  aecode <> '-000000' and aecode <> '0-00' ORDER BY ID ASC"
+	string_sql = "SELECT id, aecode FROM v_users Where aecode <> '991-000000' and  aecode <> '-000000' and aecode <> '0-00' ORDER BY ID ASC"
 	mycursor.execute(string_sql)
 	new_client_list = mycursor.fetchall()
-
 	for new_client in new_client_list:
-		client_staff = Client_Staff.objects.filter(staff__aecode=new_client[1], client__magnet_id=new_client[0], is_active=True).first()
+		print(str(new_client[1])+"|"+str(new_client[0]))
+		client_staff = Client_Staff.objects.filter(staff__aecode=str(new_client[1]), client__magnet_id=str(new_client[0]), is_active=True).first()
 		if client_staff == None:
-			client = Client.objects.filter(magnet_id=new_client[0], is_active=True).first()
-			staff = Staff.objects.filter(aecode=new_client[1], is_active=False).first()
+			client = Client.objects.filter(magnet_id=str(new_client[0]), is_active=True).first()
+			staff = Staff.objects.filter(aecode=str(new_client[1]), is_active=True).first()
 			if client != None and staff != None:
 				client_staff = Client_Staff()
 				client_staff.client = client
 				client_staff.staff = staff
 				client_staff.created_by = client_staff.updated_by = user
 				client_staff.save()
-				print('new client sync for staff', client, staff.profile.full_name )
 
 
 

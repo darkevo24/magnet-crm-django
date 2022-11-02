@@ -19,7 +19,7 @@ class StaffForm(ModelForm):
 
 	class Meta:
 		model = Staff
-		fields = ['staff_level',]
+		fields = ['staff_level','aecode']
 
 
 class StaffSalaryForm(forms.Form):
