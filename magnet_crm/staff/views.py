@@ -595,10 +595,11 @@ def staff_report_detail(request,staff_uid):
 	# Bonus OR Marketing
 	all_clinet_instance = Client.objects.filter(id__in=all_client_staff.values_list('client',flat=True))
 	print(all_clinet_instance,"all_clinet_instance")
-	total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict = get_all_clinet_bonus(all_clinet_instance)
+
+	total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance)
 
 
-
+	print("client_user_id_login_dict",client_user_id_login_dict)
 	context = {
 		'staff_list': staff_list,
 		'menu':'staff_list',
@@ -607,10 +608,10 @@ def staff_report_detail(request,staff_uid):
 		'total_amount' : amount,
 		'total_client' :  total_client,
 		'client_dict':client_dict,
+		'client_user_id_login_dict':client_user_id_login_dict,
 
-
-		'total_bonus':total_bonus,
-		'total_bonus_3':total_bonus_3,
+		'total_bonus':round(total_bonus, 2),
+		'total_bonus_3':round(total_bonus_3, 2),
 		'display_bonus_dict':display_bonus_dict,
 		'display_bonus_3_dict':display_bonus_3_dict,
 

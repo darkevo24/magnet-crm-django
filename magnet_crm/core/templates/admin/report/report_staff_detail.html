@@ -115,6 +115,7 @@
 						  <thead>
 	                            <tr>
 	                                <th scope="col">#</th>
+	                                <th scope="col">Name</th>
 	                                <th scope="col">Login</th>
 	                                <th scope="col">Account Type</th>
 	                                <th scope="col">Bonus</th>
@@ -127,15 +128,18 @@
 	                                <tr>
 	                                    <th scope="row">{{forloop.counter}}</th>
 	                                    {% with x|stringformat:"s" as x_str %}
-                                    	<th scope="row">{{x}}</th>
-                                    	
-	                                    <td >{{display_bonus_dict|dict_get:x_str|dict_get:'account_type' }}</td>
-	                                    <td>
-	                                       {{display_bonus_dict|dict_get:x_str|dict_get:'bonus' }}
-	                                    </td>
-	                                    <td>
-	                                        {{display_bonus_dict|dict_get:x_str|dict_get:'lot' }}
-	                                    </td>
+	                                    	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %} 
+	                                    	<th scope="row">{{client_dict|dict_get:x_mag_id}}</th>
+	                                    	<th scope="row">{{x}}</th>
+	                                    	
+		                                    <td >{{display_bonus_dict|dict_get:x_str|dict_get:'account_type' }}</td>
+		                                    <td>
+		                                       {{display_bonus_dict|dict_get:x_str|dict_get:'bonus' }}
+		                                    </td>
+		                                    <td>
+		                                        {{display_bonus_dict|dict_get:x_str|dict_get:'lot' }}
+		                                    </td>
+		                                    {% endwith %}
 	                                    {% endwith %}
 	                                </tr>
 	                        {% endfor %}
@@ -165,6 +169,7 @@
 						  <thead>
 	                            <tr>
 	                                <th scope="col">#</th>
+	                                <th scope="col">Name</th>
 	                                <th scope="col">Login</th>
 	                                <th scope="col">Account Type</th>
 	                                <th scope="col">Bonus</th>
@@ -172,14 +177,17 @@
 	                        </thead>
 						  <tbody>
                             {% for x in display_bonus_3_dict %}
-	                            
+	                            	
 	                                <tr>
 	                                    <th scope="row">{{forloop.counter}}</th>
-	                                    <td >{{x}}</td>
-	                                    {% with x|stringformat:"s" as x_str %}
-                                    	<td >{{display_bonus_dict|dict_get:x_str|dict_get:'account_type' }}</td>
-                                    	<td >{{display_bonus_dict|dict_get:x_str|dict_get:'bonus' }}</td>
 	                                    
+	                                    {% with x|stringformat:"s" as x_str %}
+	                                    	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %} 
+	                                    	<td >{{client_dict|dict_get:x_mag_id}}</td>
+	                                    	<td >{{x}}</td>
+	                                    	<td >{{display_bonus_dict|dict_get:x_str|dict_get:'account_type' }}</td>
+	                                    	<td >{{display_bonus_dict|dict_get:x_str|dict_get:'bonus' }}</td>
+	                                    	{% endwith %}
 	                                    {% endwith %}
 	                                </tr>
 	                        {% endfor %}

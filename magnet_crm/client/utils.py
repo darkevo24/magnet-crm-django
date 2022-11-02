@@ -300,9 +300,11 @@ def get_all_clinet_bonus(clients):
 			login_mt5_ids = []
 			myresult = mycursor.fetchall()
 			# print(myresult,"myresult")
+			client_user_id_login_dict = {}
 			account_type_dict = {}
 			for myresult in myresult:
 				if myresult[2] != 'None' and myresult[2] != None:
+					client_user_id_login_dict[str(myresult[2])]=str(myresult[1])
 					login_mt5_ids.append(myresult[2])
 					account_type_dict[str(myresult[2])] = myresult[3]
 
@@ -513,7 +515,7 @@ def get_all_clinet_bonus(clients):
 			# FINISH BONUS 2
 			print("display_bonus_3_dict", display_bonus_3_dict)
 			print("display_bonus_dict", display_bonus_dict)
-			return total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict
+			return total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict
 
 	except IntegrityError as e:
 		print(e)
