@@ -47,11 +47,11 @@
                                 <p class="mb-0">Total Client</p>
                             </div>
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_amount|default:"-"}}</h1>
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_amount|str_currency|default:"-"}}</h1>
                                 <p class="mb-0">Total Amount FTD</p>
                             </div>
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{bonus_per_ft|default:"-"}}</h1>
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{bonus_per_ft|str_currency|default:"-"}}</h1>
                                 <p class="mb-0">Bonus Per Ft</p>
                             </div>
                         </div>
