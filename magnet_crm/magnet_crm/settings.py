@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-8$^5!=&s#l3(_8^qg+^^e5m=!+@j3uk-2^0ezciujo3@*1j(f(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'bonus',
     'django_celery_beat',
     'django_celery_results',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -92,8 +93,8 @@ WSGI_APPLICATION = 'magnet_crm.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'magnet_crm_db',
-        'USER': 'aristo',
+        'NAME': 'magnet_db_1',
+        'USER': 'ivan',
         'PASSWORD': '',
         'HOST': 'localhost',
         # 'HOST': '13.215.148.70',

@@ -505,8 +505,8 @@
 									</a>
 								</li>
 								{% if not is_low_admin %}
-								<li class="nav-item {% if menu == 'feedback_list' %} active {% endif %}">
-									<a href="{% url 'followup-list' %}" class="nav-link {% if menu == 'feedback_list' %} inverted-border-radius {% endif %}">
+								<li class="nav-item {% if menu == 'report' %} active {% endif %}">
+									<a href="{% url 'staff-report' %}" class="nav-link {% if menu == 'report' %} inverted-border-radius {% endif %}">
 										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
 										<span>
 											Report

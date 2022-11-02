@@ -552,9 +552,10 @@ def staff_report(request):
 	staff_list = Staff.objects.filter(is_active=True)
 
 	
+	
 	context = {
 		'staff_list': staff_list,
-		'menu':'staff_list',
+		'menu':'report',
 	}
 	return render(request,template,context=context)
 
