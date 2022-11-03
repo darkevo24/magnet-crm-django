@@ -44,19 +44,23 @@
 				<div class="row mb-3" style="line-height: 1">
                         <div class="col py-2 px-3 " >
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_eq_bal|dict_get:'balance'|default:"-"}}</h1>
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+                                		
+                                		{{client_eq_bal|dict_get:'balance'|str_currency|default:"-"}}
+                                	
+                            </h1>
                                 <p class="mb-0">Current Balance</p>
                             </div>
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_eq_bal|dict_get:'equity'|default:"-"}}</h1>
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_eq_bal|dict_get:'equity'|str_currency|default:"-"}}</h1>
                                 <p class="mb-0">Current Equity</p>
                             </div>
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_eq_bal|dict_get:'margin'|default:"-"}}</h1>
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_eq_bal|dict_get:'margin'|str_currency|default:"-"}}</h1>
                                 <p class="mb-0">Margin</p>
                             </div>
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_eq_bal|dict_get:'margin_free'|default:"-"}}</h1>
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_eq_bal|dict_get:'margin_free'|str_currency|default:"-"}}</h1>
                                 <p class="mb-0">Margin Free</p>
                             </div>
                         </div>
