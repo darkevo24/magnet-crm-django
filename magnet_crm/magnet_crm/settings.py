@@ -93,9 +93,9 @@ WSGI_APPLICATION = 'magnet_crm.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'magnet_db_1',
-        'USER': 'ivan',
-        'PASSWORD': '',
+        'NAME': 'magnet_crm',
+        'USER': 'magnet_user',
+        'PASSWORD': 'MagnetPassowrd2022',
         'HOST': 'localhost',
         # 'HOST': '13.215.148.70',
         'PORT': 5432,
