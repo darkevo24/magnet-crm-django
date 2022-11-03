@@ -574,37 +574,45 @@ def staff_report_detail(request,staff_uid):
 	all_so = get_so_list(all_client[:-1])
 
 	total_client = 0
-	total_client = len(all_so['data'])
+	if 'data' in all_so:
+		total_client = len(all_so['data'])
 
 
 	# Calculate Skema Bonus FTD
 	amount = 0 
-	for y in all_so['data']:
-		amount += int(float(y['ftd']))
+	if 'data' in all_so:
+		for y in all_so['data']:
+			amount += int(float(y['ftd']))
 
 	
 	bonus_per_ft = 0
-	for y in all_so['data']:
-		if total_client > 15 and amount > 15000:
-			bonus_per_ft = 35
-		elif total_client >= 10 and total_client <= 14 and amount > 5000:
-			bonus_per_ft = 15
-		elif total_client >= 5 and total_client <= 9 and amount > 2500:
-			bonus_per_ft = 10
+	if 'data' in all_so:
+		for y in all_so['data']:
+			if total_client > 15 and amount > 15000:
+				bonus_per_ft = 35
+			elif total_client >= 10 and total_client <= 14 and amount > 5000:
+				bonus_per_ft = 15
+			elif total_client >= 5 and total_client <= 9 and amount > 2500:
+				bonus_per_ft = 10
 	# Finish Calculate Skema Bonus FTD
 
 	# Bonus OR Marketing
 	all_clinet_instance = Client.objects.filter(id__in=all_client_staff.values_list('client',flat=True))
 	print(all_clinet_instance,"all_clinet_instance")
-
-	total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance)
+	total_bonus = 0
+	total_bonus_3 = 0
+	display_bonus_dict = {}
+	display_bonus_3_dict = {}
+	client_user_id_login_dict = {}
+	if len(all_clinet_instance) > 0 :
+		total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance)
 
 
 	print("client_user_id_login_dict",client_user_id_login_dict)
 	context = {
 		'staff_list': staff_list,
 		'menu':'staff_list',
-		'all_so':all_so['data'],
+		'all_so': all_so['data'] if 'data' in all_so else None,
 		'bonus_per_ft': bonus_per_ft,
 		'total_amount' : amount,
 		'total_client' :  total_client,
