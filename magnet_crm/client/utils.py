@@ -18,7 +18,7 @@ from django.db.models import Q
 import requests
 import json
 import pprint
-
+from decimal import *
 
 
 def create_client_journal(request, staff=None, client=None, journal_type=None):
@@ -259,7 +259,7 @@ def get_so_list(client_ids):
 	try:
 		with transaction.atomic():
 
-			
+			print("client_ids",client_ids)
 			data = {
 				# 'logins': login_mt5_ids,
 				# 'userids': "20001,150023,151535,151533",
@@ -316,8 +316,8 @@ def get_all_clinet_bonus(clients):
 			data = {
 				# 'logins': login_mt5_ids,
 				'logins': login_mt5_ids,
-				'from':2022-11-1,
-                'to':str(now.year)+"-"+str(now.month)+'-'+str(now.day),
+				'from':'2022-10-01',
+                'to':'2022-10-31',
 			}
 			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
@@ -327,31 +327,72 @@ def get_all_clinet_bonus(clients):
 			login_dict = {}
 			for data in json_data['data']:
 				if data['action'] == 'buy':
+					print("float(data['lot'])",float(data['lot']))
 					if data['login'] not in login_dict:
-						login_dict[data['login']] = float(data['lot'])
+						login_dict[data['login']] = Decimal(data['lot'])
 					else:
-						login_dict[data['login']] += float(data['lot'])
+						login_dict[data['login']] += Decimal(data['lot'])
+
 				
 
 			print(login_dict,"login_dict") 
 
 
+			account_types = ['magneto','electro','elastico']
+			total_lot = {
+				'magneto':0,
+				'magneto_pribadi':0,
+				'electro':0,
+				'electro_pribadi':0,
+				'elastico':0,
+				'elastico_pribadi':0,
+			}
 
+			counter_temp = 1
+			for acc_type in account_types:
+				for x in login_dict:
+					if acc_type == account_type_dict[x]:
+						print("account_type_dict[x]",account_type_dict[x],login_dict[x])
+						if counter_temp == 2:
+							total_lot[acc_type+"_pribadi"] += login_dict[x]
+						else:
+							total_lot[acc_type] += login_dict[x]
+						counter_temp+=1
+						# total_lot[acc_type] += login_dict[x]
+
+			print("total_lot",total_lot)
 			display_bonus_dict = {}
 
-			total_bonus = 0
 			for data_lot in login_dict:
-				print("data_lot",data_lot,login_dict[data_lot],account_type_dict[data_lot])				
+				display_bonus_dict[data_lot] = {}
+				display_bonus_dict[data_lot]['account_type'] = account_type_dict[data_lot]
+				display_bonus_dict[data_lot]['bonus'] = 0
+				display_bonus_dict[data_lot]['lot'] = login_dict[data_lot]
+
+			total_bonus = 0
+			counter = 1
+			for acc_type in total_lot:
+
+				# print("data_lot",data_lot,login_dict[data_lot],account_type_dict[data_lot])				
 
 				# Start
-				data_kantor = True
+				data_kantor = True if '_pribadi' not in acc_type else False
+
+				# print("data_kantor ",data_kantor)
 				pos = "FC"
-				account_type = account_type_dict[data_lot].lower()
+				if '_pribadi' not in acc_type:
+					account_type = acc_type
+				else:
+					account_type = acc_type.replace("_pribadi","")
+					
+				print(data_kantor,account_type,)
 				month = 0 
 				bonus = 0
 				commision = 0
+				
 				if data_kantor:
-					lot = login_dict[data_lot]
+					lot = total_lot[acc_type]
+					print("LOTNYA SKG ",lot)
 					tier_1 = True
 					if account_type == "elastico":
 						if lot >= 0 and lot <=30:
@@ -444,6 +485,7 @@ def get_all_clinet_bonus(clients):
 						commision = 10
 
 				else:
+					lot = total_lot[acc_type]
 					if account_type == "elastico":
 						if pos == "FC":
 							bonus = 3
@@ -459,15 +501,13 @@ def get_all_clinet_bonus(clients):
 							bonus = 4
 						elif pos == "SPV":
 							bonus = 0.5
-				total_bonus += bonus
+				temp_bonus = bonus * lot
+				total_bonus += temp_bonus
+				print("bonus * lot",bonus , lot,total_bonus)
 
 
-				display_bonus_dict[data_lot] = {}
-				display_bonus_dict[data_lot]['account_type'] = account_type_dict[data_lot].lower()
-				display_bonus_dict[data_lot]['bonus'] = bonus
-				display_bonus_dict[data_lot]['lot'] = lot
-				
-				# print("bonus", bonus)
+			
+			# print("bonus", bonus)
 
 			# print("total bonus", total_bonus)
 

@@ -24,6 +24,7 @@ from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 import csv
 from io import StringIO
+from decimal import *
 
 CLEANR = re.compile('<.*?>') 
 
@@ -416,6 +417,9 @@ def detail_list(request,id_client):
 	client_position_list = get_client_position(client.id)
 	client_eq_bal = get_login_trades(client.id)
 	print(client_position_list,'client_position_list')
+	dict_total = {}
+	for x in client_position_list:
+		dict_total[x[1]] = x[16] + x[17]
 	
 	context = {
 		'client': client,
@@ -425,6 +429,7 @@ def detail_list(request,id_client):
 		'client_position_list':client_position_list,
 		'client_eq_bal':client_eq_bal['data'][0] if 'data' in client_eq_bal else [],
 		# 'history_schedule': client,
+		'dict_total':dict_total,
 		'id_client':id_client,
 	}
 	return render(request,template,context=context)
@@ -654,13 +659,25 @@ def client_position_history(request, client_id):
 	to_date = request.GET.get('to') or None
 
 	client_position_history = get_login_trades_history(client.id,from_date,to_date)
-	print(client)
+	print("client_position_history",client_position_history)
+
+	total_in = 0
+	total_out = 0
+	for x in client_position_history['data']:
+		if x['entry'] == "open":
+			total_in += Decimal(x['lot'])
+		else:
+			total_out += Decimal(x['lot'])
+
 
 	context = {
 		'client_position_history': client_position_history['data'] if 'data' in client_position_history else [] ,
 		'client': client,
 		'from_date':from_date,
 		'to_date':to_date,
+		'total_in':total_in,
+		'total_out':total_out,
+
 
 	}
 	template = 'admin/client/position_history.html'

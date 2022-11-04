@@ -15,7 +15,12 @@ def str_currency(string_value):
 		return ''
 
 	try:
-		return '{:,}'.format(float(string_value)).replace(',', ' ')
+		temp_last = str(string_value).split(".")
+		
+		clean = '{:,}'.format(float(string_value)).replace(',', ' ')
+		index_of = clean.index(".")
+
+		return clean[:index_of+3]
 	except ValueError as e:
 		return '-'
 @register.filter(name='add_class')

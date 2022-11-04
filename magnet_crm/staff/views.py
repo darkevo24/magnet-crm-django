@@ -563,15 +563,32 @@ def staff_report_detail(request,staff_uid):
 	template = 'admin/report/report_staff_detail.html'
 	staff = Staff.objects.filter(uid=staff_uid,is_active=True).first()
 
-	all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True)
+	all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True,client__magnet_created_at__month=10,client__magnet_created_at__year=2022)
+
 
 	all_client = ""
 	client_dict = {}
 	for x in all_client_staff:
+		print("x.client.profile,x.client.magnet_id",x.client,x.client.magnet_id,x.staff.aecode)
 		all_client += x.client.magnet_id + ","
 		client_dict[x.client.magnet_id] = x.client
-
+	print("all_client[:-1]",all_client[:-1])
 	all_so = get_so_list(all_client[:-1])
+	temp_so = []
+	dict_temp = {
+		'data':[]
+	}
+	print("all_so",all_so)
+	for x in all_so['data']:
+		# print("x result",x)
+		# print(x['time'])
+		if "2022-10" in str(x['time']):
+			print(x)
+			dict_temp['data'].append(x)
+
+	print("all_so['data']",all_so['data'])
+	print("dict_temp",dict_temp)
+	all_so['data'] = dict_temp['data']
 
 	total_client = 0
 	if 'data' in all_so:
@@ -582,6 +599,7 @@ def staff_report_detail(request,staff_uid):
 	amount = 0 
 	if 'data' in all_so:
 		for y in all_so['data']:
+			print("y['ftd']",y['ftd'])
 			amount += int(float(y['ftd']))
 
 	
@@ -597,6 +615,7 @@ def staff_report_detail(request,staff_uid):
 	# Finish Calculate Skema Bonus FTD
 
 	# Bonus OR Marketing
+	
 	all_clinet_instance = Client.objects.filter(id__in=all_client_staff.values_list('client',flat=True))
 	print(all_clinet_instance,"all_clinet_instance")
 	total_bonus = 0

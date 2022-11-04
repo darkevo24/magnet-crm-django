@@ -170,6 +170,14 @@
                                             <p class="mb-0">Total Lot</p>
                                         </div>
                                         <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                            <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1" >{{total_in|str_currency}}</h1>
+                                            <p class="mb-0">Total In</p>
+                                        </div>
+                                        <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                            <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1" >{{total_out|str_currency}}</h1>
+                                            <p class="mb-0">Total Out</p>
+                                        </div>
+                                        <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                             <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1" id="ttl_prof"></h1>
                                             <p class="mb-0">Total Profit</p>
                                         </div>
@@ -214,7 +222,7 @@
                                                     <td>{{x|dict_get:'action'|default:"-"}}</td>
                                                     <td>{{x|dict_get:'entry'|default:"-"}}</td>
                                                     <td>{{x|dict_get:'symbol'|default:"-"}}</td>
-                                                    <td>{{x|dict_get:'lot'|default:"-"}}</td>
+                                                    <td>{{x|dict_get:'lot'|str_currency|default:"-"}}</td>
                                                     <td>{{x|dict_get:'time'|default:"-"}}</td>
                                                     
                                                     {% with dig=x.digits %}

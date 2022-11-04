@@ -51,6 +51,7 @@
                             </h1>
                                 <p class="mb-0">Current Balance</p>
                             </div>
+
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_eq_bal|dict_get:'equity'|str_currency|default:"-"}}</h1>
                                 <p class="mb-0">Current Equity</p>
@@ -63,6 +64,12 @@
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_eq_bal|dict_get:'margin_free'|str_currency|default:"-"}}</h1>
                                 <p class="mb-0">Margin Free</p>
                             </div>
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_eq_bal|dict_get:'margin_level'|str_currency|default:"-"}}</h1>
+                                <p class="mb-0">Margin Level</p>
+                            </div>
+
+                            
                         </div>
                     </div>
 			</div>
@@ -81,6 +88,7 @@
 	                                <th scope="col">Pos Sell</th>
 	                                <th scope="col">Profit Buy</th>
 	                                <th scope="col">Profit Sell</th>
+	                                <th scope="col">NET</th>
 	                                <th scope="col">Time</th>
 	                            </tr>
 	                        </thead>
@@ -101,10 +109,13 @@
 	                                        {{x.9}}
 	                                    </td>
 	                                    <td style="{% if x.16 == 0.0 %} {% elif x.16 < 0%} color: red {% else %} color: green {% endif%}">
-	                                       {{x.16}}
+	                                       {{x.16|str_currency}}
 	                                    </td>
 	                                    <td style="{% if x.17 == 0.0 %} {% elif x.17 < 0%} color: red {% else %} color: green {% endif%}">
-	                                       {{x.17}}
+	                                       {{x.17|str_currency}}
+	                                    </td>
+	                                    <td style="{% if dict_total|dict_get:x.1 == 0.0 %} {% elif dict_total|dict_get:x.1 < 0%} color: red {% else %} color: green {% endif%}">
+	                                       {{dict_total|dict_get:x.1|str_currency}}
 	                                    </td>
 	                                    <td>
 	                                       {{x.29}}
