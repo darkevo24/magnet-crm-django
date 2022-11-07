@@ -170,7 +170,6 @@
 	                                <th scope="col">Name</th>
 	                                <th scope="col">Login</th>
 	                                <th scope="col">Account Type</th>
-	                                <th scope="col">Bonus</th>
 	                            </tr>
 	                        </thead>
 						  <tbody>
@@ -184,7 +183,6 @@
 	                                    	<td >{{client_dict|dict_get:x_mag_id}}</td>
 	                                    	<td >{{x}}</td>
 	                                    	<td >{{display_bonus_dict|dict_get:x_str|dict_get:'account_type' }}</td>
-	                                    	<td >{{display_bonus_dict|dict_get:x_str|dict_get:'bonus' }}</td>
 	                                    	{% endwith %}
 	                                    {% endwith %}
 	                                </tr>

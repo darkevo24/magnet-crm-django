@@ -563,7 +563,8 @@ def staff_report_detail(request,staff_uid):
 	template = 'admin/report/report_staff_detail.html'
 	staff = Staff.objects.filter(uid=staff_uid,is_active=True).first()
 
-	all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True,client__magnet_created_at__month=10,client__magnet_created_at__year=2022)
+	now = timezone.now()
+	all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True,client__magnet_created_at__month=now.month,client__magnet_created_at__year=now.year)
 
 
 	all_client = ""
@@ -579,16 +580,14 @@ def staff_report_detail(request,staff_uid):
 		'data':[]
 	}
 	print("all_so",all_so)
-	for x in all_so['data']:
-		# print("x result",x)
-		# print(x['time'])
-		if "2022-10" in str(x['time']):
-			print(x)
-			dict_temp['data'].append(x)
+	if 'data' in all_so:
+		for x in all_so['data']:
+			# print("x result",x)
+			# print(x['time'])
+			if str(now.year)+"-"+str(now.month) in str(x['time']):
+				dict_temp['data'].append(x)
 
-	print("all_so['data']",all_so['data'])
-	print("dict_temp",dict_temp)
-	all_so['data'] = dict_temp['data']
+		all_so['data'] = dict_temp['data']
 
 	total_client = 0
 	if 'data' in all_so:
