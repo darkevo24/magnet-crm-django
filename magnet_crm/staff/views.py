@@ -563,7 +563,12 @@ def staff_report_detail(request,staff_uid):
 	template = 'admin/report/report_staff_detail.html'
 	staff = Staff.objects.filter(uid=staff_uid,is_active=True).first()
 
+	date = request.GET.get('date').split("-") or None
 	now = timezone.now()
+	if date != None and date != "":
+		now.replace(year=int(date[1]),month=int(date[0])),"now replace",date[1]
+	# print(now,"now")
+	# print(now.replace(year=int(date[1]),month=int(date[0])),"now replace",date[1])
 	all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True,client__magnet_created_at__month=now.month,client__magnet_created_at__year=now.year)
 
 
@@ -628,6 +633,7 @@ def staff_report_detail(request,staff_uid):
 
 	print("client_user_id_login_dict",client_user_id_login_dict)
 	context = {
+		'staff':staff,
 		'staff_list': staff_list,
 		'menu':'staff_list',
 		'all_so': all_so['data'] if 'data' in all_so else None,
