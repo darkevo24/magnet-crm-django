@@ -20,7 +20,7 @@ import json
 import pprint
 from decimal import *
 
-
+import calendar
 def create_client_journal(request, staff=None, client=None, journal_type=None):
 	try:
 		with transaction.atomic():
@@ -292,14 +292,14 @@ def get_all_clinet_bonus(clients):
 			magnet_user_ids = []
 			for x in clients:
 				magnet_user_ids.append(x.magnet_id)
-			# print(magnet_user_ids,'magnet_user_ids')
+			print(magnet_user_ids,'magnet_user_ids')
 			# print("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_user_ids)[:-1][1:]+ ") ORDER BY 'id' DESC LIMIT 2")
 
 			mycursor = cnx.cursor()
 			mycursor.execute("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_user_ids)[:-1][1:]+ ") ORDER BY 'id' DESC ")
 			login_mt5_ids = []
 			myresult = mycursor.fetchall()
-			# print(myresult,"myresult")
+			print(myresult,"myresult")
 			client_user_id_login_dict = {}
 			account_type_dict = {}
 			for myresult in myresult:
@@ -316,22 +316,24 @@ def get_all_clinet_bonus(clients):
 			data = {
 				# 'logins': login_mt5_ids,
 				'logins': login_mt5_ids,
-				'from':'2022-10-01',
-                'to':'2022-10-31',
+				'from': str(now.year)+"-"+str(now.month)+"-"+"01",
+                'to':str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),
 			}
+			# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
 			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print("json_data['data']",json_data['data'])
 
 
 			login_dict = {}
-			for data in json_data['data']:
-				if data['action'] == 'buy':
-					print("float(data['lot'])",float(data['lot']))
-					if data['login'] not in login_dict:
-						login_dict[data['login']] = Decimal(data['lot'])
-					else:
-						login_dict[data['login']] += Decimal(data['lot'])
+			if 'data' in json_data:
+				for data in json_data['data']:
+					if data['action'] == 'buy':
+						print("float(data['lot'])",float(data['lot']))
+						if data['login'] not in login_dict:
+							login_dict[data['login']] = Decimal(data['lot'])
+						else:
+							login_dict[data['login']] += Decimal(data['lot'])
 
 				
 

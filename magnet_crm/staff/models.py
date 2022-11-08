@@ -14,6 +14,7 @@ class Staff_Level(Base_Model):
 class Staff(Base_Model):
 	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	aecode = models.CharField(max_length=255, default='')
+	rekening = models.CharField(max_length=255, default='')
 	staff_level = models.ForeignKey(
 		Staff_Level,
 		blank=False,
