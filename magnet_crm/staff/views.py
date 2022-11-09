@@ -16,7 +16,9 @@ from core.forms.main import *
 from staff.models import *
 from client.models import *
 from django.utils import timezone
-
+from django.http import HttpResponse
+import xlwt
+from core.excel import *
 def staff_list(request):
 	template = 'admin/staff/staff_list.html'
 	staff_list = Staff.objects.filter(is_active=True).order_by('id')
@@ -563,12 +565,30 @@ def staff_report_detail(request,staff_uid):
 	template = 'admin/report/report_staff_detail.html'
 	staff = Staff.objects.filter(uid=staff_uid,is_active=True).first()
 
-	date = request.GET.get('date').split("-") or None
+	date = request.GET.get('date') or None
+
+
+
+
 	now = timezone.now()
 	if date != None and date != "":
+		date = date.split("-")
 		now.replace(year=int(date[1]),month=int(date[0])),"now replace",date[1]
 	# print(now,"now")
 	# print(now.replace(year=int(date[1]),month=int(date[0])),"now replace",date[1])
+
+	if request.POST:
+		if 'download_excel' in request.POST:
+			if request.POST['download_excel'] == "1":
+				response = HttpResponse(content_type='application/ms-excel')
+				response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
+				wb = xlwt.Workbook(encoding='utf-8')
+				ws = wb.add_sheet("Sheet 1")
+				ws = write_worksheet_report_transaction(ws, "scheme1", None,None, {'staff':staff,'now':now})
+				wb.save(response)
+				return response
+
+
 	all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True,client__magnet_created_at__month=now.month,client__magnet_created_at__year=now.year)
 
 
@@ -628,7 +648,7 @@ def staff_report_detail(request,staff_uid):
 	display_bonus_3_dict = {}
 	client_user_id_login_dict = {}
 	if len(all_clinet_instance) > 0 :
-		total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance)
+		total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance,staff)
 
 
 	print("client_user_id_login_dict",client_user_id_login_dict)

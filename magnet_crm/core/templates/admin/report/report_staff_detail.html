@@ -28,8 +28,13 @@
 			<dir class="col-12" >
 				Staff : {{staff}}<br>
 				Position : {{staff.staff_level.level_name}}
+				<a class="btn btn-primary" id="download-btn">Export</a>
 			</dir>
 		</div>	
+		<form method="POST" id="export_form">
+			{% csrf_token %}
+			<input hidden id="download_param" name="download_excel" value="0"> 
+		</form>
 
 		<div class="row">
 			<div class="col">
@@ -228,6 +233,15 @@
         window.location = "{% url 'staff-report-detail' staff.uid %}"+"?date="+from
 
     }
+
+    $("#download-btn").click(function() {
+			console.log("masuk ke download button")
+			$("#download_param").val("1");
+	    	$("#export_form").attr("method", "post");
+			$("#export_form").submit()
+			$("#download_param").val("0");
+		})
+
 
 	$("#date-pick-from").datepicker( {
 		    format: "mm-yyyy",
