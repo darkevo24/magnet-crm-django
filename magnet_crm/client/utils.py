@@ -276,7 +276,7 @@ def get_so_list(client_ids):
 		print(e)
 
 
-def get_all_clinet_bonus(clients):
+def get_all_clinet_bonus(clients,staff):
 	clients = Client.objects.filter(id__in=clients)
 	
 	try:
@@ -381,7 +381,7 @@ def get_all_clinet_bonus(clients):
 				data_kantor = True if '_pribadi' not in acc_type else False
 
 				# print("data_kantor ",data_kantor)
-				pos = "FC"
+				pos = staff.staff_level.level_name
 				if '_pribadi' not in acc_type:
 					account_type = acc_type
 				else:
@@ -403,23 +403,23 @@ def get_all_clinet_bonus(clients):
 							tier_1 = False
 
 						if tier_1:
-							if pos == "FC":
+							if pos == "Financial Consultant":
 								if month >= 0 and month <= 2:
 									bonus = 1
 								else:
 									bonus = 0.5
-							elif pos == "SPV":
+							elif pos == "Supervisor Marketing":
 								if month >= 0 and month <= 2:
 									bonus = 0.5
 								else:
 									bonus = 1
 						else:
-							if pos == "FC":
+							if pos == "Financial Consultant":
 								if month >= 0 and month <= 2:
 									bonus = 1.75
 								else:
 									bonus = 0.75
-							elif pos == "SPV":
+							elif pos == "Supervisor Marketing":
 								if month >= 0 and month <= 2:
 									bonus = 0.75
 								else:
@@ -433,23 +433,23 @@ def get_all_clinet_bonus(clients):
 							tier_1 = False
 
 						if tier_1:
-							if pos == "FC":
+							if pos == "Financial Consultant":
 								if month >= 0 and month <= 2:
 									bonus = 0.75
 								else:
 									bonus = 0.25
-							elif pos == "SPV":
+							elif pos == "Supervisor Marketing":
 								if month >= 0 and month <= 2:
 									bonus = 0.25
 								else:
 									bonus = 0.75
 						else:
-							if pos == "FC":
+							if pos == "Financial Consultant":
 								if month >= 0 and month <= 2:
 									bonus = 1
 								else:
 									bonus = 0.5
-							elif pos == "SPV":
+							elif pos == "Supervisor Marketing":
 								if month >= 0 and month <= 2:
 									bonus = 0.5
 								else:
@@ -463,23 +463,23 @@ def get_all_clinet_bonus(clients):
 							tier_1 = False
 
 						if tier_1:
-							if pos == "FC":
+							if pos == "Financial Consultant":
 								if month >= 0 and month <= 2:
 									bonus = 2
 								else:
 									bonus = 1
-							elif pos == "SPV":
+							elif pos == "Supervisor Marketing":
 								if month >= 0 and month <= 2:
 									bonus = 1
 								else:
 									bonus = 2
 						else:
-							if pos == "FC":
+							if pos == "Financial Consultant":
 								if month >= 0 and month <= 2:
 									bonus = 3
 								else:
 									bonus = 2
-							elif pos == "SPV":
+							elif pos == "Supervisor Marketing":
 								if month >= 0 and month <= 2:
 									bonus = 2
 								else:
@@ -489,19 +489,19 @@ def get_all_clinet_bonus(clients):
 				else:
 					lot = total_lot[acc_type]
 					if account_type == "elastico":
-						if pos == "FC":
+						if pos == "Financial Consultant":
 							bonus = 3
-						elif pos == "SPV":
+						elif pos == "Supervisor Marketing":
 							bonus = 0.5
 					elif account_type == "elektro":
-						if pos == "FC":
+						if pos == "Financial Consultant":
 							bonus = 1
-						elif pos == "SPV":
+						elif pos == "Supervisor Marketing":
 							bonus = 0.5
 					elif account_type == "magneto":
-						if pos == "FC":
+						if pos == "Financial Consultant":
 							bonus = 4
-						elif pos == "SPV":
+						elif pos == "Supervisor Marketing":
 							bonus = 0.5
 				temp_bonus = bonus * lot
 				total_bonus += temp_bonus
@@ -521,7 +521,7 @@ def get_all_clinet_bonus(clients):
 			for data_lot in login_dict:
 				# print("data_lot",data_lot,login_dict[data_lot],account_type_dict[data_lot])
 				account_type = account_type_dict[data_lot].lower()
-				pos = "FC"
+				pos = "Financial Consultant"
 				bonus = 0 
 				if pos == "IB":
 					if account_type == "magneto":
@@ -530,14 +530,14 @@ def get_all_clinet_bonus(clients):
 						bonus = 1
 					elif account_type == "elastico":
 						bonus = 2
-				elif pos == "FC":
+				elif pos == "Financial Consultant":
 					if account_type == "magneto":
 						bonus = 0.35
 					elif account_type == "elektro":
 						bonus = 0.5
 					elif account_type == "elastico":
 						bonus = 1
-				elif pos == "SPV":
+				elif pos == "Supervisor Marketing":
 					if account_type == "magneto":
 						bonus = 0.15
 					elif account_type == "elektro":
