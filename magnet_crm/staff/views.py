@@ -10,7 +10,7 @@ from django.db import IntegrityError, transaction
 from django.contrib import messages
 
 import json
-from client.utils import *
+
 from staff.forms import *
 from core.forms.main import *
 from staff.models import *
@@ -585,6 +585,23 @@ def staff_report_detail(request,staff_uid):
 				wb = xlwt.Workbook(encoding='utf-8')
 				ws = wb.add_sheet("Sheet 1")
 				ws = write_worksheet_report_transaction(ws, "scheme1", None,None, {'staff':staff,'now':now})
+				wb.save(response)
+				return response
+
+			if request.POST['download_excel'] == "2":
+				response = HttpResponse(content_type='application/ms-excel')
+				response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
+				wb = xlwt.Workbook(encoding='utf-8')
+				ws = wb.add_sheet("Sheet 1")
+				ws = write_worksheet_report_transaction(ws, "scheme2", None,None, {'staff':staff,'now':now})
+				wb.save(response)
+				return response
+			if request.POST['download_excel'] == "3":
+				response = HttpResponse(content_type='application/ms-excel')
+				response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
+				wb = xlwt.Workbook(encoding='utf-8')
+				ws = wb.add_sheet("Sheet 1")
+				ws = write_worksheet_report_transaction(ws, "scheme3", None,None, {'staff':staff,'now':now})
 				wb.save(response)
 				return response
 

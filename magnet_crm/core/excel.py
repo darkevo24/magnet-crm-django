@@ -87,15 +87,11 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 
 		
 
-		row_num = 1
+		row_num = 0
 		for x in all_so['data']:
 			row_num += 1
-
-	# 		print(deposit.id,"--------------")
-			print("X",x)
 			data_list = [
-				{ 'val': row_num-1, 'style': align_center_font_style },
-				
+				{ 'val': row_num, 'style': align_center_font_style },
 				{ 'val': client_dict[x['userid']].nama , 'style': align_left_font_style },
 				{ 'val': x['userid'] , 'style': align_left_font_style },
 				{ 'val': x['login'] , 'style': align_left_font_style },
@@ -104,57 +100,133 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 			]
 
 
-			for col_num, data in enumerate(data_list):
-				worksheet.write(row_num, col_num, data['val'], data['style'])
+		for col_num, data in enumerate(data_list):
+			worksheet.write(row_num, col_num, data['val'], data['style'])
 
-	# if report_type == "transaction_withdraw":
-	# 	worksheet.write(0, 0, 'No', center_bold_font_style)
-	# 	worksheet.write(0, 1, 'Nama Bank Client', center_bold_font_style)
-	# 	worksheet.write(0, 2, 'Nomor Bank Client', center_bold_font_style)
-	# 	worksheet.write(0, 3, 'Akun', center_bold_font_style)
-	# 	worksheet.write(0, 4, 'Profil', center_bold_font_style)
-	# 	worksheet.write(0, 5, 'Nominal Penarikan', center_bold_font_style)
-	# 	worksheet.write(0, 6, 'Dibuat tanggal', center_bold_font_style)
-	# 	worksheet.write(0, 7, 'Direspond oleh', center_bold_font_style)
-	# 	worksheet.write(0, 8, 'Tanggal respon', center_bold_font_style)
+	if report_type == "scheme2":
+		staff = extra['staff']
+
+		worksheet.write(0, 0, 'No', center_bold_font_style)
+		worksheet.write(0, 1, 'Name', center_bold_font_style)
+		worksheet.write(0, 2, 'Login', center_bold_font_style)
+		worksheet.write(0, 3, 'Account Type', center_bold_font_style)
+		worksheet.write(0, 4, 'Lot', center_bold_font_style)
 		
-
-	# 	all_withdraws = Withdraw.objects.filter(is_active=True).exclude(status__in=[1,2]).order_by('-created_at')
-
 		
-
-	# 	if all_withdraws.count() == 0 :
-	# 		worksheet.write_merge(1, 1, 0, 9,'Belum ada data', center_bold_font_style)
-			
-	# 	if start_date!="":
-	# 		all_withdraws = all_withdraws.filter(created_at__gte=start_date)
-
-	# 	if end_date!="":
-	# 		all_withdraws = all_withdraws.filter(created_at__lte=end_date)
-
+		now = extra['now']
 		
+		all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True,client__magnet_created_at__month=now.month,client__magnet_created_at__year=now.year)
+		all_client = ""
+		client_dict = {}
+		for x in all_client_staff:
+			print("x.client.profile,x.client.magnet_id",x.client,x.client.magnet_id,x.staff.aecode)
+			all_client += x.client.magnet_id + ","
+			client_dict[x.client.magnet_id] = x.client
+		print("client_dict atas",client_dict)
+		# Bonus OR Marketing
+		all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True,client__magnet_created_at__month=now.month,client__magnet_created_at__year=now.year)
+		all_clinet_instance = Client.objects.filter(id__in=all_client_staff.values_list('client',flat=True))
+		print(all_clinet_instance,"all_clinet_instance")
+		total_bonus = 0
+		total_bonus_3 = 0
+		display_bonus_dict = {}
+		display_bonus_3_dict = {}
+		client_user_id_login_dict = {}
+		if len(all_clinet_instance) > 0 :
+			total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance,staff)
 
-	# 	row_num = 1
-	# 	for withdraw in all_withdraws:
-	# 		row_num += 1
 
-	# 		print(withdraw.id,"--------------")
+
+
+		if len(all_clinet_instance) == 0 :
+			worksheet.write_merge(1, 1, 0, 9,'Belum ada data', center_bold_font_style)
+		# Finish Calculate Skema Bonus FTD
+	
+
+	
+		row_num = 0
+		print("display_bonus_dict",display_bonus_dict)
+		for x in display_bonus_dict:
+			row_num += 1
+
+			# rint(deposit.id,"--------------")
+			print("X",x)
+			print("client_dict",client_dict)
+			data_list = [
+				{ 'val': row_num, 'style': align_center_font_style },
 				
-	# 		data_list = [
-	# 			{ 'val': row_num-1, 'style': align_center_font_style },
-	# 			{ 'val': withdraw.client_bank.bank_name, 'style': align_left_font_style },
-	# 			{ 'val': withdraw.client_bank.bank_number, 'style': align_left_font_style },
-	# 			{ 'val': withdraw.account.product.type_name, 'style': align_left_font_style },
-	# 			{ 'val': withdraw.profile.full_name, 'style': align_left_font_style },
-	# 			{ 'val': withdraw.withdraw_amount, 'style': align_left_font_style },
-	# 			{ 'val': withdraw.created_at.strftime("%d-%m-%Y"), 'style': align_left_font_style },
-	# 			{ 'val': withdraw.respond_by.email if withdraw.respond_by is not None else  "-" , 'style': align_left_font_style },
-	# 			{ 'val': withdraw.respond_date.strftime("%d-%m-%Y") if withdraw.respond_date is not None else  "-" , 'style': align_left_font_style },
+				{ 'val': client_dict[client_user_id_login_dict[x]].nama , 'style': align_left_font_style },
+				{ 'val': x , 'style': align_left_font_style },
+				{ 'val': display_bonus_dict[x]['account_type'] , 'style': align_left_font_style },
+				{ 'val': display_bonus_dict[x]['lot'], 'style': align_left_font_style },
+			]
+
+
+		for col_num, data in enumerate(data_list):
+			worksheet.write(row_num, col_num, data['val'], data['style'])
+
+	if report_type == "scheme3":
+		staff = extra['staff']
+
+		worksheet.write(0, 0, 'No', center_bold_font_style)
+		worksheet.write(0, 1, 'Name', center_bold_font_style)
+		worksheet.write(0, 2, 'Login', center_bold_font_style)
+		worksheet.write(0, 3, 'Account Type', center_bold_font_style)
+		
+		
+		now = extra['now']
+		
+		all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True,client__magnet_created_at__month=now.month,client__magnet_created_at__year=now.year)
+		all_client = ""
+		client_dict = {}
+		for x in all_client_staff:
+			print("x.client.profile,x.client.magnet_id",x.client,x.client.magnet_id,x.staff.aecode)
+			all_client += x.client.magnet_id + ","
+			client_dict[x.client.magnet_id] = x.client
+		print("client_dict atas",client_dict)
+		# Bonus OR Marketing
+		all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True,client__magnet_created_at__month=now.month,client__magnet_created_at__year=now.year)
+		all_clinet_instance = Client.objects.filter(id__in=all_client_staff.values_list('client',flat=True))
+		print(all_clinet_instance,"all_clinet_instance")
+		total_bonus = 0
+		total_bonus_3 = 0
+		display_bonus_dict = {}
+		display_bonus_3_dict = {}
+		client_user_id_login_dict = {}
+		if len(all_clinet_instance) > 0 :
+			total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance,staff)
+
+
+
+
+		if len(all_clinet_instance) == 0 :
+			worksheet.write_merge(1, 1, 0, 9,'Belum ada data', center_bold_font_style)
+		# Finish Calculate Skema Bonus FTD
+	
+
+		
+		
+
+
+		row_num = 0
+		print("display_bonus_dict",display_bonus_dict)
+		for x in display_bonus_3_dict:
+			row_num += 1
+
+			# print(deposit.id,"--------------")
+			print("X",x)
+			print("client_dict",client_dict)
+			data_list = [
+				{ 'val': row_num, 'style': align_center_font_style },
 				
-	# 		]
+				{ 'val': client_dict[client_user_id_login_dict[x]].nama, 'style': align_left_font_style },
+				{ 'val': x , 'style': align_left_font_style },
+				{ 'val': display_bonus_dict[x]['account_type'] , 'style': align_left_font_style },
+			]
 
 
-	# 		for col_num, data in enumerate(data_list):
-	# 			worksheet.write(row_num, col_num, data['val'], data['style'])
+		for col_num, data in enumerate(data_list):
+			worksheet.write(row_num, col_num, data['val'], data['style'])
 
+	
 	return worksheet
