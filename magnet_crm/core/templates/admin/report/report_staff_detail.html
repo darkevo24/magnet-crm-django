@@ -25,10 +25,12 @@
 
 	<div class="card-body">
 		<div class="row">
-			<dir class="col-12" >
+			<dir class="col" >
 				Staff : {{staff}}<br>
 				Position : {{staff.staff_level.level_name}}
-				<a class="btn btn-primary" id="download-btn">Export</a>
+			</dir>
+			<dir class="col text-right" >
+				<a class="btn btn-success" id="download-btn">Export</a>
 			</dir>
 		</div>	
 		<form method="POST" id="export_form">
@@ -236,10 +238,36 @@
 
     $("#download-btn").click(function() {
 			console.log("masuk ke download button")
-			$("#download_param").val("3");
-	    	$("#export_form").attr("method", "post");
-			$("#export_form").submit()
-			$("#download_param").val("0");
+
+			popupWindow1 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=1');
+			popupWindow2 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=2');
+			popupWindow3 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=3');
+			// {% if staff.staff_level.level_name == "Financial Consultant" %}
+			// 	console.log("masuk 1")
+			// 	$("#download_param").val("1");
+		 //    	$("#export_form").attr("method", "post");
+			// 	$("#export_form").submit()
+			// 	$("#download_param").val("0");
+			// 	setTimeout(function(){
+
+			// 	},5000); 
+
+			// {% endif %}
+			// {% if staff.staff_level.level_name != "IB" %}
+			// 	console.log("masuk 2")
+			// 	$("#download_param").val("2");
+		 //    	$("#export_form").attr("method", "post");
+			// 	$("#export_form").submit()
+			// 	$("#download_param").val("0");
+			// 	setTimeout(function(){
+
+			// 	},5000); 
+			// {% endif %}
+			// 	console.log("masuk 3")
+			// $("#download_param").val("3");
+	  //   	$("#export_form").attr("method", "post");
+			// $("#export_form").submit()
+			// $("#download_param").val("0");
 		})
 
 

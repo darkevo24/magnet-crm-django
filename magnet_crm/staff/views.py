@@ -577,9 +577,12 @@ def staff_report_detail(request,staff_uid):
 	# print(now,"now")
 	# print(now.replace(year=int(date[1]),month=int(date[0])),"now replace",date[1])
 
-	if request.POST:
-		if 'download_excel' in request.POST:
-			if request.POST['download_excel'] == "1":
+	if request.GET:
+		print("MASUK REQUEST")
+		print(request.GET)
+		if 'download_excel' in request.GET:
+			print("DOWNLOAD EXCEL")
+			if request.GET['download_excel'] == "1":
 				response = HttpResponse(content_type='application/ms-excel')
 				response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
 				wb = xlwt.Workbook(encoding='utf-8')
@@ -588,7 +591,7 @@ def staff_report_detail(request,staff_uid):
 				wb.save(response)
 				return response
 
-			if request.POST['download_excel'] == "2":
+			if request.GET['download_excel'] == "2":
 				response = HttpResponse(content_type='application/ms-excel')
 				response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
 				wb = xlwt.Workbook(encoding='utf-8')
@@ -596,7 +599,8 @@ def staff_report_detail(request,staff_uid):
 				ws = write_worksheet_report_transaction(ws, "scheme2", None,None, {'staff':staff,'now':now})
 				wb.save(response)
 				return response
-			if request.POST['download_excel'] == "3":
+
+			if request.GET['download_excel'] == "3":
 				response = HttpResponse(content_type='application/ms-excel')
 				response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
 				wb = xlwt.Workbook(encoding='utf-8')
