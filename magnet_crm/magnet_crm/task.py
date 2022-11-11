@@ -180,7 +180,7 @@ def new_scramble_clients():
 					print('all_prev_parents',y.staff_parent.id)
 
 					if y.staff_parent.id not in prev_parent_dict:
-						prev_parent_dict[y.staff_parent.id] = 0 
+						prev_parent_dict[y.staff_parent.id] = 1
 					else:
 						prev_parent_dict[y.staff_parent.id]+=1
 
@@ -190,15 +190,15 @@ def new_scramble_clients():
 
 				prev_parents.append(x.staff.staff_parent)
 				if x.staff.staff_parent.id not in prev_parent_dict:
-					prev_parent_dict[x.staff.staff_parent.id] = 0 
+					prev_parent_dict[x.staff.staff_parent.id] = 1
 				else:
 					prev_parent_dict[x.staff.staff_parent.id]+=1
 
 				print("prev blocked",prev_parents)
-				next_staff = Staff.objects.filter(is_active=True,staff_level__level=3).exclude(staff_parent__in=prev_parents).first()
+				next_staff = Staff.objects.filter(is_active=True,staff_level__level=3).exclude(staff_parent__in=prev_parents).order_by('?').first()
 
 				if next_staff == None:
-					next_staff = Staff.objects.filter(is_active=True,staff_level__level=3).exclude(staff_in=prev_staffs,staff_parent=x.staff_parent).first()
+					next_staff = Staff.objects.filter(is_active=True,staff_level__level=3).exclude(staff_in=prev_staffs,staff_parent=x.staff_parent).order_by('?').first()
 				
 				scramble = Client_Scramble()
 				scramble.client = x.client

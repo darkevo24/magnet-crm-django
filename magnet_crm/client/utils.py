@@ -521,7 +521,7 @@ def get_all_clinet_bonus(clients,staff):
 			for data_lot in login_dict:
 				# print("data_lot",data_lot,login_dict[data_lot],account_type_dict[data_lot])
 				account_type = account_type_dict[data_lot].lower()
-				pos = "Financial Consultant"
+				pos = staff.staff_level.level_name
 				bonus = 0 
 				if pos == "IB":
 					if account_type == "magneto":
