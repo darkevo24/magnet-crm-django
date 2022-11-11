@@ -126,6 +126,13 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		for col_num, data in enumerate(data_list):
 			worksheet.write(row_num, col_num, data['val'], data['style'])
 
+		worksheet.write(row_num+1, 0, 'Total_client', center_bold_font_style)
+		worksheet.write(row_num+1, 1, total_client, center_bold_font_style)
+		worksheet.write(row_num+1, 2, 'Total Amount FTD', center_bold_font_style)
+		worksheet.write(row_num+1, 3, amount, center_bold_font_style)
+		worksheet.write(row_num+1, 4, 'Bonus Per Ft', center_bold_font_style)
+		worksheet.write(row_num+1, 5, bonus_per_ft, center_bold_font_style)
+
 
 
 
@@ -157,7 +164,8 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		for col_num, data in enumerate(data_list):
 			worksheet2.write(row_num, col_num, data['val'], data['style'])
 
-
+		worksheet2.write(row_num+1, 0, 'Total Bonus', center_bold_font_style)
+		worksheet2.write(row_num+1, 1, total_bonus, center_bold_font_style)
 
 
 
@@ -188,6 +196,8 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		for col_num, data in enumerate(data_list):
 			worksheet3.write(row_num, col_num, data['val'], data['style'])
 
+		worksheet3.write(row_num+1, 0, 'Total Bonus', center_bold_font_style)
+		worksheet3.write(row_num+1, 1, total_bonus_3, center_bold_font_style)
 
 
 	if report_type == "scheme1":
