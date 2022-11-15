@@ -43,6 +43,7 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 
 		
 		now = extra['now']
+		print(now,"ini now skg")
 
 		all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True,client__magnet_created_at__month=now.month,client__magnet_created_at__year=now.year)
 
@@ -122,9 +123,10 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 				{ 'val': x['time'] , 'style': align_left_font_style },
 			]
 
-
-		for col_num, data in enumerate(data_list):
-			worksheet.write(row_num, col_num, data['val'], data['style'])
+		
+			for col_num, data in enumerate(data_list):
+				worksheet.write(row_num, col_num, data['val'], data['style'])
+				
 
 		worksheet.write(row_num+1, 0, 'Total_client', center_bold_font_style)
 		worksheet.write(row_num+1, 1, total_client, center_bold_font_style)
@@ -161,8 +163,8 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 			]
 
 
-		for col_num, data in enumerate(data_list):
-			worksheet2.write(row_num, col_num, data['val'], data['style'])
+			for col_num, data in enumerate(data_list):
+				worksheet2.write(row_num, col_num, data['val'], data['style'])
 
 		worksheet2.write(row_num+1, 0, 'Total Bonus', center_bold_font_style)
 		worksheet2.write(row_num+1, 1, total_bonus, center_bold_font_style)

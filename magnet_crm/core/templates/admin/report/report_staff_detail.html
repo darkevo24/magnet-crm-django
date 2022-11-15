@@ -256,7 +256,8 @@
 			{% endif %}
 				// popupWindow3 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=3');
 
-				popupWindow3 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=combination');				
+				from = $("#date-from-val").val()
+				popupWindow3 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=combination&date='+from);				
 		})
 
 
