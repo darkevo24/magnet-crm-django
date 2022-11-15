@@ -573,7 +573,7 @@ def staff_report_detail(request,staff_uid):
 	now = timezone.now()
 	if date != None and date != "":
 		date = date.split("-")
-		now.replace(year=int(date[1]),month=int(date[0])),"now replace",date[1]
+		now = now.replace(year=int(date[1]),month=int(date[0]))
 	# print(now,"now")
 	# print(now.replace(year=int(date[1]),month=int(date[0])),"now replace",date[1])
 
@@ -615,8 +615,8 @@ def staff_report_detail(request,staff_uid):
 				wb = xlwt.Workbook(encoding='utf-8')
 				ws = wb.add_sheet("Scheme 1")
 				ws2 = wb.add_sheet("Scheme 2")
-				ws3 = wb.add_sheet("Scheme 3")
-				ws = write_worksheet_report_transaction(ws, "scheme_combination", None,None, {'staff':staff,'now':now,'ws2':ws2,'ws3':ws3})
+				# ws3 = wb.add_sheet("Scheme 3")
+				ws = write_worksheet_report_transaction(ws, "scheme_combination", None,None, {'staff':staff,'now':now,'ws2':ws2})
 				wb.save(response)
 				return response
 
@@ -680,7 +680,7 @@ def staff_report_detail(request,staff_uid):
 	display_bonus_3_dict = {}
 	client_user_id_login_dict = {}
 	if len(all_clinet_instance) > 0 :
-		total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance,staff)
+		total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance,staff,now )
 
 
 	print("client_user_id_login_dict",client_user_id_login_dict)

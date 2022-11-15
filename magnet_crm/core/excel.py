@@ -20,7 +20,7 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		staff = extra['staff']
 
 		worksheet2 = extra['ws2']
-		worksheet3 = extra['ws3']
+		# worksheet3 = extra['ws3']
 
 		worksheet.write(0, 0, 'No', center_bold_font_style)
 		worksheet.write(0, 1, 'Name', center_bold_font_style)
@@ -36,10 +36,10 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		worksheet2.write(0, 3, 'Account Type', center_bold_font_style)
 		worksheet2.write(0, 4, 'Lot', center_bold_font_style)
 
-		worksheet3.write(0, 0, 'No', center_bold_font_style)
-		worksheet3.write(0, 1, 'Name', center_bold_font_style)
-		worksheet3.write(0, 2, 'Login', center_bold_font_style)
-		worksheet3.write(0, 3, 'Account Type', center_bold_font_style)
+		# worksheet3.write(0, 0, 'No', center_bold_font_style)
+		# worksheet3.write(0, 1, 'Name', center_bold_font_style)
+		# worksheet3.write(0, 2, 'Login', center_bold_font_style)
+		# worksheet3.write(0, 3, 'Account Type', center_bold_font_style)
 
 		
 		now = extra['now']
@@ -103,7 +103,7 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		display_bonus_3_dict = {}
 		client_user_id_login_dict = {}
 		if len(all_clinet_instance) > 0 :
-			total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance,staff)
+			total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance,staff,now)
 
 
 		if len(all_so) == 0 :
@@ -172,32 +172,32 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 
 
 
-		if len(all_clinet_instance) == 0 :
-			worksheet3.write_merge(1, 1, 0, 9,'Belum ada data', center_bold_font_style)
-		# Finish Calculate Skema Bonus FTD
+		# if len(all_clinet_instance) == 0 :
+		# 	worksheet3.write_merge(1, 1, 0, 9,'Belum ada data', center_bold_font_style)
+		# # Finish Calculate Skema Bonus FTD
 
-		row_num = 0
-		print("display_bonus_dict",display_bonus_dict)
-		for x in display_bonus_3_dict:
-			row_num += 1
+		# row_num = 0
+		# print("display_bonus_dict",display_bonus_dict)
+		# for x in display_bonus_3_dict:
+		# 	row_num += 1
 
-			# print(deposit.id,"--------------")
-			print("X",x)
-			print("client_dict",client_dict)
-			data_list = [
-				{ 'val': row_num, 'style': align_center_font_style },
+		# 	# print(deposit.id,"--------------")
+		# 	print("X",x)
+		# 	print("client_dict",client_dict)
+		# 	data_list = [
+		# 		{ 'val': row_num, 'style': align_center_font_style },
 				
-				{ 'val': client_dict[client_user_id_login_dict[x]].nama, 'style': align_left_font_style },
-				{ 'val': x , 'style': align_left_font_style },
-				{ 'val': display_bonus_dict[x]['account_type'] , 'style': align_left_font_style },
-			]
+		# 		{ 'val': client_dict[client_user_id_login_dict[x]].nama, 'style': align_left_font_style },
+		# 		{ 'val': x , 'style': align_left_font_style },
+		# 		{ 'val': display_bonus_dict[x]['account_type'] , 'style': align_left_font_style },
+		# 	]
 
 
-		for col_num, data in enumerate(data_list):
-			worksheet3.write(row_num, col_num, data['val'], data['style'])
+		# for col_num, data in enumerate(data_list):
+		# 	worksheet3.write(row_num, col_num, data['val'], data['style'])
 
-		worksheet3.write(row_num+1, 0, 'Total Bonus', center_bold_font_style)
-		worksheet3.write(row_num+1, 1, total_bonus_3, center_bold_font_style)
+		# worksheet3.write(row_num+1, 0, 'Total Bonus', center_bold_font_style)
+		# worksheet3.write(row_num+1, 1, total_bonus_3, center_bold_font_style)
 
 
 	if report_type == "scheme1":

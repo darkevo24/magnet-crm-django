@@ -276,7 +276,7 @@ def get_so_list(client_ids):
 		print(e)
 
 
-def get_all_clinet_bonus(clients,staff):
+def get_all_clinet_bonus(clients,staff,now):
 	clients = Client.objects.filter(id__in=clients)
 	
 	try:
@@ -312,7 +312,7 @@ def get_all_clinet_bonus(clients,staff):
 			login_mt5_ids = (str(login_mt5_ids)[:-1][1:]).replace(" ","")
 			# print("login_mt5_ids",login_mt5_ids)
 
-			now = timezone.now()
+			# now = timezone.now()
 			data = {
 				# 'logins': login_mt5_ids,
 				'logins': login_mt5_ids,
