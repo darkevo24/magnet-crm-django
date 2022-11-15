@@ -42,26 +42,26 @@ from django.utils.timezone import make_aware
 # )
 
 
-# schedule, _ = CrontabSchedule.objects.get_or_create(
-#     minute='0',
-#     hour='0',
-#     timezone="Asia/Jakarta",
-#     task='magnet_crm.task.test',
-#     # day_of_week='*',
-#     # day_of_month='*',
-#     # month_of_year='*',
-# )
+schedule, _ = CrontabSchedule.objects.get_or_create(
+    minute='0',
+    hour='0',
+    timezone="Asia/Jakarta",
+    task='magnet_crm.task.birthday',
+    # day_of_week='*',
+    # day_of_month='*',
+    # month_of_year='*',
+)
 
-# PeriodicTask.objects.create(
-#     crontab=schedule,                  # we created this above.
-#     name='Birthday',          # simply describes this periodic task.
-#     task='magnet_crm.task.test',  # name of task.
-#     # args=json.dumps(['arg1', 'arg2']),
-#     # kwargs=json.dumps({
-#     #    'be_careful': True,
-#     # }),
-#     # expires=datetime.utcnow() + timedelta(seconds=30)
-# )
+PeriodicTask.objects.create(
+    crontab=schedule,                  # we created this above.
+    name='Birthday',          # simply describes this periodic task.
+    task='magnet_crm.task.birthday',  # name of task.
+    # args=json.dumps(['arg1', 'arg2']),
+    # kwargs=json.dumps({
+    #    'be_careful': True,
+    # }),
+    # expires=datetime.utcnow() + timedelta(seconds=30)
+)
 import mysql.connector
 from mysql.connector import errorcode
 
