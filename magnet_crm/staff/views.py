@@ -582,39 +582,39 @@ def staff_report_detail(request,staff_uid):
 		print(request.GET)
 		if 'download_excel' in request.GET:
 			print("DOWNLOAD EXCEL")
-			if request.GET['download_excel'] == "1":
-				response = HttpResponse(content_type='application/ms-excel')
-				response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
-				wb = xlwt.Workbook(encoding='utf-8')
-				ws = wb.add_sheet("Scheme 1")
-				ws = write_worksheet_report_transaction(ws, "scheme1", None,None, {'staff':staff,'now':now,'ws2':ws2,'ws3':ws3})
-				wb.save(response)
-				return response
+			# if request.GET['download_excel'] == "1":
+			# 	response = HttpResponse(content_type='application/ms-excel')
+			# 	response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
+			# 	wb = xlwt.Workbook(encoding='utf-8')
+			# 	ws = wb.add_sheet("Scheme 1")
+			# 	ws = write_worksheet_report_transaction(ws, "scheme1", None,None, {'staff':staff,'now':now,'ws2':ws2,'ws3':ws3})
+			# 	wb.save(response)
+			# 	return response
 
-			if request.GET['download_excel'] == "2":
-				response = HttpResponse(content_type='application/ms-excel')
-				response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
-				wb = xlwt.Workbook(encoding='utf-8')
-				ws = wb.add_sheet("Sheet 1")
-				ws = write_worksheet_report_transaction(ws, "scheme2", None,None, {'staff':staff,'now':now})
-				wb.save(response)
-				return response
+			# if request.GET['download_excel'] == "2":
+			# 	response = HttpResponse(content_type='application/ms-excel')
+			# 	response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
+			# 	wb = xlwt.Workbook(encoding='utf-8')
+			# 	ws = wb.add_sheet("Sheet 1")
+			# 	ws = write_worksheet_report_transaction(ws, "scheme2", None,None, {'staff':staff,'now':now})
+			# 	wb.save(response)
+			# 	return response
 
-			if request.GET['download_excel'] == "3":
-				response = HttpResponse(content_type='application/ms-excel')
-				response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
-				wb = xlwt.Workbook(encoding='utf-8')
-				ws = wb.add_sheet("Sheet 1")
-				ws = write_worksheet_report_transaction(ws, "scheme3", None,None, {'staff':staff,'now':now})
-				wb.save(response)
-				return response
+			# if request.GET['download_excel'] == "3":
+			# 	response = HttpResponse(content_type='application/ms-excel')
+			# 	response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
+			# 	wb = xlwt.Workbook(encoding='utf-8')
+			# 	ws = wb.add_sheet("Sheet 1")
+			# 	ws = write_worksheet_report_transaction(ws, "scheme3", None,None, {'staff':staff,'now':now})
+			# 	wb.save(response)
+			# 	return response
 
 			if request.GET['download_excel'] == "combination":
 				response = HttpResponse(content_type='application/ms-excel')
 				response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
 				wb = xlwt.Workbook(encoding='utf-8')
-				ws = wb.add_sheet("Scheme 1")
-				ws2 = wb.add_sheet("Scheme 2")
+				ws = wb.add_sheet("Bonus FTD")
+				ws2 = wb.add_sheet("Bonus LOT")
 				# ws3 = wb.add_sheet("Scheme 3")
 				ws = write_worksheet_report_transaction(ws, "scheme_combination", None,None, {'staff':staff,'now':now,'ws2':ws2})
 				wb.save(response)

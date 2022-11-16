@@ -355,10 +355,7 @@ def get_all_clinet_bonus(clients,staff,now):
 				for x in login_dict:
 					if acc_type == account_type_dict[x]:
 						print("account_type_dict[x]",account_type_dict[x],login_dict[x])
-						if counter_temp == 2:
-							total_lot[acc_type+"_pribadi"] += login_dict[x]
-						else:
-							total_lot[acc_type] += login_dict[x]
+						total_lot[acc_type] += login_dict[x]
 						counter_temp+=1
 						# total_lot[acc_type] += login_dict[x]
 

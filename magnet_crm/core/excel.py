@@ -24,10 +24,11 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 
 		worksheet.write(0, 0, 'No', center_bold_font_style)
 		worksheet.write(0, 1, 'Name', center_bold_font_style)
-		worksheet.write(0, 2, 'userid', center_bold_font_style)
-		worksheet.write(0, 3, 'login', center_bold_font_style)
-		worksheet.write(0, 4, 'ftd', center_bold_font_style)
-		worksheet.write(0, 5, 'time', center_bold_font_style)
+		worksheet.write(0, 2, 'Email', center_bold_font_style)
+		worksheet.write(0, 3, 'Phone No', center_bold_font_style)
+		worksheet.write(0, 4, 'login', center_bold_font_style)
+		worksheet.write(0, 5, 'ftd', center_bold_font_style)
+		worksheet.write(0, 6, 'time', center_bold_font_style)
 
 
 		worksheet2.write(0, 0, 'No', center_bold_font_style)
@@ -117,7 +118,8 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 			data_list = [
 				{ 'val': row_num, 'style': align_center_font_style },
 				{ 'val': client_dict[x['userid']].nama , 'style': align_left_font_style },
-				{ 'val': x['userid'] , 'style': align_left_font_style },
+				{ 'val': client_dict[x['userid']].email , 'style': align_left_font_style },
+				{ 'val': client_dict[x['userid']].phone_no , 'style': align_left_font_style },
 				{ 'val': x['login'] , 'style': align_left_font_style },
 				{ 'val': x['ftd'] , 'style': align_left_font_style },
 				{ 'val': x['time'] , 'style': align_left_font_style },
