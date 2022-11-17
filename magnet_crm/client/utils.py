@@ -278,6 +278,8 @@ def get_so_list(client_ids):
 
 def get_all_clinet_bonus(clients,staff,now):
 	clients = Client.objects.filter(id__in=clients)
+		
+	
 	
 	try:
 		with transaction.atomic():
@@ -290,8 +292,12 @@ def get_all_clinet_bonus(clients,staff,now):
 			)
 
 			magnet_user_ids = []
+			dict_personal = []
 			for x in clients:
 				magnet_user_ids.append(x.magnet_id)
+				if x.source == 0:
+					dict_personal.append(x.magnet_id)
+		
 			print(magnet_user_ids,'magnet_user_ids')
 			# print("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_user_ids)[:-1][1:]+ ") ORDER BY 'id' DESC LIMIT 2")
 
@@ -354,8 +360,12 @@ def get_all_clinet_bonus(clients,staff,now):
 			for acc_type in account_types:
 				for x in login_dict:
 					if acc_type == account_type_dict[x]:
-						print("account_type_dict[x]",account_type_dict[x],login_dict[x])
-						total_lot[acc_type] += login_dict[x]
+						# print("account_type_dict[x]",account_type_dict[x],login_dict[x])
+						# print("client_user_id_login_dict[x]",client_user_id_login_dict[x],dict_personal)
+						if client_user_id_login_dict[x] in dict_personal:
+							total_lot[acc_type+'_pribadi'] += login_dict[x]
+						else:
+							total_lot[acc_type] += login_dict[x]
 						counter_temp+=1
 						# total_lot[acc_type] += login_dict[x]
 
@@ -363,12 +373,23 @@ def get_all_clinet_bonus(clients,staff,now):
 			display_bonus_dict = {}
 
 			for data_lot in login_dict:
+				print("data_lot",data_lot)
 				display_bonus_dict[data_lot] = {}
 				display_bonus_dict[data_lot]['account_type'] = account_type_dict[data_lot]
 				display_bonus_dict[data_lot]['bonus'] = 0
 				display_bonus_dict[data_lot]['lot'] = login_dict[data_lot]
+				print(dict_personal,client_user_id_login_dict[data_lot])
+				if client_user_id_login_dict[data_lot] in dict_personal:
+					print("Masuk personal")
+					display_bonus_dict[data_lot]['is_personal'] = True
+				else:
+					print("Tidak Masuk personal")
 
+					display_bonus_dict[data_lot]['is_personal'] = False
+
+			print("display_bonus_dict",display_bonus_dict)
 			total_bonus = 0
+			total_bonus_pribadi = 0
 			counter = 1
 			for acc_type in total_lot:
 
@@ -379,10 +400,13 @@ def get_all_clinet_bonus(clients,staff,now):
 
 				# print("data_kantor ",data_kantor)
 				pos = staff.staff_level.level_name
+				is_pribadi = False
 				if '_pribadi' not in acc_type:
 					account_type = acc_type
+					is_pribadi = False
 				else:
 					account_type = acc_type.replace("_pribadi","")
+					is_pribadi = True
 					
 				print(data_kantor,account_type,)
 				month = 0 
@@ -483,6 +507,8 @@ def get_all_clinet_bonus(clients,staff,now):
 									bonus = 3
 						commision = 10
 
+					temp_bonus = bonus * lot
+					total_bonus += temp_bonus
 				else:
 					lot = total_lot[acc_type]
 					if account_type == "elastico":
@@ -500,8 +526,8 @@ def get_all_clinet_bonus(clients,staff,now):
 							bonus = 4
 						elif pos == "Supervisor Marketing":
 							bonus = 0.5
-				temp_bonus = bonus * lot
-				total_bonus += temp_bonus
+					temp_bonus = bonus * lot
+					total_bonus_pribadi += temp_bonus
 				print("bonus * lot",bonus , lot,total_bonus)
 
 
@@ -554,7 +580,7 @@ def get_all_clinet_bonus(clients,staff,now):
 			# FINISH BONUS 2
 			print("display_bonus_3_dict", display_bonus_3_dict)
 			print("display_bonus_dict", display_bonus_dict)
-			return total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict
+			return total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict
 
 	except IntegrityError as e:
 		print(e)

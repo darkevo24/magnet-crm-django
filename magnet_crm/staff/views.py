@@ -675,12 +675,13 @@ def staff_report_detail(request,staff_uid):
 	all_clinet_instance = Client.objects.filter(id__in=all_client_staff.values_list('client',flat=True))
 	print(all_clinet_instance,"all_clinet_instance")
 	total_bonus = 0
+	total_bonus_pribadi = 0
 	total_bonus_3 = 0
 	display_bonus_dict = {}
 	display_bonus_3_dict = {}
 	client_user_id_login_dict = {}
 	if len(all_clinet_instance) > 0 :
-		total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance,staff,now )
+		total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance,staff,now )
 
 
 	print("client_user_id_login_dict",client_user_id_login_dict)
@@ -696,6 +697,7 @@ def staff_report_detail(request,staff_uid):
 		'client_user_id_login_dict':client_user_id_login_dict,
 
 		'total_bonus':round(total_bonus, 2),
+		'total_bonus_pribadi':round(total_bonus_pribadi, 2),
 		'total_bonus_3':round(total_bonus_3, 2),
 		'display_bonus_dict':display_bonus_dict,
 		'display_bonus_3_dict':display_bonus_3_dict,

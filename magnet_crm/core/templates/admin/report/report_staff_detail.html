@@ -84,7 +84,7 @@
 			</div >
 
 			<div class="col-12 ">
-				<h5>Client Position</h5>
+				<h5>BONUS FTD</h5>
 					<div class="card p-2" style="">
 
 						<table class="table" id="table_position" style="max-height: 100vh">
@@ -134,7 +134,7 @@
                     </div>
 			</div>
 			<div class="col-12 ">
-				<h5>Bonus</h5>
+				<h5>Bonus LOT (Data Kantor)</h5>
 					<div class="card p-2" style="">
 
 						<table class="table" id="table_bonus" style="max-height: 100vh">
@@ -149,23 +149,78 @@
 	                            </tr>
 	                        </thead>
 						  <tbody>
-                            {% for x in display_bonus_dict %}
-	                            
-	                                <tr>
-	                                    <th scope="row">{{forloop.counter}}</th>
-	                                    {% with x|stringformat:"s" as x_str %}
-	                                    	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %} 
-	                                    	<th scope="row">{{client_dict|dict_get:x_mag_id}}</th>
-	                                    	<th scope="row">{{x}}</th>
-	                                    	
-		                                    <td >{{display_bonus_dict|dict_get:x_str|dict_get:'account_type' }}</td>
-		                                    
-		                                    <td>
-		                                        {{display_bonus_dict|dict_get:x_str|dict_get:'lot' }}
-		                                    </td>
-		                                    {% endwith %}
+							{% for x in display_bonus_dict %}
+
+                                {% with x|stringformat:"s" as x_str %}
+                                	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %}
+	                            		{% if not display_bonus_dict|dict_get:x_str|dict_get:'is_personal' %}
+		                                <tr>
+		                                    <th scope="row">{{forloop.counter}}</th> 
+		                                    	<th scope="row">{{client_dict|dict_get:x_mag_id}}</th>
+		                                    	<th scope="row">{{x}}</th>
+		                                    	
+			                                    <td >{{display_bonus_dict|dict_get:x_str|dict_get:'account_type' }}</td>
+			                                    
+			                                    <td>
+			                                        {{display_bonus_dict|dict_get:x_str|dict_get:'lot' }}
+			                                    </td>
+		                                </tr>
+		                                {% endif %}
+
 	                                    {% endwith %}
-	                                </tr>
+                                    {% endwith %}
+	                        {% endfor %}
+                        
+                            </tbody>
+						</table>
+					</div>
+			</div>
+
+			<div class="col-12">
+				<div class="row mb-3" style="line-height: 1">
+                        <div class="col py-2 px-3 " >
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus_pribadi|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Bonus</p>
+                            </div>
+                    </div>
+			</div>
+			<div class="col-12 ">
+				<h5>Bonus LOT (Data Pribadi)</h5>
+					<div class="card p-2" style="">
+
+						<table class="table" id="table_bonus_pribadi" style="max-height: 100vh">
+						  <thead>
+	                            <tr>
+	                                <th scope="col">#</th>
+	                                <th scope="col">Name</th>
+	                                <th scope="col">Login</th>
+	                                <th scope="col">Account Type</th>
+	                                <!-- <th scope="col">Bonus</th> -->
+	                                <th scope="col">Lot</th>
+	                            </tr>
+	                        </thead>
+						  <tbody>
+                            {% for x in display_bonus_dict %}
+
+                                {% with x|stringformat:"s" as x_str %}
+                                	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %}
+	                            		{% if display_bonus_dict|dict_get:x_str|dict_get:'is_personal' %}
+		                                <tr>
+		                                    <th scope="row">{{forloop.counter}}</th> 
+		                                    	<th scope="row">{{client_dict|dict_get:x_mag_id}}</th>
+		                                    	<th scope="row">{{x}}</th>
+		                                    	
+			                                    <td >{{display_bonus_dict|dict_get:x_str|dict_get:'account_type' }}</td>
+			                                    
+			                                    <td>
+			                                        {{display_bonus_dict|dict_get:x_str|dict_get:'lot' }}
+			                                    </td>
+		                                </tr>
+		                                {% endif %}
+
+	                                    {% endwith %}
+                                    {% endwith %}
 	                        {% endfor %}
                         
                             </tbody>
@@ -284,6 +339,22 @@
     });
 
     $("#table_bonus").DataTable({
+		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+		language: {
+            search: '<span>Filter:</span> _INPUT_',
+            searchPlaceholder: 'Type to filter...',
+            lengthMenu: '<span>Show:</span> _MENU_',
+        },
+        scrollX: true,
+        // scrollY: '350px',
+        scrollCollapse: true,
+        fixedColumns: {
+            leftColumns: 2,
+            // rightColumns: 1
+        }
+    });
+
+    $("#table_bonus_pribadi").DataTable({
 		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
 		language: {
             search: '<span>Filter:</span> _INPUT_',
