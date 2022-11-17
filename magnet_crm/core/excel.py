@@ -31,11 +31,26 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		worksheet.write(0, 6, 'time', center_bold_font_style)
 
 
-		worksheet2.write(0, 0, 'No', center_bold_font_style)
-		worksheet2.write(0, 1, 'Name', center_bold_font_style)
-		worksheet2.write(0, 2, 'Login', center_bold_font_style)
-		worksheet2.write(0, 3, 'Account Type', center_bold_font_style)
-		worksheet2.write(0, 4, 'Lot', center_bold_font_style)
+		# worksheet2.write(0, 0, 'No', center_bold_font_style)
+		# worksheet2.write(0, 1, 'Name', center_bold_font_style)
+		worksheet2.write(0, 2, 'Data Kantor', center_bold_font_style)
+		# worksheet2.write(0, 3, 'Account Type', center_bold_font_style)
+		# worksheet2.write(0, 4, 'Lot', center_bold_font_style)
+
+		worksheet2.write(1, 0, 'No', center_bold_font_style)
+		worksheet2.write(1, 1, 'Name', center_bold_font_style)
+		worksheet2.write(1, 2, 'Login', center_bold_font_style)
+		worksheet2.write(1, 3, 'Account Type', center_bold_font_style)
+		worksheet2.write(1, 4, 'Lot', center_bold_font_style)
+
+
+		worksheet2.write(0, 8, 'Data Pribadi', center_bold_font_style)
+
+		worksheet2.write(1, 6, 'No', center_bold_font_style)
+		worksheet2.write(1, 7, 'Name', center_bold_font_style)
+		worksheet2.write(1, 8, 'Login', center_bold_font_style)
+		worksheet2.write(1, 9, 'Account Type', center_bold_font_style)
+		worksheet2.write(1, 10, 'Lot', center_bold_font_style)
 
 		# worksheet3.write(0, 0, 'No', center_bold_font_style)
 		# worksheet3.write(0, 1, 'Name', center_bold_font_style)
@@ -100,12 +115,13 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		all_clinet_instance = Client.objects.filter(id__in=all_client_staff.values_list('client',flat=True))
 		print(all_clinet_instance,"all_clinet_instance")
 		total_bonus = 0
+		total_bonus_pribadi = 0
 		total_bonus_3 = 0
 		display_bonus_dict = {}
 		display_bonus_3_dict = {}
 		client_user_id_login_dict = {}
 		if len(all_clinet_instance) > 0 :
-			total_bonus,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance,staff,now)
+			total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance,staff,now )
 
 
 		if len(all_so) == 0 :
@@ -148,28 +164,61 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		if len(all_clinet_instance) == 0 :
 			worksheet2.write_merge(1, 1, 0, 9,'Belum ada data', center_bold_font_style)
 
-		row_num = 0
+		row_num = 1
 		for x in display_bonus_dict:
-			row_num += 1
+			
 
 			# rint(deposit.id,"--------------")
 			print("X",x)
 			print("client_dict",client_dict)
-			data_list = [
-				{ 'val': row_num, 'style': align_center_font_style },
-				
-				{ 'val': client_dict[client_user_id_login_dict[x]].nama , 'style': align_left_font_style },
-				{ 'val': x , 'style': align_left_font_style },
-				{ 'val': display_bonus_dict[x]['account_type'] , 'style': align_left_font_style },
-				{ 'val': display_bonus_dict[x]['lot'], 'style': align_left_font_style },
-			]
+			if not display_bonus_dict[x]['is_personal']:
+				row_num += 1
+				data_list = [
+					{ 'val': row_num-1, 'style': align_center_font_style },
+					
+					{ 'val': client_dict[client_user_id_login_dict[x]].nama , 'style': align_left_font_style },
+					{ 'val': x , 'style': align_left_font_style },
+					{ 'val': display_bonus_dict[x]['account_type'] , 'style': align_left_font_style },
+					{ 'val': display_bonus_dict[x]['lot'], 'style': align_left_font_style },
+				]
 
 
-			for col_num, data in enumerate(data_list):
-				worksheet2.write(row_num, col_num, data['val'], data['style'])
+				for col_num, data in enumerate(data_list):
+					worksheet2.write(row_num, col_num, data['val'], data['style'])
 
 		worksheet2.write(row_num+1, 0, 'Total Bonus', center_bold_font_style)
 		worksheet2.write(row_num+1, 1, total_bonus, center_bold_font_style)
+
+
+
+		# if len(all_clinet_instance) == 0 :
+		# 	worksheet2.write_merge(1, 1, 0, 9,'Belum ada data', center_bold_font_style)
+
+		row_num = 1
+		for x in display_bonus_dict:
+			
+
+			# rint(deposit.id,"--------------")
+			print("X",x)
+			print("client_dict",client_dict)
+			if display_bonus_dict[x]['is_personal']:
+				row_num += 1
+				data_list = [
+					{ 'val': row_num-1, 'style': align_center_font_style },
+					
+					{ 'val': client_dict[client_user_id_login_dict[x]].nama , 'style': align_left_font_style },
+					{ 'val': x , 'style': align_left_font_style },
+					{ 'val': display_bonus_dict[x]['account_type'] , 'style': align_left_font_style },
+					{ 'val': display_bonus_dict[x]['lot'], 'style': align_left_font_style },
+				]
+
+
+				for col_num, data in enumerate(data_list):
+					print("col_num bawah",col_num)
+					worksheet2.write(row_num, col_num+6, data['val'], data['style'])
+
+		worksheet2.write(row_num+1, 6, 'Total Bonus', center_bold_font_style)
+		worksheet2.write(row_num+1, 7, total_bonus_pribadi, center_bold_font_style)
 
 
 

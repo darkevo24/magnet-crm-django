@@ -418,8 +418,9 @@ def detail_list(request,id_client):
 	client_eq_bal = get_login_trades(client.id)
 	print(client_position_list,'client_position_list')
 	dict_total = {}
-	for x in client_position_list:
-		dict_total[x[1]] = x[16] + x[17]
+	if client_position_list != None:
+		for x in client_position_list:
+			dict_total[x[1]] = x[16] + x[17]
 	
 	context = {
 		'client': client,

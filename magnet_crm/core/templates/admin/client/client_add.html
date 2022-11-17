@@ -47,6 +47,13 @@
 							<h6 class="font-weight-semibold">Birthday</h6>
 							{{client_form.birthday | add_class:"form-control"}}
 						</div>
+						{% if request.user|full_menu %}
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Source</h6>
+							{{client_form.source | add_class:"form-control"}}
+						</div>
+						{% endif %}
+
 						<button type="submit" class="btn btn-primary">Submit</button>
 							
 					</form>

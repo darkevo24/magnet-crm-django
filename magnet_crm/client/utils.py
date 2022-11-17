@@ -391,6 +391,8 @@ def get_all_clinet_bonus(clients,staff,now):
 			total_bonus = 0
 			total_bonus_pribadi = 0
 			counter = 1
+
+			info_account_dict = {}
 			for acc_type in total_lot:
 
 				# print("data_lot",data_lot,login_dict[data_lot],account_type_dict[data_lot])				
@@ -412,16 +414,22 @@ def get_all_clinet_bonus(clients,staff,now):
 				month = 0 
 				bonus = 0
 				commision = 0
-				
+
+				lot = total_lot[acc_type]
+				info_account_dict[acc_type] = {}
+				info_account_dict[acc_type]['total_lot']=lot
+				info_account_dict[acc_type]['month']=month
+				print("info_account_dict",info_account_dict)
 				if data_kantor:
-					lot = total_lot[acc_type]
 					print("LOTNYA SKG ",lot)
 					tier_1 = True
 					if account_type == "elastico":
 						if lot >= 0 and lot <=30:
 							tier_1 = True
+							info_account_dict[acc_type]['tier']= 'Tier 1'
 						else:
 							tier_1 = False
+							info_account_dict[acc_type]['tier']= 'Tier 2'
 
 						if tier_1:
 							if pos == "Financial Consultant":
@@ -450,8 +458,10 @@ def get_all_clinet_bonus(clients,staff,now):
 					elif account_type == "elektro":
 						if lot >= 0 and lot <=50:
 							tier_1 = True
+							info_account_dict[acc_type]['tier']= 'Tier 1'
 						else:
 							tier_1 = False
+							info_account_dict[acc_type]['tier']= 'Tier 2'
 
 						if tier_1:
 							if pos == "Financial Consultant":
@@ -480,8 +490,10 @@ def get_all_clinet_bonus(clients,staff,now):
 					elif account_type == "magneto":
 						if lot >= 0 and lot <=100:
 							tier_1 = True
+							info_account_dict[acc_type]['tier']= 'Tier 1'
 						else:
 							tier_1 = False
+							info_account_dict[acc_type]['tier']= 'Tier 2'
 
 						if tier_1:
 							if pos == "Financial Consultant":
@@ -510,7 +522,6 @@ def get_all_clinet_bonus(clients,staff,now):
 					temp_bonus = bonus * lot
 					total_bonus += temp_bonus
 				else:
-					lot = total_lot[acc_type]
 					if account_type == "elastico":
 						if pos == "Financial Consultant":
 							bonus = 3
@@ -580,7 +591,7 @@ def get_all_clinet_bonus(clients,staff,now):
 			# FINISH BONUS 2
 			print("display_bonus_3_dict", display_bonus_3_dict)
 			print("display_bonus_dict", display_bonus_dict)
-			return total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict
+			return total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict,info_account_dict
 
 	except IntegrityError as e:
 		print(e)

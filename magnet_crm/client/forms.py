@@ -15,7 +15,7 @@ class ClientForm(ModelForm):
 			'pekerjaan',
 			'domisili',
 			# 'birthday',
-			# 'source',
+			'source',
 		]
 		
 class ClientImportForm(forms.Form):
