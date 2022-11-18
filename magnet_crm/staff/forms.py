@@ -1,5 +1,6 @@
 from django.forms import ModelForm
 from staff.models import *
+from ib.models import *
 from django import forms
 
 class StaffLevelForm(ModelForm):
@@ -28,7 +29,24 @@ class StaffSalaryForm(forms.Form):
 	
 
 
+class IBForm(ModelForm):
+	class Meta:
+		model = IB
+		fields = ['name']
 
+class IBStaffForm(ModelForm):
+	class Meta:
+		model = IB_Staff
+		fields = ['staff']
 
+	def __init__(self, *args, **kwargs):
+		super(IBStaffForm, self).__init__(*args, **kwargs)
 
+		# self.fields['staff'].required = False
+		
+		employee_choices = []
+		employees = Staff.objects.filter(is_active=True,staff_level__level=3)
+		for data in employees:
+			employee_choices.append((data.id, data.profile.full_name))
 
+		self.fields['staff'].choices = employee_choices

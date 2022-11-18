@@ -1,0 +1,79 @@
+
+{% extends 'base/head.html' %}
+
+{% block content %}
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12 card_cus">
+		
+		<div class="card-header">
+			<h5 class="card-title">IB List</h5>
+		</div>
+
+		<div class="card-body">
+			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
+			<div class="btn-group mr-lg-3 mb-3">
+				<a href="{% url 'ib-add' %}"><button type="Staff" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add IB</span></button></a>
+			</div>
+			<div class="row">
+				<div class="col-12">
+
+
+					<table class="table" id="table-main">
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <th style="min-width:50%">Name</th>
+					      <th scope="col" class="text-center">Change FC</th>
+					      <th scope="col" class="text-center">Report</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					  	{% for ib in ib_list %}
+							<tr>
+						      <td scope="row">{{forloop.counter}}</td>
+						      <td scope="row">{{ib.name}}</td>
+						      <td scope="row" class="text-center"><a href="{% url 'ib-staff-edit' ib.uid %}" class="btn btn-success">Change</a></td>
+						      <td scope="row" class="text-center"><a href="" class="btn btn-success">Report</a></td>
+						    </tr>
+						{% endfor %}
+					    
+					    
+					  </tbody>
+					</table>
+
+					
+
+					
+
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- /typeahead -->
+</div>
+
+<script type="text/javascript">
+$(function() {
+		$("#table-main").DataTable({
+	    	dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+			language: {
+	            search: '<span>Filter:</span> _INPUT_',
+	            searchPlaceholder: 'Type to filter...',
+	            lengthMenu: '<span>Show:</span> _MENU_',
+	        },
+	        scrollX: true,
+	        // scrollY: '350px',
+	        scrollCollapse: true,
+	        fixedColumns: {
+	            leftColumns: 2,
+	            // rightColumns: 1
+	        }
+	    });
+
+	});	
+</script>
+{% endblock content %}
+

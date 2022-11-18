@@ -98,6 +98,12 @@ urlpatterns = [
     path('report', staff_views.staff_report, name='staff-report'),
     path('report/<uuid:staff_uid>', staff_views.staff_report_detail, name='staff-report-detail'),
 
+    path('ib', staff_views.ib_list, name='ib-list'),
+    path('ib/add', staff_views.ib_add, name='ib-add'),
+    path('ib/<uuid:ib_uid>/fc', staff_views.ib_staff_edit, name='ib-staff-edit'),
+
+
+
     path('staff/lock/<uuid:staff_uid>', staff_views.staff_lock, name='staff-lock'),
     path('staff/unlock/<uuid:staff_uid>', staff_views.staff_unlock, name='staff-unlock'),
 

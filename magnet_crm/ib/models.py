@@ -1,3 +1,25 @@
 from django.db import models
+from core.models import Base_Model, Profile
+from staff.models import *
+import uuid
 
-# Create your models here.
+class IB(Base_Model):
+	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+	name = models.CharField(max_length=255, default='')
+
+	def __str__(self):
+		return self.name
+
+
+
+class IB_Staff(Base_Model):
+	staff = models.ForeignKey(
+		Staff,
+		on_delete=models.CASCADE,
+	)
+	ib = models.ForeignKey(
+		IB,
+		on_delete=models.CASCADE,
+	)
+	
+
