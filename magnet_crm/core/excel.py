@@ -121,7 +121,7 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		display_bonus_3_dict = {}
 		client_user_id_login_dict = {}
 		if len(all_clinet_instance) > 0 :
-			total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict = get_all_clinet_bonus(all_clinet_instance,staff,now )
+			total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict,info_account_dict = get_all_clinet_bonus(all_clinet_instance,staff,now )
 
 
 		if len(all_so) == 0 :
@@ -189,6 +189,17 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		worksheet2.write(row_num+1, 0, 'Total Bonus', center_bold_font_style)
 		worksheet2.write(row_num+1, 1, total_bonus, center_bold_font_style)
 
+		worksheet2.write(row_num+2, 0, 'Total Lot Elastico', center_bold_font_style)
+		worksheet2.write(row_num+2, 1, info_account_dict['elastico']['total_lot'], center_bold_font_style)
+		worksheet2.write(row_num+2, 2, info_account_dict['elastico']['tier'], center_bold_font_style)
+		worksheet2.write(row_num+3, 0, 'Total Lot Magneto', center_bold_font_style)
+		worksheet2.write(row_num+3, 1, info_account_dict['magneto']['total_lot'], center_bold_font_style)
+		worksheet2.write(row_num+3, 2, info_account_dict['magneto']['tier'], center_bold_font_style)
+		worksheet2.write(row_num+4, 0, 'Total Lot Electro', center_bold_font_style)
+		worksheet2.write(row_num+4, 1, info_account_dict['elektro']['total_lot'], center_bold_font_style)
+		worksheet2.write(row_num+4, 2, info_account_dict['elektro']['tier'], center_bold_font_style)
+
+
 
 
 		# if len(all_clinet_instance) == 0 :
@@ -220,7 +231,17 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		worksheet2.write(row_num+1, 6, 'Total Bonus', center_bold_font_style)
 		worksheet2.write(row_num+1, 7, total_bonus_pribadi, center_bold_font_style)
 
+		worksheet2.write(row_num+2, 6, 'Total Lot Elastico', center_bold_font_style)
+		worksheet2.write(row_num+2, 7, info_account_dict['elastico_pribadi']['total_lot'], center_bold_font_style)
+		worksheet2.write(row_num+2, 8, info_account_dict['elastico_pribadi']['tier'], center_bold_font_style)
 
+		worksheet2.write(row_num+3, 6, 'Total Lot Magneto', center_bold_font_style)
+		worksheet2.write(row_num+3, 7, info_account_dict['magneto_pribadi']['total_lot'], center_bold_font_style)
+		worksheet2.write(row_num+3, 8, info_account_dict['magneto_pribadi']['tier'], center_bold_font_style)
+
+		worksheet2.write(row_num+4, 6, 'Total Lot Electro', center_bold_font_style)
+		worksheet2.write(row_num+4, 7, info_account_dict['elektro_pribadi']['total_lot'], center_bold_font_style)
+		worksheet2.write(row_num+4, 8, info_account_dict['elektro_pribadi']['tier'], center_bold_font_style)
 
 
 

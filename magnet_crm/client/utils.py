@@ -314,7 +314,7 @@ def get_all_clinet_bonus(clients,staff,now):
 					login_mt5_ids.append(myresult[2])
 					account_type_dict[str(myresult[2])] = myresult[3]
 
-			
+			print("account_type_dict",account_type_dict)
 			login_mt5_ids = (str(login_mt5_ids)[:-1][1:]).replace(" ","")
 			# print("login_mt5_ids",login_mt5_ids)
 
@@ -346,12 +346,12 @@ def get_all_clinet_bonus(clients,staff,now):
 			print(login_dict,"login_dict") 
 
 
-			account_types = ['magneto','electro','elastico']
+			account_types = ['magneto','elektro','elastico']
 			total_lot = {
 				'magneto':0,
 				'magneto_pribadi':0,
-				'electro':0,
-				'electro_pribadi':0,
+				'elektro':0,
+				'elektro_pribadi':0,
 				'elastico':0,
 				'elastico_pribadi':0,
 			}
@@ -410,7 +410,7 @@ def get_all_clinet_bonus(clients,staff,now):
 					account_type = acc_type.replace("_pribadi","")
 					is_pribadi = True
 					
-				print(data_kantor,account_type,)
+				# print(data_kantor,account_type,)
 				month = 0 
 				bonus = 0
 				commision = 0
@@ -419,6 +419,7 @@ def get_all_clinet_bonus(clients,staff,now):
 				info_account_dict[acc_type] = {}
 				info_account_dict[acc_type]['total_lot']=lot
 				info_account_dict[acc_type]['month']=month
+				info_account_dict[acc_type]['tier']= "-"
 				print("info_account_dict",info_account_dict)
 				if data_kantor:
 					print("LOTNYA SKG ",lot)
@@ -519,8 +520,8 @@ def get_all_clinet_bonus(clients,staff,now):
 									bonus = 3
 						commision = 10
 
-					temp_bonus = bonus * lot
-					total_bonus += temp_bonus
+					temp_bonus = float(bonus * lot)
+					total_bonus += float(temp_bonus)
 				else:
 					if account_type == "elastico":
 						if pos == "Financial Consultant":
@@ -537,9 +538,9 @@ def get_all_clinet_bonus(clients,staff,now):
 							bonus = 4
 						elif pos == "Supervisor Marketing":
 							bonus = 0.5
-					temp_bonus = bonus * lot
-					total_bonus_pribadi += temp_bonus
-				print("bonus * lot",bonus , lot,total_bonus)
+					temp_bonus = float(bonus * lot)
+					total_bonus_pribadi += float(temp_bonus)
+				
 
 
 			
