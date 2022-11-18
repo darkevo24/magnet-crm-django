@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['*']
 
 BROKER_URL = "redis://localhost:6379"
 CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379" 
 
 # Application definition
 
@@ -47,12 +47,14 @@ INSTALLED_APPS = [
     'core',
     'staff',
     'client',
+    'ib',
     'notification',
     'celery',
     'bonus',
     'django_celery_beat',
     'django_celery_results',
     'rest_framework',
+
 ]
 
 MIDDLEWARE = [
@@ -99,8 +101,8 @@ DATABASES = {
         'NAME': 'magnet_crm',
         'USER': 'magnet_user',
         'PASSWORD': 'MagnetPassowrd2022',
+        # 'HOST': '108.137.21.206',
         'HOST': 'localhost',
-        # 'HOST': '13.215.148.70',
         'PORT': 5432,
     },
 }
