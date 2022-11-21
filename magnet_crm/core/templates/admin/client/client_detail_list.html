@@ -74,9 +74,12 @@
                     </div>
 			</div>
 						<div class="col-12 ">
+							{% for x in pos_detail %}
+								<p>{{x.1}}</p><br>
+							{% endfor %}
+
 				<h5>Client Position</h5>
 					<div class="card p-2" style="">
-				
 						<table class="table" id="table_position" style="max-height: 100vh">
 						  <thead>
 	                            <tr>
@@ -93,7 +96,7 @@
 	                            </tr>
 	                        </thead>
 						  <tbody>
-                            {% for x in client_position_list%}
+                            {% for x in client_position_list %}
 	                            
 	                                <tr>
 	                                    <th scope="row">{{forloop.counter}}</th>

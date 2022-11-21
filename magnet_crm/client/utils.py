@@ -142,12 +142,18 @@ def get_client_position(user_id):
 
 		mycursor = pos_cnx.cursor()
 
-		mycursor.execute("SHOW COLUMNS FROM pos;")
+		apa_isi = mycursor.execute("SHOW COLUMNS FROM pos;")
 		count = 0
 		myresult = mycursor.fetchall()
+
 		for x in myresult:
 			count += 1
 
+
+		sql = "SELECT Position_ID,Volume,ContractSize FROM data_magnet.mt5_positions where login IN ("+ str(login_mt5_ids)[:-1][1:]+ ");"
+		mycursor.execute(sql)
+		pos_detail = mycursor.fetchall()
+		print("test_pos",pos_detail)
 
 
 		in_params = ','.join(['%s'] * len(login_mt5_ids))
@@ -158,18 +164,23 @@ def get_client_position(user_id):
 		print(my_pos_list,"my_pos_list")
 		print('my_pos_list', len(my_pos_list))
 		# print(my_pos_list)
+
+		pos_id = []
 		for x in my_pos_list:
 			count = 0
+			# print("x my_pos_list",x)
+			pos_id.append(x[0])
 			for y in x:
 				print(count, type(y), y)
 				count +=1
+		print("pos_id ",pos_id)
 		# mycursor.execute("SELECT * FROM pos ORDER BY id DESC LIMIT 1;")
 		# myresult = mycursor.fetchall()
 		# for x in myresult:
 		# 		print(x)
 
 		pos_cnx.close()
-		return my_pos_list
+		return my_pos_list,pos_detail
 
 	except mysql.connector.Error as err:
 		if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
