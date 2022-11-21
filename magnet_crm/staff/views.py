@@ -19,6 +19,7 @@ from django.utils import timezone
 from django.http import HttpResponse
 import xlwt
 from core.excel import *
+from ib.models import *
 def staff_list(request):
 	template = 'admin/staff/staff_list.html'
 	staff_list = Staff.objects.filter(is_active=True).order_by('id')
@@ -560,6 +561,92 @@ def staff_report(request):
 		'menu':'report',
 	}
 	return render(request,template,context=context)
+
+def ib_list(request):
+	template = 'admin/ib/ib_list.html'
+	ib_list = IB.objects.filter(is_active=True)
+
+	context = {
+		'ib_list': ib_list,
+		'menu':'ib_list',
+	}
+	return render(request,template,context=context)
+
+def ib_add(request):
+
+	template = 'admin/ib/ib_add.html'
+	ib_form = IBForm(request.POST or None)
+
+	if request.POST:
+		try:
+			with transaction.atomic():
+
+				if ib_form.is_valid():
+					
+					
+					ib = ib_form.save(commit=False)
+					ib.created_by = ib.updated_by = request.user
+					ib.save()
+
+					return redirect(reverse('ib-list'))
+				else:
+					print(ib_form.errors )
+
+		except IntegrityError as e:
+			print(e)
+
+	context = {
+		'ib_form': ib_form,
+	}
+	return render(request,template,context=context)
+
+def ib_staff_edit(request,ib_uid):
+
+	template = 'admin/ib/ib_staff_edit.html'
+	ib = IB.objects.filter(uid=ib_uid).first()
+
+	cur_staff = IB_Staff.objects.filter(ib=ib,is_active=True).first()
+	ib_staff_form = IBStaffForm(request.POST or None,instance=cur_staff)
+
+	if request.POST:
+		try:
+			with transaction.atomic():
+
+				if ib_staff_form.is_valid():
+
+					
+					ib_staff = ib_staff_form.save(commit=False)
+					if cur_staff:
+						print("masuk deactivate")
+						cur_staff.is_active = False
+						cur_staff.updated_at = timezone.now()
+						cur_staff.save()
+
+						new_staff = IB_Staff()
+						new_staff.ib = ib
+						new_staff.staff = ib_staff.staff
+						new_staff.created_by = new_staff.updated_by = request.user
+						new_staff.save()
+					else:
+						
+						ib_staff.ib = ib
+						ib_staff.created_by = ib_staff.updated_by = request.user
+						ib_staff.save()
+
+
+
+					return redirect(reverse('ib-list'))
+				else:
+					print(ib_form.errors )
+
+		except IntegrityError as e:
+			print(e)
+
+	context = {
+		'ib_staff_form': ib_staff_form,
+	}
+	return render(request,template,context=context)
+
 
 def staff_report_detail(request,staff_uid):
 	template = 'admin/report/report_staff_detail.html'
