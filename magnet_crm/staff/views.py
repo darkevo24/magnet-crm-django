@@ -758,7 +758,10 @@ def staff_report_detail(request,staff_uid):
 	# Finish Calculate Skema Bonus FTD
 
 	# Bonus OR Marketing
-	
+	all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True)
+	for x in all_client_staff:
+		client_dict[x.client.magnet_id] = x.client
+
 	all_clinet_instance = Client.objects.filter(id__in=all_client_staff.values_list('client',flat=True))
 	print(all_clinet_instance,"all_clinet_instance")
 	total_bonus = 0
@@ -768,7 +771,7 @@ def staff_report_detail(request,staff_uid):
 	display_bonus_3_dict = {}
 	client_user_id_login_dict = {}
 	if len(all_clinet_instance) > 0 :
-		total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict,info_account_dict = get_all_clinet_bonus(all_clinet_instance,staff,now )
+		total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict,info_account_dict,rate_dict = get_all_clinet_bonus(all_clinet_instance,staff,now )
 
 
 	print("client_user_id_login_dict",client_user_id_login_dict)
@@ -783,7 +786,7 @@ def staff_report_detail(request,staff_uid):
 		'total_client' :  total_client,
 		'client_dict':client_dict,
 		'client_user_id_login_dict':client_user_id_login_dict,
-
+		'rate_dict':rate_dict,
 		'total_bonus':round(total_bonus, 2),
 		'total_bonus_pribadi':round(total_bonus_pribadi, 2),
 		'total_bonus_3':round(total_bonus_3, 2),

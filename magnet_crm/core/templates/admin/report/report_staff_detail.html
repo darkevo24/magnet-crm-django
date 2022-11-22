@@ -96,6 +96,7 @@
 	                                <th scope="col">login</th>
 	                                <th scope="col">ftd</th>
 	                                <th scope="col">time</th>
+	                                <th scope="col">rate</th>
 	                            </tr>
 	                        </thead>
 						  <tbody>
@@ -136,18 +137,18 @@
                     	</div>    	
 				</div>
 				<div class="row mb-3" style="line-height: 1">
-                        <div class="col py-2 px-3 " >
+                        <div class="col-12 py-2 px-3 " >
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
                                 <p class="mb-0">Total Lot Elastico</p>
                             </div>
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
-                                <p class="mb-0">Total Lot Elastico</p>
+                                <p class="mb-0">Total Lot Magneto</p>
                             </div>
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
-                                <p class="mb-0">Total Lot Elastico</p>
+                                <p class="mb-0">Total Lot Electro</p>
                             </div>
                     	</div>    	
 				</div>
@@ -180,6 +181,7 @@
 	                                <th scope="col">Account Type</th>
 	                                <!-- <th scope="col">Bonus</th> -->
 	                                <th scope="col">Lot</th>
+	                                
 	                            </tr>
 	                        </thead>
 						  <tbody>
@@ -215,7 +217,7 @@
                         <div class="col py-2 px-3 " >
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus_pribadi|num_format|default:"-"}}</h1>
-                                <p class="mb-0">Total Bonus</p>
+                                <p class="mb-0">Total Bonus Pribadi</p>
                             </div>
                     	</div>
 				</div>

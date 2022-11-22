@@ -402,10 +402,14 @@ def check_user_deposit():
 
 def update_client_data(mycursor, last_id, user):
 	# print(last_id,"last_id")
+	
+
+	# string_sql = "DESCRIBE v_users;"
 	string_sql = "SELECT * FROM v_users Where ID > " + str(last_id) + " ORDER BY ID ASC"
 	mycursor.execute(string_sql)
 	new_client_list = mycursor.fetchall()
 	counter = 0
+	print("new_client_list",new_client_list)
 	for new_client in new_client_list:
 		
 		# print("add client baru dari task")

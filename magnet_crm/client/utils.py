@@ -313,17 +313,19 @@ def get_all_clinet_bonus(clients,staff,now):
 			# print("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_user_ids)[:-1][1:]+ ") ORDER BY 'id' DESC LIMIT 2")
 
 			mycursor = cnx.cursor()
-			mycursor.execute("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_user_ids)[:-1][1:]+ ") ORDER BY 'id' DESC ")
+			mycursor.execute("Select id, user_id, login, account_type, rate FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_user_ids)[:-1][1:]+ ") ORDER BY 'id' DESC ")
 			login_mt5_ids = []
 			myresult = mycursor.fetchall()
 			print(myresult,"myresult")
 			client_user_id_login_dict = {}
 			account_type_dict = {}
+			rate_dict = {}
 			for myresult in myresult:
 				if myresult[2] != 'None' and myresult[2] != None:
 					client_user_id_login_dict[str(myresult[2])]=str(myresult[1])
 					login_mt5_ids.append(myresult[2])
 					account_type_dict[str(myresult[2])] = myresult[3]
+					rate_dict[str(myresult[2])] = myresult[4]
 
 			print("account_type_dict",account_type_dict)
 			login_mt5_ids = (str(login_mt5_ids)[:-1][1:]).replace(" ","")
@@ -603,7 +605,7 @@ def get_all_clinet_bonus(clients,staff,now):
 			# FINISH BONUS 2
 			print("display_bonus_3_dict", display_bonus_3_dict)
 			print("display_bonus_dict", display_bonus_dict)
-			return total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict,info_account_dict
+			return total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict,info_account_dict,rate_dict
 
 	except IntegrityError as e:
 		print(e)
