@@ -96,7 +96,6 @@
 	                                <th scope="col">login</th>
 	                                <th scope="col">ftd</th>
 	                                <th scope="col">time</th>
-	                                <th scope="col">rate</th>
 	                            </tr>
 	                        </thead>
 						  <tbody>
@@ -141,18 +140,27 @@
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
                                 <p class="mb-0">Total Lot Elastico</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Elastico </p>
                             </div>
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
                                 <p class="mb-0">Total Lot Magneto</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Magneto</p>
                             </div>
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
                                 <p class="mb-0">Total Lot Electro</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Electro</p>
                             </div>
                     	</div>    	
 				</div>
-				<div class="row mb-3" style="line-height: 1">
+				<!-- <div class="row mb-3" style="line-height: 1">
                         <div class="col py-2 px-3 " >
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico'|dict_get:'tier'|default:"-"}}</h1>
@@ -167,7 +175,7 @@
                                 <p class="mb-0">Tier Electro</p>
                             </div>
                     	</div>    	
-				</div>
+				</div> -->
 			<div class="col-12 ">
 				<h5>Bonus LOT (Data Kantor)</h5>
 					<div class="card p-2" style="">
@@ -181,6 +189,7 @@
 	                                <th scope="col">Account Type</th>
 	                                <!-- <th scope="col">Bonus</th> -->
 	                                <th scope="col">Lot</th>
+	                                <th scope="col">Rate</th>
 	                                
 	                            </tr>
 	                        </thead>
@@ -199,6 +208,9 @@
 			                                    
 			                                    <td>
 			                                        {{display_bonus_dict|dict_get:x_str|dict_get:'lot' }}
+			                                    </td>
+			                                    <td>
+			                                        {{rate_dict|dict_get:x_str }}
 			                                    </td>
 		                                </tr>
 		                                {% endif %}
@@ -226,18 +238,27 @@
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_pribadi'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
                                 <p class="mb-0">Total Lot Elastico</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_pribadi'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Elastico</p>
                             </div>
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto_pribadi'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Elastico</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto_pribadi'|dict_get:'tier'|default:"-"}}</h1>
                                 <p class="mb-0">Total Lot Elastico</p>
                             </div>
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro_pribadi'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
                                 <p class="mb-0">Total Lot Elastico</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro_pribadi'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Elastico</p>
                             </div>
                     	</div>
 				</div>
-				<div class="row mb-3" style="line-height: 1">
+				<!-- <div class="row mb-3" style="line-height: 1">
                         <div class="col py-2 px-3 " >
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_pribadi'|dict_get:'tier'|default:"-"}}</h1>
@@ -252,7 +273,7 @@
                                 <p class="mb-0">Total Lot Elastico</p>
                             </div>
                     	</div>
-				</div>
+				</div> -->
 				<div class="col-12 ">
 					<h5>Bonus LOT (Data Pribadi)</h5>
 						<div class="card p-2" style="">

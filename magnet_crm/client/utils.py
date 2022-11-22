@@ -438,10 +438,15 @@ def get_all_clinet_bonus(clients,staff,now):
 					print("LOTNYA SKG ",lot)
 					tier_1 = True
 					if account_type == "elastico":
-						if lot >= 0 and lot <=30:
+						if lot <= 0 or lot == 0 or lot == '0':
+							tier_1 = True
+							info_account_dict[acc_type]['tier']= '-'
+						elif lot > 0 and lot <=30:
+							print("masuk 2")
 							tier_1 = True
 							info_account_dict[acc_type]['tier']= 'Tier 1'
 						else:
+							print("masuk 3")
 							tier_1 = False
 							info_account_dict[acc_type]['tier']= 'Tier 2'
 
@@ -470,7 +475,10 @@ def get_all_clinet_bonus(clients,staff,now):
 						commision = 5
 
 					elif account_type == "elektro":
-						if lot >= 0 and lot <=50:
+						if lot <= 0 or lot == 0 or lot == '0':
+							tier_1 = True
+							info_account_dict[acc_type]['tier']= '-'
+						elif lot >= 0 and lot <=50:
 							tier_1 = True
 							info_account_dict[acc_type]['tier']= 'Tier 1'
 						else:
@@ -502,7 +510,10 @@ def get_all_clinet_bonus(clients,staff,now):
 						commision = 3
 
 					elif account_type == "magneto":
-						if lot >= 0 and lot <=100:
+						if lot <= 0 or lot == 0 or lot == '0':
+							tier_1 = True
+							info_account_dict[acc_type]['tier']= '-'
+						elif lot >= 0 and lot <=100:
 							tier_1 = True
 							info_account_dict[acc_type]['tier']= 'Tier 1'
 						else:
