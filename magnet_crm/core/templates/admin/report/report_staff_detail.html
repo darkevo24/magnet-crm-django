@@ -138,91 +138,140 @@
 				<div class="row mb-3" style="line-height: 1">
                         <div class="col-12 py-2 px-3 " >
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
-                                <p class="mb-0">Total Lot Elastico</p>
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_less'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Elastico (Less than 2 Month)</p>
 
-                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico'|dict_get:'tier'|default:"-"}}</h1>
-                                <p class="mb-0">Tier Elastico </p>
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_less'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Elastico (Less than 2 Month)</p>
                             </div>
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
-                                <p class="mb-0">Total Lot Magneto</p>
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto_less'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Magneto (Less than 2 Month)</p>
 
-                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto'|dict_get:'tier'|default:"-"}}</h1>
-                                <p class="mb-0">Tier Magneto</p>
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto_less'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Magneto (Less than 2 Month)</p>
                             </div>
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
-                                <p class="mb-0">Total Lot Electro</p>
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro_less'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Electro (Less than 2 Month)</p>
 
-                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro'|dict_get:'tier'|default:"-"}}</h1>
-                                <p class="mb-0">Tier Electro</p>
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro_less'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Electro (Less than 2 Month)</p>
+                            </div>
+                    	</div>    	
+
+                    	<div class="col-12 py-2 px-3 " >
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_more'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Elastico (More than 2 Month)</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_more'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Elastico (More than 2 Month)</p>
+                            </div>
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto_more'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Magneto (More than 2 Month)</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto_more'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Magneto (More than 2 Month)</p>
+                            </div>
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro_more'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Electro (More than 2 Month)</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro_more'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Electro (More than 2 Month)</p>
                             </div>
                     	</div>    	
 				</div>
-				<!-- <div class="row mb-3" style="line-height: 1">
-                        <div class="col py-2 px-3 " >
-                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico'|dict_get:'tier'|default:"-"}}</h1>
-                                <p class="mb-0">Tier Elastico </p>
-                            </div>
-                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto'|dict_get:'tier'|default:"-"}}</h1>
-                                <p class="mb-0">Tier Magneto</p>
-                            </div>
-                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro'|dict_get:'tier'|default:"-"}}</h1>
-                                <p class="mb-0">Tier Electro</p>
-                            </div>
-                    	</div>    	
-				</div> -->
-			<div class="col-12 ">
-				<h5>Bonus LOT (Data Kantor)</h5>
-					<div class="card p-2" style="">
+				<div class="col-12 ">
+					<h5>Bonus LOT (Data Kantor)</h5>
+						<div class="card p-2" style="">
 
-						<table class="table" id="table_bonus" style="max-height: 100vh">
-						  <thead>
-	                            <tr>
-	                                <th scope="col">#</th>
-	                                <th scope="col">Name</th>
-	                                <th scope="col">Login</th>
-	                                <th scope="col">Account Type</th>
-	                                <!-- <th scope="col">Bonus</th> -->
-	                                <th scope="col">Lot</th>
-	                                <th scope="col">Rate</th>
-	                                
-	                            </tr>
-	                        </thead>
-						  <tbody>
-							{% for x in display_bonus_dict %}
+							<table class="table" id="table_bonus" style="max-height: 100vh">
+							  <thead>
+		                            <tr>
+		                                <th scope="col">#</th>
+		                                <th scope="col">Name</th>
+		                                <th scope="col">Created At</th>
+		                                <th scope="col">Account Age (Days)</th>
+		                                <th scope="col">Login</th>
+		                                <th scope="col">Account Type</th>
+		                                <!-- <th scope="col">Bonus</th> -->
+		                                <th scope="col">Lot</th>
+		                                <th scope="col">Bonus</th>
+		                                <th scope="col">Bonus Total (Bonus * Lot)</th>
+		                                <th scope="col">Bonus Total Rupiah (Bonys * Rate)</th>
+		                                <th scope="col">Rate</th>
+		                                
+		                            </tr>
+		                        </thead>
+							  <tbody>
+								{% for x in display_bonus_dict %}
 
-                                {% with x|stringformat:"s" as x_str %}
-                                	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %}
-	                            		{% if not display_bonus_dict|dict_get:x_str|dict_get:'is_personal' %}
-		                                <tr>
-		                                    <th scope="row">{{forloop.counter}}</th> 
-		                                    	<th scope="row">{{client_dict|dict_get:x_mag_id}}</th>
-		                                    	<th scope="row">{{x}}</th>
-		                                    	
-			                                    <td >{{display_bonus_dict|dict_get:x_str|dict_get:'account_type' }}</td>
-			                                    
-			                                    <td>
-			                                        {{display_bonus_dict|dict_get:x_str|dict_get:'lot' }}
-			                                    </td>
-			                                    <td>
-			                                        {{rate_dict|dict_get:x_str }}
-			                                    </td>
-		                                </tr>
-		                                {% endif %}
+	                                {% with x|stringformat:"s" as x_str %}
+	                                	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %}
+		                            		{% if not display_bonus_dict|dict_get:x_str|dict_get:'is_personal' %}
+			                                <tr>
+			                                    <th scope="row">{{forloop.counter}}</th> 
+			                                    	{% with client_dict|dict_get:x_mag_id as client_instance %}
+				                                    	<th scope="row">{{client_instance}}</th>
+				                                    	<th scope="row">{{client_instance.created_at}}</th>
+				                                    	<td >{{client_acc_age_dict|dict_get:client_instance.magnet_id }} Days </td>
+				                                    {% endwith %}
+			                                    	<!-- <th scope="row">{{client_dict|dict_get:x_mag_id}}</th> -->
+			                                    	
+			                                    	<th scope="row">{{x_str}}</th>
+			                                    	{% with display_bonus_dict|dict_get:x_str as instance_bonus %}
 
+					                                    <td >{{instance_bonus|dict_get:'account_type' }}</td>
+					                                    
+					                                    <td>
+					                                        {{instance_bonus|dict_get:'lot' }}
+					                                    </td>
+				                                    	
+				                                    	{% with instance_bonus|dict_get:'account_type' as acc_type %}
+					                                    	{% with acc_type|add:"_less" as acc_type_detail %}
+					                                    		{% with info_bonus_formula_dict|dict_get:acc_type_detail as acc_type_detail_number %}
+						                                    		{% with instance_bonus|dict_get:'lot' as lot_number %}
+						                                    			{% with rate_dict|dict_get:x_str  as rate %}
+
+									                                    <td>
+									                                        {{acc_type_detail_number }}$
+									                                    </td>
+
+									                                    <td>
+																			{{lot_number|multiply:acc_type_detail_number}}$
+									                                    </td>
+
+									                                    <td>
+																			Rp. {{lot_number|multiply:acc_type_detail_number|multiply:rate|str_currency}}
+									                                    </td>
+									                                    <td>
+									                                        {{rate }}
+									                                    </td>
+									                                    {% endwith %}
+								                                    	
+								                                    {% endwith %}
+							                                    {% endwith %}
+						                                    {% endwith %}
+					                                    {% endwith %}
+				                                    {% endwith %}
+				                                    
+			                                </tr>
+			                                {% endif %}
+
+		                                    {% endwith %}
 	                                    {% endwith %}
-                                    {% endwith %}
-	                        {% endfor %}
-                        
-                            </tbody>
-						</table>
-					</div>
-			</div>
+		                        {% endfor %}
+	                        
+	                            </tbody>
+							</table>
+						</div>
+				</div>
+
+
+
 
 			<div class="col-12">
 				<div class="row mb-3" style="line-height: 1">
@@ -232,6 +281,8 @@
                                 <p class="mb-0">Total Bonus Pribadi</p>
                             </div>
                     	</div>
+
+
 				</div>
 				<div class="row mb-3" style="line-height: 1">
                         <div class="col py-2 px-3 " >
@@ -258,22 +309,7 @@
                             </div>
                     	</div>
 				</div>
-				<!-- <div class="row mb-3" style="line-height: 1">
-                        <div class="col py-2 px-3 " >
-                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_pribadi'|dict_get:'tier'|default:"-"}}</h1>
-                                <p class="mb-0">Total Lot Elastico</p>
-                            </div>
-                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto_pribadi'|dict_get:'tier'|default:"-"}}</h1>
-                                <p class="mb-0">Total Lot Elastico</p>
-                            </div>
-                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro_pribadi'|dict_get:'tier'|default:"-"}}</h1>
-                                <p class="mb-0">Total Lot Elastico</p>
-                            </div>
-                    	</div>
-				</div> -->
+
 				<div class="col-12 ">
 					<h5>Bonus LOT (Data Pribadi)</h5>
 						<div class="card p-2" style="">
@@ -282,35 +318,76 @@
 							  <thead>
 		                            <tr>
 		                                <th scope="col">#</th>
-		                                <th scope="col">Name</th>
-		                                <th scope="col">Login</th>
-		                                <th scope="col">Account Type</th>
-		                                <!-- <th scope="col">Bonus</th> -->
-		                                <th scope="col">Lot</th>
+	                                <th scope="col">Name</th>
+	                                <th scope="col">Created At</th>
+	                                <th scope="col">Account Age (Days)</th>
+	                                <th scope="col">Login</th>
+	                                <th scope="col">Account Type</th>
+	                                <th scope="col">Lot</th>
+	                                <th scope="col">Bonus</th>
+	                                <th scope="col">Bonus Total (Bonus * Lot)</th>
+	                                <th scope="col">Bonus Total Rupiah (Bonys * Rate)</th>
+	                                <th scope="col">Rate</th>
 		                            </tr>
 		                        </thead>
 							  <tbody>
 	                            {% for x in display_bonus_dict %}
 
-	                                {% with x|stringformat:"s" as x_str %}
-	                                	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %}
-		                            		{% if display_bonus_dict|dict_get:x_str|dict_get:'is_personal' %}
-			                                <tr>
-			                                    <th scope="row">{{forloop.counter}}</th> 
-			                                    	<th scope="row">{{client_dict|dict_get:x_mag_id}}</th>
-			                                    	<th scope="row">{{x}}</th>
-			                                    	
-				                                    <td >{{display_bonus_dict|dict_get:x_str|dict_get:'account_type' }}</td>
+                                {% with x|stringformat:"s" as x_str %}
+                                	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %}
+	                            		{% if  display_bonus_dict|dict_get:x_str|dict_get:'is_personal' %}
+		                                <tr>
+		                                    <th scope="row">{{forloop.counter}}</th> 
+		                                    	{% with client_dict|dict_get:x_mag_id as client_instance %}
+			                                    	<th scope="row">{{client_instance}}</th>
+			                                    	<th scope="row">{{client_instance.created_at}}</th>
+			                                    	<td >{{client_acc_age_dict|dict_get:client_instance.magnet_id }} Days </td>
+			                                    {% endwith %}
+		                                    	<!-- <th scope="row">{{client_dict|dict_get:x_mag_id}}</th> -->
+		                                    	
+		                                    	<th scope="row">{{x_str}}</th>
+		                                    	{% with display_bonus_dict|dict_get:x_str as instance_bonus %}
+
+				                                    <td >{{instance_bonus|dict_get:'account_type' }}</td>
 				                                    
 				                                    <td>
-				                                        {{display_bonus_dict|dict_get:x_str|dict_get:'lot' }}
+				                                        {{instance_bonus|dict_get:'lot' }}
 				                                    </td>
-			                                </tr>
-			                                {% endif %}
+			                                    	
+			                                    	{% with instance_bonus|dict_get:'account_type' as acc_type %}
+				                                    	{% with acc_type|add:"_pribadi" as acc_type_detail %}
+				                                    		{% with info_bonus_formula_dict|dict_get:acc_type_detail as acc_type_detail_number %}
+					                                    		{% with instance_bonus|dict_get:'lot' as lot_number %}
+					                                    			{% with rate_dict|dict_get:x_str  as rate %}
 
-		                                    {% endwith %}
+								                                    <td>
+								                                        {{acc_type_detail_number }}$
+								                                    </td>
+
+								                                    <td>
+																		{{lot_number|multiply:acc_type_detail_number}}$
+								                                    </td>
+
+								                                    <td>
+																		Rp. {{lot_number|multiply:acc_type_detail_number|multiply:rate|str_currency}}
+								                                    </td>
+								                                    <td>
+								                                        {{rate }}
+								                                    </td>
+								                                    {% endwith %}
+							                                    	
+							                                    {% endwith %}
+						                                    {% endwith %}
+					                                    {% endwith %}
+				                                    {% endwith %}
+			                                    {% endwith %}
+			                                    
+		                                </tr>
+		                                {% endif %}
+
 	                                    {% endwith %}
-		                        {% endfor %}
+                                    {% endwith %}
+	                        {% endfor %}
 	                        
 	                            </tbody>
 							</table>

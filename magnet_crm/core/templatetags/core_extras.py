@@ -34,6 +34,14 @@ def sum(amount1, amount2):
 	total = (amount1+amount2)
 	return total
 
+@register.filter(name='multiply')
+def multiply(amount1, amount2):
+	print("amount1",amount1)
+	print("amount2",amount2)
+	total = float(amount1)*float(amount2)
+	return float(total)
+
+
 
 @register.filter(name='full_menu')
 def full_menu(user):
