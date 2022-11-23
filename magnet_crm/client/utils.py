@@ -638,8 +638,9 @@ def get_all_clinet_bonus_new(clients,staff,now):
 	client_acc_age_dict = {}
 	for x in clients:
 		client_dict[x.magnet_id] = x
+		now = x.created_at.replace(day=now.day,year=now.year,month=now.month)
 		client_acc_age_dict[x.magnet_id] = (x.created_at - now).days
-		# print(client_acc_age_dict[x.magnet_id].days)
+		print("client_acc_age_dict[x.magnet_id]",client_acc_age_dict[x.magnet_id])
 
 	print("client_acc_age_dict",client_acc_age_dict)
 	try:

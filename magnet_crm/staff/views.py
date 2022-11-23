@@ -660,7 +660,7 @@ def staff_report_detail(request,staff_uid):
 	now = timezone.now()
 	if date != None and date != "":
 		date = date.split("-")
-		now = now.replace(year=int(date[1]),month=int(date[0]))
+		now = now.replace(year=int(date[1]),month=int(date[0]),day=1)
 	# print(now,"now")
 	# print(now.replace(year=int(date[1]),month=int(date[0])),"now replace",date[1])
 
