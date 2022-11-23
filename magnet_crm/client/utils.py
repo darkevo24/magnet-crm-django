@@ -757,19 +757,22 @@ def get_all_clinet_bonus_new(clients,staff,now):
 			}
 
 			account_types = ['magneto','elektro','elastico']
-
+			info_login_account_dict = {}
 			for acc_type in account_types:
 				for x in login_dict:
 					if acc_type == account_type_dict[x]:
 						if client_user_id_login_dict[x] in dict_personal:
 							categories[acc_type+'_pribadi'] += login_dict[x]
+							info_login_account_dict[x] = acc_type+"_pribadi"
 						else:
 							print(client_acc_age_dict[client_user_id_login_dict[x]])
 							if client_acc_age_dict[client_user_id_login_dict[x]] < 60:
 								categories[acc_type+"_less"] += login_dict[x]
+								info_login_account_dict[x] = acc_type+"_less"
 							else:
 								categories[acc_type+"_more"] += login_dict[x]
-		
+								info_login_account_dict[x] = acc_type+"_more"
+			# print("info_login_account_dict",info_login_account_dict)
 			print("categories",categories)
 			total_bonus = 0
 			total_bonus_pribadi = 0
@@ -942,7 +945,8 @@ def get_all_clinet_bonus_new(clients,staff,now):
 					temp_bonus = float(bonus * lot)
 					total_bonus_pribadi += float(temp_bonus)
 					info_bonus_formula_dict[acc_type] = bonus
-				
+
+			print("info_bonus_formula_dict",info_bonus_formula_dict)
 			print("info_account_dict",info_account_dict)
 			print("total_bonus",total_bonus)
 			
@@ -994,7 +998,7 @@ def get_all_clinet_bonus_new(clients,staff,now):
 			# FINISH BONUS 2
 			print("display_bonus_3_dict", display_bonus_3_dict)
 			print("display_bonus_dict", display_bonus_dict)
-			return total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict,info_account_dict,rate_dict,client_acc_age_dict,info_bonus_formula_dict
+			return total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict,info_account_dict,rate_dict,client_acc_age_dict,info_bonus_formula_dict,info_login_account_dict
 
 	except IntegrityError as e:
 		print(e)

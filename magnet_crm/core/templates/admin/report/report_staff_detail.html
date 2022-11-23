@@ -230,29 +230,27 @@
 					                                        {{instance_bonus|dict_get:'lot' }}
 					                                    </td>
 				                                    	
-				                                    	{% with instance_bonus|dict_get:'account_type' as acc_type %}
-					                                    	{% with acc_type|add:"_less" as acc_type_detail %}
-					                                    		{% with info_bonus_formula_dict|dict_get:acc_type_detail as acc_type_detail_number %}
-						                                    		{% with instance_bonus|dict_get:'lot' as lot_number %}
-						                                    			{% with rate_dict|dict_get:x_str  as rate %}
+				                                    	{% with info_login_account_dict|dict_get:x_str as acc_type_detail %}
+				                                    		{% with info_bonus_formula_dict|dict_get:acc_type_detail as acc_type_detail_number %}
+					                                    		{% with instance_bonus|dict_get:'lot' as lot_number %}
+					                                    			{% with rate_dict|dict_get:x_str  as rate %}
 
-									                                    <td>
-									                                        {{acc_type_detail_number }}$
-									                                    </td>
+								                                    <td>
+								                                        {{acc_type_detail_number }}$
+								                                    </td>
 
-									                                    <td>
-																			{{lot_number|multiply:acc_type_detail_number}}$
-									                                    </td>
+								                                    <td>
+																		{{lot_number|multiply:acc_type_detail_number}}$
+								                                    </td>
 
-									                                    <td>
-																			Rp. {{lot_number|multiply:acc_type_detail_number|multiply:rate|str_currency}}
-									                                    </td>
-									                                    <td>
-									                                        {{rate }}
-									                                    </td>
-									                                    {% endwith %}
-								                                    	
+								                                    <td>
+																		Rp. {{lot_number|multiply:acc_type_detail_number|multiply:rate|str_currency}}
+								                                    </td>
+								                                    <td>
+								                                        {{rate }}
+								                                    </td>
 								                                    {% endwith %}
+							                                    	
 							                                    {% endwith %}
 						                                    {% endwith %}
 					                                    {% endwith %}
@@ -333,35 +331,34 @@
 							  <tbody>
 	                            {% for x in display_bonus_dict %}
 
-                                {% with x|stringformat:"s" as x_str %}
-                                	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %}
-	                            		{% if  display_bonus_dict|dict_get:x_str|dict_get:'is_personal' %}
-		                                <tr>
-		                                    <th scope="row">{{forloop.counter}}</th> 
-		                                    	{% with client_dict|dict_get:x_mag_id as client_instance %}
-			                                    	<th scope="row">{{client_instance}}</th>
-			                                    	<th scope="row">{{client_instance.created_at}}</th>
-			                                    	<td >{{client_acc_age_dict|dict_get:client_instance.magnet_id }} Days </td>
-			                                    {% endwith %}
-		                                    	<!-- <th scope="row">{{client_dict|dict_get:x_mag_id}}</th> -->
-		                                    	
-		                                    	<th scope="row">{{x_str}}</th>
-		                                    	{% with display_bonus_dict|dict_get:x_str as instance_bonus %}
-
-				                                    <td >{{instance_bonus|dict_get:'account_type' }}</td>
-				                                    
-				                                    <td>
-				                                        {{instance_bonus|dict_get:'lot' }}
-				                                    </td>
+	                                {% with x|stringformat:"s" as x_str %}
+	                                	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %}
+		                            		{% if  display_bonus_dict|dict_get:x_str|dict_get:'is_personal' %}
+			                                <tr>
+			                                    <th scope="row">{{forloop.counter}}</th> 
+			                                    	{% with client_dict|dict_get:x_mag_id as client_instance %}
+				                                    	<th scope="row">{{client_instance}}</th>
+				                                    	<th scope="row">{{client_instance.created_at}}</th>
+				                                    	<td >{{client_acc_age_dict|dict_get:client_instance.magnet_id }} Days </td>
+				                                    {% endwith %}
+			                                    	<!-- <th scope="row">{{client_dict|dict_get:x_mag_id}}</th> -->
 			                                    	
-			                                    	{% with instance_bonus|dict_get:'account_type' as acc_type %}
-				                                    	{% with acc_type|add:"_pribadi" as acc_type_detail %}
+			                                    	<th scope="row">{{x_str}}</th>
+			                                    	{% with display_bonus_dict|dict_get:x_str as instance_bonus %}
+
+					                                    <td >{{instance_bonus|dict_get:'account_type' }}</td>
+					                                    
+					                                    <td>
+					                                        {{instance_bonus|dict_get:'lot' }}
+					                                    </td>
+				                                    	
+				                                    	{% with info_login_account_dict|dict_get:x_str as acc_type_detail %}
 				                                    		{% with info_bonus_formula_dict|dict_get:acc_type_detail as acc_type_detail_number %}
 					                                    		{% with instance_bonus|dict_get:'lot' as lot_number %}
 					                                    			{% with rate_dict|dict_get:x_str  as rate %}
 
 								                                    <td>
-								                                        {{acc_type_detail_number }}$
+								                                        {{acc_type_detail_number}}$
 								                                    </td>
 
 								                                    <td>
@@ -380,14 +377,13 @@
 						                                    {% endwith %}
 					                                    {% endwith %}
 				                                    {% endwith %}
-			                                    {% endwith %}
-			                                    
-		                                </tr>
-		                                {% endif %}
+				                                    
+			                                </tr>
+			                                {% endif %}
 
+		                                    {% endwith %}
 	                                    {% endwith %}
-                                    {% endwith %}
-	                        {% endfor %}
+		                        {% endfor %}
 	                        
 	                            </tbody>
 							</table>

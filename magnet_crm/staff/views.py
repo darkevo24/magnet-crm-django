@@ -771,7 +771,7 @@ def staff_report_detail(request,staff_uid):
 	display_bonus_3_dict = {}
 	client_user_id_login_dict = {}
 	if len(all_clinet_instance) > 0 :
-		total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict,info_account_dict,rate_dict,client_acc_age_dict,info_bonus_formula_dict = get_all_clinet_bonus_new(all_clinet_instance,staff,now )
+		total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict,info_account_dict,rate_dict,client_acc_age_dict,info_bonus_formula_dict,info_login_account_dict = get_all_clinet_bonus_new(all_clinet_instance,staff,now )
 
 
 	print("client_user_id_login_dict",client_user_id_login_dict)
@@ -793,7 +793,8 @@ def staff_report_detail(request,staff_uid):
 		'display_bonus_dict':display_bonus_dict,
 		'display_bonus_3_dict':display_bonus_3_dict,
 		'client_acc_age_dict':client_acc_age_dict,
-		'info_bonus_formula_dict':info_bonus_formula_dict
+		'info_bonus_formula_dict':info_bonus_formula_dict,
+		'info_login_account_dict':info_login_account_dict
 
 
 
