@@ -30,11 +30,31 @@ class StaffSalaryForm(forms.Form):
 
 
 class IBForm(ModelForm):
+
+	STAFF_CHOICES =(
+	    ("0", "Pilih staff"),
+	   
+	)
+	staff = forms.ChoiceField(choices = STAFF_CHOICES, required=False)
+
 	class Meta:
 		model = IB
-		fields = ['name']
+		fields = ['name','staff']
+
+	def __init__(self, *args, **kwargs):
+		super(IBForm, self).__init__(*args, **kwargs)
+
+		
+		employee_choices = []
+		employees = Staff.objects.filter(is_active=True,staff_level__level=3)
+		for data in employees:
+			employee_choices.append((data.id, data.profile.full_name))
+
+		self.fields['staff'].choices = employee_choices
 
 class IBStaffForm(ModelForm):
+	ib = forms.CharField(label='IB Name', max_length=100)
+
 	class Meta:
 		model = IB_Staff
 		fields = ['staff']

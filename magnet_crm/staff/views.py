@@ -588,6 +588,14 @@ def ib_add(request):
 					ib.created_by = ib.updated_by = request.user
 					ib.save()
 
+					new_staff = IB_Staff()
+					new_staff.ib = ib
+
+					staff = Staff.objects.filter(id=ib_form.cleaned_data['staff'],is_active=True).first()
+					new_staff.staff = staff
+					new_staff.created_by = new_staff.updated_by = request.user
+					new_staff.save()
+
 					return redirect(reverse('ib-list'))
 				else:
 					print(ib_form.errors )
@@ -606,7 +614,7 @@ def ib_staff_edit(request,ib_uid):
 	ib = IB.objects.filter(uid=ib_uid).first()
 
 	cur_staff = IB_Staff.objects.filter(ib=ib,is_active=True).first()
-	ib_staff_form = IBStaffForm(request.POST or None,instance=cur_staff)
+	ib_staff_form = IBStaffForm(request.POST or None,instance=cur_staff,initial={'ib': ib.name})
 
 	if request.POST:
 		try:
@@ -627,6 +635,12 @@ def ib_staff_edit(request,ib_uid):
 						new_staff.staff = ib_staff.staff
 						new_staff.created_by = new_staff.updated_by = request.user
 						new_staff.save()
+
+						ib.name = ib_staff_form.cleaned_data['ib']
+						ib.updated_at = timezone.now()
+						ib.updated_by = request.user
+						ib.save()
+
 					else:
 						
 						ib_staff.ib = ib

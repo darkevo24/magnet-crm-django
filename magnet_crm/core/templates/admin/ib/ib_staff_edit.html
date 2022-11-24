@@ -17,8 +17,13 @@
 						{% csrf_token %}
 						<div class="mb-4">
 							<h6 class="font-weight-semibold">Name</h6>
+							{{ib_staff_form.ib | add_class:"form-control"}}
+						</div>
+						<div class="mb-4">
+							<h6 class="font-weight-semibold">Staff</h6>
 							{{ib_staff_form.staff | add_class:"form-control"}}
 						</div>
+
 						<button type="submit" class="btn btn-primary">Submit</button>
 					</form>
 					
