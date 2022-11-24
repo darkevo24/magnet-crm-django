@@ -647,7 +647,7 @@ def get_all_clinet_bonus_new(clients,staff,now):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="13.229.114.255",
+				host="3.1.223.222",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
