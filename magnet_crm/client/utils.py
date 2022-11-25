@@ -278,6 +278,7 @@ def get_so_list(client_ids):
 			}
 			print("ini data")
 			res = requests.post('http://3.1.223.222/getUserFTD', data=data)
+			print("ressssss",res)
 			json_data = json.loads(res.text)
 			
 			# print(json_data['data'],"json_data['data']")
