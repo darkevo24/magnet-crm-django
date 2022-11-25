@@ -678,7 +678,7 @@ def ib_report(request,ib_uid):
 	if date != None and date != "":
 		date = date.split("-")
 		now = now.replace(year=int(date[1]),month=int(date[0]),day=1)
-	dict_bonus_info,total_bonus_dict,account_type_dict = get_ib_bonus(ib,now)
+	dict_bonus_info,total_bonus_dict,account_type_dict,all_staff_clients = get_ib_bonus(ib,now)
 	# dict_bonus_info={		
 	# 	'magneto_IB': {'account_type': 'magneto', 'bonus': 0}, 
 	# 	'magneto_Financial Consultant': {'account_type': 'magneto', 'bonus': 0.0}, 
@@ -697,6 +697,7 @@ def ib_report(request,ib_uid):
 		'ib_staff':ib_staff,
 		'menu':'ib_list',
 		'account_type_dict':account_type_dict,
+		'all_staff_clients':all_staff_clients,
 		# 'dict_staff':dict_staff,
 		'dict_bonus_info':dict_bonus_info,
 		'total_bonus_dict':total_bonus_dict,

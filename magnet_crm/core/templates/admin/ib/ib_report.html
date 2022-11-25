@@ -127,27 +127,21 @@
 	                            <tr>
 	                                <th scope="col">#</th>
 	                                <th scope="col">Name</th>
-	                                <th scope="col">userid</th>
-	                                <th scope="col">login</th>
-	                                <th scope="col">ftd</th>
-	                                <th scope="col">time</th>
+	                                <th scope="col">Email</th>
+	                                <th scope="col">Phone No</th>
+	                                <th scope="col">Magnet ID</th>
 	                            </tr>
 	                        </thead>
 						  <tbody>
-                            {% for x in all_so %}
+                            {% for x in all_staff_clients %}
 	                            
 	                                <tr>
 	                                    <th scope="row">{{forloop.counter}}</th>
-	                                    <th scope="row">{{client_dict|dict_get:x.userid}}</th>
-	                                    <th scope="row">{{x.userid}}</th>
+	                                    <th scope="row">{{x.client.name}}</th>
+	                                    <th scope="row">{{x.client.email}}</th>
+	                                    <th scope="row">{{x.client.phone_no}}</th>
 	                                    <td>
-	                                       {{x.login}}
-	                                    </td>
-	                                    <td>
-	                                        {{x.ftd}}
-	                                    </td>
-	                                    <td>
-	                                        {{x.time}}
+	                                       {{all_staff_clients|dict_get:x.client.magnet_id}}
 	                                    </td>
 	                                </tr>
 	                        {% endfor %}

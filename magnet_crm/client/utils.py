@@ -1101,5 +1101,5 @@ def get_ib_bonus(ib,now):
 
 		print("total_bonus_dict",total_bonus_dict)
 
-	return dict_bonus_info,total_bonus_dict,account_type_dict
+	return dict_bonus_info,total_bonus_dict,account_type_dict,all_staff_clients
 
