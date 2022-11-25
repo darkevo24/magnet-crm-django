@@ -1007,7 +1007,7 @@ def get_all_clinet_bonus_new(clients,staff,now):
 
 
 def get_ib_bonus(ib):
-	ib_staff = IB_Staff.objects.filter(is_active=True,ib=ib)
+	ib_staff = IB_Staff.objects.filter(is_active=True,ib=ib).first()
 
 	staff = ib_staff.staff
 	staff_supervisor = ib_staff.staff.parent
