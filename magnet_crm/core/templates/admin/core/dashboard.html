@@ -232,9 +232,11 @@
                                                         <a href="{% url 'client-detail-list' client.id  %}" class="dropdown-item">
                                                             <i class="icon-file-eye"></i> Client Detail
                                                         </a>
+                                                        {% if not own_user %}
                                                         <a href="{% url 'client-edit' client.id  %}" class="dropdown-item">
                                                             <i class="fas fa-edit"></i> Client Edit
                                                         </a>
+                                                        {% endif %}
 
                                                         <a href="{% url 'client-schedule-list' client.id  %}" class="dropdown-item">
                                                             <i class="fas fa-calendar-alt"></i> List Schedule
