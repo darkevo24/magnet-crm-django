@@ -120,7 +120,7 @@ def get_client_position(user_id):
 	try:
 
 		cnx = mysql.connector.connect(
-			host="13.229.114.255",
+			host="3.1.223.222",
 			user='ivan',
 			password='MajuBersama123',
 			database='vifx'
@@ -200,7 +200,7 @@ def get_login_trades(user_id):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="13.229.114.255",
+				host="3.1.223.222",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -219,7 +219,7 @@ def get_login_trades(user_id):
 				'logins': login_mt5_ids
 			}
 			print("ini data")
-			res = requests.post('http://13.229.114.255/getLoginState', data=data)
+			res = requests.post('http://3.1.223.222/getLoginState', data=data)
 			json_data = json.loads(res.text)
 			# print(json_data['data'],"json_data['data']")
 			return json_data
@@ -234,7 +234,7 @@ def get_login_trades_history(user_id,from_date=None,to_date=None):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="13.229.114.255",
+				host="3.1.223.222",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -256,7 +256,7 @@ def get_login_trades_history(user_id,from_date=None,to_date=None):
                 'to':to_date if to_date is not None else str(now.year)+"-"+str(now.month)+'-'+str(now.day),
 			}
 			print("ini data")
-			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
+			res = requests.post('http://3.1.223.222/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print(json_data['data'],"json_data['data']")
 			return json_data
@@ -277,7 +277,7 @@ def get_so_list(client_ids):
 				'userids': client_ids,
 			}
 			print("ini data")
-			res = requests.post('http://13.229.114.255/getUserFTD', data=data)
+			res = requests.post('http://3.1.223.222/getUserFTD', data=data)
 			json_data = json.loads(res.text)
 			
 			# print(json_data['data'],"json_data['data']")
@@ -299,7 +299,7 @@ def get_all_clinet_bonus(clients,staff,now):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="13.229.114.255",
+				host="3.1.223.222",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -343,7 +343,7 @@ def get_all_clinet_bonus(clients,staff,now):
                 'to':str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),
 			}
 			# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
-			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
+			res = requests.post('http://3.1.223.222/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print("json_data['data']",json_data['data'])
 
@@ -647,7 +647,7 @@ def get_all_clinet_bonus_new(clients,staff,now):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="13.229.114.255",
+				host="3.1.223.222",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -691,7 +691,7 @@ def get_all_clinet_bonus_new(clients,staff,now):
                 'to':str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),
 			}
 			# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
-			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
+			res = requests.post('http://3.1.223.222/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print("json_data['data']",json_data['data'])
 
@@ -1015,7 +1015,7 @@ def get_ib_bonus(ib):
 
 
 	cnx = mysql.connector.connect(
-		host="13.229.114.255",
+		host="3.1.223.222",
 		user='ivan',
 		password='MajuBersama123',
 		database='vifx'
@@ -1092,8 +1092,8 @@ def get_ib_bonus(ib):
 		if account_type not in total_bonus_dict:
 			total_bonus_dict[account_type] = 0
 		total_bonus_dict[account_type] += dict_bonus_info[data_lot]['bonus']
-		
+
 		print("total_bonus_dict",total_bonus_dict)
 
-
+		return dict_bonus_info,total_bonus_dict
 

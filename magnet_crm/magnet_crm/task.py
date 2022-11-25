@@ -260,7 +260,7 @@ def sync_data_magnet():
 			now = timezone.now()
 
 			cnx = mysql.connector.connect(
-				host="13.229.114.255",
+				host="3.1.223.222",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -325,7 +325,7 @@ def check_user_deposit():
 
 			now = timezone.now()
 			cnx = mysql.connector.connect(
-				host="13.229.114.255",
+				host="3.1.223.222",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
