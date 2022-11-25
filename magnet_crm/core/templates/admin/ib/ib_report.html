@@ -53,7 +53,7 @@
 		<div class="row">
 
 			
-			
+			{{myresult}}
 
 			<div class="col-12 ">
 				
@@ -169,7 +169,10 @@
 </div>
 <script type="text/javascript">
 	
-
+	function change_filter(){
+        from = $("#date-from-val").val()
+        window.location = "{% url 'ib-report' ib.uid %}"+"?date="+from
+    }
 	$("#date-pick-from").datepicker( {
 		    format: "mm-yyyy",
 		    startView: "months", 

@@ -673,11 +673,30 @@ def ib_report(request,ib_uid):
 	ib = IB.objects.filter(is_active=True,uid=ib_uid).first()
 	ib_staff = IB_Staff.objects.filter(is_active=True,ib=ib).first()
 
-	dict_bonus_info,total_bonus_dict = get_ib_bonus(ib)
+	date = request.GET.get('date') or None
+	now = timezone.now()
+	if date != None and date != "":
+		date = date.split("-")
+		now = now.replace(year=int(date[1]),month=int(date[0]),day=1)
+	dict_bonus_info,total_bonus_dict,myresult = get_ib_bonus(ib,now)
+	# dict_bonus_info={		
+	# 	'magneto_IB': {'account_type': 'magneto', 'bonus': 0}, 
+	# 	'magneto_Financial Consultant': {'account_type': 'magneto', 'bonus': 0.0}, 
+	# 	'magneto_Supervisor Marketing': {'account_type': 'magneto', 'bonus': 0.0}, 
+	# 	'elektro_IB': {'account_type': 'elektro', 'bonus': 1}, 
+	# 	'elektro_Financial Consultant': {'account_type': 'elektro', 'bonus': 0.5}, 
+	# 	'elektro_Supervisor Marketing': {'account_type': 'elektro', 'bonus': 0.25}, 
+	# 	'elastico_IB': {'account_type': 'elastico', 'bonus': 10}, 
+	# 	'elastico_Financial Consultant': {'account_type': 'elastico', 'bonus': 5}, 
+	# 	'elastico_Supervisor Marketing': {'account_type': 'elastico', 'bonus': 2.5}
+	# }
+	# total_bonus_dict= {'magneto': 0.0, 'elektro': 1.75, 'elastico': 17.5}
 	context = {
+		'ib':ib,
 		'ib_list': ib_list,
 		'ib_staff':ib_staff,
 		'menu':'ib_list',
+		'myresult':myresult,
 		# 'dict_staff':dict_staff,
 		'dict_bonus_info':dict_bonus_info,
 		'total_bonus_dict':total_bonus_dict,
