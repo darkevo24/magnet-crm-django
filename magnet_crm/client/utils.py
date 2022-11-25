@@ -1085,14 +1085,14 @@ def get_ib_bonus(ib):
 				bonus = 0.5
  
 
-		dict_bonus_info[data_lot] = {}
-		dict_bonus_info[data_lot]['account_type'] = account_type
-		dict_bonus_info[data_lot]['bonus'] = (bonus * client_calculation[account_type])
+		dict_bonus_info[data] = {}
+		dict_bonus_info[data]['account_type'] = account_type
+		dict_bonus_info[data]['bonus'] = (bonus * client_calculation[account_type])
 
 		print("dict_bonus_info",dict_bonus_info)
 		if account_type not in total_bonus_dict:
 			total_bonus_dict[account_type] = 0
-		total_bonus_dict[account_type] += dict_bonus_info[data_lot]['bonus']
+		total_bonus_dict[account_type] += dict_bonus_info[data]['bonus']
 
 		print("total_bonus_dict",total_bonus_dict)
 
