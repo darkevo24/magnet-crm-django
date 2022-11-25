@@ -1010,7 +1010,7 @@ def get_ib_bonus(ib):
 	ib_staff = IB_Staff.objects.filter(is_active=True,ib=ib).first()
 
 	staff = ib_staff.staff
-	staff_supervisor = ib_staff.staff.parent
+	staff_supervisor = ib_staff.staff.staff_parent
 
 	all_staff_clients = Client_Staff.objects.filter(is_active=True,staff=staff)
 
