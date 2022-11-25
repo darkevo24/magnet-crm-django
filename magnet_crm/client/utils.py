@@ -1013,7 +1013,8 @@ def get_ib_bonus(ib,now):
 	staff_supervisor = ib_staff.staff.staff_parent
 
 	# now = timezone.now()
-	all_staff_clients = Client_Staff.objects.filter(is_active=True,staff=staff,created_at__year=now.year,created_at__month=now.month)
+	# all_staff_clients = Client_Staff.objects.filter(is_active=True,staff=staff,created_at__year=now.year,created_at__month=now.month)
+	all_staff_clients = Client_Staff.objects.filter(is_active=True,staff=staff)
 
 
 	cnx = mysql.connector.connect(
@@ -1036,9 +1037,13 @@ def get_ib_bonus(ib,now):
 		'elektro':0,
 		'elastico':0,
 	}
+
+	account_type_dict = {}
 	for myresult in myresult:
 		if myresult[2] != 'None' and myresult[2] != None:
 			client_calculation[myresult[3]] += 1
+
+			account_type_dict[str(myresult[1])] = myresult[3]
 
 
 	#START BONUS 3
@@ -1096,5 +1101,5 @@ def get_ib_bonus(ib,now):
 
 		print("total_bonus_dict",total_bonus_dict)
 
-	return dict_bonus_info,total_bonus_dict,myresult
+	return dict_bonus_info,total_bonus_dict,account_type_dict
 
