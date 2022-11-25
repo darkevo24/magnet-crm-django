@@ -135,19 +135,20 @@
 	                        </thead>
 						  <tbody>
                             {% for x in all_staff_clients %}
-	                            
-	                                <tr>
-	                                    <th scope="row">{{forloop.counter}}</th>
-	                                    <th scope="row">{{x.client.nama}}</th>
-	                                    <th scope="row">{{x.client.email}}</th>
-	                                    <th scope="row">{{x.client.phone_no}}</th>
-	                                    <td>
-	                                    		{{x.client.magnet_id}}
-	                                    </td>
-	                                    <td>
-	                                       {{account_type_dict|dict_get:x.client.magnet_id}}
-	                                    </td>
-	                                </tr>
+	                            {% if account_type_dict|dict_get:x.client.magnet_id is not None %}
+		                                <tr>
+		                                    <th scope="row">{{forloop.counter}}</th>
+		                                    <th scope="row">{{x.client.nama}}</th>
+		                                    <th scope="row">{{x.client.email}}</th>
+		                                    <th scope="row">{{x.client.phone_no}}</th>
+		                                    <td>
+	                                			{x.client.magnet_id}}
+		                                    </td>
+		                                    <td>
+		                                       {{account_type_dict|dict_get:x.client.magnet_id}}
+		                                    </td>
+		                                </tr>
+	                            {% endif %}
 	                        {% endfor %}
                         
                             </tbody>
