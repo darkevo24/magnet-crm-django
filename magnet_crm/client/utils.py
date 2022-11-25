@@ -1059,8 +1059,8 @@ def get_ib_bonus(ib):
 	total_bonus_dict = {} 
 	dict_bonus_info = {}
 	for data in dict_fin:
-		account_type = data.split[0]
-		pos = data.split[1]
+		account_type = data.split("_")[0]
+		pos = data.split("_")[1]
 		bonus = 0 
 		if pos == "IB":
 			if account_type == "magneto":
