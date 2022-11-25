@@ -50,13 +50,75 @@
                 </div>
             </div>
 		</div>
-		{{dict_bonus_info}}
-		{{total_bonus_dict}}
 		<div class="row">
 
 			
+			
 
 			<div class="col-12 ">
+				
+
+				<div class="row mb-3" style="line-height: 1">
+                        <div class="col-12 py-2 px-3 " >
+
+                        	{% for x in dict_bonus_info %}
+	                        	{% if "magneto" in x %}
+									<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+		                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{dict_bonus_info|dict_get:x|dict_get:'bonus'}}</h1>
+		                                <p class="mb-0">{{x|cus_split:"_,0"}} ({{x|cus_split:"_,1"}})</p>
+		                            </div>
+	                            {% endif %}
+							{% endfor %}
+							<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus_dict|dict_get:'magneto'}}</h1>
+                                <p class="mb-0">Total Bonus</p>
+                            </div>
+
+                            
+                    	</div>    	
+
+                    	<div class="col-12 py-2 px-3 " >
+
+                        	{% for x in dict_bonus_info %}
+	                        	{% if "elektro" in x %}
+									<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+		                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{dict_bonus_info|dict_get:x|dict_get:'bonus'}}</h1>
+		                                <p class="mb-0">{{x|cus_split:"_,0"}} ({{x|cus_split:"_,1"}})</p>
+		                            </div>
+	                            {% endif %}
+
+							{% endfor %}
+
+							<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus_dict|dict_get:'elektro'}}</h1>
+                                <p class="mb-0">Total Bonus</p>
+                            </div>
+                            
+                    	</div>    	
+
+                    	<div class="col-12 py-2 px-3 " >
+
+                        	{% for x in dict_bonus_info %}
+	                        	{% if "elastico" in x %}
+									<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+		                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{dict_bonus_info|dict_get:x|dict_get:'bonus'}}</h1>
+		                                <p class="mb-0">{{x|cus_split:"_,0"}} ({{x|cus_split:"_,1"}})</p>
+		                            </div>
+	                            {% endif %}
+
+							{% endfor %}
+
+							<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus_dict|dict_get:'elastico'}}</h1>
+                                <p class="mb-0">Total Bonus</p>
+                            </div>
+
+                            
+                    	</div>    	
+
+                    	   	
+				</div>
+
 				<h5>BONUS FTD</h5>
 					<div class="card p-2" style="">
 

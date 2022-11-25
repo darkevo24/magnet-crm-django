@@ -42,6 +42,17 @@ def multiply(amount1, amount2):
 	return float(total)
 
 
+@register.filter(name='cus_split')
+def cus_split(string, args):
+	print(string)
+	separator = args.split(",")[0]
+	key = args.split(",")[1]
+	print("string",string)
+	print("key",key)
+	temp = string.split(separator)[int(key)]
+	return temp
+
+
 
 @register.filter(name='full_menu')
 def full_menu(user):
