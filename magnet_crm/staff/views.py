@@ -676,6 +676,7 @@ def ib_report(request,ib_uid):
 	dict_bonus_info,total_bonus_dict = get_ib_bonus(ib)
 	context = {
 		'ib_list': ib_list,
+		'ib_staff':ib_staff,
 		'menu':'ib_list',
 		'dict_staff':dict_staff,
 		'dict_bonus_info':dict_bonus_info,

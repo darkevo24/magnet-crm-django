@@ -26,8 +26,9 @@
 	<div class="card-body">
 		<div class="row">
 			<dir class="col" >
-				Staff : {{staff}}<br>
-				Position : {{staff.staff_level.level_name}}
+				IB : {{ib_staff.ib}}<br>
+				IB Staff : {{ib_staff.staff}}<br>
+				IB Staff Supervisor : {{ib_staff.staff.parent}}<br>
 			</dir>
 			<dir class="col text-right" >
 				<a class="btn btn-success" id="download-btn">Export</a>
@@ -48,22 +49,11 @@
                   </span>
                 </div>
             </div>
-		</div>	
-		{% if client_position_list|length > 0 or client.is_deposit %}
-		<div class="row">
-			<dir class="col-12" style="text-align: right;">
-				<a href="{% url 'client-position-history' client.id %}">
-					<button class="btn green-btn">Client History</button>
-				</a>
-				<!-- <a href="{% url 'client-position' client.id %}">
-					<button class="btn green-btn">Client Position</button>
-				</a> -->
-			</dir>
-		</div>	
-		{% endif %}
+		</div>
+		{{dict_bonus_info}}
+		{{total_bonus_dict}}
 		<div class="row">
 
-			{% if staff.staff_level.level_name == "Financial Consultant" %}
 			<div class="col-12">
 				<div class="row mb-3" style="line-height: 1">
                         <div class="col py-2 px-3 " >
@@ -121,7 +111,6 @@
 						</table>
 					</div>
 			</div>
-			{% endif %}
 
 
 		

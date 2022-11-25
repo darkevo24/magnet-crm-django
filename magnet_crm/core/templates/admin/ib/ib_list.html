@@ -36,7 +36,7 @@
 						      <td scope="row">{{ib.name}}</td>
 						      <td scope="row">{{dict_staff|dict_get:ib}}</td>
 						      <td scope="row" class="text-center"><a href="{% url 'ib-staff-edit' ib.uid %}" class="btn btn-success">Change</a></td>
-						      <td scope="row" class="text-center"><a href="" class="btn btn-success">Report</a></td>
+						      <td scope="row" class="text-center"><a href="{% url 'ib-report' ib.uid %}" class="btn btn-success">Report</a></td>
 						    </tr>
 						{% endfor %}
 					    
