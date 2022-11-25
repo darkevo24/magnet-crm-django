@@ -1058,6 +1058,7 @@ def get_ib_bonus(ib):
 	all_role = ['IB','Financial Consultant','Supervisor Marketing']
 	total_bonus_dict = {} 
 	dict_bonus_info = {}
+	print("dict_fin",dict_fin)
 	for data in dict_fin:
 		account_type = data.split("_")[0]
 		pos = data.split("_")[1]
@@ -1084,7 +1085,7 @@ def get_ib_bonus(ib):
 			elif account_type == "elastico":
 				bonus = 0.5
  
-
+		print("data",data)
 		dict_bonus_info[data] = {}
 		dict_bonus_info[data]['account_type'] = account_type
 		dict_bonus_info[data]['bonus'] = (bonus * client_calculation[account_type])
