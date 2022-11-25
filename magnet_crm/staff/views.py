@@ -678,7 +678,7 @@ def ib_report(request,ib_uid):
 		'ib_list': ib_list,
 		'ib_staff':ib_staff,
 		'menu':'ib_list',
-		'dict_staff':dict_staff,
+		# 'dict_staff':dict_staff,
 		'dict_bonus_info':dict_bonus_info,
 		'total_bonus_dict':total_bonus_dict,
 	}
