@@ -19,7 +19,7 @@ import requests
 import json
 import pprint
 from decimal import *
-
+from ib.models import *
 import calendar
 def create_client_journal(request, staff=None, client=None, journal_type=None):
 	try:
