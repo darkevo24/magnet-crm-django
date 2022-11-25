@@ -671,7 +671,7 @@ def ib_staff_edit(request,ib_uid):
 def ib_report(request,ib_uid):
 	template = 'admin/ib/ib_report.html'
 	ib = IB.objects.filter(is_active=True,uid=ib_uid).first()
-	ib_staff = IB_Staff.objects.filter(is_active=True,ib=ib)
+	ib_staff = IB_Staff.objects.filter(is_active=True,ib=ib).first()
 
 	dict_bonus_info,total_bonus_dict = get_ib_bonus(ib)
 	context = {
