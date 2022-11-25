@@ -101,6 +101,7 @@ urlpatterns = [
     path('ib', staff_views.ib_list, name='ib-list'),
     path('ib/add', staff_views.ib_add, name='ib-add'),
     path('ib/<uuid:ib_uid>/fc', staff_views.ib_staff_edit, name='ib-staff-edit'),
+    path('ib/<uuid:ib_uid>/report', staff_views.ib_report, name='ib-report'),
 
 
 

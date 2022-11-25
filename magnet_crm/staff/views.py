@@ -566,9 +566,16 @@ def ib_list(request):
 	template = 'admin/ib/ib_list.html'
 	ib_list = IB.objects.filter(is_active=True)
 
+	all_ib_staff = IB_Staff.objects.filter(is_active=True,ib__in=ib_list.values_list('id',flat=True))
+
+	dict_staff = {}
+	for instance in all_ib_staff:
+		dict_staff[instance.ib]=instance.staff
+
 	context = {
 		'ib_list': ib_list,
 		'menu':'ib_list',
+		'dict_staff':dict_staff,
 	}
 	return render(request,template,context=context)
 
@@ -661,6 +668,20 @@ def ib_staff_edit(request,ib_uid):
 	}
 	return render(request,template,context=context)
 
+def ib_report(request,ib_uid):
+	template = 'admin/ib/ib_report.html'
+	ib = IB.objects.filter(is_active=True,uid=ib_uid).first()
+	ib_staff = IB_Staff.objects.filter(is_active=True,ib=ib)
+
+	dict_bonus_info,total_bonus_dict = get_ib_bonus(ib)
+	context = {
+		'ib_list': ib_list,
+		'menu':'ib_list',
+		'dict_staff':dict_staff,
+		'dict_bonus_info':dict_bonus_info,
+		'total_bonus_dict':total_bonus_dict,
+	}
+	return render(request,template,context=context)
 
 def staff_report_detail(request,staff_uid):
 	template = 'admin/report/report_staff_detail.html'

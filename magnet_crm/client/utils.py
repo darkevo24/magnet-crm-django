@@ -647,7 +647,7 @@ def get_all_clinet_bonus_new(clients,staff,now):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="3.1.223.222",
+				host="13.229.114.255",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -1003,3 +1003,97 @@ def get_all_clinet_bonus_new(clients,staff,now):
 
 	except IntegrityError as e:
 		print(e)
+
+
+def get_ib_bonus(ib):
+	ib_staff = IB_Staff.objects.filter(is_active=True,ib=ib)
+
+	staff = ib_staff.staff
+	staff_supervisor = ib_staff.staff.parent
+
+	all_staff_clients = Client_Staff.objects.filter(is_active=True,staff=staff)
+
+
+	cnx = mysql.connector.connect(
+		host="13.229.114.255",
+		user='ivan',
+		password='MajuBersama123',
+		database='vifx'
+	)
+
+	magnet_user_ids = []
+	for x in all_staff_clients:
+		magnet_user_ids.append(x.client.magnet_id)
+
+	mycursor = cnx.cursor()
+	mycursor.execute("Select id, user_id, login, account_type, rate FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_user_ids)[:-1][1:]+ ") ORDER BY 'id' DESC ")
+	myresult = mycursor.fetchall()
+
+	client_calculation={
+		'magneto':0,
+		'elektro':0,
+		'elastico':0,
+	}
+	for myresult in myresult:
+		if myresult[2] != 'None' and myresult[2] != None:
+			client_calculation[myresult[3]] += 1
+
+
+	#START BONUS 3
+
+	dict_fin = {
+		'magneto_IB':0,
+		'magneto_Financial Consultant':0,
+		'magneto_Supervisor Marketing':0,
+
+		'elektro_IB':0,
+		'elektro_Financial Consultant':0,
+		'elektro_Supervisor Marketing':0,
+
+		'elastico_IB':0,
+		'elastico_Financial Consultant':0,
+		'elastico_Supervisor Marketing':0,
+	}
+	all_role = ['IB','Financial Consultant','Supervisor Marketing']
+	total_bonus_dict = {} 
+	dict_bonus_info = {}
+	for data in dict_fin:
+		account_type = data.split[0]
+		pos = data.split[1]
+		bonus = 0 
+		if pos == "IB":
+			if account_type == "magneto":
+				bonus = 4
+			elif account_type == "elektro":
+				bonus = 1
+			elif account_type == "elastico":
+				bonus = 2
+		elif pos == "Financial Consultant":
+			if account_type == "magneto":
+				bonus = 0.35
+			elif account_type == "elektro":
+				bonus = 0.5
+			elif account_type == "elastico":
+				bonus = 1
+		elif pos == "Supervisor Marketing":
+			if account_type == "magneto":
+				bonus = 0.15
+			elif account_type == "elektro":
+				bonus = 0.25
+			elif account_type == "elastico":
+				bonus = 0.5
+ 
+
+		dict_bonus_info[data_lot] = {}
+		dict_bonus_info[data_lot]['account_type'] = account_type
+		dict_bonus_info[data_lot]['bonus'] = (bonus * client_calculation[account_type])
+
+		print("dict_bonus_info",dict_bonus_info)
+		if account_type not in total_bonus_dict:
+			total_bonus_dict[account_type] = 0
+		total_bonus_dict[account_type] += dict_bonus_info[data_lot]['bonus']
+		
+		print("total_bonus_dict",total_bonus_dict)
+
+
+
