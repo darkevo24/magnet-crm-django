@@ -106,36 +106,7 @@
 	<!-- /typeahead -->
 </div>
 <script type="text/javascript">
-	function change_filter(){
-        from = $("#date-from-val").val()
-        window.location = "{% url 'staff-report-detail' staff.uid %}"+"?date="+from
-
-    }
-
-    $("#download-btn").click(function() {
-			console.log("masuk ke download button")
-
-			
-			
-		
-			{% if staff.staff_level.level_name == "Financial Consultant" %}
-				// console.log("masuk 1")
-				// $("#download_param").val("1");
-		  //   	$("#export_form").attr("method", "post");
-				// $("#export_form").submit()
-				// $("#download_param").val("0");
-				// popupWindow1 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=1');
-
-			{% endif %}
-			{% if staff.staff_level.level_name != "IB" %}
-				// popupWindow2 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=2');
-			{% endif %}
-				// popupWindow3 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=3');
-
-				from = $("#date-from-val").val()
-				popupWindow3 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=combination&date='+from);				
-		})
-
+	
 
 	$("#date-pick-from").datepicker( {
 		    format: "mm-yyyy",
