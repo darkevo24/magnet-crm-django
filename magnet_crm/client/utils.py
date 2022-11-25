@@ -219,7 +219,7 @@ def get_login_trades(user_id):
 				'logins': login_mt5_ids
 			}
 			print("ini data")
-			res = requests.post('http://3.1.223.222/getLoginState', data=data)
+			res = requests.post('http://13.229.114.255/getLoginState', data=data)
 			json_data = json.loads(res.text)
 			# print(json_data['data'],"json_data['data']")
 			return json_data
@@ -256,7 +256,7 @@ def get_login_trades_history(user_id,from_date=None,to_date=None):
                 'to':to_date if to_date is not None else str(now.year)+"-"+str(now.month)+'-'+str(now.day),
 			}
 			print("ini data")
-			res = requests.post('http://3.1.223.222/getLoginsTrades', data=data)
+			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print(json_data['data'],"json_data['data']")
 			return json_data
@@ -277,7 +277,7 @@ def get_so_list(client_ids):
 				'userids': client_ids,
 			}
 			print("ini data")
-			res = requests.post('http://3.1.223.222/getUserFTD', data=data)
+			res = requests.post('http://13.229.114.255/getUserFTD', data=data)
 			print("ressssss",res)
 			json_data = json.loads(res.text)
 			
@@ -344,7 +344,7 @@ def get_all_clinet_bonus(clients,staff,now):
                 'to':str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),
 			}
 			# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
-			res = requests.post('http://3.1.223.222/getLoginsTrades', data=data)
+			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print("json_data['data']",json_data['data'])
 
@@ -692,7 +692,7 @@ def get_all_clinet_bonus_new(clients,staff,now):
                 'to':str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),
 			}
 			# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
-			res = requests.post('http://3.1.223.222/getLoginsTrades', data=data)
+			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print("json_data['data']",json_data['data'])
 
