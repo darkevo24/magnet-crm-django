@@ -1042,19 +1042,17 @@ def get_ib_bonus(ib):
 
 	#START BONUS 3
 
-	dict_fin = {
-		'magneto_IB':0,
-		'magneto_Financial Consultant':0,
-		'magneto_Supervisor Marketing':0,
-
-		'elektro_IB':0,
-		'elektro_Financial Consultant':0,
-		'elektro_Supervisor Marketing':0,
-
-		'elastico_IB':0,
-		'elastico_Financial Consultant':0,
-		'elastico_Supervisor Marketing':0,
-	}
+	dict_fin = [
+		'magneto_IB',
+		'magneto_Financial Consultant',
+		'magneto_Supervisor Marketing',
+		'elektro_IB',
+		'elektro_Financial Consultant',
+		'elektro_Supervisor Marketing',
+		'elastico_IB',
+		'elastico_Financial Consultant',
+		'elastico_Supervisor Marketing']
+		
 	all_role = ['IB','Financial Consultant','Supervisor Marketing']
 	total_bonus_dict = {} 
 	dict_bonus_info = {}
