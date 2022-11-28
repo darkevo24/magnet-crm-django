@@ -402,7 +402,7 @@
                         	{% for x in dict_bonus_info %}
 	                        	{% if "magneto" in x %}
 									<div style="display: inline-block;" class="mr-3 gadget_green p-3">
-		                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{dict_bonus_info|dict_get:x|dict_get:'bonus'}}</h1>
+		                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{dict_bonus_info|dict_get:x|dict_get:'bonus'|default:"-"}}</h1>
 		                                <p class="mb-0">{{x|cus_split:"_,0"}} ({{x|cus_split:"_,1"}})</p>
 		                            </div>
 	                            {% endif %}
