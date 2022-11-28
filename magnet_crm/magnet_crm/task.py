@@ -409,7 +409,7 @@ def update_client_data(mycursor, last_id, user):
 	mycursor.execute(string_sql)
 	new_client_list = mycursor.fetchall()
 	counter = 0
-	print("new_client_list",new_client_list)
+	# print("new_client_list",new_client_list)
 	for new_client in new_client_list:
 		
 		# print("add client baru dari task")
@@ -447,6 +447,9 @@ def update_client_data(mycursor, last_id, user):
 		client.demologin = new_client[16]
 		client.cdd = new_client[17]
 		client.create_ip = new_client[18]
+		print("new_client[19]",new_client[19])
+		print("new_client[20]",new_client[20])
+		print("new_client[21]",new_client[21])
 		client.source = new_client[19]
 		# print(new_client[20],'new_client[20]')
 		client.medium = new_client[20]
