@@ -57,6 +57,8 @@ urlpatterns = [
     path('client/suspect/<str:id_client_sus>/detail', client_views.client_suspect_detail, name='client-suspect-detail'),
     path('client/suspect/history/list', client_views.client_suspect_history_list, name='client-suspect-history-list'),
 
+    path('client/own_suspect/list', client_views.client_own_suspect_list, name='client-own-suspect-list'),
+
 
     path('client/sync', client_views.client_sync, name='client-sync'),
     

@@ -111,6 +111,29 @@ def client_import(request):
 	return render(request,template,context=context)
 
 
+def client_own_suspect_list(request):
+	now = timezone.now()
+	month = request.GET.get('month')
+	year = request.GET.get('year') or now.year
+
+	staff = Staff.objects.filter(profile__user=request.user).first()
+
+
+	client_list = Client_Staff.objects.filter(is_active=True,is_own_client_suspect=True)
+	template = 'admin/client/suspect/client_own_list.html'
+	if month != "" and month != None:
+		client_list = Client_Staff.objects.filter(is_active=True,is_own_client_suspect=True,is_checked=False,created_at__year=year,created_at__month=month).order_by("created_at")
+	else:
+		client_list = Client_Staff.objects.filter(is_active=True,is_own_client_suspect=True,is_checked=False).order_by("created_at")
+
+	
+	context = {
+		'client_list': client_list,
+		'menu':'client_own_suspect'
+	}
+	return render(request,template,context=context)
+
+
 
 def client_suspect_list(request):
 	now = timezone.now()
