@@ -679,18 +679,6 @@ def ib_report(request,ib_uid):
 		date = date.split("-")
 		now = now.replace(year=int(date[1]),month=int(date[0]),day=1)
 	dict_bonus_info,total_bonus_dict,account_type_dict,all_staff_clients = get_ib_bonus(ib,now)
-	# dict_bonus_info={		
-	# 	'magneto_IB': {'account_type': 'magneto', 'bonus': 0}, 
-	# 	'magneto_Financial Consultant': {'account_type': 'magneto', 'bonus': 0.0}, 
-	# 	'magneto_Supervisor Marketing': {'account_type': 'magneto', 'bonus': 0.0}, 
-	# 	'elektro_IB': {'account_type': 'elektro', 'bonus': 1}, 
-	# 	'elektro_Financial Consultant': {'account_type': 'elektro', 'bonus': 0.5}, 
-	# 	'elektro_Supervisor Marketing': {'account_type': 'elektro', 'bonus': 0.25}, 
-	# 	'elastico_IB': {'account_type': 'elastico', 'bonus': 10}, 
-	# 	'elastico_Financial Consultant': {'account_type': 'elastico', 'bonus': 5}, 
-	# 	'elastico_Supervisor Marketing': {'account_type': 'elastico', 'bonus': 2.5}
-	# }
-	# total_bonus_dict= {'magneto': 0.0, 'elektro': 1.75, 'elastico': 17.5}
 	context = {
 		'ib':ib,
 		'ib_list': ib_list,
@@ -830,6 +818,32 @@ def staff_report_detail(request,staff_uid):
 		total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict,info_account_dict,rate_dict,client_acc_age_dict,info_bonus_formula_dict,info_login_account_dict = get_all_clinet_bonus_new(all_clinet_instance,staff,now )
 
 
+
+
+	# IB REPORT
+	ib_staff = IB_Staff.objects.filter(is_active=True,staff__uid=staff_uid).first()
+	ib = ib_staff.ib
+	
+
+	date = request.GET.get('date') or None
+	# now = timezone.now()
+	# if date != None and date != "":
+	# 	date = date.split("-")
+	# 	now = now.replace(year=int(date[1]),month=int(date[0]),day=1)
+	dict_bonus_info,total_bonus_dict,account_type_dict,all_staff_clients = get_ib_bonus(ib,now)
+	context = {
+		'ib':ib,
+		'ib_list': ib_list,
+		'ib_staff':ib_staff,
+		'menu':'ib_list',
+		'account_type_dict':account_type_dict,
+		'all_staff_clients':all_staff_clients,
+		'dict_bonus_info':dict_bonus_info,
+		'total_bonus_dict':total_bonus_dict,
+	}
+
+
+
 	print("client_user_id_login_dict",client_user_id_login_dict)
 	context = {
 		'staff':staff,
@@ -850,7 +864,18 @@ def staff_report_detail(request,staff_uid):
 		'display_bonus_3_dict':display_bonus_3_dict,
 		'client_acc_age_dict':client_acc_age_dict,
 		'info_bonus_formula_dict':info_bonus_formula_dict,
-		'info_login_account_dict':info_login_account_dict
+		'info_login_account_dict':info_login_account_dict,
+
+
+
+		'ib':ib,
+		'ib_list': ib_list,
+		'ib_staff':ib_staff,
+		'menu':'ib_list',
+		'account_type_dict':account_type_dict,
+		'all_staff_clients':all_staff_clients,
+		'dict_bonus_info':dict_bonus_info,
+		'total_bonus_dict':total_bonus_dict,
 
 
 
