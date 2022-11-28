@@ -574,7 +574,7 @@ def ib_list(request):
 
 	context = {
 		'ib_list': ib_list,
-		'menu':'ib_list',
+		'menu':'ib_report',
 		'dict_staff':dict_staff,
 	}
 	return render(request,template,context=context)
@@ -612,6 +612,7 @@ def ib_add(request):
 
 	context = {
 		'ib_form': ib_form,
+		'menu':'ib_report',
 	}
 	return render(request,template,context=context)
 
@@ -665,6 +666,7 @@ def ib_staff_edit(request,ib_uid):
 
 	context = {
 		'ib_staff_form': ib_staff_form,
+		'menu':'ib_report',
 	}
 	return render(request,template,context=context)
 
@@ -683,12 +685,13 @@ def ib_report(request,ib_uid):
 		'ib':ib,
 		'ib_list': ib_list,
 		'ib_staff':ib_staff,
-		'menu':'ib_list',
+		# 'menu':'ib_list',
 		'account_type_dict':account_type_dict,
 		'all_staff_clients':all_staff_clients,
 		# 'dict_staff':dict_staff,
 		'dict_bonus_info':dict_bonus_info,
 		'total_bonus_dict':total_bonus_dict,
+		'menu':'ib_report',
 	}
 	return render(request,template,context=context)
 
@@ -871,7 +874,6 @@ def staff_report_detail(request,staff_uid):
 		'ib':ib,
 		'ib_list': ib_list,
 		'ib_staff':ib_staff,
-		'menu':'ib_list',
 		'account_type_dict':account_type_dict,
 		'all_staff_clients':all_staff_clients,
 		'dict_bonus_info':dict_bonus_info,

@@ -513,6 +513,14 @@
 										</span>
 									</a>
 								</li>
+								<li class="nav-item {% if menu == 'ib_report' %} active {% endif %}">
+									<a href="{% url 'ib-list' %}" class="nav-link {% if menu == 'ib_report' %} inverted-border-radius {% endif %}">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+										<span>
+											IB List
+										</span>
+									</a>
+								</li>
 								<li class="nav-item {% if menu == 'staff_list' %} active {% endif %}">
 									<a href="{% url 'staff-list' %}" class="nav-link {% if menu == 'staff_list' %} inverted-border-radius {% endif %}">
 										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff.png' %}">
