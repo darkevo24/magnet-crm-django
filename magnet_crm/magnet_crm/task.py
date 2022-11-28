@@ -447,10 +447,28 @@ def update_client_data(mycursor, last_id, user):
 		client.demologin = new_client[16]
 		client.cdd = new_client[17]
 		client.create_ip = new_client[18]
+
+
+		
 		print("new_client[19]",new_client[19])
 		print("new_client[20]",new_client[20])
 		print("new_client[21]",new_client[21])
-		client.source = new_client[19]
+
+		if new_client[19] == "google":
+			client.source = '2'
+			client.source_detail_1 = '0'
+			client.source_detail_2 = '4'
+		elif new_client[19] == 'fb / ig' or new_client[19] == 'fb  ig':
+			client.source = '2'
+			client.source_detail_1 = '0'
+			client.source_detail_2 = '1'
+		elif new_client[19] == 'discord':
+			client.source = '2'
+			client.source_detail_1 = '0'
+			client.source_detail_2 = '5'
+
+
+		# client.source = new_client[19]
 		# print(new_client[20],'new_client[20]')
 		client.medium = new_client[20]
 		# print(new_client[21],'new_client[21]')

@@ -79,12 +79,12 @@ class Client(Base_Model):
 
 	SOURCE_DETAIL_2_STR = [
 		('0', 'Adwords'), 
-		('1', 'Facebook'),
+		('1', 'Facebook/IG'),
 
 		('2', 'Social Media'),
 		('3', 'Email'),
 		('4', 'Google'),
-
+		('5', 'Discord'),
 	]
 
 	
