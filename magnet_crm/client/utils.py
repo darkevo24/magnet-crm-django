@@ -1012,7 +1012,7 @@ def get_ib_bonus(ib,now):
 	staff = ib_staff.staff
 	staff_supervisor = ib_staff.staff.staff_parent
 
-	now = timezone.now()
+	# now = timezone.now()
 	all_staff_clients = Client_Staff.objects.filter(is_active=True,staff=staff,created_at__year=now.year,created_at__month=now.month)
 	# all_staff_clients = Client_Staff.objects.filter(is_active=True,staff=staff)
 
