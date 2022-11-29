@@ -404,7 +404,10 @@ def update_client_data(mycursor, last_id, user):
 	# print(last_id,"last_id")
 	
 
-	# string_sql = "DESCRIBE v_users;"
+	string_sql = "DESCRIBE v_users;"
+	all_table = mycursor.execute(string_sql)
+	print(all_table);
+	
 	string_sql = "SELECT * FROM v_users Where ID > " + str(last_id) + " ORDER BY ID ASC"
 	mycursor.execute(string_sql)
 	new_client_list = mycursor.fetchall()
@@ -450,7 +453,7 @@ def update_client_data(mycursor, last_id, user):
 
 
 		
-		print("new_client[19]",'"'+new_client[19]+'"')
+		print("new_client[19]", '"'+str(new_client[19])+'"')
 		print("new_client[20]",new_client[20])
 		print("new_client[21]",new_client[21])
 
