@@ -7,7 +7,7 @@
 	<!-- Typeahead -->
 	<div class="card col-12 card_cus">
 		<div class="card-header">
-			<h5 class="card-title pb-2">Client Suspect List </h5>
+			<h5 class="card-title pb-2">Staff Own Client Suspect  </h5>
 			<!-- <select class="form-control" onchange="change_filter()" id="suspect_filter" style="max-width: 200px;">
 			  <option {% if request.GET.month == '' %} selected {% endif %} value="">Month Select</option>
 			  <option {% if request.GET.month == '1' %} selected {% endif %} value="1">January</option>
@@ -37,19 +37,7 @@
 			<div class="btn-group mr-lg-3 mb-3">
 				<a href="{% url 'client-suspect-history-list' %}"><button type="button" class="btn btn-light"><span class="d-none d-lg-inline-block ">History Suspect</span></button></a>
 			</div>
-			<div class="row">
-				<div class="col-2">
-					<h5>Filter By Date</h5>		
-				</div>
-				<div class="col-10">
-					<div class='input-group date datepicker' id='date-pick' onchange="change_filter()">
-					  <input type='text' name="tgl" id="date-val" class="form-control" value="{{request.GET.month}}-{{request.GET.year}}" />
-					  <span class="input-group-addon">
-					    <span class="glyphicon glyphicon-calendar"></span>
-					  </span>
-					</div>		
-				</div>
-			</div>
+			
 
 			
 			
@@ -68,40 +56,25 @@
 					      <th scope="col">Pekerjaan</th>
 					      <th scope="col">Domisili</th>
 					      <th scope="col" class="text-center">Detail</th>
-					      <th scope="col" class="text-center">Action</th>
+					      
 					    </tr>
 					  </thead>
 					  <tbody>
-					  	{% for client in client_list %}
+					  	{% for x in client_list %}
 					  		
 							<tr>
 						      <td scope="row">{{forloop.counter}}</td>
 						      <td>
-						      	<span style="display: inline-block;" >{{client.client_new.nama}}</span>
+						      	<span style="display: inline-block;" >{{x.client.nama}}</span>
 						      </td>
-						      <td scope="row">{{client.client_new.umur|default:'-'}}</td>
-						      <td scope="row">{{client.client_new.gender|default:'-'}}</td>
-						      <td scope="row">{{client.client_new.pekerjaan|default:'-'}}</td>
-						      <td scope="row">{{client.client_new.domisili|default:'-'}}</td>
+						      <td scope="row">{{x.client.umur|default:'-'}}</td>
+						      <td scope="row">{{x.client.gender|default:'-'}}</td>
+						      <td scope="row">{{x.client.pekerjaan|default:'-'}}</td>
+						      <td scope="row">{{x.client.domisili|default:'-'}}</td>
 						      <td scope="row" class="text-center">
-						      	<a href="{% url 'client-suspect-detail' client.id %}"><i class="icon-file-eye"></i></a>
+						      	<a href="{% url 'client-own-suspect-detail' x.uid %}"><i class="icon-file-eye"></i></a>
 						      </td>
-						      <td class="text-center">
-									<div class="list-icons">
-										<div class="dropdown">
-											<a href="#" class="list-icons-item" data-toggle="dropdown">
-												<i class="icon-menu9"></i>
-											</a>
-
-											<div class="dropdown-menu dropdown-menu-right">
-												<a href="{% url 'client-edit' client.client_new.id %}" class="dropdown-item"><i class="icon-pencil7"></i> Edit</a>
-												<!-- <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client.client_new.id}}"><i class="icon-pencil7"></i> Edit Color</span>
-
-												<a href="{% url 'client-delete' client.client_new.id %}" class="dropdown-item"><i class="icon-trash"></i> Delete</a> -->
-											</div>
-										</div>
-									</div>
-								</td>
+						      
 						    </tr>
 						{% endfor %}
 					    

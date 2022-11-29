@@ -122,14 +122,46 @@ def client_own_suspect_list(request):
 	client_list = Client_Staff.objects.filter(is_active=True,is_own_client_suspect=True)
 	template = 'admin/client/suspect/client_own_list.html'
 	if month != "" and month != None:
-		client_list = Client_Staff.objects.filter(is_active=True,is_own_client_suspect=True,is_checked=False,created_at__year=year,created_at__month=month).order_by("created_at")
+		client_list = Client_Staff.objects.filter(is_active=True,is_own_client_suspect=True,created_at__year=year,created_at__month=month).order_by("created_at")
 	else:
-		client_list = Client_Staff.objects.filter(is_active=True,is_own_client_suspect=True,is_checked=False).order_by("created_at")
+		client_list = Client_Staff.objects.filter(is_active=True,is_own_client_suspect=True).order_by("created_at")
 
 	
 	context = {
 		'client_list': client_list,
 		'menu':'client_own_suspect'
+	}
+	return render(request,template,context=context)
+
+def client_own_suspect_detail(request,uid_client_staff):
+	template = 'admin/client/suspect/client_own_detail.html'
+	
+	client_staff_sus = Client_Staff.objects.filter(is_active=True,uid=uid_client_staff).first()
+	
+
+	if request.POST:
+		action = request.POST['action']
+		client = client_staff_sus.client
+		if action == 'accept':
+			print("accept")
+			client.source = '0'
+			client.source_detail_1 = None
+			client.source_detail_2 = None
+			client_staff_sus.is_own_client_suspect = False
+		else:
+			print("reject")
+			client_staff_sus.is_own_client_suspect = False
+			
+		client_staff_sus.updated_by = request.user
+		client_staff_sus.updated_at = timezone.now()
+		client_staff_sus.save()	
+		client.save()
+
+		return redirect(reverse('client-own-suspect-list'))
+	
+	context = {
+		'client_staff_sus': client_staff_sus,
+		'menu':'client_suspect',
 	}
 	return render(request,template,context=context)
 
