@@ -473,6 +473,10 @@ def update_client_data(mycursor, last_id, user):
 			client.source = '2'
 			client.source_detail_1 = '0'
 			client.source_detail_2 = '5'
+		else:
+			client.source = None
+			client.source_detail_1 = None
+			client.source_detail_2 = None
 
 
 		# client.source = new_client[19]
