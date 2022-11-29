@@ -474,6 +474,7 @@ def update_client_data(mycursor, last_id, user):
 			client.source_detail_1 = '0'
 			client.source_detail_2 = '5'
 		else:
+			print("Masuk ELSE NONE")
 			client.source = None
 			client.source_detail_1 = None
 			client.source_detail_2 = None
