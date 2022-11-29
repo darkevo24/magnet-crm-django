@@ -147,9 +147,9 @@ def get_client_position(user_id):
 				password='Keluarga999',
 				database='position'
 		)
-
+		print("11")
 		mycursor = pos_cnx.cursor()
-
+		print("12")
 		apa_isi = mycursor.execute("SHOW COLUMNS FROM pos;")
 		count = 0
 		myresult = mycursor.fetchall()
@@ -157,11 +157,11 @@ def get_client_position(user_id):
 		for x in myresult:
 			count += 1
 
-
-		sql = "SELECT Position_ID,Volume,ContractSize FROM data_magnet.mt5_positions where login IN ("+ str(login_mt5_ids)[:-1][1:]+ ");"
-		mycursor.execute(sql)
-		pos_detail = mycursor.fetchall()
-		print("test_pos",pos_detail)
+		pos_detail = None
+		# sql = "SELECT Position_ID,Volume,ContractSize FROM data_magnet.mt5_positions where login IN ("+ str(login_mt5_ids)[:-1][1:]+ ");"
+		# mycursor.execute(sql)
+		# pos_detail = mycursor.fetchall()
+		# print("test_pos",pos_detail)
 
 
 		in_params = ','.join(['%s'] * len(login_mt5_ids))
