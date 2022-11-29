@@ -172,7 +172,7 @@ def get_client_position(user_id):
 		print('in_params', login_mt5_ids)
 		sql = "SELECT * FROM pos WHERE login IN (%s)" % in_params
 		print("18")
-		mycursor.execute(sql, login_mt5_ids)
+		mycursor.execute(sql)
 		print("19")
 		my_pos_list = mycursor.fetchall()
 		print("20")
