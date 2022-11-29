@@ -240,7 +240,11 @@ def client_transfer_new(request):
 	# else:
 		# client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("nama")
 	client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("created_at")
-
+	journey_register = Client_Journey.objects.filter(is_active=True,journal_type='registered',client__in=client_list.values_list('id',flat=True))
+	# print("journey_register",journey_register)
+	register_dict = {}
+	for x in journey_register:
+		register_dict[x.client] = x.created_at
 	# if request.user.is_superuser == True:
 	# 	staff_list = Staff.objects.filter(is_active=True,is_locked=False).order_by("profile__full_name")
 	# else:
@@ -332,6 +336,7 @@ def client_transfer_new(request):
 			print(e)
 
 	context = {
+		'register_dict':register_dict,
 		'all_client' : client_list,
 		'all_staff' : staff_list,
 		'filter_list':filter_list,

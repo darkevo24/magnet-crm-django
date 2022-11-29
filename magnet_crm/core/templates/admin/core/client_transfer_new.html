@@ -118,6 +118,7 @@
                                     <th>E-mail</th>
                                     <th>Source</th>
                                     <th>Deposit</th>
+                                    <th>Registered At</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -149,6 +150,10 @@
                                                 {% endif %}
 
                                             
+                                        </td>
+                                         <td>
+                                                    {{register_dict|dict_get:client}}
+                                                
                                         </td>
                                         
                                     </tr>
