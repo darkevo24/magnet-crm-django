@@ -165,32 +165,33 @@ def get_client_position(user_id):
 		# mycursor.execute(sql)
 		# pos_detail = mycursor.fetchall()
 		# print("test_pos",pos_detail)
+		my_pos_list = None
+		if len(login_mt5_ids)>0:
+			mycursor = pos_cnx.cursor()
+			in_params = ','.join(['%s'] * len(login_mt5_ids))
+			print("17")
+			print('in_params', login_mt5_ids)
+			sql = "SELECT * FROM pos WHERE login IN (%s)" % in_params
+			print("18",sql)
+			mycursor.execute(sql, login_mt5_ids)
+			print("19")
+			my_pos_list = mycursor.fetchall()
+			print("20")
+			print(my_pos_list,"my_pos_list")
+			print('my_pos_list', len(my_pos_list))
+			# print(my_pos_list)
 
-		mycursor = pos_cnx.cursor()
-		in_params = ','.join(['%s'] * len(login_mt5_ids))
-		print("17")
-		print('in_params', login_mt5_ids)
-		sql = "SELECT * FROM pos WHERE login IN (%s)" % in_params
-		print("18",sql)
-		mycursor.execute(sql, login_mt5_ids)
-		print("19")
-		my_pos_list = mycursor.fetchall()
-		print("20")
-		print(my_pos_list,"my_pos_list")
-		print('my_pos_list', len(my_pos_list))
-		# print(my_pos_list)
-
-		pos_id = []
-		print("21")
-		for x in my_pos_list:
-			count = 0
-			# print("x my_pos_list",x)
-			pos_id.append(x[0])
-			for y in x:
-				print(count, type(y), y)
-				count +=1
-		print("22")
-		print("pos_id ",pos_id)
+			pos_id = []
+			print("21")
+			for x in my_pos_list:
+				count = 0
+				# print("x my_pos_list",x)
+				pos_id.append(x[0])
+				for y in x:
+					print(count, type(y), y)
+					count +=1
+			print("22")
+			print("pos_id ",pos_id)
 		# mycursor.execute("SELECT * FROM pos ORDER BY id DESC LIMIT 1;")
 		# myresult = mycursor.fetchall()
 		# for x in myresult:
