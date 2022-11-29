@@ -404,9 +404,9 @@ def update_client_data(mycursor, last_id, user):
 	# print(last_id,"last_id")
 	
 
-	string_sql = "DESCRIBE v_users;"
-	all_table = mycursor.execute(string_sql)
-	print(all_table);
+	# string_sql = "DESCRIBE v_users;"
+	# all_table = mycursor.execute(string_sql)
+	# print(all_table);
 	
 	string_sql = "SELECT * FROM v_users Where ID > " + str(last_id) + " ORDER BY ID ASC"
 	mycursor.execute(string_sql)
