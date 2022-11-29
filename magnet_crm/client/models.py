@@ -95,7 +95,7 @@ class Client(Base_Model):
 	is_suspect_bypass = models.BooleanField(default=False)
 	magnet_id = models.CharField(max_length=255, default='')
 	source = models.CharField(max_length=255, choices=SOURCE_STR, default='0',null=True, blank=True)
-	source_detail_1 = models.CharField(max_length=255, choices=SOURCE_DETAIL_1_STR, default='3',null=True, blank=True)
+	source_detail_1 = models.CharField(max_length=255, choices=SOURCE_DETAIL_1_STR, null=True, blank=True,default=None)
 	source_detail_2 = models.CharField(max_length=255, choices=SOURCE_DETAIL_2_STR, null=True,blank=True,default=None)
 	
 	def __str__(self):
