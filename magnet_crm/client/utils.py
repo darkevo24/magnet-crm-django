@@ -151,13 +151,16 @@ def get_client_position(user_id):
 		mycursor = pos_cnx.cursor()
 		print("12")
 		apa_isi = mycursor.execute("SHOW COLUMNS FROM pos;")
+		print("13")
 		count = 0
 		myresult = mycursor.fetchall()
+		print("14")
 
 		for x in myresult:
 			count += 1
-
+		print("15")
 		pos_detail = None
+		print("16")
 		# sql = "SELECT Position_ID,Volume,ContractSize FROM data_magnet.mt5_positions where login IN ("+ str(login_mt5_ids)[:-1][1:]+ ");"
 		# mycursor.execute(sql)
 		# pos_detail = mycursor.fetchall()
