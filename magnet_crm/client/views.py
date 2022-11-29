@@ -469,7 +469,9 @@ def detail_list(request,id_client):
 	history_followup = Client_Followup.objects.filter(client=client)
 	history_schedule = Client_Schedule.objects.filter(client=client)
 	history_journey = Client_Journey.objects.filter(client=client)
+	print("sampe atasnya",client.id)
 	client_position_list,pos_detail = get_client_position(client.id)
+	print("sampe bawahnya")
 	client_eq_bal = get_login_trades(client.id)
 	print(client_position_list,'client_position_list')
 	dict_total = {}

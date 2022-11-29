@@ -115,23 +115,31 @@ def check_user_list():
 		cnx.close()
 
 def get_client_position(user_id):
+	print("1")
 	client = Client.objects.filter(id=user_id).first()
+	print("2")
 	magnet_user_id = client.magnet_id
+	print("3")
 	try:
-
+		print("4")
 		cnx = mysql.connector.connect(
 			host="3.1.223.222",
 			user='ivan',
 			password='MajuBersama123',
 			database='vifx'
 		)
-
+		print("5")
 		mycursor = cnx.cursor()
+		print("6")
 		mycursor.execute("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id="+ str(magnet_user_id)+ " ORDER BY 'id' DESC LIMIT 2")
+		print("7")
 		login_mt5_ids = []
+		print("8")
 		myresult = mycursor.fetchall()
+		print("9")
 		for myresult in myresult:
 			login_mt5_ids.append(myresult[2])
+		print("10")
 		print('connect to another db')
 		pos_cnx = mysql.connector.connect(
 				host="54.151.138.128",
