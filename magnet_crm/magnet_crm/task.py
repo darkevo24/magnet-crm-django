@@ -450,19 +450,22 @@ def update_client_data(mycursor, last_id, user):
 
 
 		
-		print("new_client[19]",new_client[19])
+		print("new_client[19]",'"'+new_client[19]+'"')
 		print("new_client[20]",new_client[20])
 		print("new_client[21]",new_client[21])
 
 		if new_client[19] == "google":
+			print("Masuk IF GOOGLE")
 			client.source = '2'
 			client.source_detail_1 = '0'
 			client.source_detail_2 = '4'
 		elif new_client[19] == 'fb / ig' or new_client[19] == 'fb  ig':
+			print("Masuk IF FB")
 			client.source = '2'
 			client.source_detail_1 = '0'
 			client.source_detail_2 = '1'
 		elif new_client[19] == 'discord':
+			print("Masuk IF DISCORD")
 			client.source = '2'
 			client.source_detail_1 = '0'
 			client.source_detail_2 = '5'
