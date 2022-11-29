@@ -161,7 +161,7 @@ def client_own_suspect_detail(request,uid_client_staff):
 	
 	context = {
 		'client_staff_sus': client_staff_sus,
-		'menu':'client_suspect',
+		'menu':'client_own_suspect',
 	}
 	return render(request,template,context=context)
 
