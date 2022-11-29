@@ -74,7 +74,9 @@
                     </div>
 			</div>
 						<div class="col-12 ">
-							
+							{% for x in pos_detail %}
+								<p>{{x.1}}</p><br>
+							{% endfor %}
 
 				<h5>Client Position</h5>
 					<div class="card p-2" style="">
