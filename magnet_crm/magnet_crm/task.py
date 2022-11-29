@@ -407,14 +407,14 @@ def update_client_data(mycursor, last_id, user):
 	# string_sql = "DESCRIBE v_users;"
 	# all_table = mycursor.execute(string_sql)
 	# print(all_table);
-	
+
 	string_sql = "SELECT * FROM v_users Where ID > " + str(last_id) + " ORDER BY ID ASC"
 	mycursor.execute(string_sql)
 	new_client_list = mycursor.fetchall()
 	counter = 0
 	# print("new_client_list",new_client_list)
 	for new_client in new_client_list:
-		
+		print('new_client',new_client)
 		# print("add client baru dari task")
 		client = Client()
 		client.magnet_id = new_client[0]
@@ -453,9 +453,10 @@ def update_client_data(mycursor, last_id, user):
 
 
 		
-		print("new_client[19]", '"'+str(new_client[19])+'"')
-		print("new_client[20]",new_client[20])
-		print("new_client[21]",new_client[21])
+		# print("new_client[19]", '"'+str(new_client[19])+'"')
+		# print("new_client[20]",new_client[20])
+		# print("new_client[21]",new_client[21])
+		print("new_client[24]",new_client[24])
 
 		if new_client[19] == "google":
 			print("Masuk IF GOOGLE")
@@ -485,9 +486,9 @@ def update_client_data(mycursor, last_id, user):
 		client.content = new_client[23]
 		client.gclid = new_client[24]
 		client.is_registered = True
-		client.source = None
-		client.source_detail_1 = None
-		client.source_detail_2 = None
+		# client.source = None
+		# client.source_detail_1 = None
+		# client.source_detail_2 = None
 		client.save()
 
 		regis = Client_Journey()
