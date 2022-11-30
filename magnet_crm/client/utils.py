@@ -1020,8 +1020,12 @@ def get_all_clinet_bonus_new(clients,staff,now):
 def get_ib_bonus(ib,now):
 	ib_staff = IB_Staff.objects.filter(is_active=True,ib=ib).first()
 
-	staff = ib_staff.staff
-	staff_supervisor = ib_staff.staff.staff_parent
+	staff = None
+	staff_supervisor = None
+	
+	if ib_staff is not None:
+		staff = ib_staff.staff
+		staff_supervisor = ib_staff.staff.staff_parent
 
 	# now = timezone.now()
 	all_staff_clients = Client_Staff.objects.filter(is_active=True,staff=staff,created_at__year=now.year,created_at__month=now.month).exclude(client__magnet_id=None)
