@@ -31,6 +31,10 @@
 				<a href="{% url 'client-position-history' client.id %}">
 					<button class="btn green-btn">Client History</button>
 				</a>
+
+				<a href="{% url 'client-position-history' client.id %}">
+					<button class="btn green-btn">Client History</button>
+				</a>
 				<!-- <a href="{% url 'client-position' client.id %}">
 					<button class="btn green-btn">Client Position</button>
 				</a> -->
@@ -45,9 +49,7 @@
                         <div class="col py-2 px-3 " >
                             <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                                 <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
-                                		
-                                		{{client_eq_bal|dict_get:'balance'|str_currency|default:"-"}}
-                                	
+                            		{{client_eq_bal|dict_get:'balance'|str_currency|default:"-"}}
                             </h1>
                                 <p class="mb-0">Current Balance</p>
                             </div>
@@ -75,7 +77,7 @@
 			</div>
 						<div class="col-12 ">
 							{% for x in pos_detail %}
-								<p>{{x.1}}</p><br>
+								<p>{{x}}{{x.1}}</p><br>
 							{% endfor %}
 
 				<h5>Client Position</h5>
