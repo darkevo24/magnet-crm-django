@@ -136,7 +136,7 @@
 					</div>
 
 					<!-- Position_ID,Volume,ContractSize -->
-
+					<p>Position Detail</p>
 					<div class="card p-2" style="">
 						<table class="table" id="table_position" style="max-height: 100vh">
 						  <thead>
@@ -152,9 +152,9 @@
 	                            
 	                                <tr>
 	                                    <th scope="row">{{forloop.counter}}</th>
-	                                    <td>{{x.1}}</td>
+	                                    <td>{{x.0}}</td>
+	                                    <td scope="row">{{x.1}}</td>
 	                                    <td scope="row">{{x.2}}</td>
-	                                    <td scope="row">{{x.3}}</td>
 
 	                                </tr>
 	                        {% endfor %}
