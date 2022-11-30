@@ -2,6 +2,18 @@
 {% extends 'base/head.html' %}
 
 {% block content %}
+<style type="text/css">
+	/*div.dataTables_wrapper div.dataTables_scrollBody {
+      min-height: 300px!important;
+    }*/
+
+    /*.datatable-scroll-wrap{
+        min-height: 300px!important;;
+    }
+    .dataTables_scrollHeadInner{
+        width: 100%!important;
+    }*/
+</style>
 <div class="row">
 	<!-- Typeahead -->
 	<div class="card col-12 card_cus">
@@ -18,14 +30,7 @@
 			<div class="row">
 				<div class="col-12">
 
-					<table style="display: table;min-width: 100%;">
-						<tbody >
-						<tr>
-							<td style="min-width: 40%;">Leverage</td>
-							<td style="min-width: 3%">:</td>
-							<td style="min-width: 30%"> 200 </td>
-						</tr>
-					</tbody></table>
+					
 
 					<table class="table" id="table-main">
 					  <thead>
@@ -109,7 +114,7 @@ $(function() {
 	            lengthMenu: '<span>Show:</span> _MENU_',
 	        },
 	        scrollX: true,
-	        // scrollY: '350px',
+	        scrollY: '350px',
 	        scrollCollapse: true,
 	        fixedColumns: {
 	            leftColumns: 2,
