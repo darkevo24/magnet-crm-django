@@ -76,9 +76,9 @@
                     </div>
 			</div>
 						<div class="col-12 ">
-							{% for x in pos_detail %}
+							<!-- {% for x in pos_detail %}
 								<p>{{x}} :  {{ x.2|divide:x.1 }}</p><br>
-							{% endfor %}
+							{% endfor %} -->
 
 				<h5>Client Position</h5>
 					<div class="card p-2" style="">
@@ -145,6 +145,8 @@
 	                                <th scope="col">Position ID</th>
 	                                <th scope="col">Volume</th>
 	                                <th scope="col">ContractSize</th>
+	                                <th scope="col">Symbol</th>
+	                                <th scope="col">LOT</th>
 	                            </tr>
 	                        </thead>
 						  <tbody>
@@ -155,7 +157,8 @@
 	                                    <td>{{x.0}}</td>
 	                                    <td scope="row">{{x.1}}</td>
 	                                    <td scope="row">{{x.2}}</td>
-
+	                                    <td scope="row">{{x.3}}</td>
+	                                    <td scope="row">{{{{ x.2|divide:x.1 }}}}</td>
 	                                </tr>
 	                        {% endfor %}
                         

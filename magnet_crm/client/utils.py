@@ -115,31 +115,21 @@ def check_user_list():
 		cnx.close()
 
 def get_client_position(user_id):
-	print("1")
 	client = Client.objects.filter(id=user_id).first()
-	print("2")
 	magnet_user_id = client.magnet_id
-	print("3")
 	try:
-		print("4")
 		cnx = mysql.connector.connect(
 			host="3.1.223.222",
 			user='ivan',
 			password='MajuBersama123',
 			database='vifx'
 		)
-		print("5")
 		mycursor = cnx.cursor()
-		print("6")
 		mycursor.execute("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id="+ str(magnet_user_id)+ " ORDER BY 'id' DESC LIMIT 2")
-		print("7")
 		login_mt5_ids = []
-		print("8")
 		myresult = mycursor.fetchall()
-		print("9")
 		for myresult in myresult:
 			login_mt5_ids.append(myresult[2])
-		print("10")
 		print('connect to another db')
 		pos_cnx = mysql.connector.connect(
 				host="54.151.138.128",
@@ -147,20 +137,15 @@ def get_client_position(user_id):
 				password='Keluarga999',
 				database='position'
 		)
-		print("11")
 		mycursor = pos_cnx.cursor()
-		print("12")
 		apa_isi = mycursor.execute("SHOW COLUMNS FROM pos;")
-		print("13")
 		count = 0
 		myresult = mycursor.fetchall()
-		print("14")
+		
 
 		for x in myresult:
 			count += 1
-		print("15")
 		pos_detail = None
-		print("16")
 
 		# sql = "SHOW COLUMNS FROM data_magnet.mt5_positions"
 		# mycursor.execute(sql)
@@ -168,7 +153,7 @@ def get_client_position(user_id):
 		# print("show_columns",show_columns)
 
 
-		sql = "SELECT Position_ID,Volume,ContractSize FROM data_magnet.mt5_positions where login IN ("+ str(login_mt5_ids)[:-1][1:]+ ");"
+		sql = "SELECT Position_ID,Volume,ContractSize,Symbol FROM data_magnet.mt5_positions where login IN ("+ str(login_mt5_ids)[:-1][1:]+ ");"
 		mycursor.execute(sql)
 		pos_detail = mycursor.fetchall()
 		print("test_pos",pos_detail)
