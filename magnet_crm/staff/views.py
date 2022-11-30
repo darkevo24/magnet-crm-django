@@ -721,7 +721,9 @@ def staff_report_detail(request,staff_uid):
 
 
 	ib_staff = IB_Staff.objects.filter(is_active=True,staff__uid=staff_uid).first()
-	ib = ib_staff.ib
+	ib = None
+	if ib_staff is not None:
+		ib = ib_staff.ib
 
 
 	now = timezone.now()
