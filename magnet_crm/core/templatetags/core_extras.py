@@ -11,10 +11,10 @@ register = template.Library()
 @register.filter(name='divide')
 def divide(value, arg):
     try:
-        return int(value) / int(arg)
+        return float(value) / float(arg)
     except (ValueError, ZeroDivisionError):
-        return None
-        
+        return '-'
+
 @register.filter(name='str_currency')
 def str_currency(string_value):
 	print("string_value",string_value)
