@@ -338,12 +338,12 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 				for col_num, data in enumerate(data_list):
 					worksheet.write(row_num, col_num, data['val'], data['style'])
 
-		worksheet.write(row_num+1, 0, 'Total_client', center_bold_font_style)
-		worksheet.write(row_num+1, 1, total_client, center_bold_font_style)
-		worksheet.write(row_num+1, 2, 'Total Amount FTD', center_bold_font_style)
-		worksheet.write(row_num+1, 3, amount, center_bold_font_style)
-		worksheet.write(row_num+1, 4, 'Bonus Per Ft', center_bold_font_style)
-		worksheet.write(row_num+1, 5, bonus_per_ft, center_bold_font_style)
+		# worksheet.write(row_num+1, 0, 'Total_client', center_bold_font_style)
+		# worksheet.write(row_num+1, 1, total_client, center_bold_font_style)
+		# worksheet.write(row_num+1, 2, 'Total Amount FTD', center_bold_font_style)
+		# worksheet.write(row_num+1, 3, amount, center_bold_font_style)
+		# worksheet.write(row_num+1, 4, 'Bonus Per Ft', center_bold_font_style)
+		# worksheet.write(row_num+1, 5, bonus_per_ft, center_bold_font_style)
 
 
 
