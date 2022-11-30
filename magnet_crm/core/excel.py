@@ -342,7 +342,7 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 
 
 
-        count_temp = 1
+		count_temp = 1
 		for y in dict_bonus_info:
 			if "magneto" in y:
 				worksheet.write(row_num+count_temp, 0, str(y.split("_")[0]) + " " + str(y.split("_")[1]), center_bold_font_style)
