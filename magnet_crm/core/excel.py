@@ -341,23 +341,11 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 
 
 
-		# {% for x in dict_bonus_info %}
-  #       	{% if "magneto" in x %}
-		# 		<div style="display: inline-block;" class="mr-3 gadget_green p-3">
-  #                   <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{dict_bonus_info|dict_get:x|dict_get:'bonus'|default:"-"}}</h1>
-  #                   <p class="mb-0">{{x|cus_split:"_,0"}} ({{x|cus_split:"_,1"}})</p>
-  #               </div>
-  #           {% endif %}
-		# {% endfor %}
-		# <div style="display: inline-block;" class="mr-3 gadget_green p-3">
-  #           <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus_dict|dict_get:'magneto'}}</h1>
-  #           <p class="mb-0">Total Bonus</p>
-  #       </div>
 
         count_temp = 1
 		for y in dict_bonus_info:
 			if "magneto" in y:
-				worksheet.write(row_num+count_temp, 0, y.split("_")[0] + " " + y.split("_")[1], center_bold_font_style)
+				worksheet.write(row_num+count_temp, 0, str(y.split("_")[0]) + " " + str(y.split("_")[1]), center_bold_font_style)
 				worksheet.write(row_num+count_temp, 1, dict_bonus_info[y]['bonus'], center_bold_font_style)
 				count_temp++
 
