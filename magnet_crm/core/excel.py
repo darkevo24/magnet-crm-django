@@ -348,6 +348,19 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 				worksheet.write(row_num+count_temp, 0, str(y.split("_")[0]) + " " + str(y.split("_")[1]), center_bold_font_style)
 				worksheet.write(row_num+count_temp, 1, dict_bonus_info[y]['bonus'], center_bold_font_style)
 				count_temp+=1
+		count_temp = 1
+		for y in dict_bonus_info:
+			if "elektro" in y:
+				worksheet.write(row_num+count_temp, 3, str(y.split("_")[0]) + " " + str(y.split("_")[1]), center_bold_font_style)
+				worksheet.write(row_num+count_temp, 4, dict_bonus_info[y]['bonus'], center_bold_font_style)
+				count_temp+=1
+
+		count_temp = 1
+		for y in dict_bonus_info:
+			if "elastico" in y:
+				worksheet.write(row_num+count_temp, 6, str(y.split("_")[0]) + " " + str(y.split("_")[1]), center_bold_font_style)
+				worksheet.write(row_num+count_temp, 7, dict_bonus_info[y]['bonus'], center_bold_font_style)
+				count_temp+=1
 
 
 		# worksheet.write(row_num+1, 0, 'Total_client', center_bold_font_style)
