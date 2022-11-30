@@ -9,6 +9,16 @@
         border-radius: 15px;
         padding: 10px;
     }
+    div.dataTables_wrapper div.dataTables_scrollBody {
+      min-height: 300px!important;
+    }
+
+    .datatable-scroll-wrap{
+        min-height: 300px!important;;
+    }
+    .dataTables_scrollHeadInner{
+        width: 100%!important;
+    }
 </style>
 <div class="row">
 	<!-- Typeahead -->
@@ -27,7 +37,7 @@
 			<div class="row ">
 				
 				<div class="col-12">
-					<input type="text" id="search_input"  class="form-control mb-3" placeholder="Search Client">
+					<!-- <input type="text" id="search_input"  class="form-control mb-3" placeholder="Search Client"> -->
 
 
 					<!-- Nav tabs -->
@@ -43,85 +53,80 @@
 					<!-- Tab panes -->
 					<div class="tab-content">
 					  <div class="tab-pane active" id="home">
-					  		
-					  		<!-- start -->
-					  							<ul class="media-list">
-                                        
-                                            
-                                {% for client in client_list %}
-                                    
-                                    {% if not client.is_deposit %}
-                                    <li class="media">
-                                        <div class="media-body ">
-                                            <div class="media-title font-weight-semibold">
-                                                <i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="icon-circle2 mr-1"></i>
-                                                {{client.nama}}
-                                            </div>
-                                            <div class="pl-1 text-muted">{{client.email}}</div>
-                                            <div class="pl-1 text-muted">
-                                                {% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
-                                                    {{client.get_source_detail_2_display}} 
-                                                {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
-                                                    {{client.get_source_detail_1_display}} 
-                                                {% else %}
-                                                    {{client.get_source_display|default:'-'}}
-                                                {% endif %}
-                                            </div>
-
-                                            
-
-                                        </div>
-
-                                       <div class="align-self-center ml-3">
-                                            <!-- <i class="fab fa-whatsapp mr-3 whatsapp-button" data-client_id="{{client_staff.client.id}}" data-journey_type="whatsapp" style="font-size:1.8em"></i> -->
-                                            <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
-                                            
-                                            
-
-                                            <img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
-
-
-                                            <!-- <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="far fa-calendar-plus mr-3" style="font-size: 1.8em"></i></a> -->
-
-                                            <a href="{% url 'client-followup-list' client.id  %}"><img class="list-icons-item"  data-popup="tooltip" title="Feedback" src="{% static 'magnet/images/admin-feedback.png' %}" style="height:2.4em" ></a>
-
-
-                                            <div class="list-icons">
-                                                <div class="dropdown">
-                                                    <a href="#" class="list-icons-item" data-toggle="dropdown">
-                                                        <i class="icon-menu9" style="font-size: 1.8em"></i>
-                                                    </a>
-
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a href="{% url 'client-detail-list' client.id  %}" class="dropdown-item">
-                                                            <i class="icon-file-eye"></i> Client Detail
-                                                        </a>
-                                                        <a href="{% url 'client-edit' client.id  %}" class="dropdown-item">
-                                                            <i class="fas fa-edit"></i> Client Edit
+					  		<table class="table" id="table-main" width="100%">
+                              <thead>
+                                <tr>
+                                  
+                                  <th scope="col"></th>
+                                  <th scope="col">Nama</th>
+                                  <th scope="col">Email</th>
+                                  <th scope="col">Source</th>
+                                  <th scope="col">Aksi</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                
+                                    {% for client in client_list %}
+                                        {% if not client.is_deposit %}
+                                        <tr>
+                                          
+                                          <td scope="row"><i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="icon-circle2 mr-1"></i></td>
+                                          <td scope="row">{{client.nama|default:"-"}}</td>
+                                          <td scope="row">{{client.email|default:"-"}}</td>
+                                          <td scope="row">{% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
+                                                        {{client.get_source_detail_2_display}} 
+                                                    {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
+                                                        {{client.get_source_detail_1_display}} 
+                                                    {% else %}
+                                                        {{client.get_source_display|default:'-'}}
+                                                    {% endif %}     </td>
+                                          <td scope="row">
+                                              
+                                              <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
+                                              <img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
+                                              <div class="list-icons">
+                                                    <div class="dropdown">
+                                                        <a href="#" class="list-icons-item" data-toggle="dropdown">
+                                                            <i class="icon-menu9" style="font-size: 1.8em"></i>
                                                         </a>
 
-                                                        <a href="{% url 'client-schedule-list' client.id  %}" class="dropdown-item">
-                                                            <i class="fas fa-calendar-alt"></i> List Schedule
-                                                        </a>
-                                                        {% if own_user %}
-                                                        <a href="{% url 'client-schedule-add' client.id  %}" class="dropdown-item">
-                                                            <i class="fas fa-calendar-plus"></i> Add Schedule
-                                                        </a>
-                                                        
-                                                            <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
-                                                        {% endif %}
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a href="{% url 'client-detail-list' client.id  %}" class="dropdown-item">
+                                                                <i class="icon-file-eye"></i> Client Detail
+                                                            </a>
+                                                            {% if not own_user %}
+                                                            <a href="{% url 'client-edit' client.id  %}" class="dropdown-item">
+                                                                <i class="fas fa-edit"></i> Client Edit
+                                                            </a>
+                                                            {% endif %}
 
+                                                            <a href="{% url 'client-schedule-list' client.id  %}" class="dropdown-item">
+                                                                <i class="fas fa-calendar-alt"></i> List Schedule
+                                                            </a>
+                                                            {% if own_user %}
+                                                                <a href="{% url 'client-schedule-add' client.id  %}" class="dropdown-item">
+                                                                    <i class="fas fa-calendar-plus"></i> Add Schedule
+                                                                </a>
+                                                            
+                                                                <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
+                                                                <span  class="dropdown-item" onclick="set_hot({{client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Hot Client</span>
+                                                            {% endif %}
+
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                          </td>
+                                          
+                                        </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                
+                                
+                                
+                              </tbody>
+                            </table>
 
-                                    </li>
-                                    {% endif %}
-                                    
-                                {% endfor %}
-
-                            
+					  		
                         </ul>
 		
 
@@ -130,88 +135,81 @@
 
 					  </div>
 					  <div class="tab-pane fade" id="menu1">
-					  						<ul class="media-list">
-                                        
+
+                        <table class="table" id="table-main-2" width="100%">
+                              <thead>
+                                <tr>
+                                  
+                                  <th scope="col"></th>
+                                  <th scope="col">Nama</th>
+                                  <th scope="col">Email</th>
+                                  <th scope="col">Source</th>
+                                  <th scope="col">Aksi</th>
+                                </tr>
+                              </thead>
+                              <tbody>
                                 
-                                {% for client in client_list %}
-                                 {% if client.is_deposit %}
-
-                                    
-                                    <li class="media">
-                                        <div class="media-body ">
-                                            <div class="media-title font-weight-semibold">
-                                                <i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="icon-circle2 mr-1"></i>
-                                                {{client.nama}} 
-                                            </div>
-                                            <div class="pl-1 text-muted">{{client.email}}</div>
-                                            <div class="pl-1 text-muted">
-                                                {% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
-                                                    {{client.get_source_detail_2_display}} 
-                                                {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
-                                                    {{client.get_source_detail_1_display}} 
-                                                {% else %}
-                                                    {{client.get_source_display|default:'-'}}
-                                                {% endif %}
-                                            </div>
-
-
-                                            
-
-                                        </div>
-
-                                       <div class="align-self-center ml-3">
-                                            <!-- <i class="fab fa-whatsapp mr-3 whatsapp-button" data-client_id="{{client_staff.client.id}}" data-journey_type="whatsapp" style="font-size:1.8em"></i> -->
-                                            <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
-                                            
-                                            
-
-                                            <img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
-
-
-                                            <!-- <a class="list-icons-item" href="{% url 'client-followup-list' client.id  %}"><i class="far fa-calendar-plus mr-3" style="font-size: 1.8em"></i></a> -->
-
-                                            <a href="{% url 'client-followup-list' client.id  %}"><img class="list-icons-item"  data-popup="tooltip" title="Feedback" src="{% static 'magnet/images/admin-feedback.png' %}" style="height:2.4em" ></a>
-
-
-                                            <div class="list-icons">
-                                                <div class="dropdown">
-                                                    <a href="#" class="list-icons-item" data-toggle="dropdown">
-                                                        <i class="icon-menu9" style="font-size: 1.8em"></i>
-                                                    </a>
-
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a href="{% url 'client-detail-list' client.id  %}" class="dropdown-item">
-                                                            <i class="icon-file-eye"></i> Client Detail
-                                                        </a>
-                                                        <a href="{% url 'client-edit' client.id  %}" class="dropdown-item">
-                                                            <i class="fas fa-edit"></i> Client Edit
+                                    {% for client in client_list %}
+                                        {% if client.is_deposit %}
+                                        <tr>
+                                          
+                                          <td scope="row"><i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="icon-circle2 mr-1"></i></td>
+                                          <td scope="row">{{client.nama|default:"-"}}</td>
+                                          <td scope="row">{{client.email|default:"-"}}</td>
+                                          <td scope="row">{% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
+                                                        {{client.get_source_detail_2_display}} 
+                                                    {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
+                                                        {{client.get_source_detail_1_display}} 
+                                                    {% else %}
+                                                        {{client.get_source_display|default:'-'}}
+                                                    {% endif %}     </td>
+                                          <td scope="row">
+                                              
+                                              <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
+                                              <img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
+                                              <div class="list-icons">
+                                                    <div class="dropdown">
+                                                        <a href="#" class="list-icons-item" data-toggle="dropdown">
+                                                            <i class="icon-menu9" style="font-size: 1.8em"></i>
                                                         </a>
 
-                                                        <a href="{% url 'client-schedule-list' client.id  %}" class="dropdown-item">
-                                                            <i class="fas fa-calendar-alt"></i> List Schedule
-                                                        </a>
-                                                        {% if own_user %}
-                                                        <a href="{% url 'client-schedule-add' client.id  %}" class="dropdown-item">
-                                                            <i class="fas fa-calendar-plus"></i> Add Schedule
-                                                        </a>
-                                                        
-                                                            <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
-                                                        {% endif %}
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a href="{% url 'client-detail-list' client.id  %}" class="dropdown-item">
+                                                                <i class="icon-file-eye"></i> Client Detail
+                                                            </a>
+                                                            {% if not own_user %}
+                                                            <a href="{% url 'client-edit' client.id  %}" class="dropdown-item">
+                                                                <i class="fas fa-edit"></i> Client Edit
+                                                            </a>
+                                                            {% endif %}
 
+                                                            <a href="{% url 'client-schedule-list' client.id  %}" class="dropdown-item">
+                                                                <i class="fas fa-calendar-alt"></i> List Schedule
+                                                            </a>
+                                                            {% if own_user %}
+                                                                <a href="{% url 'client-schedule-add' client.id  %}" class="dropdown-item">
+                                                                    <i class="fas fa-calendar-plus"></i> Add Schedule
+                                                                </a>
+                                                            
+                                                                <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
+                                                                <span  class="dropdown-item" onclick="set_hot({{client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Hot Client</span>
+                                                            {% endif %}
+
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                          </td>
+                                          
+                                        </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                
+                                
+                                
+                              </tbody>
+                            </table>
 
-                                    </li>
-                                    
-                                 {% endif %}
-                                {% endfor %}
-
-                            
-                        </ul>
-		
-
+					  						
 					  </div>
 					</div>
 
@@ -256,6 +254,40 @@
 <!-- /mini modal -->
 <script type="text/javascript">
 	$(function() {
+
+        $("#table-main").DataTable({
+            dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+            language: {
+                search: '<span>Filter:</span> _INPUT_',
+                searchPlaceholder: 'Type to filter...',
+                lengthMenu: '<span>Show:</span> _MENU_',
+            },
+            scrollX: true,
+            // scrollY: '350px',
+            scrollCollapse: true,
+            fixedColumns: {
+                leftColumns: 2,
+                // rightColumns: 1
+            }
+        });
+
+        $("#table-main-2").DataTable({
+            dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+            language: {
+                search: '<span>Filter:</span> _INPUT_',
+                searchPlaceholder: 'Type to filter...',
+                lengthMenu: '<span>Show:</span> _MENU_',
+            },
+            scrollX: true,
+            // scrollY: '350px',
+            scrollCollapse: true,
+            fixedColumns: {
+                leftColumns: 2,
+                // rightColumns: 1
+            }
+        });
+
+
 		$(".table-row").click(function() {
 		 	var link = $(this).data('href');
 		 	window.location.href = link;
