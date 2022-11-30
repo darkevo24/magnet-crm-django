@@ -464,7 +464,7 @@ def request_own(request,id_client):
 	template = 'admin/client/client_detail_list.html'
 	cur_staff = Staff.objects.filter(profile__user=request.user).first()
 	client = Client.objects.filter(id=id_client).first()
-	client_staff = Client_Staff.objects.filter(is_active=True,client=client)
+	client_staff = Client_Staff.objects.filter(is_active=True,client=client).first()
 
 	client_staff.is_own_client_suspect = True
 	client_staff.updated_at = timezone.now()
