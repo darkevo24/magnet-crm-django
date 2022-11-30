@@ -162,10 +162,10 @@ def get_client_position(user_id):
 		pos_detail = None
 		print("16")
 
-		sql = "SHOW COLUMNS FROM data_magnet.mt5_positions"
-		mycursor.execute(sql)
-		show_columns = mycursor.fetchall()
-		print("show_columns",show_columns)
+		# sql = "SHOW COLUMNS FROM data_magnet.mt5_positions"
+		# mycursor.execute(sql)
+		# show_columns = mycursor.fetchall()
+		# print("show_columns",show_columns)
 
 
 		sql = "SELECT Position_ID,Volume,ContractSize FROM data_magnet.mt5_positions where login IN ("+ str(login_mt5_ids)[:-1][1:]+ ");"
