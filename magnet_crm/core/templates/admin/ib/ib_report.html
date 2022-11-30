@@ -176,7 +176,7 @@
     $("#download-btn").click(function() {
 			console.log("masuk ke download button")
 			from = $("#date-from-val").val()
-			popupWindow3 = window.open('{% url "staff-report-detail" ib.uid %}?download_excel=ib_report&date='+from);		
+			popupWindow3 = window.open('{% url "ib-report" ib.uid %}?download_excel=ib_report&date='+from);		
 	})
 
 
