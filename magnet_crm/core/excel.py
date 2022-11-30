@@ -348,8 +348,8 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 				worksheet.write(row_num+count_temp, 0, str(y.split("_")[0]) + " (" + str(y.split("_")[1])+")", center_bold_font_style)
 				worksheet.write(row_num+count_temp, 1, dict_bonus_info[y]['bonus'], center_bold_font_style)
 				count_temp+=1
-			worksheet.write(row_num+4, 0, 'Total Bonus Magneto', center_bold_font_style)
-			worksheet.write(row_num+4, 1, total_bonus_dict['magneto'], center_bold_font_style)
+			worksheet.write(row_num+5, 0, 'Total Bonus Magneto', center_bold_font_style)
+			worksheet.write(row_num+5, 1, total_bonus_dict['magneto'], center_bold_font_style)
 
 
 		count_temp = 1
@@ -359,8 +359,8 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 				worksheet.write(row_num+count_temp, 3, dict_bonus_info[y]['bonus'], center_bold_font_style)
 				count_temp+=1
 
-			worksheet.write(row_num+4, 0, 'Total Bonus Elektro', center_bold_font_style)
-			worksheet.write(row_num+4, 1, total_bonus_dict['elektro'], center_bold_font_style)
+			worksheet.write(row_num+5, 2, 'Total Bonus Elektro', center_bold_font_style)
+			worksheet.write(row_num+5, 3, total_bonus_dict['elektro'], center_bold_font_style)
 
 		count_temp = 1
 		for y in dict_bonus_info:
@@ -369,8 +369,8 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 				worksheet.write(row_num+count_temp, 5, dict_bonus_info[y]['bonus'], center_bold_font_style)
 				count_temp+=1
 
-			worksheet.write(row_num+4, 0, 'Total Bonus Elastico', center_bold_font_style)
-			worksheet.write(row_num+4, 1, total_bonus_dict['elastico'], center_bold_font_style)
+			worksheet.write(row_num+5, 4, 'Total Bonus Elastico', center_bold_font_style)
+			worksheet.write(row_num+5, 5, total_bonus_dict['elastico'], center_bold_font_style)
 
 
 		# worksheet.write(row_num+1, 0, 'Total_client', center_bold_font_style)
