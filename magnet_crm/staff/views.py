@@ -720,6 +720,9 @@ def staff_report_detail(request,staff_uid):
 
 
 
+	ib_staff = IB_Staff.objects.filter(is_active=True,staff__uid=staff_uid).first()
+	ib = ib_staff.ib
+
 
 	now = timezone.now()
 	if date != None and date != "":
@@ -766,8 +769,8 @@ def staff_report_detail(request,staff_uid):
 				wb = xlwt.Workbook(encoding='utf-8')
 				ws = wb.add_sheet("Bonus FTD")
 				ws2 = wb.add_sheet("Bonus LOT")
-				# ws3 = wb.add_sheet("Scheme 3")
-				ws = write_worksheet_report_transaction(ws, "scheme_combination", None,None, {'staff':staff,'now':now,'ws2':ws2})
+				ws3 = wb.add_sheet("Bonus IB")
+				ws = write_worksheet_report_transaction(ws, "scheme_combination", None,None, {'staff':staff,'now':now,'ws2':ws2,'ws3':ws3,'ib_staff':ib_staff,'ib':ib})
 				wb.save(response)
 				return response
 
@@ -841,8 +844,7 @@ def staff_report_detail(request,staff_uid):
 
 
 	# IB REPORT
-	ib_staff = IB_Staff.objects.filter(is_active=True,staff__uid=staff_uid).first()
-	ib = ib_staff.ib
+	
 	
 
 	date = request.GET.get('date') or None

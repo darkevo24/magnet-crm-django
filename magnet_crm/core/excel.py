@@ -20,7 +20,7 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		staff = extra['staff']
 
 		worksheet2 = extra['ws2']
-		# worksheet3 = extra['ws3']
+		worksheet3 = extra['ws3']
 
 		worksheet.write(0, 0, 'No', center_bold_font_style)
 		worksheet.write(0, 1, 'Name', center_bold_font_style)
@@ -64,6 +64,15 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 		# worksheet3.write(0, 1, 'Name', center_bold_font_style)
 		# worksheet3.write(0, 2, 'Login', center_bold_font_style)
 		# worksheet3.write(0, 3, 'Account Type', center_bold_font_style)
+
+
+
+		worksheet3.write(0, 0, 'No', center_bold_font_style)
+		worksheet3.write(0, 1, 'Name', center_bold_font_style)
+		worksheet3.write(0, 2, 'Email', center_bold_font_style)
+		worksheet3.write(0, 3, 'Phone No', center_bold_font_style)
+		worksheet3.write(0, 4, 'Magnet ID', center_bold_font_style)
+		worksheet3.write(0, 5, 'Account Type', center_bold_font_style)
 
 		
 		now = extra['now']
@@ -300,6 +309,74 @@ def write_worksheet_report_transaction(worksheet, report_type, start_date, end_d
 
 		# worksheet3.write(row_num+1, 0, 'Total Bonus', center_bold_font_style)
 		# worksheet3.write(row_num+1, 1, total_bonus_3, center_bold_font_style)
+
+		ib = extra['ib']
+		ib_staff = extra['ib_staff']
+		# now = extra['now']
+
+
+		
+		
+		dict_bonus_info,total_bonus_dict,account_type_dict,all_staff_clients = get_ib_bonus(ib,now)
+
+		if len(all_staff_clients) == 0 :
+			worksheet3.write_merge(1, 1, 0, 9,'Belum ada data', center_bold_font_style)
+		# Finish Calculate Skema Bonus FTD
+
+		row_num = 0
+		for x in all_staff_clients:
+			if x.client.magnet_id in account_type_dict:
+				row_num += 1
+				data_list = [
+					{ 'val': row_num, 'style': align_center_font_style },
+					{ 'val': x.client.nama , 'style': align_left_font_style },
+					{ 'val': x.client.email , 'style': align_left_font_style },
+					{ 'val': x.client.phone_no , 'style': align_left_font_style },
+					{ 'val': x.client.magnet_id , 'style': align_left_font_style },
+					{ 'val': account_type_dict[x.client.magnet_id] , 'style': align_left_font_style },
+				]
+
+				for col_num, data in enumerate(data_list):
+					worksheet3.write(row_num, col_num, data['val'], data['style'])
+
+
+	
+
+		count_temp = 1
+		for y in dict_bonus_info:
+			if "magneto" in y:
+				worksheet3.write(row_num+count_temp, 0, str(y.split("_")[0]) + " (" + str(y.split("_")[1])+")", center_bold_font_style)
+				worksheet3.write(row_num+count_temp, 1, dict_bonus_info[y]['bonus'], center_bold_font_style)
+				count_temp+=1
+		worksheet3.write(row_num+5, 0, 'Total Bonus Magneto', center_bold_font_style)
+		worksheet3.write(row_num+5, 1, total_bonus_dict['magneto'], center_bold_font_style)
+
+
+		count_temp = 1
+		for y in dict_bonus_info:
+			if "elektro" in y:
+				worksheet3.write(row_num+count_temp, 2, str(y.split("_")[0]) + " (" + str(y.split("_")[1])+")", center_bold_font_style)
+				worksheet3.write(row_num+count_temp, 3, dict_bonus_info[y]['bonus'], center_bold_font_style)
+				count_temp+=1
+
+		worksheet3.write(row_num+5, 2, 'Total Bonus Elektro', center_bold_font_style)
+		worksheet3.write(row_num+5, 3, total_bonus_dict['elektro'], center_bold_font_style)
+
+		count_temp = 1
+		for y in dict_bonus_info:
+			if "elastico" in y:
+				worksheet3.write(row_num+count_temp, 4, str(y.split("_")[0]) + " (" + str(y.split("_")[1])+")", center_bold_font_style)
+				worksheet3.write(row_num+count_temp, 5, dict_bonus_info[y]['bonus'], center_bold_font_style)
+				count_temp+=1
+
+		worksheet3.write(row_num+5, 4, 'Total Bonus Elastico', center_bold_font_style)
+		worksheet3.write(row_num+5, 5, total_bonus_dict['elastico'], center_bold_font_style)
+
+
+
+
+
+
 
 	if report_type == "ib_report":
 		
