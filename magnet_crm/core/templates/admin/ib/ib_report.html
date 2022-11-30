@@ -172,6 +172,15 @@
         from = $("#date-from-val").val()
         window.location = "{% url 'ib-report' ib.uid %}"+"?date="+from
     }
+
+    $("#download-btn").click(function() {
+			console.log("masuk ke download button")
+			from = $("#date-from-val").val()
+			popupWindow3 = window.open('{% url "staff-report-detail" ib.uid %}?download_excel=ib_report&date='+from);		
+	})
+
+
+
 	$("#date-pick-from").datepicker( {
 		    format: "mm-yyyy",
 		    startView: "months", 

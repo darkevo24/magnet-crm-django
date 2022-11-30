@@ -680,6 +680,23 @@ def ib_report(request,ib_uid):
 	if date != None and date != "":
 		date = date.split("-")
 		now = now.replace(year=int(date[1]),month=int(date[0]),day=1)
+
+
+	if request.GET:
+		print("MASUK REQUEST")
+		print(request.GET)
+		if 'download_excel' in request.GET:
+			print("DOWNLOAD EXCEL")
+
+			if request.GET['download_excel'] == "ib_report":
+				response = HttpResponse(content_type='application/ms-excel')
+				response['Content-Disposition'] = 'attachment; filename="Laporan_IB.xls"'
+				wb = xlwt.Workbook(encoding='utf-8')
+				ws = wb.add_sheet("Bonus IB")
+				ws = write_worksheet_report_transaction(ws, "ib_report", None,None, {'ib':ib,'now':now,'ib_staff':ib_staff})
+				wb.save(response)
+				return response
+
 	dict_bonus_info,total_bonus_dict,account_type_dict,all_staff_clients = get_ib_bonus(ib,now)
 	context = {
 		'ib':ib,
