@@ -161,10 +161,12 @@ def get_client_position(user_id):
 		print("15")
 		pos_detail = None
 		print("16")
-		# sql = "SELECT Position_ID,Volume,ContractSize FROM data_magnet.mt5_positions where login IN ("+ str(login_mt5_ids)[:-1][1:]+ ");"
-		# mycursor.execute(sql)
-		# pos_detail = mycursor.fetchall()
-		# print("test_pos",pos_detail)
+		
+		sql = "SELECT Position_ID,Volume,ContractSize FROM data_magnet.mt5_positions where login IN ("+ str(login_mt5_ids)[:-1][1:]+ ");"
+		mycursor.execute(sql)
+		pos_detail = mycursor.fetchall()
+		print("test_pos",pos_detail)
+
 		my_pos_list = None
 		if len(login_mt5_ids)>0:
 			mycursor = pos_cnx.cursor()
