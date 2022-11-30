@@ -28,7 +28,7 @@
 		{% if client_position_list|length > 0 or client.is_deposit %}
 		<div class="row">
 			<dir class="col-12" style="text-align: right;">
-				{% if client.source != 0 %}
+				{% if client_staff is not None %}
 					<a href="{% url 'client-request-own' client.id %}">
 						<button class="btn btn-warning">Request Own Client</button>
 					</a>

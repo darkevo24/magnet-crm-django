@@ -477,7 +477,9 @@ def request_own(request,id_client):
 def detail_list(request,id_client):
 	template = 'admin/client/client_detail_list.html'
 	cur_staff = Staff.objects.filter(profile__user=request.user).first()
-	
+
+	client_staff = Client_Staff.objects.filter(is_active=True,client=client,staff=cur_staff,is_own_client_suspect=False).exclude(client__source='0').first()
+
 	client = Client.objects.filter(id=id_client).first()
 
 	history_followup = Client_Followup.objects.filter(client=client)
@@ -495,6 +497,7 @@ def detail_list(request,id_client):
 	
 	context = {
 		'client': client,
+		'client_staff':client_staff,
 		'history_followup': history_followup,
 		'history_schedule': history_schedule,
 		'history_journey':history_journey,
