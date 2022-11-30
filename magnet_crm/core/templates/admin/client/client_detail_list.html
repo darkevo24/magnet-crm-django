@@ -77,7 +77,7 @@
 			</div>
 						<div class="col-12 ">
 							{% for x in pos_detail %}
-								<p>{{x}}{{x.1}}</p><br>
+								<p>{{x}} : {% widthratio x.1 x.2 1 %}</p><br>
 							{% endfor %}
 
 				<h5>Client Position</h5>
