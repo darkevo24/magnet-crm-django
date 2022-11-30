@@ -8,6 +8,13 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 register = template.Library()
 
 
+@register.filter
+def divide(value, arg):
+    try:
+        return int(value) / int(arg)
+    except (ValueError, ZeroDivisionError):
+        return None
+        
 @register.filter(name='str_currency')
 def str_currency(string_value):
 	print("string_value",string_value)
