@@ -8,7 +8,7 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 register = template.Library()
 
 
-@register.filter
+@register.filter(name='divide')
 def divide(value, arg):
     try:
         return int(value) / int(arg)
