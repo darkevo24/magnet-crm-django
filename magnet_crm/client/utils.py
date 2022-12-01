@@ -119,7 +119,7 @@ def get_client_position(user_id):
 	magnet_user_id = client.magnet_id
 	try:
 		cnx = mysql.connector.connect(
-			host="3.1.223.222",
+			host="54.151.138.128",
 			user='ivan',
 			password='MajuBersama123',
 			database='vifx'
@@ -211,7 +211,7 @@ def get_login_trades(user_id):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="3.1.223.222",
+				host="54.151.138.128",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -230,7 +230,7 @@ def get_login_trades(user_id):
 				'logins': login_mt5_ids
 			}
 			print("ini data")
-			res = requests.post('http://13.229.114.255/getLoginState', data=data)
+			res = requests.post('http://54.151.138.128/getLoginState', data=data)
 			json_data = json.loads(res.text)
 			# print(json_data['data'],"json_data['data']")
 			return json_data
@@ -245,7 +245,7 @@ def get_login_trades_history(user_id,from_date=None,to_date=None):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="3.1.223.222",
+				host="54.151.138.128",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -267,7 +267,7 @@ def get_login_trades_history(user_id,from_date=None,to_date=None):
                 'to':to_date if to_date is not None else str(now.year)+"-"+str(now.month)+'-'+str(now.day),
 			}
 			print("ini data")
-			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
+			res = requests.post('http://54.151.138.128/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print(json_data['data'],"json_data['data']")
 			return json_data
@@ -275,6 +275,20 @@ def get_login_trades_history(user_id,from_date=None,to_date=None):
 	except IntegrityError as e:
 		print(e)
 
+
+def get_ftd_list(client_ids):
+	
+	#for removing last comma
+	client_ids = client_ids[:-1]
+	#endof for
+
+	data = {
+		'userids': client_ids,
+	}
+	
+	response = requests.post('http://13.229.114.255/getUserFTD', data=data)
+	json_data = json.loads(response.text)
+	return json_data['data']
 
 def get_so_list(client_ids):
 	
@@ -288,7 +302,7 @@ def get_so_list(client_ids):
 				'userids': client_ids,
 			}
 			print("ini data")
-			res = requests.post('http://13.229.114.255/getUserFTD', data=data)
+			res = requests.post('http://54.151.138.128/getUserFTD', data=data)
 			print("ressssss",res)
 			json_data = json.loads(res.text)
 			
@@ -298,7 +312,21 @@ def get_so_list(client_ids):
 	except IntegrityError as e:
 		print(e)
 
+def get_meta5_ids(magnet_ids):
+	cnx = mysql.connector.connect(
+		host="54.151.138.128",
+		user='ivan',
+		password='MajuBersama123',
+		database='vifx'
+	)
 
+	mycursor = cnx.cursor()
+	mycursor.execute("Select id, user_id, login, account_type, rate FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_ids)[:-1][1:]+ ") ORDER BY 'id' DESC ")
+	
+	myresult = mycursor.fetchall()
+	print(myresult,"myresult")
+	# for myresult in myresult:
+	# 	login_mt5_ids.append(myresult[2])
 def get_all_clinet_bonus(clients,staff,now):
 	clients = Client.objects.filter(id__in=clients)
 		
@@ -311,7 +339,7 @@ def get_all_clinet_bonus(clients,staff,now):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="3.1.223.222",
+				host="54.151.138.128",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -355,7 +383,7 @@ def get_all_clinet_bonus(clients,staff,now):
                 'to':str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),
 			}
 			# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
-			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
+			res = requests.post('http://54.151.138.128/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print("json_data['data']",json_data['data'])
 
@@ -659,7 +687,7 @@ def get_all_clinet_bonus_new(clients,staff,now):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="3.1.223.222",
+				host="54.151.138.128",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -703,7 +731,7 @@ def get_all_clinet_bonus_new(clients,staff,now):
                 'to':str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),
 			}
 			# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
-			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
+			res = requests.post('http://54.151.138.128/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print("json_data['data']",json_data['data'])
 
@@ -1033,7 +1061,7 @@ def get_ib_bonus(ib,now):
 
 
 	cnx = mysql.connector.connect(
-		host="3.1.223.222",
+		host="54.151.138.128",
 		user='ivan',
 		password='MajuBersama123',
 		database='vifx'
