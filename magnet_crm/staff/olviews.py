@@ -20,7 +20,6 @@ from django.http import HttpResponse
 import xlwt
 from core.excel import *
 from ib.models import *
-from dateutil.relativedelta import relativedelta
 def staff_list(request):
 	template = 'admin/staff/staff_list.html'
 	staff_list = Staff.objects.filter(is_active=True).order_by('id')
@@ -718,81 +717,190 @@ def staff_report_detail(request,staff_uid):
 	staff = Staff.objects.filter(uid=staff_uid,is_active=True).first()
 
 	date = request.GET.get('date') or None
+
+
+
+	ib_staff = IB_Staff.objects.filter(is_active=True,staff__uid=staff_uid).first()
+	ib = None
+	if ib_staff is not None:
+		ib = ib_staff.ib
+
+
 	now = timezone.now()
+	if date != None and date != "":
+		date = date.split("-")
+		now = now.replace(year=int(date[1]),month=int(date[0]),day=1)
+	# print(now,"now")
+	# print(now.replace(year=int(date[1]),month=int(date[0])),"now replace",date[1])
 
-	now = now - relativedelta(months=1)
+	if request.GET:
+		print("MASUK REQUEST")
+		print(request.GET)
+		if 'download_excel' in request.GET:
+			print("DOWNLOAD EXCEL")
+			# if request.GET['download_excel'] == "1":
+			# 	response = HttpResponse(content_type='application/ms-excel')
+			# 	response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
+			# 	wb = xlwt.Workbook(encoding='utf-8')
+			# 	ws = wb.add_sheet("Scheme 1")
+			# 	ws = write_worksheet_report_transaction(ws, "scheme1", None,None, {'staff':staff,'now':now,'ws2':ws2,'ws3':ws3})
+			# 	wb.save(response)
+			# 	return response
 
-	print('now', now)
-	start_date = 1
-	end_date = None
+			# if request.GET['download_excel'] == "2":
+			# 	response = HttpResponse(content_type='application/ms-excel')
+			# 	response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
+			# 	wb = xlwt.Workbook(encoding='utf-8')
+			# 	ws = wb.add_sheet("Sheet 1")
+			# 	ws = write_worksheet_report_transaction(ws, "scheme2", None,None, {'staff':staff,'now':now})
+			# 	wb.save(response)
+			# 	return response
+
+			# if request.GET['download_excel'] == "3":
+			# 	response = HttpResponse(content_type='application/ms-excel')
+			# 	response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
+			# 	wb = xlwt.Workbook(encoding='utf-8')
+			# 	ws = wb.add_sheet("Sheet 1")
+			# 	ws = write_worksheet_report_transaction(ws, "scheme3", None,None, {'staff':staff,'now':now})
+			# 	wb.save(response)
+			# 	return response
+
+			if request.GET['download_excel'] == "combination":
+				response = HttpResponse(content_type='application/ms-excel')
+				response['Content-Disposition'] = 'attachment; filename="Laporan.xls"'
+				wb = xlwt.Workbook(encoding='utf-8')
+				ws = wb.add_sheet("Bonus FTD")
+				ws2 = wb.add_sheet("Bonus LOT")
+				ws3 = wb.add_sheet("Bonus IB")
+				ws = write_worksheet_report_transaction(ws, "scheme_combination", None,None, {'staff':staff,'now':now,'ws2':ws2,'ws3':ws3,'ib_staff':ib_staff,'ib':ib})
+				wb.save(response)
+				return response
+
+
+	all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True,client__magnet_created_at__month=now.month,client__magnet_created_at__year=now.year)
+
+
+	all_client = ""
+	client_dict = {}
+	for x in all_client_staff:
+		print("x.client.profile,x.client.magnet_id",x.client,x.client.magnet_id,x.staff.aecode)
+		all_client += x.client.magnet_id + ","
+		client_dict[x.client.magnet_id] = x.client
+	print("all_client[:-1]",all_client[:-1])
+	all_so = get_so_list(all_client[:-1])
+	temp_so = []
+	dict_temp = {
+		'data':[]
+	}
+	print("all_so",all_so)
+	if 'data' in all_so:
+		for x in all_so['data']:
+			# print("x result",x)
+			# print(x['time'])
+			if str(now.year)+"-"+str(now.month) in str(x['time']):
+				dict_temp['data'].append(x)
+
+		all_so['data'] = dict_temp['data']
+
+	total_client = 0
+	if 'data' in all_so:
+		total_client = len(all_so['data'])
+
+
+	# Calculate Skema Bonus FTD
+	amount = 0 
+	if 'data' in all_so:
+		for y in all_so['data']:
+			print("y['ftd']",y['ftd'])
+			amount += int(float(y['ftd']))
 
 	
-	if date == None:
-		calculated_year = now.year
-		calculated_month = now.month
-		end_date = calendar.monthrange(calculated_year, calculated_month)[1]
+	bonus_per_ft = 0
+	if 'data' in all_so:
+		for y in all_so['data']:
+			if total_client > 15 and amount > 15000:
+				bonus_per_ft = 35
+			elif total_client >= 10 and total_client <= 14 and amount > 5000:
+				bonus_per_ft = 15
+			elif total_client >= 5 and total_client <= 9 and amount > 2500:
+				bonus_per_ft = 10
+	# Finish Calculate Skema Bonus FTD
 
+	# Bonus OR Marketing
+	all_client_staff = Client_Staff.objects.filter(staff=staff,is_active=True)
+	for x in all_client_staff:
+		client_dict[x.client.magnet_id] = x.client
 
-	#calculate ftd
-	client_staff_list = Client_Staff.objects.filter(
-		staff=staff,
-		client__magnet_created_at__month=now.month,
-		client__magnet_created_at__year=now.year,
-
-		is_active=True,).exclude(client__source_detail_1=2,).prefetch_related('client')
-
-	meta_ids_for_api = ''
-	for client_staff in client_staff_list:
-		meta_ids_for_api += ( client_staff.client.magnet_id + ',')
-
-	client_ftd_list = get_ftd_list(meta_ids_for_api)
-	client_ftd_total_usd = 0
-	for client_ftd in client_ftd_list:
-		client_ftd_total_usd += Decimal(client_ftd['ftd'])
-	#rumus 
-	bonus_per_ftd = 0
-	client_ftd_count = len(client_ftd_list)
-	staff_ftd_bonus = 0 
-
-	#ini buat test
-	# client_ftd_count = 16
-	# client_ftd_total_usd = Decimal(5000)
-	#endof test
-
-	if  client_ftd_count > 15 and client_ftd_total_usd >= Decimal(15000):
-		print('tier 3')
-		staff_ftd_bonus = client_ftd_count * 35
-	elif client_ftd_count > 9  and client_ftd_total_usd >= Decimal(5000):
-		print('tier 2')
-		staff_ftd_bonus = client_ftd_count * 15
-	elif client_ftd_count > 4 and client_ftd_total_usd >= Decimal(2500) :
-		print('tier 1')
-		staff_ftd_bonus = client_ftd_count * 10
-
-	# print('staff_ftd_bonus', staff_ftd_bonus)
+	all_clinet_instance = Client.objects.filter(id__in=all_client_staff.values_list('client',flat=True))
+	print(all_clinet_instance,"all_clinet_instance")
+	total_bonus = 0
+	total_bonus_pribadi = 0
+	total_bonus_3 = 0
+	display_bonus_dict = {}
+	display_bonus_3_dict = {}
+	client_user_id_login_dict = {}
+	if len(all_clinet_instance) > 0 :
+		total_bonus,total_bonus_pribadi,total_bonus_3,display_bonus_dict,display_bonus_3_dict,client_user_id_login_dict,info_account_dict,rate_dict,client_acc_age_dict,info_bonus_formula_dict,info_login_account_dict = get_all_clinet_bonus_new(all_clinet_instance,staff,now )
 
 
 
 
-	#lot data kantor
-
-	#data 0-2bulan
-	last_two_months_date = now - relativedelta(months=2)
-	last_two_monthsend_date = calendar.monthrange(calculated_year, calculated_month)[0]
-	last_two_months_date = datetime(last_two_months_date.year, last_two_months_date.month, 1)
-	print(now, 'last_two_months_date', last_two_months_date)
+	# IB REPORT
 	
-	two_months_bonus_dict = calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date)
-
-
-
-	more_than_two_months_bonus_dict = calculate_lot_more_than_two_months_bonus(staff, last_two_months_date, now, end_date)
-	print('more_than_two_months_bonus_dict', more_than_two_months_bonus_dict)
-	return None
-	#<2 months
-
-
 	
 
-	return None
+	date = request.GET.get('date') or None
+	# now = timezone.now()
+	# if date != None and date != "":
+	# 	date = date.split("-")
+	# 	now = now.replace(year=int(date[1]),month=int(date[0]),day=1)
+	dict_bonus_info,total_bonus_dict,account_type_dict,all_staff_clients = get_ib_bonus(ib,now)
+	context = {
+		'ib':ib,
+		'ib_list': ib_list,
+		'ib_staff':ib_staff,
+		'menu':'ib_list',
+		'account_type_dict':account_type_dict,
+		'all_staff_clients':all_staff_clients,
+		'dict_bonus_info':dict_bonus_info,
+		'total_bonus_dict':total_bonus_dict,
+	}
+
+
+
+	print("client_user_id_login_dict",client_user_id_login_dict)
+	context = {
+		'staff':staff,
+		'info_account_dict':info_account_dict,
+		'staff_list': staff_list,
+		'menu':'staff_list',
+		'all_so': all_so['data'] if 'data' in all_so else None,
+		'bonus_per_ft': bonus_per_ft,
+		'total_amount' : amount,
+		'total_client' :  total_client,
+		'client_dict':client_dict,
+		'client_user_id_login_dict':client_user_id_login_dict,
+		'rate_dict':rate_dict,
+		'total_bonus':round(total_bonus, 2),
+		'total_bonus_pribadi':round(total_bonus_pribadi, 2),
+		'total_bonus_3':round(total_bonus_3, 2),
+		'display_bonus_dict':display_bonus_dict,
+		'display_bonus_3_dict':display_bonus_3_dict,
+		'client_acc_age_dict':client_acc_age_dict,
+		'info_bonus_formula_dict':info_bonus_formula_dict,
+		'info_login_account_dict':info_login_account_dict,
+
+
+
+		'ib':ib,
+		'ib_list': ib_list,
+		'ib_staff':ib_staff,
+		'account_type_dict':account_type_dict,
+		'all_staff_clients':all_staff_clients,
+		'dict_bonus_info':dict_bonus_info,
+		'total_bonus_dict':total_bonus_dict,
+
+
+
+	}
 	return render(request,template,context=context)

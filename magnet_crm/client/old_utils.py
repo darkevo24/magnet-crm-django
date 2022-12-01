@@ -119,7 +119,7 @@ def get_client_position(user_id):
 	magnet_user_id = client.magnet_id
 	try:
 		cnx = mysql.connector.connect(
-			host="54.151.138.128",
+			host="3.1.223.222",
 			user='ivan',
 			password='MajuBersama123',
 			database='vifx'
@@ -130,12 +130,9 @@ def get_client_position(user_id):
 		myresult = mycursor.fetchall()
 		for myresult in myresult:
 			login_mt5_ids.append(myresult[2])
-
-
 		print('connect to another db')
-		
 		pos_cnx = mysql.connector.connect(
-				host="54.255.131.102",
+				host="54.151.138.128",
 				user='ivan',
 				password='Keluarga999',
 				database='position'
@@ -161,7 +158,7 @@ def get_client_position(user_id):
 		pos_detail = mycursor.fetchall()
 		print("test_pos",pos_detail)
 
-		my_pos_list = []
+		my_pos_list = None
 		if len(login_mt5_ids)>0:
 			mycursor = pos_cnx.cursor()
 			in_params = ','.join(['%s'] * len(login_mt5_ids))
@@ -214,7 +211,7 @@ def get_login_trades(user_id):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="54.151.138.128",
+				host="3.1.223.222",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -233,7 +230,7 @@ def get_login_trades(user_id):
 				'logins': login_mt5_ids
 			}
 			print("ini data")
-			res = requests.post('http://54.151.138.128/getLoginState', data=data)
+			res = requests.post('http://13.229.114.255/getLoginState', data=data)
 			json_data = json.loads(res.text)
 			# print(json_data['data'],"json_data['data']")
 			return json_data
@@ -248,7 +245,7 @@ def get_login_trades_history(user_id,from_date=None,to_date=None):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="54.151.138.128",
+				host="3.1.223.222",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -270,7 +267,7 @@ def get_login_trades_history(user_id,from_date=None,to_date=None):
                 'to':to_date if to_date is not None else str(now.year)+"-"+str(now.month)+'-'+str(now.day),
 			}
 			print("ini data")
-			res = requests.post('http://54.151.138.128/getLoginsTrades', data=data)
+			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print(json_data['data'],"json_data['data']")
 			return json_data
@@ -278,20 +275,6 @@ def get_login_trades_history(user_id,from_date=None,to_date=None):
 	except IntegrityError as e:
 		print(e)
 
-
-def get_ftd_list(client_ids):
-	
-	#for removing last comma
-	client_ids = client_ids[:-1]
-	#endof for
-
-	data = {
-		'userids': client_ids,
-	}
-	
-	response = requests.post('http://13.229.114.255/getUserFTD', data=data)
-	json_data = json.loads(response.text)
-	return json_data['data']
 
 def get_so_list(client_ids):
 	
@@ -305,7 +288,7 @@ def get_so_list(client_ids):
 				'userids': client_ids,
 			}
 			print("ini data")
-			res = requests.post('http://54.151.138.128/getUserFTD', data=data)
+			res = requests.post('http://13.229.114.255/getUserFTD', data=data)
 			print("ressssss",res)
 			json_data = json.loads(res.text)
 			
@@ -315,463 +298,7 @@ def get_so_list(client_ids):
 	except IntegrityError as e:
 		print(e)
 
-def get_meta5_ids(magnet_ids):
-	cnx = mysql.connector.connect(
-		host="54.151.138.128",
-		user='ivan',
-		password='MajuBersama123',
-		database='vifx'
-	)
 
-	mycursor = cnx.cursor()
-	mycursor.execute("Select id, user_id, login, account_type, rate FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_ids)[:-1][1:]+ ") ORDER BY 'id' DESC ")
-	
-	myresult = mycursor.fetchall()
-	return myresult
-	print("myresult", myresult)
-	# for myresult in myresult:
-	# 	login_mt5_ids.append(myresult[2])
-
-def calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date):
-
-	client_staff_all_list = Client_Staff.objects.filter(
-		staff=staff,
-		client__magnet_created_at__gte= last_two_months_date,
-		is_active=True,).exclude(client__source_detail_1=2,).prefetch_related('client')
-	print(client_staff_all_list.count(), 'count')
-
-	meta_ids_lot_for_api = ''
-	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-
-	
-	#get meta5 ids
-	user_login_details = get_meta5_ids(meta_ids_lot_for_api)
-	meta5_ids = []
-	user_magnet_detail_dict = {}
-	mt5_account_type_dict = {}
-	for user_login_detail in user_login_details:
-		#user_login_detail[1] = magnet_id
-		user_magnet_id = user_login_detail[1]
-		if  user_magnet_id not in user_magnet_detail_dict:
-			user_magnet_detail_dict[user_magnet_id] = []
-		temp_dict = {}
-		temp_dict['rate'] = user_login_detail[4]
-		temp_dict['product_name'] = user_login_detail[3]
-		temp_dict['cabinet_id'] = user_login_detail[0]
-		temp_dict['meta_id'] = user_login_detail[2]
-
-		user_magnet_detail_dict[user_magnet_id].append(temp_dict)
-		loop_meta_id = str(user_login_detail[2])
-		if user_login_detail[2] != None:
-			meta5_ids.append(loop_meta_id)
-			if loop_meta_id not in mt5_account_type_dict:
-				mt5_account_type_dict[loop_meta_id] = {}
-			mt5_account_type_dict[loop_meta_id]['account_type'] = user_login_detail[3]
-			mt5_account_type_dict[loop_meta_id]['rate'] = user_login_detail[4]
-	# print('__________')
-	# print(meta5_ids)
-	# print(user_magnet_detail_dict)
-
-	meta5_id_string_for_post = ''
-	for meta5_id in meta5_ids:
-		meta5_id_string_for_post +=  ( str(meta5_id) + ',' )
-	data_post_for_get_login_trades = {
-		'logins': meta5_id_string_for_post[:-1],
-		'from': str(now.year)+"-"+str(now.month)+"-"+"01",
-        'to':str(now.year)+"-"+str(now.month)+"-"+str(end_date),
-	}
-	print(data_post_for_get_login_trades)
-	
-	# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
-	res = requests.post('http://13.229.114.255/getLoginsTrades', data=data_post_for_get_login_trades)
-	
-	json_data = json.loads(res.text)
-	last_two_months_account_trades = json_data['data']
-	total_lot_dict = {}
-	print(mt5_account_type_dict)
-	
-	for last_two_months_account_trade in last_two_months_account_trades:
-		# print('account_type',)
-		account_type = mt5_account_type_dict[last_two_months_account_trade['login']]['account_type']
-
-		#buat testing
-		# account_type = 'magneto'
-
-		str_rate = mt5_account_type_dict[last_two_months_account_trade['login']]['rate']
-		loop_lot_decimal = float(last_two_months_account_trade['lot'])
-		loop_rate_decimal = float(str_rate)
-		if account_type not in total_lot_dict:
-			total_lot_dict[account_type] = {}
-		if str_rate not in total_lot_dict[account_type]:
-			total_lot_dict[account_type][str_rate] = {}
-			total_lot_dict[account_type][str_rate]['total_lot'] = 0
-			total_lot_dict[account_type][str_rate]['total_idr'] = 0
-		total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
-		# print(type(loop_lot_decimal), type(loop_rate_decimal))
-		# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
-
-	
-
-
-	# print(last_two_months_account_trades)
-	print(total_lot_dict)
-	for account_type, rate_trade_dict in total_lot_dict.items():
-		for rate, bonus_dict in rate_trade_dict.items():
-
-			loop_total_lot = total_lot_dict[account_type][rate]['total_lot']
-			decimal_rate = float(rate)
-			if account_type == 'elastico':
-
-				#buat testing
-				# total_lot_dict[account_type][rate]['total_lot'] = 30.001
-
-				
-				if loop_total_lot < 29.99:
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 1 )
-				else:
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 1.75 )
-			elif account_type == 'elektro':
-				if loop_total_lot < 49.99:
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 0.75 )
-				else:
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 1 )
-			elif account_type == 'magneto':
-				if loop_total_lot < 99.99:
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 2 )
-				else:
-					client_staff_all_list = Client_Staff.objects.filter(
-		staff=staff,
-		client__magnet_created_at__gte= last_two_months_date,
-		is_active=True,).exclude(client__source_detail_1=2,).prefetch_related('client')
-	print(client_staff_all_list.count(), 'count')
-
-	meta_ids_lot_for_api = ''
-	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-
-	
-	#get meta5 ids
-	user_login_details = get_meta5_ids(meta_ids_lot_for_api)
-	meta5_ids = []
-	user_magnet_detail_dict = {}
-	mt5_account_type_dict = {}
-	for user_login_detail in user_login_details:
-		#user_login_detail[1] = magnet_id
-		user_magnet_id = user_login_detail[1]
-		if  user_magnet_id not in user_magnet_detail_dict:
-			user_magnet_detail_dict[user_magnet_id] = []
-		temp_dict = {}
-		temp_dict['rate'] = user_login_detail[4]
-		temp_dict['product_name'] = user_login_detail[3]
-		temp_dict['cabinet_id'] = user_login_detail[0]
-		temp_dict['meta_id'] = user_login_detail[2]
-
-		user_magnet_detail_dict[user_magnet_id].append(temp_dict)
-		loop_meta_id = str(user_login_detail[2])
-		if user_login_detail[2] != None:
-			meta5_ids.append(loop_meta_id)
-			if loop_meta_id not in mt5_account_type_dict:
-				mt5_account_type_dict[loop_meta_id] = {}
-			mt5_account_type_dict[loop_meta_id]['account_type'] = user_login_detail[3]
-			mt5_account_type_dict[loop_meta_id]['rate'] = user_login_detail[4]
-	# print('__________')
-	# print(meta5_ids)
-	# print(user_magnet_detail_dict)
-
-	meta5_id_string_for_post = ''
-	for meta5_id in meta5_ids:
-		meta5_id_string_for_post +=  ( str(meta5_id) + ',' )
-	data_post_for_get_login_trades = {
-		'logins': meta5_id_string_for_post[:-1],
-		'from': str(now.year)+"-"+str(now.month)+"-"+"01",
-        'to':str(now.year)+"-"+str(now.month)+"-"+str(end_date),
-	}
-	print(data_post_for_get_login_trades)
-	
-	# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
-	res = requests.post('http://13.229.114.255/getLoginsTrades', data=data_post_for_get_login_trades)
-	
-	json_data = json.loads(res.text)
-	last_two_months_account_trades = json_data['data']
-	total_lot_dict = {}
-	print(mt5_account_type_dict)
-	
-	for last_two_months_account_trade in last_two_months_account_trades:
-		# print('account_type',)
-		account_type = mt5_account_type_dict[last_two_months_account_trade['login']]['account_type']
-
-		#buat testing
-		# account_type = 'magneto'
-
-		str_rate = mt5_account_type_dict[last_two_months_account_trade['login']]['rate']
-		loop_lot_decimal = float(last_two_months_account_trade['lot'])
-		loop_rate_decimal = float(str_rate)
-		if account_type not in total_lot_dict:
-			total_lot_dict[account_type] = {}
-		if str_rate not in total_lot_dict[account_type]:
-			total_lot_dict[account_type][str_rate] = {}
-			total_lot_dict[account_type][str_rate]['total_lot'] = 0
-			total_lot_dict[account_type][str_rate]['total_idr'] = 0
-		total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
-		# print(type(loop_lot_decimal), type(loop_rate_decimal))
-		# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
-
-	
-
-
-	# print(last_two_months_account_trades)
-	print(total_lot_dict)
-	for account_type, rate_trade_dict in total_lot_dict.items():
-		for rate, bonus_dict in rate_trade_dict.items():
-
-			loop_total_lot = total_lot_dict[account_type][rate]['total_lot']
-			decimal_rate = float(rate)
-			if account_type == 'elastico':
-
-				#buat testing
-				# total_lot_dict[account_type][rate]['total_lot'] = 30.001
-
-				
-				if loop_total_lot < 29.99:
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 1 )
-				else:
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 1.75 )
-			elif account_type == 'elektro':
-				if loop_total_lot < 49.99:
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 0.75 )
-				else:
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 1 )
-			elif account_type == 'magneto':
-				if loop_total_lot < 99.99:
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 2 )
-				else:
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 3 )
-	print('after')
-	print(total_lot_dict)
-	return total_lot_dict
-
-def calculate_lot_more_than_two_months_bonus(staff, last_two_months_date, now, end_date):
-	client_staff_all_list = Client_Staff.objects.filter(
-		staff=staff,
-		client__magnet_created_at__lt= last_two_months_date,
-		is_active=True,).exclude(client__source_detail_1=2,).prefetch_related('client')
-	print(client_staff_all_list.count(), 'count')
-
-	meta_ids_lot_for_api = ''
-	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-
-	
-	
-	if client_staff_all_list.count() > 0:
-		#get meta5 ids
-		user_login_details = get_meta5_ids(meta_ids_lot_for_api)
-		meta5_ids = []
-		user_magnet_detail_dict = {}
-		mt5_account_type_dict = {}
-		for user_login_detail in user_login_details:
-			#user_login_detail[1] = magnet_id
-			user_magnet_id = user_login_detail[1]
-			if  user_magnet_id not in user_magnet_detail_dict:
-				user_magnet_detail_dict[user_magnet_id] = []
-			temp_dict = {}
-			temp_dict['rate'] = user_login_detail[4]
-			temp_dict['product_name'] = user_login_detail[3]
-			temp_dict['cabinet_id'] = user_login_detail[0]
-			temp_dict['meta_id'] = user_login_detail[2]
-
-			user_magnet_detail_dict[user_magnet_id].append(temp_dict)
-			loop_meta_id = str(user_login_detail[2])
-			if user_login_detail[2] != None:
-				meta5_ids.append(loop_meta_id)
-				if loop_meta_id not in mt5_account_type_dict:
-					mt5_account_type_dict[loop_meta_id] = {}
-				mt5_account_type_dict[loop_meta_id]['account_type'] = user_login_detail[3]
-				mt5_account_type_dict[loop_meta_id]['rate'] = user_login_detail[4]
-		# print('__________')
-		# print(meta5_ids)
-		# print(user_magnet_detail_dict)
-
-		meta5_id_string_for_post = ''
-		for meta5_id in meta5_ids:
-			meta5_id_string_for_post +=  ( str(meta5_id) + ',' )
-		data_post_for_get_login_trades = {
-			'logins': meta5_id_string_for_post[:-1],
-			'from': str(now.year)+"-"+str(now.month)+"-"+"01",
-	        'to':str(now.year)+"-"+str(now.month)+"-"+str(end_date),
-		}
-		print(data_post_for_get_login_trades)
-		
-		# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
-		res = requests.post('http://13.229.114.255/getLoginsTrades', data=data_post_for_get_login_trades)
-		
-		json_data = json.loads(res.text)
-		last_two_months_account_trades = json_data['data']
-		total_lot_dict = {}
-		print(mt5_account_type_dict)
-		
-		for last_two_months_account_trade in last_two_months_account_trades:
-			# print('account_type',)
-			account_type = mt5_account_type_dict[last_two_months_account_trade['login']]['account_type']
-
-			#buat testing
-			# account_type = 'magneto'
-
-			str_rate = mt5_account_type_dict[last_two_months_account_trade['login']]['rate']
-			loop_lot_decimal = float(last_two_months_account_trade['lot'])
-			loop_rate_decimal = float(str_rate)
-			if account_type not in total_lot_dict:
-				total_lot_dict[account_type] = {}
-			if str_rate not in total_lot_dict[account_type]:
-				total_lot_dict[account_type][str_rate] = {}
-				total_lot_dict[account_type][str_rate]['total_lot'] = 0
-				total_lot_dict[account_type][str_rate]['total_idr'] = 0
-			total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
-			# print(type(loop_lot_decimal), type(loop_rate_decimal))
-			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
-
-		
-
-
-		# print(last_two_months_account_trades)
-		print(total_lot_dict)
-		for account_type, rate_trade_dict in total_lot_dict.items():
-			for rate, bonus_dict in rate_trade_dict.items():
-
-				loop_total_lot = total_lot_dict[account_type][rate]['total_lot']
-				decimal_rate = float(rate)
-				if account_type == 'elastico':
-
-					#buat testing
-					# total_lot_dict[account_type][rate]['total_lot'] = 30.001
-
-					
-					if loop_total_lot < 29.99:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 1 )
-					else:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 1.75 )
-				elif account_type == 'elektro':
-					if loop_total_lot < 49.99:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 0.75 )
-					else:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 1 )
-				elif account_type == 'magneto':
-					if loop_total_lot < 99.99:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 2 )
-					else:
-						client_staff_all_list = Client_Staff.objects.filter(
-			staff=staff,
-			client__magnet_created_at__gte= last_two_months_date,
-			is_active=True,).exclude(client__source_detail_1=2,).prefetch_related('client')
-		print(client_staff_all_list.count(), 'count')
-
-		meta_ids_lot_for_api = ''
-		for client_staff in client_staff_all_list:
-			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-
-		
-		#get meta5 ids
-		user_login_details = get_meta5_ids(meta_ids_lot_for_api)
-		meta5_ids = []
-		user_magnet_detail_dict = {}
-		mt5_account_type_dict = {}
-		for user_login_detail in user_login_details:
-			#user_login_detail[1] = magnet_id
-			user_magnet_id = user_login_detail[1]
-			if  user_magnet_id not in user_magnet_detail_dict:
-				user_magnet_detail_dict[user_magnet_id] = []
-			temp_dict = {}
-			temp_dict['rate'] = user_login_detail[4]
-			temp_dict['product_name'] = user_login_detail[3]
-			temp_dict['cabinet_id'] = user_login_detail[0]
-			temp_dict['meta_id'] = user_login_detail[2]
-
-			user_magnet_detail_dict[user_magnet_id].append(temp_dict)
-			loop_meta_id = str(user_login_detail[2])
-			if user_login_detail[2] != None:
-				meta5_ids.append(loop_meta_id)
-				if loop_meta_id not in mt5_account_type_dict:
-					mt5_account_type_dict[loop_meta_id] = {}
-				mt5_account_type_dict[loop_meta_id]['account_type'] = user_login_detail[3]
-				mt5_account_type_dict[loop_meta_id]['rate'] = user_login_detail[4]
-		# print('__________')
-		# print(meta5_ids)
-		# print(user_magnet_detail_dict)
-
-		meta5_id_string_for_post = ''
-		for meta5_id in meta5_ids:
-			meta5_id_string_for_post +=  ( str(meta5_id) + ',' )
-		data_post_for_get_login_trades = {
-			'logins': meta5_id_string_for_post[:-1],
-			'from': str(now.year)+"-"+str(now.month)+"-"+"01",
-	        'to':str(now.year)+"-"+str(now.month)+"-"+str(end_date),
-		}
-		print(data_post_for_get_login_trades)
-		
-		# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
-		res = requests.post('http://13.229.114.255/getLoginsTrades', data=data_post_for_get_login_trades)
-		
-		json_data = json.loads(res.text)
-		last_two_months_account_trades = json_data['data']
-		total_lot_dict = {}
-		print(mt5_account_type_dict)
-		
-		for last_two_months_account_trade in last_two_months_account_trades:
-			# print('account_type',)
-			account_type = mt5_account_type_dict[last_two_months_account_trade['login']]['account_type']
-
-			#buat testing
-			# account_type = 'magneto'
-
-			str_rate = mt5_account_type_dict[last_two_months_account_trade['login']]['rate']
-			loop_lot_decimal = float(last_two_months_account_trade['lot'])
-			loop_rate_decimal = float(str_rate)
-			if account_type not in total_lot_dict:
-				total_lot_dict[account_type] = {}
-			if str_rate not in total_lot_dict[account_type]:
-				total_lot_dict[account_type][str_rate] = {}
-				total_lot_dict[account_type][str_rate]['total_lot'] = 0
-				total_lot_dict[account_type][str_rate]['total_idr'] = 0
-			total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
-			# print(type(loop_lot_decimal), type(loop_rate_decimal))
-			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
-
-		
-
-
-		# print(last_two_months_account_trades)
-		print(total_lot_dict)
-		for account_type, rate_trade_dict in total_lot_dict.items():
-			for rate, bonus_dict in rate_trade_dict.items():
-
-				loop_total_lot = total_lot_dict[account_type][rate]['total_lot']
-				decimal_rate = float(rate)
-				if account_type == 'elastico':
-
-					#buat testing
-					# total_lot_dict[account_type][rate]['total_lot'] = 30.001
-
-					
-					if loop_total_lot < 29.99:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 0.5 )
-					else:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 0.75 )
-				elif account_type == 'elektro':
-					if loop_total_lot < 49.99:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 0.25 )
-					else:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 0.5 )
-				elif account_type == 'magneto':
-					if loop_total_lot < 99.99:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 1 )
-					else:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * 2 )
-		print('after')
-		print(total_lot_dict)
-		return total_lot_dict
-	else:
-		return {'status' : None}
 def get_all_clinet_bonus(clients,staff,now):
 	clients = Client.objects.filter(id__in=clients)
 		
@@ -784,7 +311,7 @@ def get_all_clinet_bonus(clients,staff,now):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="54.151.138.128",
+				host="3.1.223.222",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -828,7 +355,7 @@ def get_all_clinet_bonus(clients,staff,now):
                 'to':str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),
 			}
 			# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
-			res = requests.post('http://54.151.138.128/getLoginsTrades', data=data)
+			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print("json_data['data']",json_data['data'])
 
@@ -1132,7 +659,7 @@ def get_all_clinet_bonus_new(clients,staff,now):
 		with transaction.atomic():
 
 			cnx = mysql.connector.connect(
-				host="54.151.138.128",
+				host="3.1.223.222",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -1176,7 +703,7 @@ def get_all_clinet_bonus_new(clients,staff,now):
                 'to':str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),
 			}
 			# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
-			res = requests.post('http://54.151.138.128/getLoginsTrades', data=data)
+			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data)
 			json_data = json.loads(res.text)
 			# print("json_data['data']",json_data['data'])
 
@@ -1493,12 +1020,8 @@ def get_all_clinet_bonus_new(clients,staff,now):
 def get_ib_bonus(ib,now):
 	ib_staff = IB_Staff.objects.filter(is_active=True,ib=ib).first()
 
-	staff = None
-	staff_supervisor = None
-	
-	if ib_staff is not None:
-		staff = ib_staff.staff
-		staff_supervisor = ib_staff.staff.staff_parent
+	staff = ib_staff.staff
+	staff_supervisor = ib_staff.staff.staff_parent
 
 	# now = timezone.now()
 	all_staff_clients = Client_Staff.objects.filter(is_active=True,staff=staff,created_at__year=now.year,created_at__month=now.month).exclude(client__magnet_id=None)
@@ -1506,7 +1029,7 @@ def get_ib_bonus(ib,now):
 
 
 	cnx = mysql.connector.connect(
-		host="54.151.138.128",
+		host="3.1.223.222",
 		user='ivan',
 		password='MajuBersama123',
 		database='vifx'
