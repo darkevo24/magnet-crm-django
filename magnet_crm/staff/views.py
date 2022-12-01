@@ -741,11 +741,17 @@ def staff_report_detail(request,staff_uid):
 
 		is_active=True,).exclude(client__source_detail_1=2,).prefetch_related('client')
 
+	client_ftd_user_magnet_dict = {}
+
 	meta_ids_for_api = ''
 	for client_staff in client_staff_list:
 		meta_ids_for_api += ( client_staff.client.magnet_id + ',')
 
+		if client_staff.client.magnet_id not in client_ftd_user_magnet_dict:
+			client_ftd_user_magnet_dict[client_staff.client.magnet_id] = client_staff.client
+
 	client_ftd_list = get_ftd_list(meta_ids_for_api)
+	print('client_ftd_list', client_ftd_list)
 	client_ftd_total_usd = 0
 	for client_ftd in client_ftd_list:
 		client_ftd_total_usd += Decimal(client_ftd['ftd'])
@@ -771,28 +777,38 @@ def staff_report_detail(request,staff_uid):
 
 	# print('staff_ftd_bonus', staff_ftd_bonus)
 
-
-
-
 	#lot data kantor
 
 	#data 0-2bulan
 	last_two_months_date = now - relativedelta(months=2)
 	last_two_monthsend_date = calendar.monthrange(calculated_year, calculated_month)[0]
 	last_two_months_date = datetime(last_two_months_date.year, last_two_months_date.month, 1)
-	print(now, 'last_two_months_date', last_two_months_date)
 	
-	two_months_bonus_dict = calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date)
-
-
-
-	more_than_two_months_bonus_dict = calculate_lot_more_than_two_months_bonus(staff, last_two_months_date, now, end_date)
-	print('more_than_two_months_bonus_dict', more_than_two_months_bonus_dict)
-	return None
-	#<2 months
-
-
 	
+	two_months_bonus_dict, two_months_trades, two_months_user_magnet_dict = calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date)
+	#data > 2bulan
+	more_two_months_bonus_dict, more_two_months_trades, more_two_months_user_magnet_dict = calculate_lot_more_than_two_months_bonus(staff, last_two_months_date, now, end_date)
+	print('more than more_two_months_bonus_dict', more_two_months_trades)
+	print('more than more_two_months_trades', more_two_months_trades)
+	print('more than more_two_months_user_magnet_dict', more_two_months_user_magnet_dict)
 
-	return None
+	data_pribadi_months_bonus_dict, data_pribadi_trades, data_pribadi_user_magnet_dict = calculate_data_pribadi_bonus(staff, now, end_date)
+	#data > pribadi
+	# pribadi_bonus_dict = calculate_data_pribadi_bonus(staff, now, end_date)
+
+	# print('two_months_bonus_dict', two_months_bonus_dict)
+	context = {}
+	context['staff'] = staff
+	context['staff_ftd_bonus'] = staff_ftd_bonus
+	context['client_ftd_count'] = client_ftd_count
+	context['client_ftd_total_usd'] = client_ftd_total_usd
+	context['client_ftd_list'] = client_ftd_list
+	context['client_ftd_user_magnet_dict'] = client_ftd_user_magnet_dict
+	context['two_months_bonus_dict'] = two_months_bonus_dict
+	context['two_months_trades'] = two_months_trades
+	context['two_months_user_magnet_dict'] = two_months_user_magnet_dict
+	context['more_two_months_bonus_dict'] = more_two_months_bonus_dict
+	context['more_two_months_trades'] = more_two_months_trades
+	context['more_two_months_user_magnet_dict'] = more_two_months_user_magnet_dict
+
 	return render(request,template,context=context)

@@ -1,0 +1,656 @@
+
+{% extends 'base/head.html' %}
+{% load core_extras %}
+{% block content %}
+
+<style type="text/css">
+	#table_followup tr{
+		height: 80px
+	}
+
+	#table_schedule tr{
+		height: 80px
+	}
+	.gadget_green{
+        white-space: nowrap;background-color: #e8f5eb;border-radius: 10px;position: relative;   
+    }
+</style>
+<div class="row">
+	<!-- Typeahead -->
+	<div class="card col-12">
+		
+	<div class="card-header">
+		<h5 class="card-title">Client Detail & Info</h5>
+	</div>
+
+	<div class="card-body">
+		<div class="row">
+			<dir class="col" >
+				Staff : {{staff}}<br>
+				Position : {{staff.staff_level.level_name}}
+			</dir>
+			<dir class="col text-right" >
+				<a class="btn btn-success" id="download-btn">Export</a>
+			</dir>
+		</div>	
+		<form method="POST" id="export_form">
+			{% csrf_token %}
+			<input hidden id="download_param" name="download_excel" value="0"> 
+		</form>
+
+		<div class="row">
+			<div class="col">
+                <h5 class="p-0 m-0">Date</h5>
+                <div class='input-group date datepicker' id='date-pick-from' onchange="change_filter()">
+                  <input type='text' name="tgl" id="date-from-val" class="form-control" value="{{request.GET.date}}" />
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+                </div>
+            </div>
+		</div>	
+		{% if client_position_list|length > 0 or client.is_deposit %}
+		<div class="row">
+			<dir class="col-12" style="text-align: right;">
+				<a href="{% url 'client-position-history' client.id %}">
+					<button class="btn green-btn">Client History</button>
+				</a>
+				<!-- <a href="{% url 'client-position' client.id %}">
+					<button class="btn green-btn">Client Position</button>
+				</a> -->
+			</dir>
+		</div>	
+		{% endif %}
+		<div class="row">
+
+			{% if staff.staff_level.level_name == "Financial Consultant" %}
+			<div class="col-12">
+				<div class="row mb-3" style="line-height: 1">
+                        <div class="col py-2 px-3 " >
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_client|default:"-"}}</h1>
+                                <p class="mb-0">Total Client</p>
+                            </div>
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_amount|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Amount FTD</p>
+                            </div>
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{bonus_per_ft|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Bonus Per Ft</p>
+                            </div>
+                        </div>
+                    </div>
+			</div >
+
+			<div class="col-12 " style="border-bottom: 1px solid black;">
+				<h5>BONUS FTD</h5>
+					<div class="card p-2" style="">
+
+						<table class="table" id="table_position" style="max-height: 100vh">
+						  <thead>
+	                            <tr>
+	                                <th scope="col">#</th>
+	                                <th scope="col">Name</th>
+	                                <th scope="col">userid</th>
+	                                <th scope="col">login</th>
+	                                <th scope="col">ftd</th>
+	                                <th scope="col">time</th>
+	                            </tr>
+	                        </thead>
+						  <tbody>
+                            {% for x in all_so %}
+	                            
+	                                <tr>
+	                                    <th scope="row">{{forloop.counter}}</th>
+	                                    <th scope="row">{{client_dict|dict_get:x.userid}}</th>
+	                                    <th scope="row">{{x.userid}}</th>
+	                                    <td>
+	                                       {{x.login}}
+	                                    </td>
+	                                    <td>
+	                                        {{x.ftd}}
+	                                    </td>
+	                                    <td>
+	                                        {{x.time}}
+	                                    </td>
+	                                </tr>
+	                        {% endfor %}
+                        
+                            </tbody>
+						</table>
+					</div>
+			</div>
+			{% endif %}
+
+
+			{% if staff.staff_level.level_name != "IB" %}
+			<div class="col-12">
+				<div class="row mb-3" style="line-height: 1">
+                        <div class="col py-2 px-3 " >
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Bonus</p>
+                            </div>
+                            
+                    	</div>    	
+				</div>
+				<div class="row mb-3" style="line-height: 1">
+                        <div class="col-12 py-2 px-3 " >
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_less'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Elastico (Less than 2 Month)</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_less'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Elastico (Less than 2 Month)</p>
+                            </div>
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto_less'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Magneto (Less than 2 Month)</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto_less'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Magneto (Less than 2 Month)</p>
+                            </div>
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro_less'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Electro (Less than 2 Month)</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro_less'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Electro (Less than 2 Month)</p>
+                            </div>
+                    	</div>    	
+
+                    	<div class="col-12 py-2 px-3 " >
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_more'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Elastico (More than 2 Month)</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_more'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Elastico (More than 2 Month)</p>
+                            </div>
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto_more'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Magneto (More than 2 Month)</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto_more'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Magneto (More than 2 Month)</p>
+                            </div>
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro_more'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Electro (More than 2 Month)</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro_more'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Tier Electro (More than 2 Month)</p>
+                            </div>
+                    	</div>    	
+				</div>
+				<div class="col-12 " style="border-bottom: 1px solid black;">
+					<h5>Bonus LOT (Data Kantor)</h5>
+						<div class="card p-2" style="">
+
+							<table class="table" id="table_bonus" style="max-height: 100vh">
+							  <thead>
+		                            <tr>
+		                                <th scope="col">#</th>
+		                                <th scope="col">Name</th>
+		                                <th scope="col">Created At</th>
+		                                <th scope="col">Account Age (Days)</th>
+		                                <th scope="col">Login</th>
+		                                <th scope="col">Account Type</th>
+		                                <!-- <th scope="col">Bonus</th> -->
+		                                <th scope="col">Lot</th>
+		                                <th scope="col">Bonus</th>
+		                                <th scope="col">Bonus Total (Bonus * Lot)</th>
+		                                <th scope="col">Bonus Total Rupiah (Bonys * Rate)</th>
+		                                <th scope="col">Rate</th>
+		                                
+		                            </tr>
+		                        </thead>
+							  <tbody>
+								{% for x in display_bonus_dict %}
+
+	                                {% with x|stringformat:"s" as x_str %}
+	                                	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %}
+		                            		{% if not display_bonus_dict|dict_get:x_str|dict_get:'is_personal' %}
+			                                <tr>
+			                                    <th scope="row">{{forloop.counter}}</th> 
+			                                    	{% with client_dict|dict_get:x_mag_id as client_instance %}
+				                                    	<th scope="row">{{client_instance}}</th>
+				                                    	<th scope="row">{{client_instance.created_at}}</th>
+				                                    	<td >{{client_acc_age_dict|dict_get:client_instance.magnet_id }} Days </td>
+				                                    {% endwith %}
+			                                    	<!-- <th scope="row">{{client_dict|dict_get:x_mag_id}}</th> -->
+			                                    	
+			                                    	<th scope="row">{{x_str}}</th>
+			                                    	{% with display_bonus_dict|dict_get:x_str as instance_bonus %}
+
+					                                    <td >{{instance_bonus|dict_get:'account_type' }}</td>
+					                                    
+					                                    <td>
+					                                        {{instance_bonus|dict_get:'lot' }}
+					                                    </td>
+				                                    	
+				                                    	{% with info_login_account_dict|dict_get:x_str as acc_type_detail %}
+				                                    		{% with info_bonus_formula_dict|dict_get:acc_type_detail as acc_type_detail_number %}
+					                                    		{% with instance_bonus|dict_get:'lot' as lot_number %}
+					                                    			{% with rate_dict|dict_get:x_str  as rate %}
+
+								                                    <td>
+								                                        {{acc_type_detail_number }}$
+								                                    </td>
+
+								                                    <td>
+																		{{lot_number|multiply:acc_type_detail_number}}$
+								                                    </td>
+
+								                                    <td>
+																		Rp. {{lot_number|multiply:acc_type_detail_number|multiply:rate|str_currency}}
+								                                    </td>
+								                                    <td>
+								                                        {{rate }}
+								                                    </td>
+								                                    {% endwith %}
+							                                    	
+							                                    {% endwith %}
+						                                    {% endwith %}
+					                                    {% endwith %}
+				                                    {% endwith %}
+				                                    
+			                                </tr>
+			                                {% endif %}
+
+		                                    {% endwith %}
+	                                    {% endwith %}
+		                        {% endfor %}
+	                        
+	                            </tbody>
+							</table>
+						</div>
+				</div>
+
+
+
+
+			<div class="col-12">
+				<div class="row mb-3" style="line-height: 1">
+                        <div class="col py-2 px-3 " >
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus_pribadi|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Bonus Pribadi</p>
+                            </div>
+                    	</div>
+
+
+				</div>
+				<div class="row mb-3" style="line-height: 1">
+                        <div class="col py-2 px-3 " >
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_pribadi'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Elastico</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elastico_pribadi'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Elastico</p>
+                            </div>
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto_pribadi'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Elastico</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'magneto_pribadi'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Elastico</p>
+                            </div>
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro_pribadi'|dict_get:'total_lot'|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Elastico</p>
+
+                                <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 2.5em;line-height:1">{{info_account_dict|dict_get:'elektro_pribadi'|dict_get:'tier'|default:"-"}}</h1>
+                                <p class="mb-0">Total Lot Elastico</p>
+                            </div>
+                    	</div>
+				</div>
+
+				<div class="col-12 ">
+					<h5>Bonus LOT (Data Pribadi)</h5>
+						<div class="card p-2" style="">
+
+							<table class="table" id="table_bonus_pribadi" style="max-height: 100vh">
+							  <thead>
+		                            <tr>
+		                                <th scope="col">#</th>
+	                                <th scope="col">Name</th>
+	                                <th scope="col">Created At</th>
+	                                <th scope="col">Account Age (Days)</th>
+	                                <th scope="col">Login</th>
+	                                <th scope="col">Account Type</th>
+	                                <th scope="col">Lot</th>
+	                                <th scope="col">Bonus</th>
+	                                <th scope="col">Bonus Total (Bonus * Lot)</th>
+	                                <th scope="col">Bonus Total Rupiah (Bonys * Rate)</th>
+	                                <th scope="col">Rate</th>
+		                            </tr>
+		                        </thead>
+							  <tbody>
+	                            {% for x in display_bonus_dict %}
+
+	                                {% with x|stringformat:"s" as x_str %}
+	                                	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %}
+		                            		{% if  display_bonus_dict|dict_get:x_str|dict_get:'is_personal' %}
+			                                <tr>
+			                                    <th scope="row">{{forloop.counter}}</th> 
+			                                    	{% with client_dict|dict_get:x_mag_id as client_instance %}
+				                                    	<th scope="row">{{client_instance}}</th>
+				                                    	<th scope="row">{{client_instance.created_at}}</th>
+				                                    	<td >{{client_acc_age_dict|dict_get:client_instance.magnet_id }} Days </td>
+				                                    {% endwith %}
+			                                    	<!-- <th scope="row">{{client_dict|dict_get:x_mag_id}}</th> -->
+			                                    	
+			                                    	<th scope="row">{{x_str}}</th>
+			                                    	{% with display_bonus_dict|dict_get:x_str as instance_bonus %}
+
+					                                    <td >{{instance_bonus|dict_get:'account_type' }}</td>
+					                                    
+					                                    <td>
+					                                        {{instance_bonus|dict_get:'lot' }}
+					                                    </td>
+				                                    	
+				                                    	{% with info_login_account_dict|dict_get:x_str as acc_type_detail %}
+				                                    		{% with info_bonus_formula_dict|dict_get:acc_type_detail as acc_type_detail_number %}
+					                                    		{% with instance_bonus|dict_get:'lot' as lot_number %}
+					                                    			{% with rate_dict|dict_get:x_str  as rate %}
+
+								                                    <td>
+								                                        {{acc_type_detail_number}}$
+								                                    </td>
+
+								                                    <td>
+																		{{lot_number|multiply:acc_type_detail_number}}$
+								                                    </td>
+
+								                                    <td>
+																		Rp. {{lot_number|multiply:acc_type_detail_number|multiply:rate|str_currency}}
+								                                    </td>
+								                                    <td>
+								                                        {{rate }}
+								                                    </td>
+								                                    {% endwith %}
+							                                    	
+							                                    {% endwith %}
+						                                    {% endwith %}
+					                                    {% endwith %}
+				                                    {% endwith %}
+				                                    
+			                                </tr>
+			                                {% endif %}
+
+		                                    {% endwith %}
+	                                    {% endwith %}
+		                        {% endfor %}
+	                        
+	                            </tbody>
+							</table>
+						</div>
+				</div>
+			{% endif %}
+
+
+
+			<div class="col-12 ">
+				
+
+				<div class="row mb-3" style="line-height: 1">
+                        <div class="col-12 py-2 px-3 " >
+
+                        	{% for x in dict_bonus_info %}
+	                        	{% if "magneto" in x %}
+									<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+		                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{dict_bonus_info|dict_get:x|dict_get:'bonus'|default:"-"}}</h1>
+		                                <p class="mb-0">{{x|cus_split:"_,0"}} ({{x|cus_split:"_,1"}})</p>
+		                            </div>
+	                            {% endif %}
+							{% endfor %}
+							<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus_dict|dict_get:'magneto'}}</h1>
+                                <p class="mb-0">Total Bonus</p>
+                            </div>
+
+                            
+                    	</div>    	
+
+                    	<div class="col-12 py-2 px-3 " >
+
+                        	{% for x in dict_bonus_info %}
+	                        	{% if "elektro" in x %}
+									<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+		                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{dict_bonus_info|dict_get:x|dict_get:'bonus'}}</h1>
+		                                <p class="mb-0">{{x|cus_split:"_,0"}} ({{x|cus_split:"_,1"}})</p>
+		                            </div>
+	                            {% endif %}
+
+							{% endfor %}
+
+							<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus_dict|dict_get:'elektro'}}</h1>
+                                <p class="mb-0">Total Bonus</p>
+                            </div>
+                            
+                    	</div>    	
+
+                    	<div class="col-12 py-2 px-3 " >
+
+                        	{% for x in dict_bonus_info %}
+	                        	{% if "elastico" in x %}
+									<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+		                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{dict_bonus_info|dict_get:x|dict_get:'bonus'}}</h1>
+		                                <p class="mb-0">{{x|cus_split:"_,0"}} ({{x|cus_split:"_,1"}})</p>
+		                            </div>
+	                            {% endif %}
+
+							{% endfor %}
+
+							<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus_dict|dict_get:'elastico'}}</h1>
+                                <p class="mb-0">Total Bonus</p>
+                            </div>
+
+                            
+                    	</div>    	
+
+                    	   	
+				</div>
+
+				<h5>BONUS IB</h5>
+					<div class="card p-2" style="">
+
+						<table class="table" id="table_position" style="max-height: 100vh">
+						  <thead>
+	                            <tr>
+	                                <th scope="col">#</th>
+	                                <th scope="col">Name</th>
+	                                <th scope="col">Email</th>
+	                                <th scope="col">Phone No</th>
+	                                <th scope="col">Magnet ID</th>
+	                                <th scope="col">Account Type</th>
+	                            </tr>
+	                        </thead>
+						  <tbody>
+                            {% for x in all_staff_clients %}
+	                            {% if account_type_dict|dict_get:x.client.magnet_id is not None %}
+		                                <tr>
+		                                    <th scope="row">{{forloop.counter}}</th>
+		                                    <th scope="row">{{x.client.nama}}</th>
+		                                    <th scope="row">{{x.client.email}}</th>
+		                                    <th scope="row">{{x.client.phone_no}}</th>
+		                                    <td>
+	                                			{{x.client.magnet_id}}
+		                                    </td>
+		                                    <td>
+		                                       {{account_type_dict|dict_get:x.client.magnet_id}}
+		                                    </td>
+		                                </tr>
+	                            {% endif %}
+	                        {% endfor %}
+                        
+                            </tbody>
+						</table>
+					</div>
+			</div>
+
+
+
+			
+			<!-- <div class="col-12">
+				<div class="row mb-3" style="line-height: 1">
+                        <div class="col py-2 px-3 " >
+                            <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_bonus_3|num_format|default:"-"}}</h1>
+                                <p class="mb-0">Total Bonus</p>
+                            </div>
+                    </div>
+			</div>
+			<div class="col-12 ">
+				<h5>Skema IB</h5>
+
+					<div class="card p-2" style="">
+
+						<table class="table" id="table_bonus_2" style="max-height: 100vh">
+						  <thead>
+	                            <tr>
+	                                <th scope="col">#</th>
+	                                <th scope="col">Name</th>
+	                                <th scope="col">Login</th>
+	                                <th scope="col">Account Type</th>
+	                            </tr>
+	                        </thead>
+						  <tbody>
+                            {% for x in display_bonus_3_dict %}
+	                            	
+	                                <tr>
+	                                    <th scope="row">{{forloop.counter}}</th>
+	                                    
+	                                    {% with x|stringformat:"s" as x_str %}
+	                                    	{% with client_user_id_login_dict|dict_get:x_str as x_mag_id %} 
+	                                    	<td >{{client_dict|dict_get:x_mag_id}}</td>
+	                                    	<td >{{x}}</td>
+	                                    	<td >{{display_bonus_dict|dict_get:x_str|dict_get:'account_type' }}</td>
+	                                    	{% endwith %}
+	                                    {% endwith %}
+	                                </tr>
+	                        {% endfor %}
+                        
+                            </tbody>
+						</table>
+					</div>
+			</div>
+			 -->
+			
+			
+
+			
+
+		</div>
+
+	</div>
+	<!-- /typeahead -->
+</div>
+<script type="text/javascript">
+	function change_filter(){
+        from = $("#date-from-val").val()
+        window.location = "{% url 'staff-report-detail' staff.uid %}"+"?date="+from
+
+    }
+
+    $("#download-btn").click(function() {
+			console.log("masuk ke download button")
+
+			
+			
+		
+			{% if staff.staff_level.level_name == "Financial Consultant" %}
+				// console.log("masuk 1")
+				// $("#download_param").val("1");
+		  //   	$("#export_form").attr("method", "post");
+				// $("#export_form").submit()
+				// $("#download_param").val("0");
+				// popupWindow1 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=1');
+
+			{% endif %}
+			{% if staff.staff_level.level_name != "IB" %}
+				// popupWindow2 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=2');
+			{% endif %}
+				// popupWindow3 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=3');
+
+				from = $("#date-from-val").val()
+				popupWindow3 = window.open('{% url "staff-report-detail" staff.uid %}?download_excel=combination&date='+from);				
+		})
+
+
+	$("#date-pick-from").datepicker( {
+		    format: "mm-yyyy",
+		    startView: "months", 
+		    minViewMode: "months"
+		});
+
+	$("#table_position").DataTable({
+		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+		language: {
+            search: '<span>Filter:</span> _INPUT_',
+            searchPlaceholder: 'Type to filter...',
+            lengthMenu: '<span>Show:</span> _MENU_',
+        },
+        scrollX: true,
+        // scrollY: '350px',
+        scrollCollapse: true,
+        fixedColumns: {
+            leftColumns: 2,
+            // rightColumns: 1
+        }
+    });
+
+    $("#table_bonus").DataTable({
+		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+		language: {
+            search: '<span>Filter:</span> _INPUT_',
+            searchPlaceholder: 'Type to filter...',
+            lengthMenu: '<span>Show:</span> _MENU_',
+        },
+        scrollX: true,
+        // scrollY: '350px',
+        scrollCollapse: true,
+        fixedColumns: {
+            leftColumns: 2,
+            // rightColumns: 1
+        }
+    });
+
+    $("#table_bonus_pribadi").DataTable({
+		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+		language: {
+            search: '<span>Filter:</span> _INPUT_',
+            searchPlaceholder: 'Type to filter...',
+            lengthMenu: '<span>Show:</span> _MENU_',
+        },
+        scrollX: true,
+        // scrollY: '350px',
+        scrollCollapse: true,
+        fixedColumns: {
+            leftColumns: 2,
+            // rightColumns: 1
+        }
+    });
+
+    $("#table_bonus_2").DataTable({
+		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+		language: {
+            search: '<span>Filter:</span> _INPUT_',
+            searchPlaceholder: 'Type to filter...',
+            lengthMenu: '<span>Show:</span> _MENU_',
+        },
+        scrollX: true,
+        // scrollY: '350px',
+        scrollCollapse: true,
+        fixedColumns: {
+            leftColumns: 2,
+            // rightColumns: 1
+        }
+    });
+</script>
+{% endblock content %}

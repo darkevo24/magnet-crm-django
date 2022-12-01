@@ -99,7 +99,7 @@ class Client(Base_Model):
 	source_detail_2 = models.CharField(max_length=255, choices=SOURCE_DETAIL_2_STR, null=True,blank=True,default=None)
 	
 	def __str__(self):
-		return self.nama + '( ' + self.first_name + ' ' + self.middle_name + ' ' + self.last_name + ' )'
+		return self.nama 
 
 	def save(self, *args, **kwargs):
 

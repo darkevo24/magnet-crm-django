@@ -99,5 +99,14 @@ def num_format(value):
 	return (f'{value:,}').replace(","," ")
 	# return ' '.join(str(value)[i:i+3] for i in range(0, len(str(value)), 3))
 
+@register.filter(name='num_format_decimal')
+def num_format_decimal(value):
+	value = round(value, 2)
+	value = str(value)
+	return value
+	return value.replace('.', ' ')
+	
+
+
 
 		
