@@ -123,7 +123,7 @@
                     <div style="display: inline-block;" class="mr-3 gadget_green p-3">
                         <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
                         	{% with two_months_bonus_dict|dict_get:'elastico' as elastico_two_months_dict %}
-                        		{{elastico_two_months_dict|dict_get:'total_idr'|num_format_decimal|default:'-'}}
+                        		{{elastico_two_months_dict|dict_get:'total_idr'|str_currency|default:'-'}}
                         	{% endwith %}
                         </h1>
                         <p class="mb-0">Total Bonus IDR</p>
@@ -247,7 +247,7 @@
             	</div>
 			</div>
 
-			<div class="col-12 " style="border-bottom: 1px solid black;">
+			<div class="col-12 " style="border-bottom: 2px solid #0c2a15;">
 				<h5>Bonus LOT (Data Kantor 0 -2 months) </h5>
 				<div class="card p-2" style="">
 
@@ -311,11 +311,11 @@
 					</table>
 				</div>
 			</div>
-			<div class="col-12 pt-2 " style="border-bottom: 1px solid black;">
+			<div class="col-12 pt-2 " style="border-bottom: 2px solid #0c2a15;">
 				<h5>Bonus LOT (Data Kantor > 2 months) </h5>
 				<div class="card p-2" style="">
 
-					<table class="table" id="table_bonus" style="max-height: 100vh">
+					<table class="table" id="table_bonus_more_than_two_months" style="max-height: 100vh">
 					  <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -375,10 +375,91 @@
 				</div>
 			</div>
 		</div>
+		<div class="row pt-4">
+			<div class="col-12">
+				<h5>BONUS Data Pribadi</h5>
+				<div class="row mb-3" style="line-height: 1">
+					<div class="col py-2 px-3 " >
+						<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+							<h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_ftd_count|default:"-"}}</h1>
+							<p class="mb-0">Total Client</p>
+						</div>
+						<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+							<h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_ftd_total_usd|num_format|default:"-"}}</h1>
+							<p class="mb-0">Total Amount FTD</p>
+						</div>
+						<div style="display: inline-block;" class="mr-3 gadget_green p-3">
+							<h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{staff_ftd_bonus|num_format|default:"-"}}</h1>
+							<p class="mb-0">Bonus Per Ft</p>
+						</div>
+					</div>
+				</div>
+			</div >
+		</div>
+
+
 	</div>
 	<!-- /typeahead -->
 </div>
 <script type="text/javascript">
-	
+	function change_filter(){
+        from = $("#date-from-val").val()
+        window.location = "{% url 'staff-report-detail' staff.uid %}"+"?date="+from
+
+    }
+    $( document ).ready(function() {
+    	$("#date-pick-from").datepicker( {
+		    format: "mm-yyyy",
+		    startView: "months", 
+		    minViewMode: "months"
+		});
+
+		$("#table_position").DataTable({
+			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+			language: {
+	            search: '<span>Filter:</span> _INPUT_',
+	            searchPlaceholder: 'Type to filter...',
+	            lengthMenu: '<span>Show:</span> _MENU_',
+	        },
+	        scrollX: true,
+	        // scrollY: '350px',
+	        scrollCollapse: true,
+	        fixedColumns: {
+	            leftColumns: 2,
+	            // rightColumns: 1
+	        }
+	    });
+
+	    $("#table_bonus").DataTable({
+			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+			language: {
+		        search: '<span>Filter:</span> _INPUT_',
+		        searchPlaceholder: 'Type to filter...',
+		        lengthMenu: '<span>Show:</span> _MENU_',
+		    },
+		    scrollX: true,
+		    // scrollY: '350px',
+		    scrollCollapse: true,
+		    fixedColumns: {
+		        leftColumns: 2,
+		        // rightColumns: 1
+		    }
+		});
+		$("#table_bonus_more_than_two_months").DataTable({
+			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+			language: {
+		        search: '<span>Filter:</span> _INPUT_',
+		        searchPlaceholder: 'Type to filter...',
+		        lengthMenu: '<span>Show:</span> _MENU_',
+		    },
+		    scrollX: true,
+		    // scrollY: '350px',
+		    scrollCollapse: true,
+		    fixedColumns: {
+		        leftColumns: 2,
+		        // rightColumns: 1
+		    }
+		});
+    });
 </script>
 {% endblock content %}

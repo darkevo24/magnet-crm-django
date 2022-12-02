@@ -21,6 +21,10 @@ import xlwt
 from core.excel import *
 from ib.models import *
 from dateutil.relativedelta import relativedelta
+import pytz
+from django.utils.timezone import make_aware
+
+
 def staff_list(request):
 	template = 'admin/staff/staff_list.html'
 	staff_list = Staff.objects.filter(is_active=True).order_by('id')
@@ -718,11 +722,10 @@ def staff_report_detail(request,staff_uid):
 	staff = Staff.objects.filter(uid=staff_uid,is_active=True).first()
 
 	date = request.GET.get('date') or None
+
+	
 	now = timezone.now()
 
-	now = now - relativedelta(months=1)
-
-	print('now', now)
 	start_date = 1
 	end_date = None
 
@@ -731,13 +734,20 @@ def staff_report_detail(request,staff_uid):
 		calculated_year = now.year
 		calculated_month = now.month
 		end_date = calendar.monthrange(calculated_year, calculated_month)[1]
+	else:
+		temp_date = date.split('-')
+		calculated_month = int(temp_date[0])
+		calculated_year = int(temp_date[1])
+		end_date = calendar.monthrange(calculated_year, calculated_month)[1]
+		date_str = '1-' + str(calculated_month) + '-' + str(calculated_year)
+		now = make_aware(datetime.strptime(date_str, '%d-%m-%Y'))
 
 
 	#calculate ftd
 	client_staff_list = Client_Staff.objects.filter(
 		staff=staff,
-		client__magnet_created_at__month=now.month,
-		client__magnet_created_at__year=now.year,
+		client__magnet_created_at__month=calculated_month,
+		client__magnet_created_at__year=calculated_year,
 
 		is_active=True,).exclude(client__source_detail_1=2,).prefetch_related('client')
 
