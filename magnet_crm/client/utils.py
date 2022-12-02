@@ -118,6 +118,7 @@ def get_client_position(user_id):
 	client = Client.objects.filter(id=user_id).first()
 	magnet_user_id = client.magnet_id
 	try:
+		# connect to proxy db to query for MT5 IDs
 		cnx = mysql.connector.connect(
 			host="54.151.138.128",
 			user='ivan',
@@ -125,15 +126,17 @@ def get_client_position(user_id):
 			database='vifx'
 		)
 		mycursor = cnx.cursor()
-		mycursor.execute("Select id, user_id, login, account_type FROM vif_cabinet_legal_form_decleration WHERE user_id="+ str(magnet_user_id)+ " ORDER BY 'id' DESC LIMIT 2")
+		query = """SELECT id, user_id, login, account_type 
+			FROM vif_cabinet_legal_form_decleration 
+			WHERE user_id=""" + str(magnet_user_id) + """ 
+			ORDER BY 'id' DESC LIMIT 2"""
+		mycursor.execute(query)
 		login_mt5_ids = []
 		myresult = mycursor.fetchall()
 		for myresult in myresult:
 			login_mt5_ids.append(myresult[2])
 
-
 		print('connect to another db')
-		
 		pos_cnx = mysql.connector.connect(
 				host="54.255.131.102",
 				user='ivan',
@@ -147,15 +150,18 @@ def get_client_position(user_id):
 		# mycursor.execute(sql)
 		# show_columns = mycursor.fetchall()
 		# print("show_columns",show_columns)
-		print("SELECT Position_ID,Volume,ContractSize,Symbol FROM data_magnet.mt5_positions where login IN ("+ str(login_mt5_ids)[:-1][1:]+ ");")
-		return None
-		sql = "SELECT Position_ID,Volume,ContractSize,Symbol FROM data_magnet.mt5_positions where login IN ("+ str(login_mt5_ids)[:-1][1:]+ ");"
-		mycursor.execute(sql)
-		pos_detail = mycursor.fetchall()
-		print("test_pos",pos_detail)
+		
 
 		my_pos_list = []
+		pos_detail = []
 		if len(login_mt5_ids)>0:
+			query = """SELECT Position_ID,Volume,ContractSize,Symbol 
+				FROM data_magnet.mt5_positions 
+				WHERE login IN (""" + str(login_mt5_ids)[:-1][1:]+ ");"
+			mycursor.execute(query)
+			pos_detail = mycursor.fetchall()
+			print("test_pos", pos_detail)
+			
 			mycursor = pos_cnx.cursor()
 			in_params = ','.join(['%s'] * len(login_mt5_ids))
 			print("17")
@@ -172,12 +178,11 @@ def get_client_position(user_id):
 
 			pos_id = []
 			print("21")
-			for x in my_pos_list:
+			for positions in my_pos_list:
 				count = 0
-				# print("x my_pos_list",x)
-				pos_id.append(x[0])
-				for y in x:
-					print(count, type(y), y)
+				pos_id.append(positions[0])
+				for position in positions:
+					print(count, type(position), position)
 					count +=1
 			print("22")
 			print("pos_id ",pos_id)
@@ -187,16 +192,17 @@ def get_client_position(user_id):
 		# 		print(x)
 
 		pos_cnx.close()
-		return my_pos_list,pos_detail
+		return my_pos_list, pos_detail
 
 	except mysql.connector.Error as err:
 		if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-				print("Something is wrong with your user name or password")
+			print("Something is wrong with your user name or password")
 		elif err.errno == errorcode.ER_BAD_DB_ERROR:
-				print("Database does not exist")
+			print("Database does not exist")
 		else:
-				print(err)
-	else:
+			print(err)
+
+	finally:
 		cnx.close()
 
 
@@ -226,7 +232,8 @@ def get_login_trades(user_id):
 				'logins': login_mt5_ids
 			}
 			print("ini data")
-			res = requests.post('http://54.151.138.128/getLoginState', data=data)
+			res = requests.post('https://apireg.magnetfx.id/getLoginState', data=data)
+			print("res: ", res)
 			json_data = json.loads(res.text)
 			# print(json_data['data'],"json_data['data']")
 			return json_data

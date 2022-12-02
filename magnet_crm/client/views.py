@@ -363,7 +363,6 @@ def client_add(request):
 
 					return redirect(reverse('client-list'))
 				else:
-					print(client_form.errors )
 					print(client_form.errors)
 
 		except IntegrityError as e:
