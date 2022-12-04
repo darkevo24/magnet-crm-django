@@ -59,6 +59,7 @@ class Client(Base_Model):
 	phone_no = models.CharField(max_length=255, default='')
 	email = models.EmailField(null=True, blank=True)
 	birthday = models.DateField(null=True, blank=True)
+	is_ib = models.BooleanField(default=False)
 
 	SOURCE_STR = [
 		('0', 'Fresh Data'), 
