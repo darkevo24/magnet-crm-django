@@ -3,7 +3,13 @@ from client.models import *
 from django import forms
 
 class ClientForm(ModelForm):
-	birthday = forms.CharField(label='Birthday', max_length=100,required=False)
+	email = forms.CharField(label='Email', required=False)
+	umur = forms.CharField(label='Umur', required=False)
+	gender = forms.CharField(label='Jenis Kelamin', required=False)
+	pekerjaan = forms.CharField(label='Pekerjaan', required=False)
+	domisili = forms.CharField(label='Domisili', required=False)
+	birthday = forms.DateField(label='Tanggal Ulang Tahun',required=False, input_formats=['%Y-%m-%d'])
+	source = forms.CharField(label='Source', required=False)
 	class Meta:
 		model = Client
 		fields = [
@@ -14,7 +20,7 @@ class ClientForm(ModelForm):
 			'gender',
 			'pekerjaan',
 			'domisili',
-			# 'birthday',
+			'birthday',
 			'source',
 		]
 		

@@ -16,11 +16,11 @@
 					<form method="POST" id="main-form"> 
 						{% csrf_token %}
 						<div class="mb-4">
-							<h6 class="font-weight-semibold">nama</h6>
+							<h6 class="font-weight-semibold">Nama</h6>
 							{{client_form.nama | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
-							<h6 class="font-weight-semibold">Phone Number</h6>
+							<h6 class="font-weight-semibold">Nomor Telepon</h6>
 							{{client_form.phone_no | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
@@ -28,23 +28,23 @@
 							{{client_form.email | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
-							<h6 class="font-weight-semibold">Age</h6>
+							<h6 class="font-weight-semibold">Umur</h6>
 							{{client_form.umur | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
-							<h6 class="font-weight-semibold">Gender</h6>
+							<h6 class="font-weight-semibold">Jenis Kelamin</h6>
 							{{client_form.gender | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
-							<h6 class="font-weight-semibold">Job</h6>
+							<h6 class="font-weight-semibold">Pekerjaan</h6>
 							{{client_form.pekerjaan | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
-							<h6 class="font-weight-semibold">Domicile</h6>
+							<h6 class="font-weight-semibold">Domisili</h6>
 							{{client_form.domisili | add_class:"form-control"}}
 						</div>
 						<div class="mb-4">
-							<h6 class="font-weight-semibold">Birthday</h6>
+							<h6 class="font-weight-semibold">Tanggal Ulang Tahun</h6>
 							{{client_form.birthday | add_class:"form-control"}}
 						</div>
 						{% if request.user|full_menu %}
@@ -67,11 +67,7 @@
 </div>
 <script type="text/javascript">
 	$( document ).ready(function() {
-	    $('#id_birthday').pickadate(
-		    {
-		    	formatSubmit: 'yyyy-mm-dd',
-		    }
-    	);
+	    $('#id_birthday').datepicker({ format: "yyyy-mm-dd" }).val();
 	});
 	var submited = 0
 

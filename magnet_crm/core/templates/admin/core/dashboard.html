@@ -201,6 +201,7 @@
                                   
                                   <th scope="col"></th>
                                   <th scope="col">Nama</th>
+                                  <th scope="col">No. Telepon</th>
                                   <th scope="col">Email</th>
                                   <th scope="col">Source</th>
                                   <th scope="col">Aksi</th>
@@ -214,6 +215,7 @@
                                           
                                           <td scope="row"><i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="icon-circle2 mr-1"></i></td>
                                           <td scope="row">{{client.nama|default:"-"}}</td>
+                                          <td scope="row">{{client.phone_no|default:"-"}}</td>
                                           <td scope="row">{{client.email|default:"-"}}</td>
                                           <td scope="row">{% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
                                                         {{client.get_source_detail_2_display}} 
@@ -288,6 +290,7 @@
                                   
                                   <th scope="col"></th>
                                   <th scope="col">Nama</th>
+                                  <th scope="col">No. Telepon</th>
                                   <th scope="col">Email</th>
                                   <th scope="col">Source</th>
                                   <th scope="col">Aksi</th>
@@ -301,6 +304,7 @@
                                           
                                           <td scope="row"><i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="icon-circle2 mr-1"></i></td>
                                           <td scope="row">{{client.nama|default:"-"}}</td>
+                                          <td scope="row">{{client.phone_no|default:"-"}}</td>
                                           <td scope="row">{{client.email|default:"-"}}</td>
                                           <td scope="row">{% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
                                                         {{client.get_source_detail_2_display}} 
@@ -445,8 +449,8 @@
         $("#table-main").DataTable({
             dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
             language: {
-                search: '<span>Filter:</span> _INPUT_',
-                searchPlaceholder: 'Type to filter...',
+                search: '<span>Search:</span> _INPUT_',
+                searchPlaceholder: 'Type to search...',
                 lengthMenu: '<span>Show:</span> _MENU_',
             },
             scrollX: true,
@@ -458,11 +462,11 @@
             }
         });
 
-    $("#table-main-2").DataTable({
+        $("#table-main-2").DataTable({
             dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
             language: {
-                search: '<span>Filter:</span> _INPUT_',
-                searchPlaceholder: 'Type to filter...',
+                search: '<span>Search:</span> _INPUT_',
+                searchPlaceholder: 'Type to search...',
                 lengthMenu: '<span>Show:</span> _MENU_',
             },
             scrollX: true,
@@ -474,7 +478,7 @@
             }
         });
 
-    $('#table-main-2').DataTable().draw();
+        $('#table-main-2').DataTable().draw();
     	
     	events = {{client_schedule_list_json|safe}};
     	const calendarBasicViewElement = document.querySelector('.fullcalendar-basic');
@@ -584,12 +588,12 @@
 
 	});
 
-$("#search_input").on("keyup", function() {
-          var value = this.value.toLowerCase().trim();
-          $(".media-list li").show().filter(function() {
-            return $(this).text().toLowerCase().trim().indexOf(value) == -1;
-          }).hide();
-        });
+    $("#search_input").on("keyup", function() {
+        var value = this.value.toLowerCase().trim();
+        $(".media-list li").show().filter(function() {
+        return $(this).text().toLowerCase().trim().indexOf(value) == -1;
+        }).hide();
+    });
 	
 </script>
 {% endblock content %}
