@@ -77,8 +77,8 @@ urlpatterns = [
 
     path('client/detail/<str:id_client>', client_views.detail_list, name='client-detail-list'),
     path('client/<str:id_client>/request_own', client_views.request_own, name='client-request-own'),
-    path('client/followup/<str:id_client>', client_views.client_followup_list, name='client-followup-list'),
-    path('client/followup/<str:id_client>/add', main_view.add_form, name='followup-form'),
+    path('client/feedback/<str:id_client>', client_views.client_followup_list, name='client-feedback-list'),
+    path('client/feedback/<str:id_client>/add', main_view.add_form, name='followup-form'),
 
     path('client/client_journey/add/<str:client_id>/<str:journey_type>', client_views.client_journey_add, name='client-journey-add'),
 

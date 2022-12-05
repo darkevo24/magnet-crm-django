@@ -77,22 +77,29 @@
                                     {% if not client_staff.client.is_deposit and not client_staff.is_hot %}
                                         <tr>
                                           
-                                          <td scope="row"><i style="display: inline-block;color: #{{client_color|dict_get:client_staff.client.id}}" class="icon-circle2 mr-1"></i></td>
-                                          <td scope="row">{{client_staff.client.nama|default:"-"}}</td>
-                                          <td scope="row">{{client_staff.client.phone_no|default:"-"}}</td>
-                                          <td scope="row">{{client_staff.client.email|default:"-"}}</td>
-                                          <td scope="row">{% if client_staff.client.source_detail_2 is not None and client_staff.client.source_detail_2 != '' %}
-                                                        {{client_staff.client.get_source_detail_2_display}} 
-                                                    {% elif client_staff.client.source_detail_1 is not None and client_staff.client.source_detail_1 != '' %}
-                                                        {{client_staff.client.get_source_detail_1_display}} 
-                                                    {% else %}
-                                                        {{client_staff.client.get_source_display|default:'-'}}
-                                                    {% endif %}     </td>
-                                          <td scope="row">
-                                              
-                                              <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client_staff.client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
-                                              <img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client_staff.client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
-                                              <div class="list-icons">
+                                            <td scope="row"><i style="display: inline-block;color: #{{client_color|dict_get:client_staff.client.id}}" class="icon-circle2 mr-1"></i></td>
+                                            <td scope="row">{{client_staff.client.nama|default:"-"}}</td>
+                                            <td scope="row">{{client_staff.client.email|default:"-"}}</td>
+                                            <td scope="row">
+                                                {% if client_staff.client.source_detail_2 is not None and client_staff.client.source_detail_2 != '' %}
+                                                    {{client_staff.client.get_source_detail_2_display}} 
+                                                {% elif client_staff.client.source_detail_1 is not None and client_staff.client.source_detail_1 != '' %}
+                                                    {{client_staff.client.get_source_detail_1_display}} 
+                                                {% else %}
+                                                    {{client_staff.client.get_source_display|default:'-'}}
+                                                {% endif %}     
+                                            </td>
+                                            <td scope="row">
+                                                <a href="https://wa.me/{{client_staff.client.phone_no}}?text=Halo" target="_blank">
+                                                    <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client_staff.client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
+                                                </a>
+                                                <a href="">
+                                                    <img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client_staff.client_staff.client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
+                                                </a>
+                                                <a href="{% url 'client-feedback-list' client_staff.client.id%}">
+                                                    <img class="list-icons-item clickable feedback-button" data-popup="tooltip" title="Feedback" data-client_id="{{client_staff.client.id}}" data-journey_type="feedback" data-toggle="modal" data-trigger="hover" data-target="#feedback" src="{% static 'magnet/images/admin-feedback.png' %}" style="height:2.4em" >
+                                                </a>
+                                                <div class="list-icons">
                                                     <div class="dropdown">
                                                         <a href="#" class="list-icons-item" data-toggle="dropdown">
                                                             <i class="icon-menu9" style="font-size: 1.8em"></i>

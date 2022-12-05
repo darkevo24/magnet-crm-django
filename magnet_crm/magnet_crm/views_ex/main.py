@@ -476,7 +476,7 @@ def add_form(request,id_client):
 	# if tree_form.is_valid():
 		
 	
-		return redirect(reverse('client-followup-list', kwargs={'id_client': id_client}))
+		return redirect(reverse('client-feedback-list', kwargs={'id_client': id_client}))
 
 
 	context = {
@@ -494,7 +494,7 @@ def delete_form(request,id_client,id_followup):
 	fol.updated_at = timezone.now()
 	fol.save()
 
-	return redirect(reverse('client-followup-list', kwargs={'id_client': id_client}))
+	return redirect(reverse('client-feedback-list', kwargs={'id_client': id_client}))
 
 def ajax_form(request):
 

@@ -31,6 +31,7 @@ from django.utils.timezone import make_aware
 def staff_list(request):
 	template = 'admin/staff/staff_list.html'
 	staff_list = Staff.objects.filter(is_active=True).order_by('id')
+	print(staff_list.count())
 
 	
 	context = {
@@ -561,6 +562,8 @@ def staff_salary_edit(request,staff_uid,salary_id):
 def staff_report(request):
 	template = 'admin/report/report_staff_list.html'
 	staff_list = Staff.objects.filter(is_active=True)
+	for s in staff_list:
+		print(s.staff_level)
 
 	
 	
@@ -884,7 +887,7 @@ def staff_supervisor_report_detail(request,staff_uid):
 	template = 'admin/report/report_staff_supervisor_detail.html'
 	
 	staff = Staff.objects.filter(uid=staff_uid,is_active=True).first()
-
+	staff_list = Staff.objects.filter(staff_parent=staff, is_active=True)
 	date = request.GET.get('date') or None
 	
 	now = timezone.now()
@@ -914,21 +917,27 @@ def staff_supervisor_report_detail(request,staff_uid):
 	last_two_months_date = datetime(last_two_months_date.year, last_two_months_date.month, 1)
 	
 	
-	two_months_bonus_dict, two_months_trades = supervisor_calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date)
-	return None
+	two_months_bonus_dict, two_months_trades = supervisor_calculate_lot_two_months_bonus(staff_list, last_two_months_date, now, end_date)
+	
 	#data > 2bulan
-	more_two_months_bonus_dict, more_two_months_trades = calculate_lot_more_than_two_months_bonus(staff, last_two_months_date, now, end_date)
-	data_pribadi_months_bonus_dict, data_pribadi_trades = calculate_data_pribadi_bonus(staff, now, end_date)
-
+	more_two_months_bonus_dict, more_two_months_trades = supervisor_calculate_lot_more_than_two_months_bonus(staff_list, last_two_months_date, now, end_date)
+	
+	data_pribadi_months_bonus_dict, data_pribadi_trades = supervisor_calculate_data_pribadi_bonus(staff_list, now, end_date)
+	print('sampe disni')
 
 	#data-ib
 	show_ib_bonus = False
-	ib_staff = IB_Staff.objects.filter(staff=staff, is_active=True).prefetch_related('staff').first()
+	ib_staffs = IB_Staff.objects.filter(staff__in=staff_list, is_active=True).prefetch_related('staff')
+	staff_ids = []
+	for ib_staff in ib_staffs:
+		staff_ids.append(ib_staff.staff.id)
+
+	ib_staff_query = Staff.objects.filter(id__in=staff_ids)
 	ib_bonus_dict = {}
 	ib_client_trades = {}
-	if ib_staff != None:
+	if len(staff_ids):
 		show_ib_bonus = True
-		ib_bonus_dict, ib_client_trades = calculate_ib_bonus(ib_staff.staff, now, end_date)
+		ib_bonus_dict, ib_client_trades = supervisor_calculate_ib_bonus(ib_staff_query, now, end_date)
 	else:
 		ib_bonus_dict['elastico'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 		ib_bonus_dict['elektro'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
@@ -967,7 +976,6 @@ def staff_supervisor_report_detail(request,staff_uid):
 	# pribadi_bonus_dict = calculate_data_pribadi_bonus(staff, now, end_date)
 
 	# print('two_months_bonus_dict', two_months_bonus_dict)
-	print('client_ftd_total_usd', client_ftd_total_usd)
 	print('ib_bonus_dict', ib_bonus_dict, type(ib_bonus_dict))
 	context = {}
 	context['staff'] = staff
