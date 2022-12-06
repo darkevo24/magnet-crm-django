@@ -222,7 +222,13 @@
 							<tr>
 								<td>Source</td>
 								<td>:</td>
-								<td>{{client.source|default:"-"}}</td>
+								<td>{% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
+									{{client.get_source_detail_2_display}} 
+								{% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
+									{{client.get_source_detail_1_display}} 
+								{% else %}
+									{{client.get_source_display|default:'-'}}
+								{% endif %}</td>
 							</tr>
 							<tr>
 								<td>GCL ID</td>
