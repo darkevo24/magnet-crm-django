@@ -44,7 +44,7 @@
 						      	{% elif staff.staff_level.level_name == 'Financial Consultant' %}
 						      		<a href="{% url 'staff-report-detail' staff.uid %}">Report</a>
 						      	{% else %}
-						      		<a href="#">Report</a>
+						      		<a href="{% url 'master-report-detail' %}">Report</a>
 						      	{% endif %}
 								</td>
 						    </tr>
