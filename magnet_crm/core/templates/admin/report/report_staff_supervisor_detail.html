@@ -664,10 +664,11 @@
 		    // scrollY: '350px',
 		    scrollCollapse: true,
 		    fixedColumns: {
-		        leftColumns: 2,
+		        leftColumns: 3,
 		        // rightColumns: 1
 		    }
 		});
+		$('#table_bonus').DataTable().draw();
 		$("#table_bonus_more_than_two_months").DataTable({
 			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
 			language: {
@@ -679,10 +680,11 @@
 		    // scrollY: '350px',
 		    scrollCollapse: true,
 		    fixedColumns: {
-		        leftColumns: 2,
+		        leftColumns: 3,
 		        // rightColumns: 1
 		    }
 		});
+		$('#table_bonus_more_than_two_months').DataTable().draw();
 		$("#table_bonus_data_pribadi").DataTable({
 			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
 			language: {
@@ -694,11 +696,11 @@
 		    // scrollY: '350px',
 		    scrollCollapse: true,
 		    fixedColumns: {
-		        leftColumns: 2,
+		        leftColumns: 3,
 		        // rightColumns: 1
 		    }
 		});
-
+		$('#table_bonus_data_pribadi').DataTable().draw();
 		{% if show_ib_bonus == True %}
 			("#table_bonus_data_iba").DataTable({
 				dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
@@ -711,10 +713,11 @@
 			    // scrollY: '350px',
 			    scrollCollapse: true,
 			    fixedColumns: {
-			        leftColumns: 2,
+			        leftColumns: 3,
 			        // rightColumns: 1
 			    }
 			});
+			$('#table_bonus_data_iba').DataTable().draw();
 		{% endif %}
 		
     });

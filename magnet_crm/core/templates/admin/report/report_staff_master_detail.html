@@ -1,4 +1,3 @@
-report_staff_master_detail
 {% extends 'base/head.html' %}
 {% load core_extras %}
 {% block content %}
@@ -660,6 +659,7 @@ report_staff_master_detail
 
 	    $("#table_bonus").DataTable({
 			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+			pageLength: 10,
 			language: {
 		        search: '<span>Filter:</span> _INPUT_',
 		        searchPlaceholder: 'Type to filter...',
@@ -672,6 +672,7 @@ report_staff_master_detail
 		        leftColumns: 4,
 		    }
 		});
+		$('#table_bonus').DataTable().draw();
 		$("#table_bonus_more_than_two_months").DataTable({
 			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
 			language: {
@@ -687,6 +688,7 @@ report_staff_master_detail
 		        // rightColumns: 1
 		    }
 		});
+		$('#table_bonus_more_than_two_months').DataTable().draw();
 		$("#table_bonus_data_pribadi").DataTable({
 			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
 			language: {
@@ -702,26 +704,27 @@ report_staff_master_detail
 		        // rightColumns: 1
 		    }
 		});
+		$('#table_bonus_data_pribadi').DataTable().draw();
+		
+		$("#table_bonus_ib").DataTable({
+			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+			language: {
+		        search: '<span>Filter:</span> _INPUT_',
+		        searchPlaceholder: 'Type to filter...',
+		        lengthMenu: '<span>Show:</span> _MENU_',
+		    },
+		    scrollX: true,
+		    // scrollY: '350px',
+		    scrollCollapse: true,
+		    fixedColumns: {
+		        leftColumns: 4,
+		        // rightColumns: 1
+		    }
+		});
+		$('#table_bonus_ib').DataTable().draw();
+		
 
-		{% if show_ib_bonus == True %}
-			("#table_bonus_data_iba").DataTable({
-				dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
-				language: {
-			        search: '<span>Filter:</span> _INPUT_',
-			        searchPlaceholder: 'Type to filter...',
-			        lengthMenu: '<span>Show:</span> _MENU_',
-			    },
-			    scrollX: true,
-			    // scrollY: '350px',
-			    scrollCollapse: true,
-			    fixedColumns: {
-			        leftColumns: 4,
-			        // rightColumns: 1
-			    }
-			});
-		{% endif %}
-
-		$('.col-custom-table').css('height', '100%');
+		// $('.col-custom-table').css('height', '100%');
 		console.log('finished')
 		
     });
