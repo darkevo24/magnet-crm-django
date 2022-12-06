@@ -39,7 +39,13 @@
 						      
 						      
 						      <td class="text-center">
-									<a href="{% url 'staff-report-detail' staff.uid %}">Report</a>
+						      	{% if staff.staff_level.level_name == 'Supervisor Marketing' %}
+									<a href="{% url 'staff-supervisor-report-detail' staff.uid %}">Report</a>
+						      	{% elif staff.staff_level.level_name == 'Financial Consultant' %}
+						      		<a href="{% url 'staff-report-detail' staff.uid %}">Report</a>
+						      	{% else %}
+						      		<a href="#">Report</a>
+						      	{% endif %}
 								</td>
 						    </tr>
 						{% endfor %}

@@ -53,72 +53,6 @@
 		<div class="card-body">
 			<div class="row">
 				<div class="col-12">
-					<h5 style="color:green">Bonus FTD</h5>
-				</div>
-			</div>
-			<div class="row mb-3 py-2" style="line-height: 1">
-				<div class="col py-2" >
-					<div class="mr-3 gadget_green p-3">
-						<h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_ftd_count|default:"-"}}</h1>
-						<p class="mb-0">Total Client</p>
-					</div>
-				</div>
-				<div class="col py-2" >
-					<div class="mr-3 gadget_green p-3">
-						<h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{client_ftd_total_usd|num_format|default:"-"}}</h1>
-						<p class="mb-0">Total Amount FTD</p>
-					</div>
-				</div>
-				<div class="col py-2" >
-					<div class="mr-3 gadget_green p-3">
-						<h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{staff_ftd_bonus|num_format|default:"-"}}</h1>
-						<p class="mb-0">Bonus Per Ft</p>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-12">
-					<table class="table" id="table_position" style="max-height: 100vh">
-					  <thead>
-	                        <tr>
-	                            <th scope="col">#</th>
-	                            <th scope="col">Name</th>
-	                            <th scope="col">userid</th>
-	                            <th scope="col">login</th>
-	                            <th scope="col">ftd</th>
-	                            <th scope="col">time</th>
-	                        </tr>
-	                    </thead>
-					  <tbody>
-	                    {% for client_ftd in client_ftd_list %}
-	                        <tr>
-	                            <th scope="row">{{forloop.counter}}</th>
-	                            <th scope="row">{{client_ftd_user_magnet_dict|dict_get:client_ftd.userid}}</th>
-	                            <th scope="row">{{client_ftd.userid}}</th>
-	                            <td>
-	                               {{client_ftd.login}}
-	                            </td>
-	                            <td>
-	                                {{client_ftd.ftd}}
-	                            </td>
-	                            <td>
-	                                {{client_ftd.time}}
-	                            </td>
-	                        </tr>
-	                    {% endfor %}
-	                    </tbody>
-					</table>
-					
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="card col-12 px-2">
-		<div class="card-body">
-			<div class="row">
-				<div class="col-12">
 					<h5 style="color:green">Bonus LOT</h5>
 				</div>
 			</div>
@@ -709,21 +643,7 @@
 		    minViewMode: "months"
 		});
 
-		$("#table_position").DataTable({
-			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
-			language: {
-	            search: '<span>Filter:</span> _INPUT_',
-	            searchPlaceholder: 'Type to filter...',
-	            lengthMenu: '<span>Show:</span> _MENU_',
-	        },
-	        scrollX: true,
-	        // scrollY: '350px',
-	        scrollCollapse: true,
-	        fixedColumns: {
-	            leftColumns: 2,
-	            // rightColumns: 1
-	        }
-	    });
+		
 
 	    $("#table_bonus").DataTable({
 			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
@@ -739,7 +659,7 @@
 		        leftColumns: 2,
 		        // rightColumns: 1
 		    }
-		});a
+		});
 		$("#table_bonus_more_than_two_months").DataTable({
 			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
 			language: {

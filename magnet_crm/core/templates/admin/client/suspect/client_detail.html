@@ -148,10 +148,12 @@
 				<form method="POST" id="main_form">
 						{% csrf_token %}
 					<input type="text" name="action" id="action_input" hidden>
+					<input type="text" name="action_extra" id="action_extra" hidden>
 				</form>
 				<h5>Aksi : </h5>
-				<a class="btn btn-primary" onclick="form_submit('accept')">Accept</a>
-				<a class="btn btn-danger" onclick="form_submit('reject')">Reject</a>
+				<a class="btn btn-primary" onclick="form_submit('accept', '')">Accept</a>
+				<a class="btn btn-danger" onclick="form_submit('reject', '')">Reject</a>
+				<a class="btn btn-info" onclick="form_submit('reject', 'pribadi')">Reject and Make Data Pribadi</a>
 			</div>
 		</div>
 
@@ -166,8 +168,10 @@
 	<!-- /typeahead -->
 </div>
 <script type="text/javascript">
-	function form_submit(action){
+	function form_submit(action, action_extra){
 		$("#action_input").val(action)
+		$('#action_extra').val(action_extra)
+		// console.log($('#action_extra'),$("#action_input") )
 		$("#main_form").submit()
 	}
 	$(function() {

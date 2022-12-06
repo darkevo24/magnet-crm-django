@@ -211,7 +211,9 @@ def client_suspect_detail(request,id_client_sus):
 	print(client_sus,'client_sus')
 
 	if request.POST:
+		print(request.POST)
 		action = request.POST['action']
+		action_extra = request.POST['action_extra']
 		client = client_sus.client_new
 		if action == 'accept':
 			print("accept")
@@ -222,6 +224,7 @@ def client_suspect_detail(request,id_client_sus):
 			new_his.duplicate_suspect = client_sus
 			new_his.action = "accepted"
 			new_his.created_by = request.user
+			i
 			new_his.save()
 
 		else:
@@ -232,6 +235,8 @@ def client_suspect_detail(request,id_client_sus):
 			new_his.created_by = request.user
 			new_his.save()
 			client.is_active = False
+			if action_extra != None and action_extra != '' and action_extra == 'pribadi':
+				client.source_detail_1 = 2
 
 			rejected_client_followup = Client_Followup.objects.filter(is_active=True,client=client)
 			for x in rejected_client_followup:
