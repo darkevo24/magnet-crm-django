@@ -22,8 +22,16 @@ class ClientForm(ModelForm):
 			'domisili',
 			'birthday',
 			'source',
+			'source_detail_1',
+			'source_detail_2',
 		]
+	
+	def __init__(self, *args, **kwargs):
+		super(ClientForm, self).__init__(*args, **kwargs)
+		self.fields['source_detail_1'].required = False
+		self.fields['source_detail_2'].required = False
 		
+
 class ClientImportForm(forms.Form):
 	staff = forms.ChoiceField(choices=[])
 	file = forms.FileField()
