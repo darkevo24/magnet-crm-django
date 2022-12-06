@@ -345,7 +345,7 @@ def client_list(request):
 		'client_staff_list': client_staff_list,
 		'menu':'client',
 		'client_color':client_color,
-		'staff_level':staff.staff_level.level,
+		# 'staff_level':staff.staff_level.level,
 	}
 	return render(request,template,context=context)
 

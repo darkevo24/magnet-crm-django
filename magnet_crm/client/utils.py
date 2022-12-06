@@ -1236,6 +1236,7 @@ def calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date):
 				# account_type = 'magneto'
 
 				str_rate = mt5_account_type_dict[last_two_months_account_trade['login']]['rate']
+				print('[][]', account_type, str_rate)
 				loop_lot_decimal = Decimal(last_two_months_account_trade['lot'])
 				loop_rate_decimal = Decimal(str_rate)
 				if account_type not in total_lot_dict:
@@ -1256,7 +1257,7 @@ def calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date):
 
 
 		# print(last_two_months_account_trades)
-		print(total_lot_dict)
+		print('++++++++', total_lot_dict)
 		for account_type, rate_trade_dict in total_lot_dict.items():
 			for rate, bonus_dict in rate_trade_dict.items():
 
@@ -1270,34 +1271,35 @@ def calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date):
 					
 					if loop_total_lot < 29.99:
 						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(1) )
-						total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(1) )
-						total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-						total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(1)
+						total_lot_dict[account_type][rate]['total_usd'] += ( loop_total_lot * Decimal(1) )
+						total_lot_dict[account_type][rate]['bonus_tier'] = 'Tier 1'
+						total_lot_dict[account_type][rate]['bonus_lot_usd'] = Decimal(1)
 
 					else:
 						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(1.75) )
-						total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(1.75) )
-						total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 2'
-						total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(1.75)
+						total_lot_dict[account_type][rate]['total_usd'] += ( loop_total_lot * Decimal(1.75) )
+						total_lot_dict[account_type][rate]['bonus_tier'] = 'Tier 2'
+						total_lot_dict[account_type][rate]['bonus_lot_usd'] = Decimal(1.75)
 				elif account_type == 'elektro':
 					if loop_total_lot < 49.99:
 						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(0.75) )
-						total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(0.75) )
-						total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-						total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(0.75)
+						total_lot_dict[account_type][rate]['total_usd'] += ( loop_total_lot * Decimal(0.75) )
+						total_lot_dict[account_type][rate]['bonus_tier'] = 'Tier 1'
+						total_lot_dict[account_type][rate]['bonus_lot_usd'] = Decimal(0.75)
 					else:
 						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(1) )
-						total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(1) )
-						total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 2'
-						total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(1)
+						total_lot_dict[account_type][rate]['total_usd'] += ( loop_total_lot * Decimal(1) )
+						total_lot_dict[account_type][rate]['bonus_tier'] = 'Tier 2'
+						total_lot_dict[account_type][rate]['bonus_lot_usd'] = Decimal(1)
 				elif account_type == 'magneto':
 					if loop_total_lot < 99.99:
+						print('error disini', total_lot_dict[account_type], str_rate)
 						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(2) )
-						total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(2) )
-						total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-						total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(2)
+						total_lot_dict[account_type][rate]['total_usd'] += ( loop_total_lot * Decimal(2) )
+						total_lot_dict[account_type][rate]['bonus_tier'] = 'Tier 1'
+						total_lot_dict[account_type][rate]['bonus_lot_usd'] = Decimal(2)
 					else:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(3) )
+						total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(3) )
 						total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(3) )
 						total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 2'
 						total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(3)
