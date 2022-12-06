@@ -403,6 +403,27 @@ def client_edit(request,id_client):
 					client = client_form.save(commit=False)
 					client.updated_by = request.user
 					client.updated_at = timezone.now()
+
+					client_aecode = client_form.cleaned_data['aecode']
+					client_staff = Client_Staff.objects.filter(client__aecode=client_aecode).first()
+					if client_staff == None:
+						staff = Staff.objects.filter(aecode=client_aecode).first()
+						#get active client_staff
+						client_staff = Client_Staff.objects.filter(client=client, staff=staff, is_active=True).first()
+						if client_staff != None and staff.aecode != client_aecode:
+							client_staff.is_active = False
+							client_staff.updated_by = request.user
+							client_staff.save()
+
+						if staff != None:
+							new_client_staff = Client_Staff()
+							new_client_staff.client = client
+							new_client_staff.staff = staff
+							new_client_staff.updated_by = client_staff.created_by = request.user
+							new_client_staff.save()
+
+
+
 					client.save()
 
 					return redirect(reverse('client-list'))
