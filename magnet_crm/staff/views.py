@@ -882,7 +882,122 @@ def staff_report_detail(request,staff_uid):
 
 	return render(request,template,context=context)
 
+def master_report_detail(request):
+	template = 'admin/report/report_staff_master_detail.html'
+	
+	
+	staff_list = Staff.objects.filter(is_active=True, staff_level__level=3).prefetch_related('staff_parent', 'staff_level')
+	date = request.GET.get('date') or None
+	
+	now = timezone.now()
 
+	start_date = 1
+	end_date = None
+
+	
+	if date == None:
+		calculated_year = now.year
+		calculated_month = now.month
+		end_date = calendar.monthrange(calculated_year, calculated_month)[1]
+	else:
+		temp_date = date.split('-')
+		calculated_month = int(temp_date[0])
+		calculated_year = int(temp_date[1])
+		end_date = calendar.monthrange(calculated_year, calculated_month)[1]
+		date_str = str(end_date) + '-' + str(calculated_month) + '-' + str(calculated_year)
+		now = make_aware(datetime.strptime(date_str, '%d-%m-%Y'))
+
+
+	#lot data kantor
+
+	#data 0-2bulan
+	last_two_months_date = now - relativedelta(months=2)
+	last_two_monthsend_date = calendar.monthrange(calculated_year, calculated_month)[0]
+	last_two_months_date = datetime(last_two_months_date.year, last_two_months_date.month, 1)
+	
+	
+	two_months_bonus_dict, two_months_trades = master_calculate_lot_two_months_bonus(staff_list, last_two_months_date, now, end_date)
+	
+	#data > 2bulan
+	more_two_months_bonus_dict, more_two_months_trades = master_calculate_lot_more_than_two_months_bonus(staff_list, last_two_months_date, now, end_date)
+	
+	data_pribadi_months_bonus_dict, data_pribadi_trades = master_calculate_data_pribadi_bonus(staff_list, now, end_date)
+	
+	print('sampe disni')
+
+	#data-ib
+	show_ib_bonus = False
+	ib_staffs = IB_Staff.objects.filter(staff__in=staff_list, is_active=True).prefetch_related('staff')
+	staff_ids = []
+	for ib_staff in ib_staffs:
+		staff_ids.append(ib_staff.staff.id)
+
+	ib_staff_query = Staff.objects.filter(id__in=staff_ids)
+	ib_bonus_dict = {}
+	ib_client_trades = {}
+	if len(staff_ids):
+		show_ib_bonus = True
+		ib_bonus_dict, ib_client_trades = master_calculate_ib_bonus(ib_staff_query, now, end_date)
+	else:
+		ib_bonus_dict['elastico'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
+		ib_bonus_dict['elektro'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
+		ib_bonus_dict['magneto'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
+
+	
+	#get_total bonus 
+	total_bonus_lot_usd = 0
+	total_bonus_lot_idr = 0
+	for account_type, bonus_dict, in two_months_bonus_dict.items():
+		total_bonus_lot_usd += bonus_dict['total_usd']
+		total_bonus_lot_idr += bonus_dict['total_idr']
+	
+	total_bonus_two_month_more_usd = 0
+	total_bonus_two_month_more_idr = 0
+	for account_type, bonus_dict, in more_two_months_bonus_dict.items():
+		total_bonus_lot_usd += bonus_dict['total_usd']
+		total_bonus_lot_idr += bonus_dict['total_idr']
+
+	total_bonus_data_pribadi_usd = 0
+	total_bonus_data_pribadi_idr = 0
+	for account_type, bonus_dict, in data_pribadi_months_bonus_dict.items():
+		total_bonus_data_pribadi_usd += bonus_dict['total_usd']
+		total_bonus_data_pribadi_idr += bonus_dict['total_idr']
+	
+
+	total_bonus_ib_usd = 0 
+	total_bonus_ib_idr = 0
+	for account_type, bonus_dict, in ib_bonus_dict.items():
+		total_bonus_ib_usd += bonus_dict['total_usd']
+		total_bonus_ib_idr += bonus_dict['total_idr']
+	
+	
+
+	#data > pribadi
+	# pribadi_bonus_dict = calculate_data_pribadi_bonus(staff, now, end_date)
+
+	# print('two_months_bonus_dict', two_months_bonus_dict)
+	print('ib_bonus_dict', ib_bonus_dict, type(ib_bonus_dict))
+	context = {}
+	context['two_months_bonus_dict'] = two_months_bonus_dict
+	context['two_months_trades'] = two_months_trades
+	context['more_two_months_bonus_dict'] = more_two_months_bonus_dict
+	context['more_two_months_trades'] = more_two_months_trades
+	context['data_pribadi_months_bonus_dict'] = data_pribadi_months_bonus_dict
+	context['data_pribadi_trades'] = data_pribadi_trades
+	context['ib_bonus_dict'] = ib_bonus_dict
+	context['ib_client_trades'] = ib_client_trades
+	context['total_bonus_lot_usd'] = total_bonus_lot_usd
+	context['total_bonus_lot_idr'] = total_bonus_lot_idr
+	context['total_bonus_data_pribadi_usd'] = total_bonus_data_pribadi_usd
+	context['total_bonus_data_pribadi_idr'] = total_bonus_data_pribadi_idr
+	context['total_bonus_ib_usd'] = total_bonus_ib_usd
+	context['total_bonus_ib_idr'] = total_bonus_ib_idr
+	context['show_ib_bonus'] = show_ib_bonus
+
+
+
+
+	return render(request,template,context=context)
 def staff_supervisor_report_detail(request,staff_uid):
 	template = 'admin/report/report_staff_supervisor_detail.html'
 	

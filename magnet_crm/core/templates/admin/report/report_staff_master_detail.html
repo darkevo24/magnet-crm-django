@@ -1,4 +1,4 @@
-
+report_staff_master_detail
 {% extends 'base/head.html' %}
 {% load core_extras %}
 {% block content %}
@@ -22,13 +22,10 @@
 		</div>
 		<div class="card-body">
 			<div class="row">
-				<dir class="col" >
-					Staff : {{staff}}<br>
-					Position : {{staff.staff_level.level_name}}
-				</dir>
+				<!-- 
 				<dir class="col text-right" >
 					<a class="btn btn-success" id="download-btn">Export</a>
-				</dir>
+				</dir> -->
 			</div>	
 			<form method="POST" id="export_form">
 				{% csrf_token %}
@@ -196,8 +193,8 @@
                     
             	</div>
 			</div>
-			<div class="row mb-3" style="line-height: 1">
-				<div class="col-12 ">
+			<div class="row mb-3">
+				<div class="col-12 col-custom-table" style="height: 100%;">
 					<h5>Bonus LOT (Data Kantor 0 -2 months) </h5>
 					<div class="card p-2" style="">
 
@@ -207,6 +204,7 @@
 	                                <th scope="col">#</th>
 	                                <th scope="col">Name</th>
 	                                <th scope="col">FC</th>
+	                                <th scope="col">SPV</th>
 	                                <th scope="col">Created At</th>
 	                                <th scope="col">Account Age (Days)</th>
 	                                <th scope="col">Login</th>
@@ -223,14 +221,15 @@
 						  <tbody>
 							{% for meta_id, trade_dict in two_months_trades.items %}
 	                           	<tr>
-		                           <th scope="row">{{forloop.counter}}</th> 
+		                           <td >{{forloop.counter}}</td> 
 		                        	
-		                            <th scope="row">{{trade_dict.client_name|default:'-'}}</th>
-		                            <th scope="row">{{trade_dict.staff_name|default:'-'}}</th>
-		                            <th scope="row">{{trade_dict.created_at}}</th>
+		                            <td >{{trade_dict.client_name|default:'-'}}</td>
+		                            <td >{{trade_dict.staff_name }}</td>
+		                            <td >{{trade_dict.supervisor_name }}</td>
+		                            <td >{{trade_dict.created_at}}</td>
 		                            <td >{{trade_dict.account_ages }} Days </td>
 		                        	
-		                        	<th scope="row">{{meta_id}}</th>
+		                        	<td scope="row">{{meta_id}}</td>
 	                            	
 	                                <td >{{trade_dict.account_type }}</td>
 	                                
@@ -264,7 +263,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-12 pt-2 ">
+			<div class="col-12 pt-2 " style="height: 100%;">
 				<h5>Bonus LOT (Data Kantor > 2 months) </h5>
 				<div class="card p-2" style="">
 
@@ -274,6 +273,7 @@
                                 <th scope="col">#</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">FC</th>
+                                <th scope="col">SPV</th>
                                 <th scope="col">Created At</th>
                                 <th scope="col">Account Age (Days)</th>
                                 <th scope="col">Login</th>
@@ -293,7 +293,8 @@
 	                           <th scope="row">{{forloop.counter}}</th> 
 	                        	
 	                            <th scope="row">{{trade_dict.client_name|default:'-'}}</th>
-	                            <th scope="row">{{trade_dict.staff_name|default:'-'}}</th>
+	                            <td >{{trade_dict.staff_name }}</td>
+		                        <td >{{trade_dict.supervisor_name }}</td>
 	                            <th scope="row">{{trade_dict.created_at}}</th>
 	                            <td >{{trade_dict.account_ages }} Days </td>
 	                        	
@@ -416,7 +417,7 @@
                 	</div>
             	</div>
             </div>
-			<div class="col-12 pt-2 ">
+			<div class="col-12 pt-2 " style="height:100%">
 				<h5>Bonus LOT (Data Pribadi) </h5>
 				<div class="card p-2" style="">
 
@@ -426,6 +427,7 @@
                                 <th scope="col">#</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">FC</th>
+                                <th scope="col">SPV</th>
                                 <th scope="col">Created At</th>
                                 <th scope="col">Account Age (Days)</th>
                                 <th scope="col">Login</th>
@@ -445,7 +447,8 @@
 	                           <th scope="row">{{forloop.counter}}</th> 
 	                        	
 	                            <th scope="row">{{trade_dict.client_name|default:'-'}}</th>
-	                            <th scope="row">{{trade_dict.staff_name|default:'-'}}</th>
+	                            <td >{{trade_dict.staff_name }}</td>
+		                        <td >{{trade_dict.supervisor_name }}</td>
 	                            <th scope="row">{{trade_dict.created_at}}</th>
 	                            <td >{{trade_dict.account_ages }} Days </td>
 	                        	
@@ -569,7 +572,7 @@
                 	</div>
             	</div>
             </div>
-			<div class="col-12 pt-2 ">
+			<div class="col-12 pt-2 " style="height:100%">
 				<h5>Bonus LOT IB </h5>
 				<div class="card p-2" style="">
 
@@ -579,6 +582,7 @@
                                 <th scope="col">#</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">FC</th>
+                                <th scope="col">SPV</th>
                                 <th scope="col">Created At</th>
                                 <th scope="col">Account Age (Days)</th>
                                 <th scope="col">Login</th>
@@ -598,7 +602,8 @@
 	                           <th scope="row">{{forloop.counter}}</th> 
 	                        	
 	                            <th scope="row">{{trade_dict.client_name|default:'-'}}</th>
-	                            <th scope="row">{{trade_dict.staff_name|default:'-'}}</th>
+	                            <td scope="row">{{trade_dict.staff_name }}</td>
+		                        <td scope="row">{{trade_dict.supervisor_name }}</td>
 	                            <th scope="row">{{trade_dict.created_at}}</th>
 	                            <td >{{trade_dict.account_ages }} Days </td>
 	                        	
@@ -641,7 +646,7 @@
 <script type="text/javascript">
 	function change_filter(){
         from = $("#date-from-val").val()
-        window.location = "{% url 'staff-supervisor-report-detail' staff.uid %}"+"?date="+from
+        window.location = "{% url 'master-report-detail' %}"+"?date="+from
 
     }
     $( document ).ready(function() {
@@ -662,10 +667,9 @@
 		    },
 		    scrollX: true,
 		    // scrollY: '350px',
-		    scrollCollapse: true,
+		    
 		    fixedColumns: {
-		        leftColumns: 2,
-		        // rightColumns: 1
+		        leftColumns: 4,
 		    }
 		});
 		$("#table_bonus_more_than_two_months").DataTable({
@@ -679,7 +683,7 @@
 		    // scrollY: '350px',
 		    scrollCollapse: true,
 		    fixedColumns: {
-		        leftColumns: 2,
+		        leftColumns: 4,
 		        // rightColumns: 1
 		    }
 		});
@@ -694,7 +698,7 @@
 		    // scrollY: '350px',
 		    scrollCollapse: true,
 		    fixedColumns: {
-		        leftColumns: 2,
+		        leftColumns: 4,
 		        // rightColumns: 1
 		    }
 		});
@@ -711,11 +715,14 @@
 			    // scrollY: '350px',
 			    scrollCollapse: true,
 			    fixedColumns: {
-			        leftColumns: 2,
+			        leftColumns: 4,
 			        // rightColumns: 1
 			    }
 			});
 		{% endif %}
+
+		$('.col-custom-table').css('height', '100%');
+		console.log('finished')
 		
     });
 </script>
