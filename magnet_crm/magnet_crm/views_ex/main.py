@@ -77,7 +77,8 @@ def admin_login(request):
 						return redirect(request.GET.get('next'))
 					else:
 						return redirect(reverse('dashboard'))
-				else:
+				# else:
+				# 	error_message = "email and password do not match"
 					
 			else:
 				print('user not found')
