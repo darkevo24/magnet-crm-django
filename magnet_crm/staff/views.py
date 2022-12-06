@@ -999,3 +999,6 @@ def staff_supervisor_report_detail(request,staff_uid):
 
 
 	return render(request,template,context=context)
+
+
+

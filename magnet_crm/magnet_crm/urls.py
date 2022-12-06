@@ -103,7 +103,7 @@ urlpatterns = [
     path('report', staff_views.staff_report, name='staff-report'),
 
     path('report/<uuid:staff_uid>', staff_views.staff_report_detail, name='staff-report-detail'),
-    path('report/master/<uuid:staff_uid>', staff_views.master_report_detail, name='master-report-detail'), 
+    path('report/master', staff_views.master_report_detail, name='master-report-detail'), 
     path('report/supervisor/<uuid:staff_uid>', staff_views.staff_supervisor_report_detail, name='staff-supervisor-report-detail'),
     path('ib', staff_views.ib_list, name='ib-list'),
     path('ib/add', staff_views.ib_add, name='ib-add'),
