@@ -50,34 +50,39 @@ def admin_login(request):
 			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
 			
-
-			user = authenticate(request, username=email, password=password)
-			
-			data = User.objects.first()
-			print(data,"ini data")
-			profile = Profile.objects.filter(user=user).first()
+			user = User.objects.filter(email=email).first()			
 
 			if user is not None:
-				login(request, user)
 				
-				profile = user.profile
-				profile.last_login_ip = get_client_ip(request)
-				profile.save()
-				staff = Staff.objects.filter(profile__user__id=user.id, is_active=True).first()
-				if staff != None:
-					level_name = staff.staff_level.level_name
-					request.session['level_name'] = level_name
+				
+				auth_user = authenticate(request, username=email, password=password)
+				if auth_user != None:
+					login(request, user)
+					data = User.objects.first()
+					print(data,"ini data")
+					profile = Profile.objects.filter(user=user).first()
 
-				else:
-					request.session['level_name'] = 'Admin'
+					profile = user.profile
+					profile.last_login_ip = get_client_ip(request)
+					profile.save()
+					staff = Staff.objects.filter(profile__user__id=user.id, is_active=True).first()
+					if staff != None:
+						level_name = staff.staff_level.level_name
+						request.session['level_name'] = level_name
 
-				if request.GET.get('next') != None:
-					return redirect(request.GET.get('next'))
-				else:
-					return redirect(reverse('dashboard'))
+					else:
+						request.session['level_name'] = 'Admin'
+
+					if request.GET.get('next') != None:
+						return redirect(request.GET.get('next'))
+					else:
+						return redirect(reverse('dashboard'))
+				# else:
+				# 	error_message = "email and password do not match"
+					
 			else:
 				print('user not found')
-				error_message = "Password salah"
+				error_message = "User not found"
 
 	context = {
 		'form': form,
