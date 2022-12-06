@@ -116,10 +116,10 @@ def dashboard(request):
 
 	form_color = ColorForm(None)
 	staff = Staff.objects.filter(profile__user=request.user).first()
-	client_staff_list = Client_Staff.objects.filter(staff=staff, is_active=True).order_by('-client__magnet_created_at').prefetch_related('client')
+	client_staff_list = Client_Staff.objects.filter(staff=staff, is_active=True).prefetch_related('client')
 	client_ids = []
 
-	client_list = Client.objects.filter(is_active=True,id__in=client_staff_list.values_list('client__id',flat=True)).order_by('-magnet_created_at')
+	client_list = Client.objects.filter(is_active=True,id__in=client_staff_list.values_list('client__id',flat=True))
 	client_color = {}
 	client_color_text = {}
 	color_dict = {
@@ -150,7 +150,7 @@ def dashboard(request):
 
 	if get_all_user == True	:
 		total_client = Client.objects.filter(is_active=True).order_by("nama").count()
-		client_list = Client.objects.filter(is_active=True).order_by('created_at')
+		client_list = Client.objects.filter(is_active=True).order_by('-magnet_created_at')
 	else:
 		total_client = client_staff_list.count()
 

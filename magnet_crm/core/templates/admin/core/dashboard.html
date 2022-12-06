@@ -212,7 +212,6 @@
                                     {% for client in all_client %}
                                         {% if not client.is_deposit %}
                                         <tr>
-                                          
                                             <td scope="row"><i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="    icon-circle2 mr-1"></i>
                                             </td>
                                             <td scope="row" hidden>{{client_color_text|dict_get:client.id}}</td>
