@@ -334,7 +334,7 @@ def client_list(request):
 
 	else:
 		template = 'admin/client/admin_client_list.html'
-		client_list = Client.objects.filter(is_active=True).order_by("created_at")
+		client_list = Client.objects.filter(is_active=True).order_by("-created_at")
 		client_staff_list = Client_Staff.objects.none()
 
 		
