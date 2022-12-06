@@ -346,12 +346,13 @@ def client_list(request):
 		client_list = Client.objects.filter(is_active=True).order_by("-created_at")
 		client_staff_list = Client_Staff.objects.none()
 
-		
+	form_color = ColorForm(None)
 
 	# messages.success(request, 'Profile details updated.')
 	context = {
 		'client_list': client_list,
 		'client_staff_list': client_staff_list,
+		'form_color' : form_color,
 		'menu':'client',
 		'client_color':client_color,
 		'client_color_text' : client_color_text,

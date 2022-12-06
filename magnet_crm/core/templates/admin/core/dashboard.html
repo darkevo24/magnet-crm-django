@@ -191,7 +191,27 @@
                     <div class="tab-content" style="border:0">
                       <div class="tab-pane active" id="home">
                             
-
+                            <div class="row">
+                                <div class="col-12 d-flex ">
+                                    <div style="padding-right: 2em;">
+                                        <input type="checkbox" class="filter-checkbox" value="Hitam"/> Hitam    
+                                    </div>
+                                    <div style="padding-right: 2em;">
+                                        <input type="checkbox" class="filter-checkbox" value="Kuning"/>  Kuning    
+                                    </div>
+                                    <div style="padding-right: 2em;">
+                                        <input type="checkbox" class="filter-checkbox" value="Merah"/>  Merah
+                                    </div>
+                                    <div style="padding-right: 2em;">
+                                        <input type="checkbox" class="filter-checkbox" value="Hijau"/>  Hijau
+                                    </div>
+                                    <div style="padding-right: 2em;">
+                                        <input type="checkbox" class="filter-checkbox" value="Biru"/>  Biru
+                                    </div>
+                                    
+                                    
+                                </div>
+                            </div>
                             <!-- USING TABLE -->
 
                             <table class="table" id="table-main" width="100%">
@@ -215,7 +235,7 @@
                                             <td scope="row"><i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="    icon-circle2 mr-1"></i>
                                             </td>
                                             <td scope="row" hidden>{{client_color_text|dict_get:client.id}}</td>
-                                            <td scope="row">{{client.nama|default:"-"}}</td>
+                                            <td scope="row">{{client.nama|default:"-"}} {{client_color_text|dict_get:client.id}}</td>
                                             <td scope="row">{{client.phone_no|default:"-"}}</td>
                                             <td scope="row">{{client.email|default:"-"}}</td>
                                             <td scope="row">
@@ -287,7 +307,27 @@
 
                       </div>
                       <div class="tab-pane fade" id="menu1">
-                                            <!-- USING TABLE -->
+                            <div class="row">
+                                <div class="col-12 d-flex ">
+                                    <div style="padding-right: 2em;">
+                                        <input type="checkbox" class="client-filter-checkbox" value="Hitam"/> Hitam    
+                                    </div>
+                                    <div style="padding-right: 2em;">
+                                        <input type="checkbox" class="client-filter-checkbox" value="Kuning"/>  Kuning    
+                                    </div>
+                                    <div style="padding-right: 2em;">
+                                        <input type="checkbox" class="client-filter-checkbox" value="Merah"/>  Merah
+                                    </div>
+                                    <div style="padding-right: 2em;">
+                                        <input type="checkbox" class="client-filter-checkbox" value="Hijau"/>  Hijau
+                                    </div>
+                                    <div style="padding-right: 2em;">
+                                        <input type="checkbox" class="client-filter-checkbox" value="Biru"/>  Biru
+                                    </div>
+                                    
+                                    
+                                </div>
+                            </div>
 
                             <table class="table" id="table-main-2" width="100%">
                               <thead>
@@ -453,7 +493,7 @@
     	console.log( "ready!" );
 
 
-        $("#table-main").DataTable({
+        var dataTableFollowup = $("#table-main").DataTable({
             dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
             language: {
                 search: '<span>Search:</span> _INPUT_',
@@ -469,7 +509,18 @@
             }
         });
 
-        $("#table-main-2").DataTable({
+        $('.filter-checkbox').on('change', function(e){
+            var searchTerms = []
+            $.each($('.filter-checkbox'), function(i,elem){
+                if($(elem).prop('checked')){
+                    searchTerms.push("^" + $(this).val() + "$")
+                }   
+            })
+            dataTableFollowup.column(1).search(searchTerms.join('|'), true, false, true).draw();
+        });
+
+
+        var dataTableClient = $("#table-main-2").DataTable({
             dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
             language: {
                 search: '<span>Search:</span> _INPUT_',
@@ -485,9 +536,26 @@
             }
         });
 
+        $('.client-filter-checkbox').on('change', function(e){
+            console.log('checked')
+            var searchTerms = []
+            $.each($('.client-filter-checkbox'), function(i,elem){
+                if($(elem).prop('checked')){
+                    console.log($(this).val())
+                    searchTerms.push("^" + $(this).val() + "$")
+                }   
+            })
+            dataTableClient.column(1).search(searchTerms.join('|'), true, false, true).draw();
+        });
         $('#table-main-2').DataTable().draw();
     	
-    	events = {{client_schedule_list_json|safe}};
+    	
+
+
+
+
+
+        events = {{client_schedule_list_json|safe}};
     	const calendarBasicViewElement = document.querySelector('.fullcalendar-basic');
 
         // Initialize
