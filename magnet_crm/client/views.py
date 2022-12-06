@@ -317,6 +317,14 @@ def client_list(request):
 	staff = Staff.objects.filter(profile__user=request.user).first()
 
 	client_color = {}
+	client_color_text = {}
+	color_dict = {
+		'008000': 'Hijau',
+		'ff0000': 'Merah',
+		'e7ff00': 'Kuning',
+		'000000': 'Hitam',
+		'0066ff': 'Biru'
+	}
 
 	if not request.user.is_superuser and not staff.staff_level.level < 2:
 		template = 'admin/client/client_list.html'
@@ -330,6 +338,7 @@ def client_list(request):
 		for client_staff in client_staff_list:
 			if client_staff.client.id not in client_color:
 				client_color[client_staff.client.id] = client_staff.color
+				client_color_text[client_staff.client.id] = color_dict[client_staff.color]
 			
 
 	else:
@@ -345,6 +354,7 @@ def client_list(request):
 		'client_staff_list': client_staff_list,
 		'menu':'client',
 		'client_color':client_color,
+		'client_color_text' : client_color_text,
 		# 'staff_level':staff.staff_level.level,
 	}
 	return render(request,template,context=context)

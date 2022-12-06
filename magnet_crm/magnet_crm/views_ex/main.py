@@ -121,9 +121,18 @@ def dashboard(request):
 
 	client_list = Client.objects.filter(is_active=True,id__in=client_staff_list.values_list('client__id',flat=True))
 	client_color = {}
+	client_color_text = {}
+	color_dict = {
+		'008000': 'Hijau',
+		'ff0000': 'Merah',
+		'e7ff00': 'Kuning',
+		'000000': 'Hitam',
+		'0066ff': 'Biru'
+	}
 	for client_staff in client_staff_list:
 		if client_staff.client.id not in client_color:
 			client_color[client_staff.client.id] = client_staff.color
+			client_color_text[client_staff.client.id] = color_dict[client_staff.color]
 		client_ids.append(client_staff.client.id)
 	client_schedule_list = Client_Schedule.objects.filter(client__id__in=client_ids, is_active=True).order_by('schedule_date')
 	client_schedule_list_json = []
@@ -158,6 +167,7 @@ def dashboard(request):
 		'all_client' : client_list,
 		'client_schedule_list_json': json.dumps(client_schedule_list_json),
 		'client_color' : client_color,
+		'client_color_text' : client_color_text,
 		'form_color':form_color,
 		'menu':'dashboard',
 
