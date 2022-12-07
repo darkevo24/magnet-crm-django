@@ -407,24 +407,26 @@ def client_edit(request,id_client):
 					client_aecode = client_form.cleaned_data['aecode']
 
 					#get existing client_staff
-					client_staff = Client_Staff.objects.filter(client=client, is_active=True),first()
-					old_staff = client.staff
-					if old_staff.aecode != client_aecode:
-						selected_staff = Staff.objects.filter(aecode=client_aecode, is_active=True).first()
-						new_client_staff = Client_Staff()
-						new_client_staff.client = client
-						new_client_staff.staff = selected_staff
-						new_client_staff.updated_by = new_client_staff.created_by = request.user
-						new_client_staff.save()
+					client_staff = Client_Staff.objects.filter(client=client, is_active=True).first()
+					if client_staff != None:
+						old_staff = client_staff.staff
+						if old_staff != None:
+							if old_staff.aecode != client_aecode:
+								selected_staff = Staff.objects.filter(aecode=client_aecode, is_active=True).first()
+								new_client_staff = Client_Staff()
+								new_client_staff.client = client
+								new_client_staff.staff = selected_staff
+								new_client_staff.updated_by = new_client_staff.created_by = request.user
+								new_client_staff.save()
 
-						old_client_journey_list = Client_Journey.objects.filter(client=client, staff=old_staff, is_active=True)
-						for old_client_journey in old_client_journey_list:
-							new_client_journey = Client_Journey()
-							new_client_journey.client = client
-							new_client_journey.staff = selected_staff
-							new_client_journey.journal_type = old_client_journey.journal_type
-							new_client_journey.updated_by = new_client_journey.created_by = request.user
-							new_client_journey.save()
+								old_client_journey_list = Client_Journey.objects.filter(client=client, staff=old_staff, is_active=True)
+								for old_client_journey in old_client_journey_list:
+									new_client_journey = Client_Journey()
+									new_client_journey.client = client
+									new_client_journey.staff = selected_staff
+									new_client_journey.journal_type = old_client_journey.journal_type
+								new_client_journey.updated_by = new_client_journey.created_by = request.user
+								new_client_journey.save()
 					# client_staff = Client_Staff.objects.filter(client__aecode=client_aecode).first()
 					# if client_staff == None:
 					# 	staff = Staff.objects.filter(aecode=client_aecode).first()
