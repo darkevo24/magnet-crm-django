@@ -92,6 +92,30 @@ def admin_login(request):
 
 	return render(request,template, context=context)
 
+def change_staff_password(request):
+	template = 'admin/core/change_password.html'
+	form = StaffForgetPasswordForm(request.POST or None)
+
+	if request.POST:
+		if form.is_valid():
+			
+			new_password = form.cleaned_data['new_password']
+			confirm_password = form.cleaned_data['new_password']
+			print('valid', new_password, confirm_password)
+			if new_password == confirm_password :
+				user = User.objects.get(id = request.user.id)
+				user.set_password(new_password)
+				user.save()
+			#check passsword lama sama dengan password yg ada didatabase
+			#check lagi new_password == confirm password
+			#change password usernya gmn 
+			return redirect(reverse('dashboard'))			
+
+	context = {}
+	context["form"] = form
+
+	return render(request,template,context=context)
+
 def index(request):
 	template = 'list.html'
 	tree_level = request.GET.get('level')

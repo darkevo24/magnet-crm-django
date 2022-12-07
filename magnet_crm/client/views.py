@@ -24,6 +24,7 @@ from magnet_crm.task import *
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 import csv
+import openpyxl
 from io import StringIO
 from decimal import *
 from django.contrib.auth.decorators import login_required
@@ -42,49 +43,151 @@ def client_import(request):
 
 				if import_form.is_valid():
 					
-					csv_file = import_form.cleaned_data['file']
-					file = csv_file.read().decode('utf-8').splitlines()
+					# csv_file = import_form.cleaned_data['file']
+					# file = csv_file.read().decode('utf-8').spl
+					# iterating over the rows and
+					# getting value from each cell in rowitlines()
 					# print(file)
-					counter = 0 
-					for row in file:
-						# print(row)
-						if counter == 0:
-							counter+=1
-							pass
-						else:
-							print("temp",row)
 
-							temp = row.split(";")
-							print("temp",temp)
+					excel_file = request.FILES["file"]
+					wb = openpyxl.load_workbook(excel_file)
+					external_data_wb = wb["Data Eksternal"]
+					leads_data_wb = wb["Data Leads"]
+
+					# Langsung dibuat client
+					# for row in external_data_wb.iter_rows(2, external_data_wb.max_row):
+					# 	if row[0].value != None:
+					# 		print("Tanggal data diberikan: ", row[1].value)
+					# 		print("Nama: ", row[2].value)
+					# 		print("No Telepon: ", row[3].value)
+					# 		print("Email: ", row[4].value)
+					# 		print("Source: ", row[5].value)
+					# 		print("Medium: ", row[6].value)
+					# 		print("Campaign: ", row[7].value)
+					# 		print("GCLID: ", row[8].value)
+					# 		print("Category data: ", row[9].value)
+					# 		print("Tanggal respon: ", row[10].value)
+					# 		new_client = Client()
+					# 		new_client.created_at = row[1].value
+					# 		new_client.created_by = request.user
+					# 		new_client.nama = row[2].value
+					# 		new_client.phone_no = row[3].value
+					# 		new_client.email = row[4].value
+					# 		new_client.source = 2
+					# 		if row[5].value == "google":
+					# 			new_client.source_detail_1 = None
+					# 			new_client.source_detail_2 = "4"
+					# 		elif row[5].value == "fb / ig":
+					# 			new_client.source_detail_1 = None
+					# 			new_client.source_detail_2 = "1"
+					# 		else:
+					# 			new_client.source_detail_1 = None
+					# 		new_client.medium = row[6].value
+					# 		new_client.campaign = row[7].value
+					# 		new_client.gclid = row[8].value
+					# 		new_client.save()
+
+					# 		selected_staff = Staff.objects.filter(id=import_form.cleaned_data['staff']).first()
+					# 		if selected_staff is not None and selected_staff is not "":
+					# 			c_staff = Client_Staff()
+					# 			c_staff.client = new_client
+					# 			c_staff.staff =	selected_staff
+					# 			c_staff.created_by = request.user				
+					# 			c_staff.save()
+
+					# Cek client udah exist belom, query email
+					for row in leads_data_wb.iter_rows(2, leads_data_wb.max_row):
+						if row[0].value != None:
+							# print("Tanggal data: ", row[1].value)
+							# print("Nama: ", row[2].value)
+							# print("No Telepon: ", row[3].value)
+							# print("Email: ", row[4].value)
+							# print("Source: ", row[8].value)
+							# print("Medium: ", row[9].value)
+							# print("Campaign: ", row[10].value)
+							# print("AE code: ", row[11].value)
+							# print("User code: ", row[12].value)
+							# print("Category data: ", row[13].value)
+							# print("Tanggal respon: ", row[14].value)
+							existing_client = Client.objects.filter(email=row[4].value).first()
+							if existing_client:
+								if existing_client.aecode != row[11].value and row[11].value != "-":
+									existing_client.is_active = False
+							
 							new_client = Client()
-							new_client.nama = temp[2]
-							try:
-								new_client.phone_no = temp[3]
-							except:
-								new_client.phone_no = 0
-							new_client.email = temp[4]
-
-							if temp[5] == "google":
-
+							new_client.created_at = row[1].value
+							print("new_client.created_at: ", new_client.created_at)
+							new_client.created_by = request.user
+							print("new_client.created_by: ", new_client.created_by)
+							new_client.nama = row[2].value
+							print("new_client.nama: ", new_client.nama)
+							new_client.phone_no = row[3].value
+							print("new_client.phone_no: ", new_client.phone_no)
+							new_client.email = row[4].value
+							print("new_client.email: ", new_client.email)
+							new_client.source = 1
+							print("new_client.source: ", new_client.source)
+							if row[8].value == "google":
 								new_client.source_detail_1 = None
 								new_client.source_detail_2 = "4"
-							elif temp[5] == "fb / ig":
+							elif row[8].value == "fb / ig":
 								new_client.source_detail_1 = None
 								new_client.source_detail_2 = "1"
 							else:
 								new_client.source_detail_1 = None
+							print("new_client.source_detail_1: ", new_client.source_detail_1)
+							print("new_client.source_detail_2: ", new_client.source_detail_2)
+							new_client.medium = row[9].value
+							print("new_client.medium: ", new_client.medium)
+							new_client.campaign = row[10].value
+							print("new_client.campaign: ", new_client.campaign)
+							new_client.aecode = row[11].value
+							print("new_client.aecode: ", new_client.aecode)
+							print("----------------------------------------------------------")
+							
 
-							new_client.created_by = request.user
-							new_client.save()
+						
 
-							selected_staff = Staff.objects.filter(id=import_form.cleaned_data['staff']).first()
-							if selected_staff is not None and selected_staff is not "":
+					# counter = 0 
+					# for row in file:
+					# 	# print(row)
+					# 	if counter == 0:
+					# 		counter+=1
+					# 		pass
+					# 	else:
+					# 		print("temp",row)
+
+					# 		temp = row.split(";")
+					# 		print("temp",temp)
+					# 		new_client = Client()
+					# 		new_client.nama = temp[2]
+					# 		try:
+					# 			new_client.phone_no = temp[3]
+					# 		except:
+					# 			new_client.phone_no = 0
+					# 		new_client.email = temp[4]
+
+					# 		if temp[5] == "google":
+
+					# 			new_client.source_detail_1 = None
+					# 			new_client.source_detail_2 = "4"
+					# 		elif temp[5] == "fb / ig":
+					# 			new_client.source_detail_1 = None
+					# 			new_client.source_detail_2 = "1"
+					# 		else:
+					# 			new_client.source_detail_1 = None
+
+					# 		new_client.created_by = request.user
+					# 		new_client.save()
+
+					# 		selected_staff = Staff.objects.filter(id=import_form.cleaned_data['staff']).first()
+					# 		if selected_staff is not None and selected_staff is not "":
 								
-								c_staff = Client_Staff()
-								c_staff.client = new_client
-								c_staff.staff =	selected_staff
-								c_staff.created_by = request.user				
-								c_staff.save()
+					# 			c_staff = Client_Staff()
+					# 			c_staff.client = new_client
+					# 			c_staff.staff =	selected_staff
+					# 			c_staff.created_by = request.user				
+					# 			c_staff.save()
 
 
 
