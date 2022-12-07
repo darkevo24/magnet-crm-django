@@ -12,6 +12,10 @@ class LoginForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}), required=True)
 	
 
+class StaffForgetPasswordForm(forms.Form):
+	new_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'New Password'}), required=True)
+	confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password'}), required=True)
+
 class SettingsForm(ModelForm):
 	class Meta:
 		model = Settings
