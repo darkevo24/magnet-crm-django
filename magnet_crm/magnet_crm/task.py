@@ -64,11 +64,14 @@ schedule_seconds, created = IntervalSchedule.objects.get_or_create(
     period=IntervalSchedule.SECONDS,
 )
 
-period_task, _ = PeriodicTask.objects.get(
-    interval=schedule,
-    name='sync_data_magnet_1',
-    task='magnet_crm.task.sync_data_magnet',
-    start_time=timezone.now(),
+check_task = PeriodicTask.objects.get(name='sync_data_magnet')
+print('check_task', check_task)
+if check_task == None:
+	period_task, _ = PeriodicTask.objects.get_or_create(
+	    interval=schedule,
+	    name='',
+	    task='magnet_crm.task.sync_data_magnet',
+	    start_time=timezone.now(),
 )
 
 
