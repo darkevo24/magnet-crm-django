@@ -391,7 +391,12 @@ def client_edit(request,id_client):
 	template = 'admin/client/client_add.html'
 
 	client = Client.objects.filter(id=id_client,is_active=True).first()
-	client_form = ClientForm(request.POST or None,instance=client)
+	client_staff = Client_Staff.objects.filter(client=client, is_active=True).first()
+	
+	aecode = ''
+	if client_staff != None:
+		aecode = client_staff.staff.aecode
+	client_form = ClientForm(request.POST or None,instance=client, aecode=aecode)
 
 
 	if request.POST:

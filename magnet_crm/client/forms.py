@@ -28,9 +28,12 @@ class ClientForm(ModelForm):
 		]
 	
 	def __init__(self, *args, **kwargs):
+		aecode = kwargs.pop('aecode', None)
 		super(ClientForm, self).__init__(*args, **kwargs)
+		
 		self.fields['source_detail_1'].required = False
 		self.fields['source_detail_2'].required = False
+		self.fields['aecode'].initial = aecode
 		
 
 class ClientImportForm(forms.Form):
