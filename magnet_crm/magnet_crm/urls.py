@@ -21,6 +21,7 @@ from magnet_crm.views_ex import (
 )
 from staff import views as staff_views
 from client import views as client_views
+from core import views as core_views
 from notification import views as notification_views
 from django.conf.urls.static import static
 from django.conf import settings
@@ -40,7 +41,9 @@ urlpatterns = [
 
     path('client_import', client_views.client_import, name='client-import'),
 
-    
+    path('change_password', main_view.change_staff_password, name='change_password'),
+
+
     
 
     # Admin Dashboard
@@ -87,6 +90,7 @@ urlpatterns = [
 
     path('client/position/<str:client_id>', client_views.client_position, name='client-position'),
     path('client/position/history/<str:client_id>', client_views.client_position_history, name='client-position-history'),
+
 
     # Staff
     path('staff', staff_views.staff_list, name='staff-list'),
