@@ -306,6 +306,7 @@ def sync_data_magnet():
 
 			if update == True:
 				update_client_data(mycursor, start_from, user)
+				create_client_journey_mt5(mycursor, start_from)
 			
 			check_user_deposit()
 
@@ -512,7 +513,32 @@ def update_client_data(mycursor, last_id, user):
 	print("total nambah "+str(counter))
 
 
+def create_client_journey_mt5(mycursor, start_from):
+	super_user = User.objects.filter(is_superuser=True).first()
+	string_sql = "Select user_id, login, account_type , updated_at, rate FROM vif_cabinet_legal_form_decleration WHERE user_id="+ str(start_from)+ " ORDER BY 'id' ASC"
+	mycursor.execute(string_sql)
+	new_legal_form_declerations = mycursor.fetchall()
+	for new_legal_form_decleration in new_legal_form_declerations:
+		login_id = new_legal_form_declerations[1]
+		if login_id != '' and login_id != None:
+			client = Client.objects.filter(magnet_id=new_legal_form_declerations[0]).first()
+			client_staff = Client_Staff.objects.filter(client__magnet_id=new_legal_form_declerations[0], is_active=True).first()
+			account_type = new_legal_form_declerations[2]
+			login_created_at = new_legal_form_declerations[3]
+			rate = new_legal_form_declerations[4]
+			
+			client_journey = Client_Journey()
+			client_journey.client_staff
+			client_journey.journal_type = 'login_created'
+			client_journey.extra = str(account_type) + ' ' + str(rate) + ' ' + login_id
+			client_journey.updated_by = client_journey.created_at = super_user
+			client_journey.save()
+
+
+
+
 def check_aecode(mycursor, start_from, user):
+	string_sql = "SELECT id, aecode FROM v_users Where aecode <> '991-000000' and  aecode <> '-000000' and aecode <> '0-00' ORDER BY ID ASC"
 
 	string_sql = "SELECT id, aecode FROM v_users Where aecode <> '991-000000' and  aecode <> '-000000' and aecode <> '0-00' ORDER BY ID ASC"
 	mycursor.execute(string_sql)

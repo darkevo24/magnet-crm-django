@@ -271,9 +271,11 @@ class Client_Journey(Base_Model):
 		('called', 'Called'), 
 		('emailed', 'Emailed'),
 		('changed_fc', 'Change FC'), 
+		('login_created', 'Login Creaated'), 
 	]
 	
 	journal_type = models.CharField(max_length=255, choices=JOURNAL_TYPE)
+	extra = models.CharField(max_length=255, default='')
 	
 	def __str__(self):
 		return self.client.nama + ' ' + self.journal_type + ' at ' + self.created_at
