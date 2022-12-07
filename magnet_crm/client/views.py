@@ -26,9 +26,11 @@ from django.utils.timezone import make_aware
 import csv
 from io import StringIO
 from decimal import *
+from django.contrib.auth.decorators import login_required
 
 CLEANR = re.compile('<.*?>') 
 
+@login_required
 def client_import(request):
 	template = 'admin/client/client_import.html'
 	import_form = ClientImportForm(request.POST or None, request.FILES or None)
@@ -112,6 +114,7 @@ def client_import(request):
 	return render(request,template,context=context)
 
 
+@login_required
 def client_own_suspect_list(request):
 	now = timezone.now()
 	month = request.GET.get('month')
@@ -134,6 +137,7 @@ def client_own_suspect_list(request):
 	}
 	return render(request,template,context=context)
 
+@login_required
 def client_own_suspect_detail(request,uid_client_staff):
 	template = 'admin/client/suspect/client_own_detail.html'
 	
@@ -168,6 +172,7 @@ def client_own_suspect_detail(request,uid_client_staff):
 
 
 
+@login_required
 def client_suspect_list(request):
 	now = timezone.now()
 	month = request.GET.get('month')
@@ -192,6 +197,7 @@ def client_suspect_list(request):
 	}
 	return render(request,template,context=context)
 
+@login_required
 def client_suspect_history_list(request):
 		
 	template = 'admin/client/suspect/history_list.html'
@@ -202,6 +208,8 @@ def client_suspect_history_list(request):
 	}
 	return render(request,template,context=context)
 
+
+@login_required
 def client_suspect_detail(request,id_client_sus):
 	template = 'admin/client/suspect/client_detail.html'
 	# cur_staff = Staff.objects.filter(profile__user=request.user).first()
@@ -307,12 +315,15 @@ def client_suspect_detail(request,id_client_sus):
 		# 'id_client':id_client,
 	}
 	return render(request,template,context=context)
+
+@login_required	
 def client_sync(request):
 	sync_data_magnet()
 	# check_user_deposit()
 	
 	return redirect(reverse('client-list'))
 
+@login_required
 def client_list(request):
 		
 	staff = Staff.objects.filter(profile__user=request.user).first()
@@ -487,6 +498,7 @@ def client_edit(request,id_client):
 	}
 	return render(request,template,context=context)
 
+@login_required
 def client_edit_color(request,id_client, color_str):
 	template = 'admin/client/client_add.html'
 
@@ -508,6 +520,7 @@ def client_edit_color(request,id_client, color_str):
 
 	return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+@login_required
 def client_set_hot(request,id_client, action):
 
 
@@ -531,6 +544,7 @@ def client_set_hot(request,id_client, action):
 
 
 
+@login_required
 def client_delete(request,id_client):
 	
 	client = Client.objects.filter(id=id_client).first()
@@ -540,7 +554,7 @@ def client_delete(request,id_client):
 	client.save()
 	return redirect(reverse('client-list'))
 
-
+@login_required
 def request_own(request,id_client):
 	template = 'admin/client/client_detail_list.html'
 	cur_staff = Staff.objects.filter(profile__user=request.user).first()
@@ -555,6 +569,7 @@ def request_own(request,id_client):
 	messages.success(request, "Request Berhasil")
 	return redirect(reverse('client-detail-list',id_client))
 
+@login_required
 def detail_list(request,id_client):
 	template = 'admin/client/client_detail_list.html'
 	cur_staff = Staff.objects.filter(profile__user=request.user).first()
@@ -591,6 +606,7 @@ def detail_list(request,id_client):
 	}
 	return render(request,template,context=context)
 
+@login_required
 def client_followup_list(request,id_client):
 	template = 'admin/client/client_followup_list.html'
 	cur_staff = Staff.objects.filter(profile__user=request.user).first()
@@ -604,11 +620,13 @@ def client_followup_list(request,id_client):
 	return render(request,template,context=context)
 
 
+@login_required
 def cleanhtml(raw_html):
 	  cleantext = re.sub(CLEANR, '', raw_html)
 	  return cleantext
 
 
+@login_required
 def client_schedule_list(request, client_id):
 	template = 'admin/client/client_schedule/list.html'
 	staff = Staff.objects.filter(profile__user=request.user).first()
@@ -623,6 +641,7 @@ def client_schedule_list(request, client_id):
 	}
 	return render(request,template,context=context)
 
+@login_required
 def client_schedule_add(request, client_id):
 	template = 'admin/client/client_schedule/add.html'
 	staff = Staff.objects.filter(profile__user=request.user).first()
@@ -677,6 +696,7 @@ def client_schedule_add(request, client_id):
 
 	return render(request,template,context=context)
 
+@login_required
 def client_schedule_update(request, client_schedule_uid):
 	
 	template = 'admin/client/client_schedule/update.html'
@@ -724,6 +744,7 @@ def client_schedule_update(request, client_schedule_uid):
 
 	return render(request,template,context=context)
 
+@login_required
 def client_journey_add(request, client_id, journey_type):
 	data = {}
 	data['status'] = False
@@ -739,6 +760,7 @@ def client_journey_add(request, client_id, journey_type):
 		print(e)
 	return JsonResponse(data)
 
+@login_required
 def feedback_list(request):
 	template = 'admin/client/client_feedback/list.html'
 
@@ -795,6 +817,7 @@ def feedback_list(request):
 
 	return render(request,template,context=context)
 
+@login_required
 def client_position(request, client_id):
 	client = Client.objects.filter(id=client_id).first()
 	print(client.magnet_id)
@@ -809,6 +832,7 @@ def client_position(request, client_id):
 	# template = 'admin/client/client_schedule/list.html'
 	return render(request, template, context)
 
+@login_required
 def client_position_history(request, client_id):
 	client = Client.objects.filter(id=client_id).first()
 	print(client.magnet_id)
