@@ -103,28 +103,65 @@ def client_import(request):
 							# print("Category data: ", row[13].value)
 							# print("Tanggal respon: ", row[14].value)
 							existing_client = Client.objects.filter(email=row[4].value).first()
-							if existing_client:
+							if existing_client != None:
 								if existing_client.aecode != row[11].value and row[11].value != "-":
-									existing_client.is_active = False
-							
-							new_client = Client()
-							new_client.created_at = row[1].value
-							new_client.created_by = request.user
-							new_client.nama = row[2].value
-							new_client.phone_no = row[3].value
-							new_client.email = row[4].value
-							new_client.source = 1
-							if row[8].value == "google":
-								new_client.source_detail_1 = None
-								new_client.source_detail_2 = "4"
-							elif row[8].value == "fb / ig":
-								new_client.source_detail_1 = None
-								new_client.source_detail_2 = "1"
+									# existing_client.is_active = False
+									client_staff = Client_Staff.objects.filter(is_active=True, client=existing_client).first()
+									if client_staff.staff.aecode != row[11].value:
+										client_staff.is_active = False
+										client_staff.save()
+
+										selected_staff = Staff.objects.filter(aecode=row[11].value, is_active=True).first()
+										new_client_staff = Client_Staff()
+										new_client_staff.client = client
+										new_client_staff.staff = selected_staff
+										new_client_staff.updated_by = new_client_staff.created_by = request.user
+										new_client_staff.save()
+
+										client_journey_list = Client_Journey.objects.filter(client=existing_client, is_active=True)
+										for client_journey in client_journey_list:
+											client_journey.is_active = False
+											client_journey.updated_by = request.user
+											client_journey.save()
+
+											new_client_journey = Client_Journey()
+											new_client_journey.client = existing_client
+											new_client_journey.staff = selected_staff
+											new_client_journey.journal_type = client_journey.journal_type
+											new_client_journey.created_by = request.user
+											new_client_journey.updated_by = request.user
+											new_client_journey.created_at = client_journey.created_at
+											new_client_journey.save()
+
 							else:
-								new_client.source_detail_1 = None
-							new_client.medium = row[9].value
-							new_client.campaign = row[10].value
-							new_client.aecode = row[11].value						
+							
+								new_client = Client()
+								new_client.created_at = row[1].value
+								new_client.created_by = request.user
+								new_client.nama = row[2].value
+								new_client.phone_no = row[3].value
+								new_client.email = row[4].value
+								new_client.source = 1
+								if row[8].value == "google":
+									new_client.source_detail_1 = None
+									new_client.source_detail_2 = "4"
+								elif row[8].value == "fb / ig":
+									new_client.source_detail_1 = None
+									new_client.source_detail_2 = "1"
+								else:
+									new_client.source_detail_1 = None
+								new_client.medium = row[9].value
+								new_client.campaign = row[10].value
+								new_client.aecode = row[11].value	
+								new_client.save()					
+
+								selected_staff = Staff.objects.filter(aecode=row[11].value, is_active=True).first()
+								new_client_staff = Client_Staff()
+								new_client_staff.client = new_client
+								new_client_staff.staff = selected_staff
+								new_client_staff.updated_by = new_client_staff.created_by = request.user
+								new_client_staff.save()
+								
 
 					# counter = 0 
 					# for row in file:
