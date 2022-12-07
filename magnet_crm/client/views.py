@@ -427,6 +427,13 @@ def client_edit(request,id_client):
 									new_client_journey.journal_type = old_client_journey.journal_type
 								new_client_journey.updated_by = new_client_journey.created_by = request.user
 								new_client_journey.save()
+					else:
+						selected_staff = Staff.objects.filter(aecode=client_aecode, is_active=True).first()
+						new_client_staff = Client_Staff()
+						new_client_staff.client = client
+						new_client_staff.staff = selected_staff
+						new_client_staff.updated_by = new_client_staff.created_by = request.user
+						new_client_staff.save()
 					# client_staff = Client_Staff.objects.filter(client__aecode=client_aecode).first()
 					# if client_staff == None:
 					# 	staff = Staff.objects.filter(aecode=client_aecode).first()
@@ -456,7 +463,7 @@ def client_edit(request,id_client):
 
 
 
-
+					client.aecode = client_aecode
 					client.save()
 
 					return redirect(reverse('client-list'))
