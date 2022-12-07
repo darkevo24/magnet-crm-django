@@ -119,6 +119,7 @@ def dashboard(request):
 	form_color = ColorForm(None)
 	staff = Staff.objects.filter(profile__user=request.user).first()
 	client_staff_list = Client_Staff.objects.filter(staff=staff, is_active=True).prefetch_related('client')
+	print(client_staff_list.count(), '>>>')
 	client_ids = []
 
 	client_list = Client.objects.filter(is_active=True,id__in=client_staff_list.values_list('client__id',flat=True))

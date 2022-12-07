@@ -42,15 +42,7 @@ from django.utils.timezone import make_aware
 # )
 
 
-# schedule, _ = CrontabSchedule.objects.get_or_create(
-#     minute='0',
-#     hour='0',
-#     timezone="Asia/Jakarta",
-#     # task='magnet_crm.task.birthday',
-#     # day_of_week='*',
-#     # day_of_month='*',
-#     # month_of_year='*',
-# )
+
 
 # PeriodicTask.objects.create(
 #     crontab=schedule,                  # we created this above.
@@ -62,8 +54,38 @@ from django.utils.timezone import make_aware
 #     # }),
 #     # expires=datetime.utcnow() + timedelta(seconds=30)
 # )
+
+schedule, created = IntervalSchedule.objects.get_or_create(
+    every=2,
+    period=IntervalSchedule.MINUTES,
+)
+schedule_seconds, created = IntervalSchedule.objects.get_or_create(
+    every=30,
+    period=IntervalSchedule.SECONDS,
+)
+
+period_task, _ = PeriodicTask.objects.get(
+    interval=schedule,
+    name='sync_data_magnet_1',
+    task='magnet_crm.task.sync_data_magnet',
+    start_time=timezone.now(),
+)
+
+
+# schedule, _ = CrontabSchedule.objects.get_or_create(
+#     minute='0',
+#     hour='0',
+#     timezone="Asia/Jakarta",
+#     # task='magnet_crm.task.birthday',
+#     # day_of_week='*',
+#     # day_of_month='*',
+#     # month_of_year='*',
+# )
+
+
 import mysql.connector
 from mysql.connector import errorcode
+
 
 
 @shared_task
