@@ -29,61 +29,16 @@ from datetime import datetime, timedelta
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
 from client.models import *
 from django.utils.timezone import make_aware
-# schedule, created = IntervalSchedule.objects.get_or_create(
-#     every=1,
-#     period=IntervalSchedule.SECONDS,
-# )
-
-# PeriodicTask.objects.create(
-#     interval=schedule,
-#     name='news',          # simply describes this periodic task.
-#     task='magnet_crm.tasks.test',
-#     # args="ini dari periodic"  # name of task.
-# )
-
-
-
-
-# PeriodicTask.objects.create(
-#     crontab=schedule,                  # we created this above.
-#     name='Birthday',          # simply describes this periodic task.
-#     task='magnet_crm.task.birthday',  # name of task.
-#     # args=json.dumps(['arg1', 'arg2']),
-#     # kwargs=json.dumps({
-#     #    'be_careful': True,
-#     # }),
-#     # expires=datetime.utcnow() + timedelta(seconds=30)
-# )
-
-schedule, created = IntervalSchedule.objects.get_or_create(
-    every=2,
-    period=IntervalSchedule.MINUTES,
-)
-schedule_seconds, created = IntervalSchedule.objects.get_or_create(
-    every=30,
-    period=IntervalSchedule.SECONDS,
-)
-
-check_task = PeriodicTask.objects.get(name='sync_data_magnet')
-print('check_task', check_task)
-if check_task == None:
-	period_task, _ = PeriodicTask.objects.get_or_create(
-	    interval=schedule,
-	    name='',
-	    task='magnet_crm.task.sync_data_magnet',
-	    start_time=timezone.now(),
-)
-
-
-# schedule, _ = CrontabSchedule.objects.get_or_create(
-#     minute='0',
-#     hour='0',
-#     timezone="Asia/Jakarta",
-#     # task='magnet_crm.task.birthday',
-#     # day_of_week='*',
-#     # day_of_month='*',
-#     # month_of_year='*',
-# )
+from magnet_crm.celery import app
+import pytz
+app.conf.beat_schedule = {
+    # Executes every Monday morning at 7:30 a.m.
+    'add-every-monday-morning': {
+        'task': 'magnet_crm.task.sync_data_magnet',
+        'schedule': crontab( minute='*'),
+        
+    },
+}
 
 
 import mysql.connector
@@ -260,19 +215,16 @@ def birthday():
 		with transaction.atomic():
 			now = timezone.localtime(timezone.now())
 			clients = Client.objects.filter(birthday__month=now.month, birthday__day=now.day)
-
-			print("ini clients",clients)
-			print(now.month,now.day)
 			all_clients = Client_Staff.objects.filter(client_id__in=clients.values_list('id',flat=True),is_active=True)
 			user = User.objects.filter(is_superuser=True).first()
 			data = {}
-			print("masuk birthday",all_clients)
+			
 			for client_staff in all_clients:
 				data['client'] = client_staff.client
 				data['notification_type'] = 'birthday'
 				data['notes'] = 'Today ' + client_staff.client.nama + " Birthday"
 				data['staff'] = client_staff.staff
-				print("mu")
+				
 				create_notification(user, data)
 			
 	except IntegrityError as e:
@@ -285,7 +237,7 @@ def sync_data_magnet():
 			now = timezone.now()
 
 			cnx = mysql.connector.connect(
-				host="3.1.223.222",
+				host="54.151.138.128",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -293,7 +245,6 @@ def sync_data_magnet():
 			mycursor = cnx.cursor()
 			mycursor.execute("SELECT COUNT(*) from v_users")
 			user_count = mycursor.fetchone()
-			print(user_count[0], '????')
 			user = User.objects.filter(is_superuser=True).first()
 
 			mycursor.execute("SELECT * FROM v_users ORDER BY ID DESC LIMIT 1")
@@ -331,8 +282,9 @@ def sync_data_magnet():
 
 			if update == True:
 				update_client_data(mycursor, start_from, user)
-				create_client_journey_mt5(mycursor, start_from)
+				
 			
+			create_client_journey_mt5()
 			check_user_deposit()
 
 			check_aecode(mycursor, start_from, user)
@@ -351,7 +303,7 @@ def check_user_deposit():
 
 			now = timezone.now()
 			cnx = mysql.connector.connect(
-				host="3.1.223.222",
+				host="54.151.138.128",
 				user='ivan',
 				password='MajuBersama123',
 				database='vifx'
@@ -471,7 +423,12 @@ def update_client_data(mycursor, last_id, user):
 		client.id_verification_status = new_client[11]
 		client.legal_status = new_client[12]
 		client.magnet_created_at = new_client[13]
-		client.magnet_updated_at = new_client[14]
+		tz = pytz.timezone('Asia/Jakarta')
+		
+
+
+		client.created_at = new_client[13].replace(tzinfo=tz)
+		client.magnet_updated_at = new_client[14].replace(tzinfo=tz)
 		client.aecode = new_client[15]
 		client.demologin = new_client[16]
 		client.cdd = new_client[17]
@@ -538,26 +495,50 @@ def update_client_data(mycursor, last_id, user):
 	print("total nambah "+str(counter))
 
 
-def create_client_journey_mt5(mycursor, start_from):
+def create_client_journey_mt5():
+	cnx = mysql.connector.connect(
+			host="54.151.138.128",
+			user='ivan',
+			password='MajuBersama123',
+			database='vifx'
+		)
+
+		
 	super_user = User.objects.filter(is_superuser=True).first()
-	string_sql = "Select user_id, login, account_type , updated_at, rate FROM vif_cabinet_legal_form_decleration WHERE user_id="+ str(start_from)+ " ORDER BY 'id' ASC"
+	string_sql = "Select user_id, login, account_type , updated_at, rate FROM vif_cabinet_legal_form_decleration ORDER BY 'id' ASC"
+	mycursor = cnx.cursor()
 	mycursor.execute(string_sql)
 	new_legal_form_declerations = mycursor.fetchall()
-	for new_legal_form_decleration in new_legal_form_declerations:
-		login_id = new_legal_form_declerations[1]
-		if login_id != '' and login_id != None:
-			client = Client.objects.filter(magnet_id=new_legal_form_declerations[0]).first()
-			client_staff = Client_Staff.objects.filter(client__magnet_id=new_legal_form_declerations[0], is_active=True).first()
-			account_type = new_legal_form_declerations[2]
-			login_created_at = new_legal_form_declerations[3]
-			rate = new_legal_form_declerations[4]
-			
-			client_journey = Client_Journey()
-			client_journey.client_staff
-			client_journey.journal_type = 'login_created'
-			client_journey.extra = str(account_type) + ' ' + str(rate) + ' ' + login_id
-			client_journey.updated_by = client_journey.created_at = super_user
-			client_journey.save()
+	try:
+		with transaction.atomic():
+
+			for new_legal_form_decleration in new_legal_form_declerations:
+				magnet_id = str(new_legal_form_decleration[0])
+				login_id = new_legal_form_decleration[1]
+				
+				if login_id != '' and login_id != None:
+					print(new_legal_form_decleration[0], '???', type(new_legal_form_decleration[0]))
+					client = Client.objects.filter(magnet_id=magnet_id, is_active=True).first()
+					if client != None:
+						print('ada ini')
+						print('>>>>',client.magnet_id)
+						client_staff = Client_Staff.objects.filter(client__magnet_id=magnet_id, is_active=True).first()
+						if client_staff != None:
+							account_type = new_legal_form_decleration[2]
+							login_created_at = new_legal_form_decleration[3]
+							rate = new_legal_form_decleration[4]
+							client_journey = Client_Journey()
+							client_journey.client = client
+							client_journey.staff = client_staff.staff
+							client_journey.journal_type = 'mt5 created'
+							client_journey.extra = str(account_type) + ' ' + str(rate) + ' ' + str(login_id)
+							tz = pytz.timezone('Asia/Jakarta')
+							client_journey.created_at = login_created_at.replace(tzinfo=tz)
+							client_journey.updated_by = client_journey.created_by = super_user
+							client_journey.save()
+
+	except IntegrityError as e:
+		print('error bung', e)
 
 
 

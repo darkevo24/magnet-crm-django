@@ -248,6 +248,8 @@
 						<div class="list-feed-item">
 							<div class="text-muted">{{journey.created_at|date:"d-m-Y H:i"}}</div>
 							{{journey.staff.profile.full_name|title}} - {{journey.journal_type|title|default:'-'}}
+							<div class="text-muted">{{journey.extra|default:'-'}}</div>
+
 						</div>
 						{% endfor %}
 					</div>
