@@ -1,6 +1,7 @@
 from django.shortcuts import render
 # # from core.forms.admin.main.main import *
 # # from referal.models import *
+from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -360,6 +361,7 @@ def client_list(request):
 	}
 	return render(request,template,context=context)
 
+@login_required
 def client_add(request):
 	template = 'admin/client/client_add.html'
 	client_form = ClientForm(request.POST or None)
@@ -387,6 +389,7 @@ def client_add(request):
 	}
 	return render(request,template,context=context)
 
+@login_required
 def client_edit(request,id_client):
 	template = 'admin/client/client_add.html'
 

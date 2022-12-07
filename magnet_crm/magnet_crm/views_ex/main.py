@@ -15,6 +15,7 @@ from django.utils import timezone
 from django.db import IntegrityError, transaction
 from notification.views import create_notification
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 # from magnet_crm.task import *
 
 def notif_check(request):
@@ -106,6 +107,7 @@ def index(request):
 	}
 	return render(request,template,context=context)
 
+@login_required
 def dashboard(request):
 	# notification_time = timezone.now() + timedelta(seconds=3)
 	# birthday = timezone.now().replace(minute=57,second=59)
