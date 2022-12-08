@@ -64,13 +64,17 @@ def client_import(request):
 							# print("GCLID: ", row[8].value)
 							# print("Category data: ", row[9].value)
 							# print("Tanggal respon: ", row[10].value)
+							phone_no = str(row[3].value)
+							if phone_no[0] == '8':
+								phone_no = '6' + phone_no
+
 							existing_client = Client.objects.filter(email=row[4].value).first()
 							if existing_client == None:
 								new_client = Client()
 								new_client.created_at = row[1].value
 								new_client.created_by = request.user
 								new_client.nama = row[2].value
-								new_client.phone_no = row[3].value
+								new_client.phone_no = phone_no
 								new_client.email = row[4].value
 								new_client.source = 2
 								if row[5].value == "google":
@@ -155,7 +159,10 @@ def client_import(request):
 								new_client.created_at = row[1].value
 								new_client.created_by = request.user
 								new_client.nama = row[2].value
-								new_client.phone_no = row[3].value
+								phone_no = str(row[3].value)
+								if phone_no[0] == '8':
+									phone_no = '6' + phone_no
+								new_client.phone_no = phone_no
 								new_client.email = row[4].value
 								new_client.source = 1
 								if row[8].value == "google":

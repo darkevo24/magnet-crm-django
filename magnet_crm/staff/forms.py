@@ -22,6 +22,11 @@ class StaffForm(ModelForm):
 		model = Staff
 		fields = ['staff_level','aecode','rekening']
 
+	def __init__(self, *args, **kwargs):
+		super(StaffForm, self).__init__(*args, **kwargs)
+		self.fields['staff_level'].required = False
+		self.fields['aecode'].required = False
+		self.fields['rekening'].required = False
 
 class StaffSalaryForm(forms.Form):
 	salary_amount = forms.CharField(required=True)

@@ -25,6 +25,12 @@ class ProfileForm(ModelForm):
 	class Meta:
 		model = Profile
 		fields = ['full_name', 'no_ktp', 'phone_no', 'email']
+
+	def __init__(self, *args, **kwargs):
+		super(ProfileForm, self).__init__(*args, **kwargs)
+		self.fields['no_ktp'].required = False
+		self.fields['phone_no'].required = False
+		
 	
 class ColorForm(ModelForm):
 	class Meta:
