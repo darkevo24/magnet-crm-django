@@ -41,6 +41,7 @@ class Command(BaseCommand):
 					user = staff.profile.user
 					user.email = fullname.replace(' ', '_') + '@magnet.co.id'
 					user.username = user.email
+					user.set_password('123123')
 					user.save()
 
 					profile = staff.profile
