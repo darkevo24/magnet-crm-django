@@ -50,16 +50,16 @@ def client_import(request):
 					# Langsung dibuat client
 					for row in external_data_wb.iter_rows(2, external_data_wb.max_row):
 						if row[0].value != None:
-							print("Tanggal data diberikan: ", row[1].value)
-							print("Nama: ", row[2].value)
-							print("No Telepon: ", row[3].value)
-							print("Email: ", row[4].value)
-							print("Source: ", row[5].value)
-							print("Medium: ", row[6].value)
-							print("Campaign: ", row[7].value)
-							print("GCLID: ", row[8].value)
-							print("Category data: ", row[9].value)
-							print("Tanggal respon: ", row[10].value)
+							# print("Tanggal data diberikan: ", row[1].value)
+							# print("Nama: ", row[2].value)
+							# print("No Telepon: ", row[3].value)
+							# print("Email: ", row[4].value)
+							# print("Source: ", row[5].value)
+							# print("Medium: ", row[6].value)
+							# print("Campaign: ", row[7].value)
+							# print("GCLID: ", row[8].value)
+							# print("Category data: ", row[9].value)
+							# print("Tanggal respon: ", row[10].value)
 							new_client = Client()
 							new_client.created_at = row[1].value
 							new_client.created_by = request.user
@@ -113,7 +113,7 @@ def client_import(request):
 
 										selected_staff = Staff.objects.filter(aecode=row[11].value, is_active=True).first()
 										new_client_staff = Client_Staff()
-										new_client_staff.client = client
+										new_client_staff.client = existing_client
 										new_client_staff.staff = selected_staff
 										new_client_staff.updated_by = new_client_staff.created_by = request.user
 										new_client_staff.save()
