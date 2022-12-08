@@ -161,8 +161,8 @@ def client_import(request):
 								new_client.aecode = row[11].value	
 								new_client.save()					
 
-								if row[11].value != '-':
-									selected_staff = Staff.objects.filter(aecode=row[11].value, is_active=True).first()
+								if row[11].value != '-' and row[11].value != '' and row[11].value != None:
+									selected_staff = Staff.objects.filter(id=import_form.cleaned_data['staff']).first()
 									new_client_staff = Client_Staff()
 									new_client_staff.client = new_client
 									new_client_staff.staff = selected_staff
