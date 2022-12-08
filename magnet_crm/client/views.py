@@ -105,10 +105,14 @@ def client_import(request):
 							# print("Category data: ", row[13].value)
 							# print("Tanggal respon: ", row[14].value)
 							existing_client = Client.objects.filter(email=row[4].value).first()
+							print("existing leads data: ", existing_client)
 							if existing_client != None:
+								print("existing client found")
 								if existing_client.aecode != row[11].value and row[11].value != "-":
 									# existing_client.is_active = False
 									client_staff = Client_Staff.objects.filter(is_active=True, client=existing_client).first()
+									print("existing client staff: ", client_staff)
+									print("staff id: ", client_staff.staff.id)
 									if client_staff.staff.aecode != row[11].value:
 										client_staff.is_active = False
 										client_staff.save()
@@ -157,12 +161,13 @@ def client_import(request):
 								new_client.aecode = row[11].value	
 								new_client.save()					
 
-								selected_staff = Staff.objects.filter(aecode=row[11].value, is_active=True).first()
-								new_client_staff = Client_Staff()
-								new_client_staff.client = new_client
-								new_client_staff.staff = selected_staff
-								new_client_staff.updated_by = new_client_staff.created_by = request.user
-								new_client_staff.save()
+								if row[11].value != '-':
+									selected_staff = Staff.objects.filter(aecode=row[11].value, is_active=True).first()
+									new_client_staff = Client_Staff()
+									new_client_staff.client = new_client
+									new_client_staff.staff = selected_staff
+									new_client_staff.updated_by = new_client_staff.created_by = request.user
+									new_client_staff.save()
 								
 
 					# counter = 0 
