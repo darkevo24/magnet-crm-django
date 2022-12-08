@@ -53,6 +53,7 @@ def client_import(request):
 
 					# Langsung dibuat client
 					for row in external_data_wb.iter_rows(2, external_data_wb.max_row):
+
 						if row[0].value != None:
 							# print("Tanggal data diberikan: ", row[1].value)
 							# print("Nama: ", row[2].value)
@@ -64,16 +65,17 @@ def client_import(request):
 							# print("GCLID: ", row[8].value)
 							# print("Category data: ", row[9].value)
 							# print("Tanggal respon: ", row[10].value)
-							phone_no = str(row[3].value)
+							phone_no = str(row[3].value).trim()
 							if phone_no[0] == '8':
 								phone_no = '6' + phone_no
-
-							existing_client = Client.objects.filter(email=row[4].value).first()
+							print('****', row[2].value, phone_no)
+							existing_client = Client.objects.filter(email=row[4].value, nama=row[2].value, phone_no=phone_no).first()
 							if existing_client == None:
 								new_client = Client()
 								new_client.created_at = row[1].value
 								new_client.created_by = request.user
 								new_client.nama = row[2].value
+								print('+++++', row[2].value, phone_no)
 								new_client.phone_no = phone_no
 								new_client.email = row[4].value
 								new_client.source = 2
@@ -112,7 +114,7 @@ def client_import(request):
 							# print("User code: ", row[12].value)
 							# print("Category data: ", row[13].value)
 							# print("Tanggal respon: ", row[14].value)
-							existing_client = Client.objects.filter(email=row[4].value).first()
+							existing_client = Client.objects.filter(email=row[4].value, nama=row[2].value, phone_no=phone_no).first()
 							print("existing leads data: ", existing_client)
 							if existing_client != None:
 								print("existing client found")
@@ -159,9 +161,10 @@ def client_import(request):
 								new_client.created_at = row[1].value
 								new_client.created_by = request.user
 								new_client.nama = row[2].value
-								phone_no = str(row[3].value)
+								phone_no = str(row[3].value).trim()
 								if phone_no[0] == '8':
 									phone_no = '6' + phone_no
+								print('____', row[2].value, phone_no)
 								new_client.phone_no = phone_no
 								new_client.email = row[4].value
 								new_client.source = 1
