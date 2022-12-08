@@ -43,6 +43,10 @@ def client_import(request):
 
 				if import_form.is_valid():
 					excel_file = request.FILES["file"]
+					print(excel_file)
+					staff_email = excel_file.name.split('.xlsx')[0]
+					
+					
 					wb = openpyxl.load_workbook(excel_file)
 					external_data_wb = wb["Data Eksternal"]
 					leads_data_wb = wb["Data Leads"]
@@ -108,16 +112,15 @@ def client_import(request):
 							print("existing leads data: ", existing_client)
 							if existing_client != None:
 								print("existing client found")
-								if existing_client.aecode != row[11].value and row[11].value != "-":
-									# existing_client.is_active = False
-									client_staff = Client_Staff.objects.filter(is_active=True, client=existing_client).first()
-									print("existing client staff: ", client_staff)
-									print("staff id: ", client_staff.staff.id)
-									if client_staff.staff.aecode != row[11].value:
+								
+								# existing_client.is_active = False
+								client_staff = Client_Staff.objects.filter(is_active=True, client=existing_client).first()
+								if client_staff != None :
+									if client_staff.staff.profile.email != staff_email:
 										client_staff.is_active = False
 										client_staff.save()
 
-										selected_staff = Staff.objects.filter(aecode=row[11].value, is_active=True).first()
+										selected_staff = Staff.objects.filter(profile__email=staff_email, is_active=True).first()
 										new_client_staff = Client_Staff()
 										new_client_staff.client = existing_client
 										new_client_staff.staff = selected_staff
@@ -138,9 +141,16 @@ def client_import(request):
 											new_client_journey.updated_by = request.user
 											new_client_journey.created_at = client_journey.created_at
 											new_client_journey.save()
+								else:
+									selected_staff = Staff.objects.filter(profile__email=staff_email, is_active=True).first()
+									new_client_staff = Client_Staff()
+									new_client_staff.client = existing_client
+									new_client_staff.staff = selected_staff
+									new_client_staff.updated_by = new_client_staff.created_by = request.user
+									new_client_staff.save()
 
 							else:
-							
+								
 								new_client = Client()
 								new_client.created_at = row[1].value
 								new_client.created_by = request.user
@@ -158,16 +168,21 @@ def client_import(request):
 									new_client.source_detail_1 = None
 								new_client.medium = row[9].value
 								new_client.campaign = row[10].value
-								new_client.aecode = row[11].value	
-								new_client.save()					
+								client_aecode = row[11].value
+								if client_aecode == None:
+									client_aecode = ''
+								new_client.aecode = client_aecode
+								print('sebelum save')	
+								new_client.save()		
+								print('setelah save')				
 
-								if row[11].value != '-' and row[11].value != '' and row[11].value != None:
-									selected_staff = Staff.objects.filter(id=import_form.cleaned_data['staff']).first()
-									new_client_staff = Client_Staff()
-									new_client_staff.client = new_client
-									new_client_staff.staff = selected_staff
-									new_client_staff.updated_by = new_client_staff.created_by = request.user
-									new_client_staff.save()
+								
+								selected_staff = Staff.objects.filter(profile__email=staff_email).first()
+								new_client_staff = Client_Staff()
+								new_client_staff.client = new_client
+								new_client_staff.staff = selected_staff
+								new_client_staff.updated_by = new_client_staff.created_by = request.user
+								new_client_staff.save()
 								
 
 					# counter = 0 
