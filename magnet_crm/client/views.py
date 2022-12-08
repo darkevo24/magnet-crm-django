@@ -69,7 +69,7 @@ def client_import(request):
 							if phone_no != None and phone_no != '':
 								phone_no = str(row[3].value).strip()
 								phone_no = phone_no.replace('-', '')
-								if phone_no.length > 0:
+								if len(phone_no) > 0:
 									if phone_no[0] == '8':
 										phone_no = '6' + phone_no
 							print('****', row[2].value, phone_no)
@@ -168,7 +168,7 @@ def client_import(request):
 								if phone_no != None and phone_no != '':
 									phone_no = str(row[3].value).strip()
 									phone_no = phone_no.replace('-', '')
-									if phone_no.length > 0:
+									if len(phone_no) > 0:
 										if phone_no[0] == '8':
 											phone_no = '6' + phone_no
 								print('____', row[2].value, phone_no)
