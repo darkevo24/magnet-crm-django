@@ -45,7 +45,7 @@ app.conf.beat_schedule = {
     },
     'add-every-new_scramble_clients-every-week': {
         'task': 'magnet_crm.task.new_scramble_clients',
-        'schedule': crontab( hour=23, day_of_week='sunday'),
+        'schedule': crontab(0, 0, day_of_month='3,6,9,12'),
         
     },
 }
