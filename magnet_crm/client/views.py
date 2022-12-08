@@ -69,8 +69,9 @@ def client_import(request):
 							if phone_no != None and phone_no != '':
 								phone_no = str(row[3].value).strip()
 								phone_no = phone_no.replace('-', '')
-								if phone_no[0] == '8':
-									phone_no = '6' + phone_no
+								if phone_no.length > 0:
+									if phone_no[0] == '8':
+										phone_no = '6' + phone_no
 							print('****', row[2].value, phone_no)
 							existing_client = Client.objects.filter(email=row[4].value, nama=row[2].value, phone_no=phone_no).first()
 							if existing_client == None:
@@ -167,8 +168,9 @@ def client_import(request):
 								if phone_no != None and phone_no != '':
 									phone_no = str(row[3].value).strip()
 									phone_no = phone_no.replace('-', '')
-									if phone_no[0] == '8':
-										phone_no = '6' + phone_no
+									if phone_no.length > 0:
+										if phone_no[0] == '8':
+											phone_no = '6' + phone_no
 								print('____', row[2].value, phone_no)
 								new_client.phone_no = phone_no
 								new_client.email = row[4].value

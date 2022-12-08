@@ -50,7 +50,10 @@ def admin_login(request):
 		if form.is_valid():
 			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
-			
+			users = User.objects.all()
+			for u in users:
+				print(u.email, '<----')
+
 			user = User.objects.filter(email=email).first()			
 
 			if user is not None:
