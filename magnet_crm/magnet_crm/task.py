@@ -33,12 +33,21 @@ from magnet_crm.celery import app
 import pytz
 app.conf.beat_schedule = {
     # Executes every Monday morning at 7:30 a.m.
-    'add-every-monday-morning': {
+    'add-sync-data-magnet': {
         'task': 'magnet_crm.task.sync_data_magnet',
         'schedule': crontab( minute='*/5'),
         
     },
-    
+    'add-every-monday-morning': {
+        'task': 'magnet_crm.task.birthday',
+        'schedule': crontab( minute=7, hour=13),
+        
+    },
+    'add-every-new_scramble_clients-every-week': {
+        'task': 'magnet_crm.task.new_scramble_clients',
+        'schedule': crontab(0, 0, day_of_month='3,6,9,12'),
+        
+    },
 }
 
 
@@ -212,6 +221,7 @@ def new_scramble_clients():
 
 @shared_task
 def birthday():
+	print('check birthday')
 	try:
 		with transaction.atomic():
 			now = timezone.localtime(timezone.now())
