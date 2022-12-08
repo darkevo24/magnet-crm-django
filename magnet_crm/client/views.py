@@ -66,6 +66,7 @@ def client_import(request):
 							# print("Category data: ", row[9].value)
 							# print("Tanggal respon: ", row[10].value)
 							phone_no = str(row[3].value).trim()
+							phone_no = phone_no.replace('-', '')
 							if phone_no[0] == '8':
 								phone_no = '6' + phone_no
 							print('****', row[2].value, phone_no)
@@ -162,6 +163,7 @@ def client_import(request):
 								new_client.created_by = request.user
 								new_client.nama = row[2].value
 								phone_no = str(row[3].value).trim()
+								phone_no = phone_no.replace('-', '')
 								if phone_no[0] == '8':
 									phone_no = '6' + phone_no
 								print('____', row[2].value, phone_no)
