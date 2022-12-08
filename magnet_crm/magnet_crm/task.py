@@ -35,9 +35,10 @@ app.conf.beat_schedule = {
     # Executes every Monday morning at 7:30 a.m.
     'add-every-monday-morning': {
         'task': 'magnet_crm.task.sync_data_magnet',
-        'schedule': crontab( minute='*'),
+        'schedule': crontab( minute='*/5'),
         
     },
+    
 }
 
 
