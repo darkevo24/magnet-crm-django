@@ -60,33 +60,35 @@ def client_import(request):
 							# print("GCLID: ", row[8].value)
 							# print("Category data: ", row[9].value)
 							# print("Tanggal respon: ", row[10].value)
-							new_client = Client()
-							new_client.created_at = row[1].value
-							new_client.created_by = request.user
-							new_client.nama = row[2].value
-							new_client.phone_no = row[3].value
-							new_client.email = row[4].value
-							new_client.source = 2
-							if row[5].value == "google":
-								new_client.source_detail_1 = None
-								new_client.source_detail_2 = "4"
-							elif row[5].value == "fb / ig":
-								new_client.source_detail_1 = None
-								new_client.source_detail_2 = "1"
-							else:
-								new_client.source_detail_1 = None
-							new_client.medium = row[6].value
-							new_client.campaign = row[7].value
-							new_client.gclid = row[8].value
-							new_client.save()
+							existing_client = Client.objects.filter(email=row[4].value).first()
+							if existing_client == None:
+								new_client = Client()
+								new_client.created_at = row[1].value
+								new_client.created_by = request.user
+								new_client.nama = row[2].value
+								new_client.phone_no = row[3].value
+								new_client.email = row[4].value
+								new_client.source = 2
+								if row[5].value == "google":
+									new_client.source_detail_1 = None
+									new_client.source_detail_2 = "4"
+								elif row[5].value == "fb / ig":
+									new_client.source_detail_1 = None
+									new_client.source_detail_2 = "1"
+								else:
+									new_client.source_detail_1 = None
+								new_client.medium = row[6].value
+								new_client.campaign = row[7].value
+								new_client.gclid = row[8].value
+								new_client.save()
 
-							selected_staff = Staff.objects.filter(id=import_form.cleaned_data['staff']).first()
-							if selected_staff is not None and selected_staff is not "":
-								c_staff = Client_Staff()
-								c_staff.client = new_client
-								c_staff.staff =	selected_staff
-								c_staff.created_by = request.user				
-								c_staff.save()
+								selected_staff = Staff.objects.filter(id=import_form.cleaned_data['staff']).first()
+								if selected_staff is not None and selected_staff is not "":
+									c_staff = Client_Staff()
+									c_staff.client = new_client
+									c_staff.staff =	selected_staff
+									c_staff.created_by = request.user				
+									c_staff.save()
 
 					# Cek client udah exist belom, query email
 					for row in leads_data_wb.iter_rows(2, leads_data_wb.max_row):
