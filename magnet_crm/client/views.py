@@ -738,15 +738,27 @@ def detail_list(request,id_client):
 	history_followup = Client_Followup.objects.filter(client=client)
 	history_schedule = Client_Schedule.objects.filter(client=client)
 	history_journey = Client_Journey.objects.filter(client=client).order_by('-created_at')
-	print("sampe atasnya",client.id)
-	client_position_list,pos_detail = get_client_position(client.id)
-	print("sampe bawahnya")
-	client_eq_bal = get_login_trades(client.id)
-	print(client_position_list,'client_position_list')
 	dict_total = {}
-	if client_position_list != None:
-		for x in client_position_list:
-			dict_total[x[1]] = x[16] + x[17]
+	if client.magnet_id == None  or client.magnet_id == '':
+		print('tidak ada magnet id')
+		selected_client_magnet_id = get_client_magnet_id(client)
+		if selected_client_magnet_id != None:
+			client.magnet_id = selected_client_magnet_id
+			client.save()
+
+	if client.magnet_id != None:
+		client_position_list,pos_detail = get_client_position(client.id)
+	
+
+	
+		client_eq_bal = get_login_trades(client.id)
+		if client_position_list != None and client_position_list != []:
+			for x in client_position_list:
+				dict_total[x[1]] = x[16] + x[17]
+
+			client_eq_bal = client_eq_bal['data'][0] if 'data' in client_eq_bal else []
+		else:
+			client_eq_bal = []
 	
 	context = {
 		'client': client,
@@ -756,7 +768,7 @@ def detail_list(request,id_client):
 		'history_journey':history_journey,
 		'client_position_list':client_position_list,
 		'pos_detail':pos_detail,
-		'client_eq_bal':client_eq_bal['data'][0] if 'data' in client_eq_bal else [],
+		'client_eq_bal':client_eq_bal,
 		# 'history_schedule': client,
 		'dict_total':dict_total,
 		'id_client':id_client,

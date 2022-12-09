@@ -81,6 +81,69 @@ def check_client_duplicate(client, name, email):
 	
 import mysql.connector
 from mysql.connector import errorcode
+def get_client_magnet_id(client):
+	print('get_client_magnet_id')
+	cnx = mysql.connector.connect(
+			host="54.151.138.128",
+			user='ivan',
+			password='MajuBersama123',
+			database='vifx'
+		)
+	
+	mycursor = cnx.cursor()
+	mycursor.execute("SHOW COLUMNS FROM v_users;")
+	myresult = mycursor.fetchall()
+	client_email = str(client.email)
+	print('show able', mycursor)
+	for m in myresult:
+		print(m)
+
+	str_sql = "SELECT id FROM v_users WHERE  email = '" +  client_email + "';";
+	print('sql str', str_sql)
+	mycursor.execute(str_sql)
+	result = mycursor.fetchone()
+	cnx.close()
+	
+	if len(result) > 0 :
+		return result[0]
+	else:
+		return None
+def check_user_list(client):
+
+
+	try:
+		print('start')
+		cnx = mysql.connector.connect(
+			host="18.143.147.140",
+			user='ivan',
+			password='MajuBersama123',
+			database='vifx'
+		)
+		print('start')
+		mycursor = cnx.cursor()
+		mycursor.execute("Show tables;")
+		myresult = mycursor.fetchall()
+		print(myresult,'myresult')
+		for x in myresult:
+			print(x)
+
+		mycursor.execute("SHOW COLUMNS FROM v_users;")
+		myresult = mycursor.fetchall()
+
+		print("ini kolumnya ======")
+		for x in myresult:
+			print(x)
+
+	except mysql.connector.Error as err:
+		if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+			print("Something is wrong with your user name or password")
+		elif err.errno == errorcode.ER_BAD_DB_ERROR:
+			print("Database does not exist")
+		else:
+			print(err)
+	else:
+		cnx.close()
+
 def check_user_list():
 
 
@@ -189,13 +252,17 @@ def get_client_position(user_id):
 					count +=1
 			print("22")
 			print("pos_id ",pos_id)
+
+			pos_cnx.close()
+			return my_pos_list, pos_detail
 		# mycursor.execute("SELECT * FROM pos ORDER BY id DESC LIMIT 1;")
 		# myresult = mycursor.fetchall()
 		# for x in myresult:
 		# 		print(x)
-
-		pos_cnx.close()
-		return my_pos_list, pos_detail
+		else:
+			pos_cnx.close()
+			return [], []
+		
 
 	except mysql.connector.Error as err:
 		if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -205,6 +272,8 @@ def get_client_position(user_id):
 		else:
 			print(err)
 
+		return [], []
+
 	finally:
 		cnx.close()
 
@@ -212,6 +281,8 @@ def get_client_position(user_id):
 def get_login_trades(user_id):
 	client = Client.objects.filter(id=user_id).first()
 	magnet_user_id = client.magnet_id
+	print(magnet_user_id, '<---')
+	return None
 	try:
 		with transaction.atomic():
 
