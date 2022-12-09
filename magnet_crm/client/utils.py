@@ -103,8 +103,8 @@ def get_client_magnet_id(client):
 	mycursor.execute(str_sql)
 	result = mycursor.fetchone()
 	cnx.close()
-	
-	if len(result) > 0 :
+
+	if result != None and len(result) > 0 :
 		return result[0]
 	else:
 		return None
@@ -440,7 +440,7 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
-		is_active=True,).exclude(client__source_detail_1=2,).prefetch_related('client', 'staff', 'staff__profile')
+		is_active=True,).exclude(client__source_detail_1=2, client__magnet_id='').exclude( client__magnet_id=None).prefetch_related('client', 'staff', 'staff__profile')
 	
 	staff_client_dict = {}
 	client_staff_dict = {}
@@ -448,19 +448,21 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
 		staff_id = str(client_staff.staff.id)
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-		if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
-			
-			client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
-		staff_id = str(client_staff.id)
-		if staff_id not in staff_client_dict:
-			staff_client_dict[staff_id] = {}
-		staff_client_dict[staff_id]['staff_name'] = client_staff.staff.profile.full_name
-		staff_client_dict[staff_id]['client_trade_account'] = {}
+		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
+			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
+			if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
+				
+				client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
 
-		if str(client_staff.client.magnet_id) not in client_staff_dict :
-			client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
-		
+			staff_id = str(client_staff.id)
+			if staff_id not in staff_client_dict:
+				staff_client_dict[staff_id] = {}
+			staff_client_dict[staff_id]['staff_name'] = client_staff.staff.profile.full_name
+			staff_client_dict[staff_id]['client_trade_account'] = {}
+
+			if str(client_staff.client.magnet_id) not in client_staff_dict :
+				client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
+			
 
 	print('last_two_months_date', last_two_months_date,)
 	
@@ -655,7 +657,7 @@ def master_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_date
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
 		client__magnet_created_at__lt= last_two_months_date,
-		is_active=True,).exclude(client__source_detail_1=2,).prefetch_related('client')
+		is_active=True,).exclude(client__source_detail_1=2, client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client')
 	
 	two_month_trades = {}
 	bonus_account_type_dict = {}
@@ -668,13 +670,14 @@ def master_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_date
 	client_detail_magnet_id_dict = {}
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-		if str(client_staff.client.magnet_id) not in client_magnet_id_created_at_dict:
-			client_magnet_id_created_at_dict[str(client_staff.client.magnet_id)] = client_staff.client.magnet_created_at
-			client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
+		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
+			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
+			if str(client_staff.client.magnet_id) not in client_magnet_id_created_at_dict:
+				client_magnet_id_created_at_dict[str(client_staff.client.magnet_id)] = client_staff.client.magnet_created_at
+				client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
 
-		if str(client_staff.client.magnet_id) not in client_staff_dict :
-			client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
+			if str(client_staff.client.magnet_id) not in client_staff_dict :
+				client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
 
 	
 	#get meta5 ids
@@ -875,18 +878,20 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
 		client__source_detail_1=2,
-		is_active=True,).prefetch_related('client')
+		is_active=True,).exclude( (Q(client__magnet_id='') & Q(client__magnet_id=None)) ).prefetch_related('client')
 	print(client_staff_all_list.count(), 'count')
 	client_staff_dict = {}
 	client_detail_magnet_id_dict = {}
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-		if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
-			
-			client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
-		if str(client_staff.client.magnet_id) not in client_staff_dict :
-			client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
+		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
+			if client_staff.client.magnet_id != '' and client_staff.client.magnet_id  != None:
+				meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
+				if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
+					
+					client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
+				if str(client_staff.client.magnet_id) not in client_staff_dict :
+					client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
 
 	
 	#get meta5 ids
@@ -1063,7 +1068,7 @@ def master_calculate_ib_bonus(staffs, now, end_date):
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
 		client__is_ib=True,
-		is_active=True,).prefetch_related('client')
+		is_active=True,).exclude(  (Q(client__magnet_id='') & Q(client__magnet_id=None)) ).prefetch_related('client')
 	
 	supervisor_staff_dict = {}
 	staff_supervisor_dict = {}
@@ -1078,13 +1083,14 @@ def master_calculate_ib_bonus(staffs, now, end_date):
 	client_staff_dict = {}
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-		if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
-			
-			client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
+		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
+			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
+			if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
+				
+				client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
 
-		if str(client_staff.client.magnet_id) not in client_staff_dict :
-			client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
+			if str(client_staff.client.magnet_id) not in client_staff_dict :
+				client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
 
 	
 	#get meta5 ids
@@ -1259,25 +1265,26 @@ def supervisor_calculate_lot_two_months_bonus(staffs, last_two_months_date, now,
 
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
-		is_active=True,).exclude(client__source_detail_1=2,).prefetch_related('client', 'staff')
+		is_active=True,).exclude(client__source_detail_1=2, client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client', 'staff')
 	print(client_staff_all_list.count(), 'count')
 	staff_client_dict = {}
 	client_staff_dict = {}
 	client_detail_magnet_id_dict = {}
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-		if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
-			
-			client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
-		staff_id = str(client_staff.id)
-		if staff_id not in staff_client_dict:
-			staff_client_dict[staff_id] = {}
-		staff_client_dict[staff_id]['staff_name'] = client_staff.staff.profile.full_name
-		staff_client_dict[staff_id]['client_trade_account'] = {}
+		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
+			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
+			if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
+				
+				client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
+			staff_id = str(client_staff.id)
+			if staff_id not in staff_client_dict:
+				staff_client_dict[staff_id] = {}
+			staff_client_dict[staff_id]['staff_name'] = client_staff.staff.profile.full_name
+			staff_client_dict[staff_id]['client_trade_account'] = {}
 
-		if str(client_staff.client.magnet_id) not in client_staff_dict :
-			client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
+			if str(client_staff.client.magnet_id) not in client_staff_dict :
+				client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
 		
 
 	print('last_two_months_date', last_two_months_date,)
@@ -1462,7 +1469,7 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
 		client__magnet_created_at__lt= last_two_months_date,
-		is_active=True,).exclude(client__source_detail_1=2,).prefetch_related('client')
+		is_active=True,).exclude(client__source_detail_1=2, client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client')
 	
 	two_month_trades = {}
 	bonus_account_type_dict = {}
@@ -1475,13 +1482,14 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 	client_detail_magnet_id_dict = {}
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-		if str(client_staff.client.magnet_id) not in client_magnet_id_created_at_dict:
-			client_magnet_id_created_at_dict[str(client_staff.client.magnet_id)] = client_staff.client.magnet_created_at
-			client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
+		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
+			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
+			if str(client_staff.client.magnet_id) not in client_magnet_id_created_at_dict:
+				client_magnet_id_created_at_dict[str(client_staff.client.magnet_id)] = client_staff.client.magnet_created_at
+				client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
 
-		if str(client_staff.client.magnet_id) not in client_staff_dict :
-			client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
+			if str(client_staff.client.magnet_id) not in client_staff_dict :
+				client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
 
 	
 	#get meta5 ids
@@ -1671,18 +1679,19 @@ def supervisor_calculate_data_pribadi_bonus(staffs, now, end_date):
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
 		client__source_detail_1=2,
-		is_active=True,).prefetch_related('client')
+		is_active=True,).exclude(client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client')
 	print(client_staff_all_list.count(), 'count')
 	client_staff_dict = {}
 	client_detail_magnet_id_dict = {}
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-		if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
-			
-			client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
-		if str(client_staff.client.magnet_id) not in client_staff_dict :
-			client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
+		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
+			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
+			if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
+				
+				client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
+			if str(client_staff.client.magnet_id) not in client_staff_dict :
+				client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
 
 	
 	#get meta5 ids
@@ -1854,20 +1863,21 @@ def supervisor_calculate_ib_bonus(staffs, now, end_date):
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
 		client__is_ib=True,
-		is_active=True,).prefetch_related('client')
+		is_active=True,).exclude(client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client')
 	print(client_staff_all_list.count(), 'count')
 	
 	client_detail_magnet_id_dict = {}
 	client_staff_dict = {}
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-		if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
-			
-			client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
+		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
+			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
+			if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
+				
+				client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
 
-		if str(client_staff.client.magnet_id) not in client_staff_dict :
-			client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
+			if str(client_staff.client.magnet_id) not in client_staff_dict :
+				client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
 
 	
 	#get meta5 ids
@@ -2039,16 +2049,17 @@ def calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date):
 
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff=staff,
-		is_active=True,).exclude(client__source_detail_1=2,).prefetch_related('client')
+		is_active=True,).exclude(client__source_detail_1=2, client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client')
 	print(client_staff_all_list.count(), 'count')
 	
 	client_detail_magnet_id_dict = {}
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-		if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
-			
-			client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
+		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
+			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
+			if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
+				
+				client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
 
 	print('last_two_months_date', last_two_months_date,)
 	
@@ -2234,7 +2245,7 @@ def calculate_lot_more_than_two_months_bonus(staff, last_two_months_date, now, e
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff=staff,
 		client__magnet_created_at__lt= last_two_months_date,
-		is_active=True,).exclude(client__source_detail_1=2,).prefetch_related('client')
+		is_active=True,).exclude(client__source_detail_1=2, client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client')
 	
 	two_month_trades = {}
 	bonus_account_type_dict = {}
@@ -2247,10 +2258,11 @@ def calculate_lot_more_than_two_months_bonus(staff, last_two_months_date, now, e
 	client_detail_magnet_id_dict = {}
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-		if str(client_staff.client.magnet_id) not in client_magnet_id_created_at_dict:
-			client_magnet_id_created_at_dict[str(client_staff.client.magnet_id)] = client_staff.client.magnet_created_at
-			client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
+		if client_staff.client.magnet_id != '' and client_staff != None:
+			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
+			if str(client_staff.client.magnet_id) not in client_magnet_id_created_at_dict:
+				client_magnet_id_created_at_dict[str(client_staff.client.magnet_id)] = client_staff.client.magnet_created_at
+				client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
 
 	
 	#get meta5 ids
@@ -2438,21 +2450,22 @@ def calculate_data_pribadi_bonus(staff, now, end_date):
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff=staff,
 		client__source_detail_1=2,
-		is_active=True,).prefetch_related('client')
+		is_active=True).exclude(  (Q(client__magnet_id='') & Q(client__magnet_id=None)) ).prefetch_related('client')
 	print(client_staff_all_list.count(), 'count')
 	
 	client_detail_magnet_id_dict = {}
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-		if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
-			
-			client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
+		if client_staff.client.magnet_id != None and client_staff.client.magnet_id != '':
+			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
+			if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
+				
+				client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
 
 	
 	#get meta5 ids
 	user_login_details = get_meta5_ids(meta_ids_lot_for_api, None, None)
-	print('user_login_details -->', user_login_details)
+	
 	meta5_ids = []
 	user_magnet_detail_dict = {}
 	mt5_account_type_dict = {}
@@ -2617,16 +2630,17 @@ def calculate_ib_bonus(staff, now, end_date):
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff=staff,
 		client__is_ib=True,
-		is_active=True,).prefetch_related('client')
+		is_active=True,).exclude(  (Q(client__magnet_id='') & Q(client__magnet_id=None)) ).prefetch_related('client')
 	print(client_staff_all_list.count(), 'count')
 	
 	client_detail_magnet_id_dict = {}
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
-		meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
-		if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
-			
-			client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
+		if client_staff.client.magnet_id != None and client_staff.client.magnet_id != '':
+			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
+			if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
+				
+				client_detail_magnet_id_dict[str(client_staff.client.magnet_id)] = client_staff.client.nama
 
 	
 	#get meta5 ids
