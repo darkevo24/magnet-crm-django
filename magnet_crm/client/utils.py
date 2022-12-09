@@ -395,6 +395,37 @@ def get_so_list(client_ids):
 	except IntegrityError as e:
 		print(e)
 
+def get_meta5_ftd_ids(magnet_ids, now):
+	year = now.year
+	month = now.month
+	print('get_meta5_ids', magnet_ids, now)
+	if magnet_ids != '':
+		cnx = mysql.connector.connect(
+			host="54.151.138.128",
+			user='ivan',
+			password='MajuBersama123',
+			database='vifx'
+		)
+		
+		start_date_str = str(now.year) + '-' + str(month) + '-1'
+		end_day_str = str(calendar.monthrange(now.year, now.month)[1])
+		end_date_str = str(now.year) + '-' + str(month) + '-' + end_day_str
+		print('++++', start_date_str, '-----', end_date_str)
+		mycursor = cnx.cursor()		
+		str_sql = "Select * FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_ids)[:-1]+ ") AND updated_at >= "
+		str_sql += start_date_str + " AND updated_at <= " + end_date_str +" ORDER BY 'id' DESC " 
+		print(str_sql)
+		# print('finished')
+		
+		# print('str_sql', str_sql,date, )
+		mycursor.execute(str_sql)
+		myresult = mycursor.fetchall()
+		print('myresult', myresult)
+		return None
+		return myresult
+	else:
+		return {}
+
 def get_meta5_ids(magnet_ids, date, calculation_type):
 	print('get_meta5_ids', magnet_ids, date, calculation_type)
 	if magnet_ids != '':

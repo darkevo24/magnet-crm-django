@@ -26,6 +26,7 @@ from notification import views as notification_views
 from django.conf.urls.static import static
 from django.conf import settings
 from api import views as api_views
+
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', main_view.admin_login, name='admin-login'),
@@ -139,4 +140,5 @@ urlpatterns = [
     
 
 ]
+
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

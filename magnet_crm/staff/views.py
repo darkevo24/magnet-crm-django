@@ -727,7 +727,6 @@ def staff_report_detail(request,staff_uid):
 	template = 'admin/report/report_staff_detail.html'
 
 	test_client = Client.objects.filter(nama__icontains='Sukoyo')
-	print(test_client.count(), '{}')
 	
 	staff = Staff.objects.filter(uid=staff_uid,is_active=True).first()
 
@@ -755,24 +754,41 @@ def staff_report_detail(request,staff_uid):
 	#calculate ftd
 	client_staff_list = Client_Staff.objects.filter(
 		staff=staff,
-		client__magnet_created_at__month=calculated_month,
-		client__magnet_created_at__year=calculated_year,
+		# client__magnet_created_at__month=calculated_month,
+		# client__magnet_created_at__year=calculated_year,
 		is_active=True,).prefetch_related('client')
 
 	client_ftd_user_magnet_dict = {}
 
 	meta_ids_for_api = ''
 	for client_staff in client_staff_list:
-		meta_ids_for_api += ( client_staff.client.magnet_id + ',')
+		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
+			print(client_staff.client.nama, client_staff.client.magnet_id)
+			meta_ids_for_api += ( client_staff.client.magnet_id + ',')
 
-		if client_staff.client.magnet_id not in client_ftd_user_magnet_dict:
-			client_ftd_user_magnet_dict[client_staff.client.magnet_id] = client_staff.client
-	print('meta_ids_for_api', meta_ids_for_api)
+			if client_staff.client.magnet_id not in client_ftd_user_magnet_dict:
+				client_ftd_user_magnet_dict[client_staff.client.magnet_id] = client_staff.client
+
+	
+
+	# print('meta_ids_for_api', meta_ids_for_api)
+	# print('^^^^^^')
+	# get_meta5_ftd_ids(meta_ids_for_api, now)
 	client_ftd_list = get_ftd_list(meta_ids_for_api)
-	print('client_ftd_list', client_ftd_list)
+	current_month_client_ftd_list = []
 	client_ftd_total_usd = 0
+	index_loop = 0
 	for client_ftd in client_ftd_list:
-		client_ftd_total_usd += Decimal(client_ftd['ftd'])
+		
+		temp_split = client_ftd['time'].split('-')
+		loop_year = int(temp_split[0])
+		loop_month = int(temp_split[1])
+
+		if now.year == loop_year and now.month == loop_month:
+			client_ftd_total_usd += Decimal(client_ftd['ftd'])
+			current_month_client_ftd_list.append(client_ftd)
+
+	client_ftd_list = current_month_client_ftd_list
 	#rumus 
 	bonus_per_ftd = 0
 	client_ftd_count = len(client_ftd_list)

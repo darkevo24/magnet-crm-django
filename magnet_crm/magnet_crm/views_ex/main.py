@@ -18,6 +18,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 # from magnet_crm.task import *
 
+
 def notif_check(request):
 	print("masuk sini")
 	# start_process.apply_async(_id='eta-testing')
