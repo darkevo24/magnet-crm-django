@@ -31,28 +31,64 @@ from client.models import *
 from django.utils.timezone import make_aware
 from magnet_crm.celery import app
 import pytz
-app.conf.beat_schedule = {
-    # Executes every Monday morning at 7:30 a.m.
-    'add-sync-data-magnet': {
-        'task': 'magnet_crm.task.sync_data_magnet',
-        'schedule': crontab( minute='*/5'),
+# app.conf.beat_schedule = {
+#     # Executes every Monday morning at 7:30 a.m.
+#     'add-sync-data-magnet': {
+#         'task': 'magnet_crm.task.sync_data_magnet',
+#         'schedule': crontab( minute='*/5'),
         
-    },
-    'add-every-monday-morning': {
-        'task': 'magnet_crm.task.birthday',
-        'schedule': crontab( minute=7, hour=13),
+#     },
+#     'add-every-monday-morning': {
+#         'task': 'magnet_crm.task.birthday',
+#         'schedule': crontab( minute=7, hour=13),
         
-    },
-    'add-every-new_scramble_clients-every-week': {
-        'task': 'magnet_crm.task.new_scramble_clients',
-        'schedule': crontab(0, 0, day_of_month='3,6,9,12'),
+#     },
+#     'add-every-new_scramble_clients-every-week': {
+#         'task': 'magnet_crm.task.new_scramble_clients',
+#         'schedule': crontab(0, 0, day_of_month='3,6,9,12'),
         
-    },
-}
+#     },
+# }
 
 
-import mysql.connector
-from mysql.connector import errorcode
+# import mysql.connector
+# from mysql.connector import errorcode
+
+
+schedule, created = IntervalSchedule.objects.get_or_create(
+    every=5,
+    period=IntervalSchedule.SECONDS,
+)
+
+PeriodicTask.objects.create(
+    interval=schedule,
+    name='Testing',          # simply describes this periodic task.
+    task='magnet_crm.tasks.test',
+    # args="ini dari periodic"  # name of task.
+)
+
+
+# schedule, _ = CrontabSchedule.objects.get_or_create(
+#     minute='0',
+#     hour='0',
+#     timezone="Asia/Jakarta",
+#     # task='magnet_crm.task.birthday',
+#     # day_of_week='*',
+#     # day_of_month='*',
+#     # month_of_year='*',
+# )
+
+# PeriodicTask.objects.create(
+#     crontab=schedule,                  # we created this above.
+#     name='Birthday',          # simply describes this periodic task.
+#     task='magnet_crm.task.birthday',  # name of task.
+#     # args=json.dumps(['arg1', 'arg2']),
+#     # kwargs=json.dumps({
+#     #    'be_careful': True,
+#     # }),
+#     # expires=datetime.utcnow() + timedelta(seconds=30)
+# )
+
 
 
 
