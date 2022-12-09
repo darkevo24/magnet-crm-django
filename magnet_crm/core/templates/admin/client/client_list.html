@@ -178,19 +178,19 @@
                             <div class="row">
                                 <div class="col-12 d-flex ">
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Hitam"/> Hitam    
+                                        <input type="checkbox" class="client-filter-checkbox" value="Hitam"/> Hitam    
                                     </div>
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Kuning"/>  Kuning    
+                                        <input type="checkbox" class="client-filter-checkbox" value="Kuning"/>  Kuning    
                                     </div>
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Merah"/>  Merah
+                                        <input type="checkbox" class="client-filter-checkbox" value="Merah"/>  Merah
                                     </div>
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Hijau"/>  Hijau
+                                        <input type="checkbox" class="client-filter-checkbox" value="Hijau"/>  Hijau
                                     </div>
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Biru"/>  Biru
+                                        <input type="checkbox" class="client-filter-checkbox" value="Biru"/>  Biru
                                     </div>
                                     
                                     
@@ -295,19 +295,19 @@
                             <div class="row">
                                 <div class="col-12 d-flex ">
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Hitam"/> Hitam    
+                                        <input type="checkbox" class="hot-client-filter-checkbox" value="Hitam"/> Hitam    
                                     </div>
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Kuning"/>  Kuning    
+                                        <input type="checkbox" class="hot-client-filter-checkbox" value="Kuning"/>  Kuning    
                                     </div>
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Merah"/>  Merah
+                                        <input type="checkbox" class="hot-client-filter-checkbox" value="Merah"/>  Merah
                                     </div>
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Hijau"/>  Hijau
+                                        <input type="checkbox" class="hot-client-filter-checkbox" value="Hijau"/>  Hijau
                                     </div>
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Biru"/>  Biru
+                                        <input type="checkbox" class="hot-client-filter-checkbox" value="Biru"/>  Biru
                                     </div>
                                     
                                     
@@ -319,7 +319,7 @@
                                   
                                   <th scope="col"></th>
                                   <th scope="col" hidden>Warna</th>
-                                  <th scope="col">Nama 123</th>
+                                  <th scope="col">Nama</th>
                                   <th scope="col">No. Telepon</th>
                                   <th scope="col">Email</th>
                                   <th scope="col">Source</th>
@@ -528,6 +528,18 @@
         })
         dataTableHotClient.column(1).search(searchTerms.join('|'), true, false, true).draw();
     });
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+		  if (e.target.hash == '#menu1') {
+		  	console.log('menu1');
+		    dataTableClient.columns.adjust().draw()
+		  }
+		  if (e.target.hash == '#menu2') {
+		  	console.log('menu1');
+		    dataTableHotClient.columns.adjust().draw()
+		  }
+		})
+
 
 	
 	$(function() {
