@@ -763,7 +763,6 @@ def staff_report_detail(request,staff_uid):
 	meta_ids_for_api = ''
 	for client_staff in client_staff_list:
 		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
-			print(client_staff.client.nama, client_staff.client.magnet_id)
 			meta_ids_for_api += ( client_staff.client.magnet_id + ',')
 
 			if client_staff.client.magnet_id not in client_ftd_user_magnet_dict:
@@ -814,8 +813,11 @@ def staff_report_detail(request,staff_uid):
 	last_two_months_date = now - relativedelta(months=2)
 	last_two_monthsend_date = calendar.monthrange(calculated_year, calculated_month)[0]
 	last_two_months_date = datetime(last_two_months_date.year, last_two_months_date.month, 1)
-	
-	
+	last_program_date = datetime(2022, 10, 1)
+	if last_two_months_date <= last_two_months_date:
+		last_two_months_date = last_program_date
+
+	print('last_two_months_date', last_two_months_date)
 	two_months_bonus_dict, two_months_trades = calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date)
 	#data > 2bulan
 	more_two_months_bonus_dict, more_two_months_trades = calculate_lot_more_than_two_months_bonus(staff, last_two_months_date, now, end_date)

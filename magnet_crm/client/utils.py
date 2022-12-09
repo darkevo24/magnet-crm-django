@@ -23,6 +23,7 @@ from ib.models import *
 import calendar
 import pytz
 from django.utils.timezone import make_aware
+from dateutil.relativedelta import relativedelta
 
 def create_client_journal(request, staff=None, client=None, journal_type=None):
 	try:
@@ -412,7 +413,7 @@ def get_meta5_ftd_ids(magnet_ids, now):
 		end_date_str = str(now.year) + '-' + str(month) + '-' + end_day_str
 		print('++++', start_date_str, '-----', end_date_str)
 		mycursor = cnx.cursor()		
-		str_sql = "Select * FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_ids)[:-1]+ ") AND updated_at >= "
+		str_sql = "Select  user_id, login, account_type, rate, updated_at FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_ids)[:-1]+ ") AND updated_at >= "
 		str_sql += start_date_str + " AND updated_at <= " + end_date_str +" ORDER BY 'id' DESC " 
 		print(str_sql)
 		# print('finished')
@@ -436,20 +437,22 @@ def get_meta5_ids(magnet_ids, date, calculation_type):
 			database='vifx'
 		)
 
+		date = date - relativedelta(months=2)
+
 		mycursor = cnx.cursor()
 		date_str = ''
 		print('calculation_type', calculation_type)
 		print('date -->', date)
 
 		if date != None and date != '':
-			date_str = date.strftime("%Y-%m-%d")
+			date_str = date.strftime("%Y-%m-%d %H:%M")
+			print('date_str', date_str)
 		str_sql = "Select id, user_id, login, account_type, rate, updated_at FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_ids)[:-1]+ ") ORDER BY 'id' DESC "
 		if date != None and date != '' and calculation_type=='two_months':
-			
-			str_sql = "Select id, user_id, login, account_type, rate, updated_at FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_ids)[:-1]+ ") AND updated_at >= " + date_str + " ORDER BY 'id' DESC "
+			str_sql = "Select id, user_id, login, account_type, rate, updated_at FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_ids)[:-1]+ ") AND updated_at >= '" + date_str + "' AND updated_at >= '2022-10-01 00:00' ORDER BY 'id' DESC "			
 		elif date != None and date != '' and calculation_type=='more_than_two_months': 
-			str_sql = "Select id, user_id, login, account_type, rate, updated_at FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_ids)[:-1]+ ") AND updated_at < " + date_str + " ORDER BY 'id' DESC "
-		
+			str_sql = "Select id, user_id, login, account_type, rate, updated_at FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_ids)[:-1]+ ") AND updated_at < '" + date_str + "' AND updated_at >= '2022-10-01 00:00' ORDER BY 'id' DESC "
+
 		print('str_sql', str_sql,date, )
 		mycursor.execute(str_sql)
 		myresult = mycursor.fetchall()
@@ -2357,10 +2360,11 @@ def calculate_lot_more_than_two_months_bonus(staff, last_two_months_date, now, e
 			print('more than two months trades', last_two_months_account_trades)
 			for last_two_months_account_trade in last_two_months_account_trades:
 				if last_two_months_account_trade['action'] == 'buy':
+					print(':::::',last_two_months_account_trade)
 					account_type = mt5_account_type_dict[last_two_months_account_trade['login']]['account_type']
 					login_id = str(last_two_months_account_trade['login'])
 					jakarta_timezone = pytz.timezone('Asia/Jakarta')
-					created_at_timezone = two_month_trades[login_id]['created_at'].replace(tzinfo=jakarta_timezone)
+					created_at_timezone = mt5_account_type_dict[login_id]['created_at'].replace(tzinfo=jakarta_timezone)
 
 					if last_two_months_account_trade['login'] not in two_month_trades:
 						two_month_trades[login_id] = {}
