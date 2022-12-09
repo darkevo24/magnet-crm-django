@@ -185,7 +185,7 @@ def dashboard(request):
 
 	total_upcomming_followup = client_schedule_list.filter(schedule_date__gt=timezone.now()).count()
 	total_feedback = Client_Followup.objects.filter(staff=staff,is_active=True).count()
-	total_followup = Client_Journey.objects.filter(staff=staff,is_active=True).count()
+	total_followup = Client_Schedule.objects.filter(staff=staff,is_active=True, schedule_date__lt=timezone.now()).count()
 
 	context = {
 		'total_client':total_client,

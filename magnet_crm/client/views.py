@@ -307,7 +307,7 @@ def client_own_suspect_detail(request,uid_client_staff):
 		if action == 'accept':
 			print("accept")
 			client.source = '0'
-			client.source_detail_1 = None
+			client.source_detail_1 = 2
 			client.source_detail_2 = None
 			client_staff_sus.is_own_client_suspect = False
 		else:
@@ -724,7 +724,7 @@ def request_own(request,id_client):
 	client_staff.save()
 
 	messages.success(request, "Request Berhasil")
-	return redirect(reverse('client-detail-list',id_client))
+	return redirect(reverse('client-detail-list', kwargs={'id_client': id_client,}))
 
 @login_required
 def detail_list(request,id_client):

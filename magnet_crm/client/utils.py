@@ -437,7 +437,7 @@ def get_meta5_ids(magnet_ids, date, calculation_type):
 			database='vifx'
 		)
 
-		date = date - relativedelta(months=2)
+		
 
 		mycursor = cnx.cursor()
 		date_str = ''
@@ -445,6 +445,7 @@ def get_meta5_ids(magnet_ids, date, calculation_type):
 		print('date -->', date)
 
 		if date != None and date != '':
+			date = date - relativedelta(months=2)
 			date_str = date.strftime("%Y-%m-%d %H:%M")
 			print('date_str', date_str)
 		str_sql = "Select id, user_id, login, account_type, rate, updated_at FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_ids)[:-1]+ ") ORDER BY 'id' DESC "

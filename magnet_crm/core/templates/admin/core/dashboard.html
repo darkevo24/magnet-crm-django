@@ -67,12 +67,12 @@
 </style>
 <script src="{% static 'limitless/global_assets/js/plugins/ui/fullcalendar/main.min.js' %}"></script>
 <div class="row">
-	<!-- Typeahead -->
-	<div class="card col-12">
-		<div class="card-header">
-			<h5 class="card-title">Dashboard</h5>
-		</div>
-		<div class="card-body">
+    <!-- Typeahead -->
+    <div class="card col-12">
+        <div class="card-header">
+            <h5 class="card-title">Dashboard</h5>
+        </div>
+        <div class="card-body">
             <div class="row pb-3">
                 <div class="col-3 px-3">
                     <div class="row" style="line-height: 1">
@@ -146,15 +146,15 @@
                 </div>
             </div>
 
-			<div class="row"> 
-				<div class="col-12">
+            <div class="row"> 
+                <div class="col-12">
                   
 
 
                     
 
 
-					<ul class="nav nav-tabs nav-tabs-highlight">
+                    <ul class="nav nav-tabs nav-tabs-highlight">
                                 <!-- <li class="nav-item"><a href="#highlighted-justified-tab1" class="nav-link active" data-toggle="tab">General Information</a></li> -->
 
                                 <li class="nav-item"><a href="#highlighted-justified-tab2" class="nav-link active" data-toggle="tab">Clients</a></li>
@@ -214,7 +214,7 @@
                             </div>
                             <!-- USING TABLE -->
 
-                            <table class="display" id="table-main" width="100%">
+                            <table class="stripe table row-border order-column" id="table-main" width="100%">
                               <thead>
                                 <tr>
                                   
@@ -224,8 +224,6 @@
                                   <th scope="col">No. Telepon</th>
                                   <th scope="col">Email</th>
                                   <th scope="col">Source</th>
-                                  <th scope="col">Medium</th>
-                                  <th scope="col">Campaign</th>
                                   <th scope="col">Aksi</th>
                                 </tr>
                               </thead>
@@ -249,8 +247,6 @@
                                                     {{client.get_source_display|default:'-'}}
                                                 {% endif %}     
                                             </td>
-                                            <td scope="row">{{client.medium|default:"-"}}</td>
-                                            <td scope="row">{{client.campaign|default:"-"}}</td>
                                             <td scope="row">
                                                 <a href="https://wa.me/{{client.phone_no}}?text=Halo" target="_blank">
                                                     <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
@@ -310,30 +306,32 @@
 
 
                       </div>
-                      <div class="tab-pane fade" id="menu1">
+                       <div class="tab-pane active" id="menu1">
+                            
                             <div class="row">
                                 <div class="col-12 d-flex ">
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="client-filter-checkbox" value="Hitam"/> Hitam    
+                                        <input type="checkbox" class="filter-checkbox" value="Hitam"/> Hitam    
                                     </div>
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="client-filter-checkbox" value="Kuning"/>  Kuning    
+                                        <input type="checkbox" class="filter-checkbox" value="Kuning"/>  Kuning    
                                     </div>
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="client-filter-checkbox" value="Merah"/>  Merah
+                                        <input type="checkbox" class="filter-checkbox" value="Merah"/>  Merah
                                     </div>
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="client-filter-checkbox" value="Hijau"/>  Hijau
+                                        <input type="checkbox" class="filter-checkbox" value="Hijau"/>  Hijau
                                     </div>
                                     <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="client-filter-checkbox" value="Biru"/>  Biru
+                                        <input type="checkbox" class="filter-checkbox" value="Biru"/>  Biru
                                     </div>
                                     
                                     
                                 </div>
                             </div>
+                            <!-- USING TABLE -->
 
-                            <table class="display" id="table-main-2" width="100%">
+                            <table class="stripe table row-border order-column" id="table-main-2" width="100%">
                               <thead>
                                 <tr>
                                   
@@ -343,8 +341,6 @@
                                   <th scope="col">No. Telepon</th>
                                   <th scope="col">Email</th>
                                   <th scope="col">Source</th>
-                                  <th scope="col">Medium</th>
-                                  <th scope="col">Campaign</th>
                                   <th scope="col">Aksi</th>
                                 </tr>
                               </thead>
@@ -353,26 +349,32 @@
                                     {% for client in all_client %}
                                         {% if client.is_deposit %}
                                         <tr>
-                                          
-                                          <td scope="row"><i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="icon-circle2 mr-1"></i></td>
-                                          <td scope="row" hidden>{{client_color_text|dict_get:client.id}}</td>
-                                          <td scope="row">{{client.nama|default:"-"}}</td>
-                                          <td scope="row">{{client.phone_no|default:"-"}}</td>
-                                          <td scope="row">{{client.email|default:"-"}}</td>
-                                          <td scope="row">{% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
-                                                        {{client.get_source_detail_2_display}} 
-                                                    {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
-                                                        {{client.get_source_detail_1_display}} 
-                                                    {% else %}
-                                                        {{client.get_source_display|default:'-'}}
-                                                    {% endif %}     </td>
-                                          <td scope="row">{{client.medium|default:"-"}}</td>
-                                          <td scope="row">{{client.campaign|default:"-"}}</td>
-                                          <td scope="row">
-                                              
-                                              <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
-                                              <img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
-                                              <div class="list-icons">
+                                            <td scope="row"><i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="    icon-circle2 mr-1"></i>
+                                            </td>
+                                            <td scope="row" hidden>{{client_color_text|dict_get:client.id}}</td>
+                                            <td scope="row">{{client.nama|default:"-"}}</td>
+                                            <td scope="row">{{client.phone_no|default:"-"}}</td>
+                                            <td scope="row">{{client.email|default:"-"}}</td>
+                                            <td scope="row">
+                                                {% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
+                                                    {{client.get_source_detail_2_display}} 
+                                                {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
+                                                    {{client.get_source_detail_1_display}} 
+                                                {% else %}
+                                                    {{client.get_source_display|default:'-'}}
+                                                {% endif %}     
+                                            </td>
+                                            <td scope="row">
+                                                <a href="https://wa.me/{{client.phone_no}}?text=Halo" target="_blank">
+                                                    <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
+                                                </a>
+                                                <a href="">
+                                                    <img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
+                                                </a>
+                                                <a href="{% url 'client-feedback-list' client.id%}">
+                                                    <img class="list-icons-item clickable feedback-button" data-popup="tooltip" title="Feedback" data-client_id="{{client.id}}" data-journey_type="feedback" data-toggle="modal" data-trigger="hover" data-target="#feedback" src="{% static 'magnet/images/admin-feedback.png' %}" style="height:2.4em" >
+                                                </a>
+                                                <div class="list-icons">
                                                     <div class="dropdown">
                                                         <a href="#" class="list-icons-item" data-toggle="dropdown">
                                                             <i class="icon-menu9" style="font-size: 1.8em"></i>
@@ -403,18 +405,22 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                          </td>
-                                          
+                                            </td>
                                         </tr>
                                         {% endif %}
                                     {% endfor %}
-                                
-                                
-                                
                               </tbody>
                             </table>
 
                             <!-- FINISH TABLE -->
+                           
+
+                            
+                        </ul>
+        
+
+                            <!-- start end -->
+
 
                       </div>
                     </div>
@@ -432,12 +438,12 @@
                                     Aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthet.
                                 </div> -->
                             </div>
-					
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- /typeahead -->
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /typeahead -->
 </div>
 <!-- Phone call modal -->
 <div id="call" class="modal fade">
@@ -497,8 +503,8 @@
     
 
 
-	$( document ).ready(function() {
-    	console.log( "ready!" );
+    $( document ).ready(function() {
+        console.log( "ready!" );
 
 
         var dataTableFollowup = $("#table-main").DataTable({
@@ -509,14 +515,15 @@
                 lengthMenu: '<span>Show:</span> _MENU_',
             },
             scrollX: true,
-            // scrollY: '350px',
-            // scrollCollapse: true,
-            // fixedColumns: {
-            //     leftColumns: 3,
-            //     rightColumns: 1
-            // }
+            // scrollY: '400',
+            scrollCollapse: true,
+            fixedColumns: {
+                leftColumns: 3,
+                rightColumns: 1,
+            }
         });
 
+       dataTableFollowup.draw();
         $('.filter-checkbox').on('change', function(e){
             var searchTerms = []
             $.each($('.filter-checkbox'), function(i,elem){
@@ -536,14 +543,14 @@
                 lengthMenu: '<span>Show:</span> _MENU_',
             },
             scrollX: true,
-            // scrollY: '350px',
-            // scrollCollapse: true,
-            // fixedColumns: {
-            //     leftColumns: 2,
-            //     rightColumns: 1
-            // }
+            // scrollY: '400',
+            scrollCollapse: true,
+            fixedColumns: {
+                leftColumns: 3,
+                rightColumns: 1,
+            }
         });
-
+        dataTableClient.draw()
         $('.client-filter-checkbox').on('change', function(e){
             console.log('checked')
             var searchTerms = []
@@ -556,15 +563,15 @@
             dataTableClient.column(1).search(searchTerms.join('|'), true, false, true).draw();
         });
         $('#table-main-2').DataTable().draw();
-    	
-    	
+        
+        
 
 
 
 
 
         events = {{client_schedule_list_json|safe}};
-    	const calendarBasicViewElement = document.querySelector('.fullcalendar-basic');
+        const calendarBasicViewElement = document.querySelector('.fullcalendar-basic');
 
         // Initialize
         
@@ -594,14 +601,14 @@
         });
         var counter = 1;
         $('#calendar-tab').click(function(){
-        	console.log(123123);
-        	const myTimeout = setTimeout(init_calendar, 1200);
-        	// setTimeout("calendarBasicViewInit.render();", 1000);
-        	// setTimeout(() => {calendarBasicViewInit.render()}, 1)
+            console.log(123123);
+            const myTimeout = setTimeout(init_calendar, 1200);
+            // setTimeout("calendarBasicViewInit.render();", 1000);
+            // setTimeout(() => {calendarBasicViewInit.render()}, 1)
         });
 
         function init_calendar() {
-        	calendarBasicViewInit.render();
+            calendarBasicViewInit.render();
         }
         var client_id = '';
         $('.change-color-button').click(function(){
@@ -668,7 +675,7 @@
         }
       
 
-	});
+    });
 
     $("#search_input").on("keyup", function() {
         var value = this.value.toLowerCase().trim();
@@ -676,9 +683,8 @@
         return $(this).text().toLowerCase().trim().indexOf(value) == -1;
         }).hide();
     });
-	
+    
 </script>
 {% endblock content %}
 
-							
-						
+                            
