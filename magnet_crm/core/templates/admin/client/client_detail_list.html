@@ -209,7 +209,7 @@
 								<td>{{client.email|default:"-"}}</td>
 							</tr>
 							<tr>
-								<td>Registerd</td>
+								<td>Registered</td>
 								<td>:</td>
 								<td>
 									{% if client.is_registered %}
@@ -229,6 +229,16 @@
 								{% else %}
 									{{client.get_source_display|default:'-'}}
 								{% endif %}</td>
+							</tr>
+							<tr>
+								<td>Medium</td>
+								<td>:</td>
+								<td>{{client.medium|default:"-"}}</td>
+							</tr>
+							<tr>
+								<td>Campaign</td>
+								<td>:</td>
+								<td>{{client.campaign|default:"-"}}</td>
 							</tr>
 							<tr>
 								<td>GCL ID</td>

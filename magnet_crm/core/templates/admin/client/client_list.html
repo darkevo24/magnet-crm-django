@@ -79,7 +79,7 @@
                                     
                                 </div>
                             </div>
-					  		<table class="table" id="table-main" width="100%">
+					  		<table class="display" id="table-main" width="100%">
                               <thead>
                                 <tr>
                                   
@@ -89,6 +89,8 @@
                                   <th scope="col">No. Telepon</th>
                                   <th scope="col">Email</th>
                                   <th scope="col">Source</th>
+                                  <th scope="col">Medium</th>
+                                  <th scope="col">Campaign</th>
                                   <th scope="col">Aksi</th>
                                 </tr>
                               </thead>
@@ -115,6 +117,8 @@
                                                     {{client_staff.client.get_source_display|default:'-'}}
                                                 {% endif %}     
                                             </td>
+                                            <td scope="row">{{client_staff.client.medium|default:"-"}}</td>
+                                            <td scope="row">{{client_staff.client.campaign|default:"-"}}</td>
                                             <td scope="row">
                                                 <a href="https://wa.me/{{client_staff.client.phone_no}}?text=Halo" target="_blank">
                                                     <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client_staff.client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
@@ -193,7 +197,7 @@
                                 </div>
                             </div>
 
-					  		<table class="table" id="table-main-2" width="100%">
+					  		<table class="display" id="table-main-2" width="100%">
                               <thead>
                                 <tr>
                                   
@@ -203,6 +207,8 @@
                                   <th scope="col">No. Telepon</th>
                                   <th scope="col">Email</th>
                                   <th scope="col">Source</th>
+                                  <th scope="col">Medium</th>
+                                  <th scope="col">Campaign</th>
                                   <th scope="col">Aksi</th>
                                 </tr>
                               </thead>
@@ -224,6 +230,8 @@
                                                     {% else %}
                                                         {{client_staff.client.get_source_display|default:'-'}}
                                                     {% endif %}     </td>
+                                          <td scope="row">{{client_staff.client.medium|default:"-"}}</td>
+                                          <td scope="row">{{client_staff.client.campaign|default:"-"}}</td>
                                           <td scope="row">
                                               
                                                 <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client_staff.client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
@@ -297,7 +305,7 @@
                             </div>
                         </div>
 
-                        <table class="table" id="table-main-3" width="100%">
+                        <table class="display" id="table-main-3" width="100%">
                               <thead>
                                 <tr>
                                   
@@ -307,6 +315,8 @@
                                   <th scope="col">No. Telepon</th>
                                   <th scope="col">Email</th>
                                   <th scope="col">Source</th>
+                                  <th scope="col">Medium</th>
+                                  <th scope="col">Campaign</th>
                                   <th scope="col">Aksi</th>
                                 </tr>
                               </thead>
@@ -328,6 +338,8 @@
                                                     {% else %}
                                                         {{client_staff.client.get_source_display|default:'-'}}
                                                     {% endif %}     </td>
+                                          <td scope="row">{{client_staff.client.medium|default:"-"}}</td>
+                                          <td scope="row">{{client_staff.client.campaign|default:"-"}}</td>
                                           <td scope="row">
                                               
                                               <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client_staff.client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
@@ -424,11 +436,11 @@
         },
         scrollX: true,
         // scrollY: '350px',
-        scrollCollapse: true,
-        fixedColumns: {
-            leftColumns: 2,
-            // rightColumns: 1
-        }
+        // scrollCollapse: true,
+        // fixedColumns: {
+        //     leftColumns: 2,
+        //     rightColumns: 1
+        // }
     });
     
     $('.filter-checkbox').on('change', function(e){
@@ -449,11 +461,11 @@
         },
         scrollX: true,
         // scrollY: '350px',
-        scrollCollapse: true,
-        fixedColumns: {
-            leftColumns: 2,
-            // rightColumns: 1
-        }
+        // scrollCollapse: true,
+        // fixedColumns: {
+        //     leftColumns: 2,
+        //     rightColumns: 1
+        // }
     });
 
     $('.client-filter-checkbox').on('change', function(e){
@@ -476,11 +488,11 @@
         },
         scrollX: true,
         // scrollY: '350px',
-        scrollCollapse: true,
-        fixedColumns: {
-            leftColumns: 2,
-            // rightColumns: 1
-        }
+        // scrollCollapse: true,
+        // fixedColumns: {
+        //     leftColumns: 2,
+        //     rightColumns: 1
+        // }
     });
     $('.hot-client-filter-checkbox').on('change', function(e){
         console.log('checked')

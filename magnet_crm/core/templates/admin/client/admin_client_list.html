@@ -53,7 +53,7 @@
 					<!-- Tab panes -->
 					<div class="tab-content">
 					  <div class="tab-pane active" id="home">
-					  		<table class="table" id="table-main" width="100%">
+					  		<table class="display" id="table-main" width="100%">
                               <thead>
                                 <tr>
                                   
@@ -63,6 +63,8 @@
                                   <th scope="col">No. Telepon</th>
                                   <th scope="col">Email</th>
                                   <th scope="col">Source</th>
+                                  <th scope="col">Medium</th>
+                                  <th scope="col">Campaign</th>
                                   <th scope="col">Aksi</th>
                                 </tr>
                               </thead>
@@ -84,6 +86,8 @@
                                                     {% else %}
                                                         {{client.get_source_display|default:'-'}}
                                                     {% endif %}     </td>
+                                          <td scope="row">{{client.medium|default:"-"}}</td>
+                                          <td scope="row">{{client.campaign|default:"-"}}</td>
                                           <td scope="row">
                                               
                                               <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
@@ -140,7 +144,7 @@
 					  </div>
 					  <div class="tab-pane fade" id="menu1">
 
-                        <table class="table" id="table-main-2" width="100%">
+                        <table class="display" id="table-main-2" width="100%">
                               <thead>
                                 <tr>
                                   
@@ -150,6 +154,8 @@
                                   <th scope="col">No. Telepon</th>
                                   <th scope="col">Email</th>
                                   <th scope="col">Source</th>
+                                  <th scope="col">Medium</th>
+                                  <th scope="col">Campaign</th>
                                   <th scope="col">Aksi</th>
                                 </tr>
                               </thead>
@@ -171,6 +177,8 @@
                                                     {% else %}
                                                         {{client.get_source_display|default:'-'}}
                                                     {% endif %}     </td>
+                                          <td scope="row">{{client.medium|default:"-"}}</td>
+                                          <td scope="row">{{client.campaign|default:"-"}}</td>
                                           <td scope="row">
                                               
                                               <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
@@ -272,11 +280,11 @@
             },
             scrollX: true,
             // scrollY: '350px',
-            scrollCollapse: true,
-            fixedColumns: {
-                leftColumns: 2,
-                // rightColumns: 1
-            }
+            // scrollCollapse: true,
+            // fixedColumns: {
+            //     leftColumns: 2,
+            //     rightColumns: 1
+            // }
         });
 
         $("#table-main-2").DataTable({
@@ -288,11 +296,11 @@
             },
             scrollX: true,
             // scrollY: '350px',
-            scrollCollapse: true,
-            fixedColumns: {
-                leftColumns: 2,
-                // rightColumns: 1
-            }
+            // scrollCollapse: true,
+            // fixedColumns: {
+            //     leftColumns: 2,
+            //     rightColumns: 1
+            // }
         });
 
 
