@@ -148,7 +148,7 @@ def dashboard(request):
 	print(client_staff_list.count(), '>>>')
 	client_ids = []
 
-	client_list = Client.objects.filter(is_active=True,id__in=client_staff_list.values_list('client__id',flat=True))
+	client_list = Client.objects.filter(is_active=True,id__in=client_staff_list.values_list('client__id',flat=True)).order_by('-magnet_created_at')
 	client_color = {}
 	client_color_text = {}
 	color_dict = {
