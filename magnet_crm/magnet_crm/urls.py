@@ -98,6 +98,7 @@ urlpatterns = [
     path('staff/add', staff_views.staff_add, name='staff-add'),
     path('staff/<str:uid_staff>/edit', staff_views.staff_edit, name='staff-edit'),
     path('staff/detail/<uuid:staff_uid>', staff_views.staff_detail, name='staff-detail'),
+    path('staff/change_password/<uuid:staff_uid>', staff_views.staff_change_password, name='staff-change-password'),
     path('staff/delete/<uuid:staff_uid>', staff_views.staff_delete, name='staff-delete'),
         
     path('staff/<str:staff_uid>/salary', staff_views.staff_salary_list, name='staff-salary-list'),

@@ -7,20 +7,20 @@
 {% block content %}
 <style type="text/css">
 	.media{
-        border: 1px solid silver;
-        border-radius: 15px;
-        padding: 10px;
-    }
-    div.dataTables_wrapper div.dataTables_scrollBody {
-      min-height: 300px!important;
-    }
+		border: 1px solid silver;
+		border-radius: 15px;
+		padding: 10px;
+	}
+	div.dataTables_wrapper div.dataTables_scrollBody {
+	  min-height: 300px!important;
+	}
 
-    .datatable-scroll-wrap{
-        min-height: 300px!important;;
-    }
-    .dataTables_scrollHeadInner{
-        width: 100%!important;
-    }
+	.datatable-scroll-wrap{
+		min-height: 300px!important;;
+	}
+	.dataTables_scrollHeadInner{
+		width: 100%!important;
+	}
 </style>
 <div class="row">
 	<!-- Typeahead -->
@@ -45,369 +45,369 @@
 					<!-- Nav tabs -->
 					<ul class="nav nav-tabs">
 					  <li class="nav-item">
-					    <a class="nav-link active" data-toggle="tab" href="#home">Data Followup</a>
+						<a class="nav-link active" data-toggle="tab" href="#home">Data Followup</a>
 					  </li>
 					  <li class="nav-item">
-					    <a class="nav-link" data-toggle="tab" href="#menu1">Client</a>
+						<a class="nav-link" data-toggle="tab" href="#menu1">Client</a>
 					  </li>
-                      <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#menu2">HOT Client</a>
-                      </li>
+					  <li class="nav-item">
+						<a class="nav-link" data-toggle="tab" href="#menu2">HOT Client</a>
+					  </li>
 					</ul>
 
 					<!-- Tab panes -->
 					<div class="tab-content">
 					   <div class="tab-pane active" id="home">
-                            <div class="row">
-                                <div class="col-12 d-flex ">
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Hitam"/> Hitam    
-                                    </div>
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Kuning"/>  Kuning    
-                                    </div>
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Merah"/>  Merah
-                                    </div>
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Hijau"/>  Hijau
-                                    </div>
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="filter-checkbox" value="Biru"/>  Biru
-                                    </div>
-                                    
-                                    
-                                </div>
-                            </div>
-					  		<table class="stripe table row-border order-column" id="table-main" width="100%">
-                              <thead>
-                                <tr>
-                                  
-                                  <th scope="col"></th>
-                                  <th scope="col" hidden>Warna</th>
-                                  <th scope="col">Nama</th>
-                                  <th scope="col">No. Telepon</th>
-                                  <th scope="col">Email</th>
-                                  <th scope="col">Source</th>
-                                  <th scope="col">Medium</th>
-                                  <th scope="col">Campaign</th>
-                                  <th scope="col">Aksi</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                
-                                    {% for client_staff in client_staff_list %}
-                                    
-                                    {% if not client_staff.client.is_deposit and not client_staff.is_hot %}
-                                        <tr>
-                                          
-                                            <td scope="row">
-                                                <i style="display: inline-block;color: #{{client_color|dict_get:client_staff.client.id}}" class="icon-circle2 mr-1"></i>
-                                            </td>
-                                            <td scope="row" hidden>{{client_color_text|dict_get:client_staff.client.id}}</td>
-                                            <td scope="row">{{client_staff.client.nama|default:"-"}}</td>
-                                            <td scope="row">{{client_staff.client.phone_no|default:"-"}}</td>
-                                            <td scope="row">{{client_staff.client.email|default:"-"}}</td>
-                                            <td scope="row">
-                                                {% if client_staff.client.source_detail_2 is not None and client_staff.client.source_detail_2 != '' %}
-                                                    {{client_staff.client.get_source_detail_2_display}} 
-                                                {% elif client_staff.client.source_detail_1 is not None and client_staff.client.source_detail_1 != '' %}
-                                                    {{client_staff.client.get_source_detail_1_display}} 
-                                                {% else %}
-                                                    {{client_staff.client.get_source_display|default:'-'}}
-                                                {% endif %}     
-                                            </td>
-                                            <td scope="row">{{client_staff.client.medium|default:"-"}}</td>
-                                            <td scope="row">{{client_staff.client.campaign|default:"-"}}</td>
-                                            <td scope="row">
-                                                <a href="https://wa.me/{{client_staff.client.phone_no}}?text=Halo" target="_blank">
-                                                    <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client_staff.client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
-                                                </a>
-                                                <a href="">
-                                                    <img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client_staff.client_staff.client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
-                                                </a>
-                                                <a href="{% url 'client-feedback-list' client_staff.client.id%}">
-                                                    <img class="list-icons-item clickable feedback-button" data-popup="tooltip" title="Feedback" data-client_id="{{client_staff.client.id}}" data-journey_type="feedback" data-toggle="modal" data-trigger="hover" data-target="#feedback" src="{% static 'magnet/images/admin-feedback.png' %}" style="height:2.4em" >
-                                                </a>
-                                                <div class="list-icons">
-                                                    <div class="dropdown">
-                                                        <a href="#" class="list-icons-item" data-toggle="dropdown">
-                                                            <i class="icon-menu9" style="font-size: 1.8em"></i>
-                                                        </a>
+							<div class="row">
+								<div class="col-12 d-flex ">
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="filter-checkbox" value="Hitam"/> Hitam    
+									</div>
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="filter-checkbox" value="Kuning"/>  Kuning    
+									</div>
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="filter-checkbox" value="Merah"/>  Merah
+									</div>
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="filter-checkbox" value="Hijau"/>  Hijau
+									</div>
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="filter-checkbox" value="Biru"/>  Biru
+									</div>
+									
+									
+								</div>
+							</div>
+							<table class="stripe table row-border order-column" id="table-main" width="100%">
+							  <thead>
+								<tr>
+								  
+								  <th scope="col"></th>
+								  <th scope="col" hidden>Warna</th>
+								  <th scope="col">Nama</th>
+								  <th scope="col">No. Telepon</th>
+								  <th scope="col">Email</th>
+								  <th scope="col">Source</th>
+								  <th scope="col">Medium</th>
+								  <th scope="col">Campaign</th>
+								  <th scope="col">Aksi</th>
+								</tr>
+							  </thead>
+							  <tbody>
+								
+									{% for client_staff in client_staff_list %}
+									
+									{% if not client_staff.client.is_deposit and not client_staff.is_hot %}
+										<tr>
+										  
+											<td scope="row">
+												<i style="display: inline-block;color: #{{client_color|dict_get:client_staff.client.id}}" class="icon-circle2 mr-1"></i>
+											</td>
+											<td scope="row" hidden>{{client_color_text|dict_get:client_staff.client.id}}</td>
+											<td scope="row">{{client_staff.client.nama|default:"-"}}</td>
+											<td scope="row">{{client_staff.client.phone_no|default:"-"}}</td>
+											<td scope="row">{{client_staff.client.email|default:"-"}}</td>
+											<td scope="row">
+												{% if client_staff.client.source_detail_2 is not None and client_staff.client.source_detail_2 != '' %}
+													{{client_staff.client.get_source_detail_2_display}} 
+												{% elif client_staff.client.source_detail_1 is not None and client_staff.client.source_detail_1 != '' %}
+													{{client_staff.client.get_source_detail_1_display}} 
+												{% else %}
+													{{client_staff.client.get_source_display|default:'-'}}
+												{% endif %}     
+											</td>
+											<td scope="row">{{client_staff.client.medium|default:"-"}}</td>
+											<td scope="row">{{client_staff.client.campaign|default:"-"}}</td>
+											<td scope="row">
+												<a href="https://wa.me/{{client_staff.client.phone_no}}?text=Halo" target="_blank">
+													<img class="list-icons-item clickable whatsapp-button" data-client_id="{{client_staff.client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
+												</a>
+												<a href="">
+													<img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client_staff.client_staff.client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
+												</a>
+												<a href="{% url 'client-feedback-list' client_staff.client.id%}">
+													<img class="list-icons-item clickable feedback-button" data-popup="tooltip" title="Feedback" data-client_id="{{client_staff.client.id}}" data-journey_type="feedback" data-toggle="modal" data-trigger="hover" data-target="#feedback" src="{% static 'magnet/images/admin-feedback.png' %}" style="height:2.4em" >
+												</a>
+												<div class="list-icons">
+													<div class="dropdown">
+														<a href="#" class="list-icons-item" data-toggle="dropdown">
+															<i class="icon-menu9" style="font-size: 1.8em"></i>
+														</a>
 
-                                                        <div class="dropdown-menu dropdown-menu-right">
-                                                            <a href="{% url 'client-detail-list' client_staff.client.id  %}" class="dropdown-item">
-                                                                <i class="icon-file-eye"></i> Client Detail
-                                                            </a>
-                                                            <!-- % if own_user and staff_level != 3 % -->
-                                                            {% if staff_level != 3 %}
-                                                            <a href="{% url 'client-edit' client_staff.client.id  %}" class="dropdown-item">
-                                                                <i class="fas fa-edit"></i> Client Edit
-                                                            </a>
-                                                            {% endif %}
+														<div class="dropdown-menu dropdown-menu-right">
+															<a href="{% url 'client-detail-list' client_staff.client.id  %}" class="dropdown-item">
+																<i class="icon-file-eye"></i> Client Detail
+															</a>
+															<!-- % if own_user and staff_level != 3 % -->
+															{% if staff_level != 3 %}
+															<a href="{% url 'client-edit' client_staff.client.id  %}" class="dropdown-item">
+																<i class="fas fa-edit"></i> Client Edit
+															</a>
+															{% endif %}
 
-                                                            <a href="{% url 'client-schedule-list' client_staff.client.id  %}" class="dropdown-item">
-                                                                <i class="fas fa-calendar-alt"></i> List Schedule
-                                                            </a>
-                                                            <!-- % if own_user % -->
-                                                            <a href="{% url 'client-schedule-add' client_staff.client.id  %}" class="dropdown-item">
-                                                                <i class="fas fa-calendar-plus"></i> Add Schedule
-                                                            </a>
-                                                        
-                                                            <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client_staff.client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
-                                                            <span  class="dropdown-item" onclick="set_hot({{client_staff.client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Hot Client</span>
-                                                            <!-- % endif % -->
+															<a href="{% url 'client-schedule-list' client_staff.client.id  %}" class="dropdown-item">
+																<i class="fas fa-calendar-alt"></i> List Schedule
+															</a>
+															<!-- % if own_user % -->
+															<a href="{% url 'client-schedule-add' client_staff.client.id  %}" class="dropdown-item">
+																<i class="fas fa-calendar-plus"></i> Add Schedule
+															</a>
+														
+															<span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client_staff.client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
+															<span  class="dropdown-item" onclick="set_hot({{client_staff.client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Hot Client</span>
+															<!-- % endif % -->
 
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                          </td>
-                                          
-                                        </tr>
-                                        {% endif %}
-                                    {% endfor %}
-                                
-                                
-                                
-                              </tbody>
-                            </table>
+														</div>
+													</div>
+												</div>
+										  </td>
+										  
+										</tr>
+										{% endif %}
+									{% endfor %}
+								
+								
+								
+							  </tbody>
+							</table>
 
 
 					   </div>
 					   <div class="tab-pane" id="menu1">
-                            <div class="row">
-                                <div class="col-12 d-flex ">
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="client-filter-checkbox" value="Hitam"/> Hitam    
-                                    </div>
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="client-filter-checkbox" value="Kuning"/>  Kuning    
-                                    </div>
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="client-filter-checkbox" value="Merah"/>  Merah
-                                    </div>
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="client-filter-checkbox" value="Hijau"/>  Hijau
-                                    </div>
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="client-filter-checkbox" value="Biru"/>  Biru
-                                    </div>
-                                    
-                                    
-                                </div>
-                            </div>
-                            <table class="stripe table row-border order-column" id="table-main-2" width="100%">
-                              <thead>
-                                <tr>
-                                  
-                                  <th scope="col"></th>
-                                  <th scope="col" hidden>Warna</th>
-                                  <th scope="col">Nama</th>
-                                  <th scope="col">No. Telepon</th>
-                                  <th scope="col">Email</th>
-                                  <th scope="col">Source</th>
-                                  <th scope="col">Medium</th>
-                                  <th scope="col">Campaign</th>
-                                  <th scope="col">Aksi</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                
-                                    {% for client_staff in client_staff_list %}
-                                    
-                                    {% if client_staff.client.is_deposit and not client_staff.is_hot %}
-                                        <tr>
-                                          
-                                            <td scope="row">
-                                                <i style="display: inline-block;color: #{{client_color|dict_get:client_staff.client.id}}" class="icon-circle2 mr-1"></i>
-                                            </td>
-                                            <td scope="row" hidden>{{client_color_text|dict_get:client_staff.client.id}}</td>
-                                            <td scope="row">{{client_staff.client.nama|default:"-"}}</td>
-                                            <td scope="row">{{client_staff.client.phone_no|default:"-"}}</td>
-                                            <td scope="row">{{client_staff.client.email|default:"-"}}</td>
-                                            <td scope="row">
-                                                {% if client_staff.client.source_detail_2 is not None and client_staff.client.source_detail_2 != '' %}
-                                                    {{client_staff.client.get_source_detail_2_display}} 
-                                                {% elif client_staff.client.source_detail_1 is not None and client_staff.client.source_detail_1 != '' %}
-                                                    {{client_staff.client.get_source_detail_1_display}} 
-                                                {% else %}
-                                                    {{client_staff.client.get_source_display|default:'-'}}
-                                                {% endif %}     
-                                            </td>
-                                            <td scope="row">{{client_staff.client.medium|default:"-"}}</td>
-                                            <td scope="row">{{client_staff.client.campaign|default:"-"}}</td>
-                                            <td scope="row">
-                                                <a href="https://wa.me/{{client_staff.client.phone_no}}?text=Halo" target="_blank">
-                                                    <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client_staff.client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
-                                                </a>
-                                                <a href="">
-                                                    <img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client_staff.client_staff.client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
-                                                </a>
-                                                <a href="{% url 'client-feedback-list' client_staff.client.id%}">
-                                                    <img class="list-icons-item clickable feedback-button" data-popup="tooltip" title="Feedback" data-client_id="{{client_staff.client.id}}" data-journey_type="feedback" data-toggle="modal" data-trigger="hover" data-target="#feedback" src="{% static 'magnet/images/admin-feedback.png' %}" style="height:2.4em" >
-                                                </a>
-                                                <div class="list-icons">
-                                                    <div class="dropdown">
-                                                        <a href="#" class="list-icons-item" data-toggle="dropdown">
-                                                            <i class="icon-menu9" style="font-size: 1.8em"></i>
-                                                        </a>
+							<div class="row">
+								<div class="col-12 d-flex ">
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="client-filter-checkbox" value="Hitam"/> Hitam    
+									</div>
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="client-filter-checkbox" value="Kuning"/>  Kuning    
+									</div>
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="client-filter-checkbox" value="Merah"/>  Merah
+									</div>
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="client-filter-checkbox" value="Hijau"/>  Hijau
+									</div>
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="client-filter-checkbox" value="Biru"/>  Biru
+									</div>
+									
+									
+								</div>
+							</div>
+							<table class="stripe table row-border order-column" id="table-main-2" width="100%">
+							  <thead>
+								<tr>
+								  
+								  <th scope="col"></th>
+								  <th scope="col" hidden>Warna</th>
+								  <th scope="col">Nama</th>
+								  <th scope="col">No. Telepon</th>
+								  <th scope="col">Email</th>
+								  <th scope="col">Source</th>
+								  <th scope="col">Medium</th>
+								  <th scope="col">Campaign</th>
+								  <th scope="col">Aksi</th>
+								</tr>
+							  </thead>
+							  <tbody>
+								
+									{% for client_staff in client_staff_list %}
+									
+									{% if client_staff.client.is_deposit and not client_staff.is_hot %}
+										<tr>
+										  
+											<td scope="row">
+												<i style="display: inline-block;color: #{{client_color|dict_get:client_staff.client.id}}" class="icon-circle2 mr-1"></i>
+											</td>
+											<td scope="row" hidden>{{client_color_text|dict_get:client_staff.client.id}}</td>
+											<td scope="row">{{client_staff.client.nama|default:"-"}}</td>
+											<td scope="row">{{client_staff.client.phone_no|default:"-"}}</td>
+											<td scope="row">{{client_staff.client.email|default:"-"}}</td>
+											<td scope="row">
+												{% if client_staff.client.source_detail_2 is not None and client_staff.client.source_detail_2 != '' %}
+													{{client_staff.client.get_source_detail_2_display}} 
+												{% elif client_staff.client.source_detail_1 is not None and client_staff.client.source_detail_1 != '' %}
+													{{client_staff.client.get_source_detail_1_display}} 
+												{% else %}
+													{{client_staff.client.get_source_display|default:'-'}}
+												{% endif %}     
+											</td>
+											<td scope="row">{{client_staff.client.medium|default:"-"}}</td>
+											<td scope="row">{{client_staff.client.campaign|default:"-"}}</td>
+											<td scope="row">
+												<a href="https://wa.me/{{client_staff.client.phone_no}}?text=Halo" target="_blank">
+													<img class="list-icons-item clickable whatsapp-button" data-client_id="{{client_staff.client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
+												</a>
+												<a href="">
+													<img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client_staff.client_staff.client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
+												</a>
+												<a href="{% url 'client-feedback-list' client_staff.client.id%}">
+													<img class="list-icons-item clickable feedback-button" data-popup="tooltip" title="Feedback" data-client_id="{{client_staff.client.id}}" data-journey_type="feedback" data-toggle="modal" data-trigger="hover" data-target="#feedback" src="{% static 'magnet/images/admin-feedback.png' %}" style="height:2.4em" >
+												</a>
+												<div class="list-icons">
+													<div class="dropdown">
+														<a href="#" class="list-icons-item" data-toggle="dropdown">
+															<i class="icon-menu9" style="font-size: 1.8em"></i>
+														</a>
 
-                                                        <div class="dropdown-menu dropdown-menu-right">
-                                                            <a href="{% url 'client-detail-list' client_staff.client.id  %}" class="dropdown-item">
-                                                                <i class="icon-file-eye"></i> Client Detail
-                                                            </a>
-                                                            <!-- % if own_user and staff_level != 3 % -->
-                                                            {% if staff_level != 3 %}
-                                                            <a href="{% url 'client-edit' client_staff.client.id  %}" class="dropdown-item">
-                                                                <i class="fas fa-edit"></i> Client Edit
-                                                            </a>
-                                                            {% endif %}
+														<div class="dropdown-menu dropdown-menu-right">
+															<a href="{% url 'client-detail-list' client_staff.client.id  %}" class="dropdown-item">
+																<i class="icon-file-eye"></i> Client Detail
+															</a>
+															<!-- % if own_user and staff_level != 3 % -->
+															{% if staff_level != 3 %}
+															<a href="{% url 'client-edit' client_staff.client.id  %}" class="dropdown-item">
+																<i class="fas fa-edit"></i> Client Edit
+															</a>
+															{% endif %}
 
-                                                            <a href="{% url 'client-schedule-list' client_staff.client.id  %}" class="dropdown-item">
-                                                                <i class="fas fa-calendar-alt"></i> List Schedule
-                                                            </a>
-                                                            <!-- % if own_user % -->
-                                                            <a href="{% url 'client-schedule-add' client_staff.client.id  %}" class="dropdown-item">
-                                                                <i class="fas fa-calendar-plus"></i> Add Schedule
-                                                            </a>
-                                                        
-                                                            <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client_staff.client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
-                                                            <span  class="dropdown-item" onclick="set_hot({{client_staff.client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Hot Client</span>
-                                                            <!-- % endif % -->
+															<a href="{% url 'client-schedule-list' client_staff.client.id  %}" class="dropdown-item">
+																<i class="fas fa-calendar-alt"></i> List Schedule
+															</a>
+															<!-- % if own_user % -->
+															<a href="{% url 'client-schedule-add' client_staff.client.id  %}" class="dropdown-item">
+																<i class="fas fa-calendar-plus"></i> Add Schedule
+															</a>
+														
+															<span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client_staff.client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
+															<span  class="dropdown-item" onclick="set_hot({{client_staff.client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Hot Client</span>
+															<!-- % endif % -->
 
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                          </td>
-                                          
-                                        </tr>
-                                        {% endif %}
-                                    {% endfor %}
-                                
-                                
-                                
-                              </tbody>
-                            </table>
-
-
-                       </div>
-                        <div class="tab-pane" id="menu2">
-                            <div class="row">
-                                <div class="col-12 d-flex ">
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="hot-client-filter-checkbox" value="Hitam"/> Hitam    
-                                    </div>
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="hot-client-filter-checkbox" value="Kuning"/>  Kuning    
-                                    </div>
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="hot-client-filter-checkbox" value="Merah"/>  Merah
-                                    </div>
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="hot-client-filter-checkbox" value="Hijau"/>  Hijau
-                                    </div>
-                                    <div style="padding-right: 2em;">
-                                        <input type="checkbox" class="hot-client-filter-checkbox" value="Biru"/>  Biru
-                                    </div>
-                                    
-                                    
-                                </div>
-                            </div>
-                            <table class="stripe table row-border order-column" id="table-main-3" width="100%">
-                              <thead>
-                                <tr>
-                                  
-                                  <th scope="col"></th>
-                                  <th scope="col" hidden>Warna</th>
-                                  <th scope="col">Nama</th>
-                                  <th scope="col">No. Telepon</th>
-                                  <th scope="col">Email</th>
-                                  <th scope="col">Source</th>
-                                  <th scope="col">Medium</th>
-                                  <th scope="col">Campaign</th>
-                                  <th scope="col">Aksi</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                
-                                    {% for client_staff in client_staff_list %}
-                                    
-                                    {% if client_staff.is_hot %}
-                                        <tr>
-                                          
-                                            <td scope="row">
-                                                <i style="display: inline-block;color: #{{client_color|dict_get:client_staff.client.id}}" class="icon-circle2 mr-1"></i>
-                                            </td>
-                                            <td scope="row" hidden>{{client_color_text|dict_get:client_staff.client.id}}</td>
-                                            <td scope="row">{{client_staff.client.nama|default:"-"}}</td>
-                                            <td scope="row">{{client_staff.client.phone_no|default:"-"}}</td>
-                                            <td scope="row">{{client_staff.client.email|default:"-"}}</td>
-                                            <td scope="row">
-                                                {% if client_staff.client.source_detail_2 is not None and client_staff.client.source_detail_2 != '' %}
-                                                    {{client_staff.client.get_source_detail_2_display}} 
-                                                {% elif client_staff.client.source_detail_1 is not None and client_staff.client.source_detail_1 != '' %}
-                                                    {{client_staff.client.get_source_detail_1_display}} 
-                                                {% else %}
-                                                    {{client_staff.client.get_source_display|default:'-'}}
-                                                {% endif %}     
-                                            </td>
-                                            <td scope="row">{{client_staff.client.medium|default:"-"}}</td>
-                                            <td scope="row">{{client_staff.client.campaign|default:"-"}}</td>
-                                            <td scope="row">
-                                                <a href="https://wa.me/{{client_staff.client.phone_no}}?text=Halo" target="_blank">
-                                                    <img class="list-icons-item clickable whatsapp-button" data-client_id="{{client_staff.client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
-                                                </a>
-                                                <a href="">
-                                                    <img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client_staff.client_staff.client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
-                                                </a>
-                                                <a href="{% url 'client-feedback-list' client_staff.client.id%}">
-                                                    <img class="list-icons-item clickable feedback-button" data-popup="tooltip" title="Feedback" data-client_id="{{client_staff.client.id}}" data-journey_type="feedback" data-toggle="modal" data-trigger="hover" data-target="#feedback" src="{% static 'magnet/images/admin-feedback.png' %}" style="height:2.4em" >
-                                                </a>
-                                                <div class="list-icons">
-                                                    <div class="dropdown">
-                                                        <a href="#" class="list-icons-item" data-toggle="dropdown">
-                                                            <i class="icon-menu9" style="font-size: 1.8em"></i>
-                                                        </a>
-
-                                                        <div class="dropdown-menu dropdown-menu-right">
-                                                            <a href="{% url 'client-detail-list' client_staff.client.id  %}" class="dropdown-item">
-                                                                <i class="icon-file-eye"></i> Client Detail
-                                                            </a>
-                                                            <!-- % if own_user and staff_level != 3 % -->
-                                                            {% if staff_level != 3 %}
-                                                            <a href="{% url 'client-edit' client_staff.client.id  %}" class="dropdown-item">
-                                                                <i class="fas fa-edit"></i> Client Edit
-                                                            </a>
-                                                            {% endif %}
-
-                                                            <a href="{% url 'client-schedule-list' client_staff.client.id  %}" class="dropdown-item">
-                                                                <i class="fas fa-calendar-alt"></i> List Schedule
-                                                            </a>
-                                                            <!-- % if own_user % -->
-                                                            <a href="{% url 'client-schedule-add' client_staff.client.id  %}" class="dropdown-item">
-                                                                <i class="fas fa-calendar-plus"></i> Add Schedule
-                                                            </a>
-                                                        
-                                                            <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client_staff.client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
-                                                            <span  class="dropdown-item" onclick="set_hot({{client_staff.client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Hot Client</span>
-                                                            <!-- % endif % -->
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                          </td>
-                                          
-                                        </tr>
-                                        {% endif %}
-                                    {% endfor %}
-                                
-                                
-                                
-                              </tbody>
-                            </table>
+														</div>
+													</div>
+												</div>
+										  </td>
+										  
+										</tr>
+										{% endif %}
+									{% endfor %}
+								
+								
+								
+							  </tbody>
+							</table>
 
 
-                      </div>
+					   </div>
+						<div class="tab-pane" id="menu2">
+							<div class="row">
+								<div class="col-12 d-flex ">
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="hot-client-filter-checkbox" value="Hitam"/> Hitam    
+									</div>
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="hot-client-filter-checkbox" value="Kuning"/>  Kuning    
+									</div>
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="hot-client-filter-checkbox" value="Merah"/>  Merah
+									</div>
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="hot-client-filter-checkbox" value="Hijau"/>  Hijau
+									</div>
+									<div style="padding-right: 2em;">
+										<input type="checkbox" class="hot-client-filter-checkbox" value="Biru"/>  Biru
+									</div>
+									
+									
+								</div>
+							</div>
+							<table class="stripe table row-border order-column" id="table-main-3" width="100%">
+							  <thead>
+								<tr>
+								  
+								  <th scope="col"></th>
+								  <th scope="col" hidden>Warna</th>
+								  <th scope="col">Nama</th>
+								  <th scope="col">No. Telepon</th>
+								  <th scope="col">Email</th>
+								  <th scope="col">Source</th>
+								  <th scope="col">Medium</th>
+								  <th scope="col">Campaign</th>
+								  <th scope="col">Aksi</th>
+								</tr>
+							  </thead>
+							  <tbody>
+								
+									{% for client_staff in client_staff_list %}
+									
+									{% if client_staff.is_hot %}
+										<tr>
+										  
+											<td scope="row">
+												<i style="display: inline-block;color: #{{client_color|dict_get:client_staff.client.id}}" class="icon-circle2 mr-1"></i>
+											</td>
+											<td scope="row" hidden>{{client_color_text|dict_get:client_staff.client.id}}</td>
+											<td scope="row">{{client_staff.client.nama|default:"-"}}</td>
+											<td scope="row">{{client_staff.client.phone_no|default:"-"}}</td>
+											<td scope="row">{{client_staff.client.email|default:"-"}}</td>
+											<td scope="row">
+												{% if client_staff.client.source_detail_2 is not None and client_staff.client.source_detail_2 != '' %}
+													{{client_staff.client.get_source_detail_2_display}} 
+												{% elif client_staff.client.source_detail_1 is not None and client_staff.client.source_detail_1 != '' %}
+													{{client_staff.client.get_source_detail_1_display}} 
+												{% else %}
+													{{client_staff.client.get_source_display|default:'-'}}
+												{% endif %}     
+											</td>
+											<td scope="row">{{client_staff.client.medium|default:"-"}}</td>
+											<td scope="row">{{client_staff.client.campaign|default:"-"}}</td>
+											<td scope="row">
+												<a href="https://wa.me/{{client_staff.client.phone_no}}?text=Halo" target="_blank">
+													<img class="list-icons-item clickable whatsapp-button" data-client_id="{{client_staff.client.id}}"  data-popup="tooltip" title="WA" data-journey_type="whatsapp" src="{% static 'magnet/images/admin-wa.png' %}" style="height:2.4em" >
+												</a>
+												<a href="">
+													<img class="list-icons-item clickable call-button" data-popup="tooltip" title="Call" data-client_id="{{client_staff.client_staff.client.id}}" data-journey_type="called" data-toggle="modal" data-trigger="hover" data-target="#call" src="{% static 'magnet/images/admin-call.png' %}" style="height:2.4em" >
+												</a>
+												<a href="{% url 'client-feedback-list' client_staff.client.id%}">
+													<img class="list-icons-item clickable feedback-button" data-popup="tooltip" title="Feedback" data-client_id="{{client_staff.client.id}}" data-journey_type="feedback" data-toggle="modal" data-trigger="hover" data-target="#feedback" src="{% static 'magnet/images/admin-feedback.png' %}" style="height:2.4em" >
+												</a>
+												<div class="list-icons">
+													<div class="dropdown">
+														<a href="#" class="list-icons-item" data-toggle="dropdown">
+															<i class="icon-menu9" style="font-size: 1.8em"></i>
+														</a>
+
+														<div class="dropdown-menu dropdown-menu-right">
+															<a href="{% url 'client-detail-list' client_staff.client.id  %}" class="dropdown-item">
+																<i class="icon-file-eye"></i> Client Detail
+															</a>
+															<!-- % if own_user and staff_level != 3 % -->
+															{% if staff_level != 3 %}
+															<a href="{% url 'client-edit' client_staff.client.id  %}" class="dropdown-item">
+																<i class="fas fa-edit"></i> Client Edit
+															</a>
+															{% endif %}
+
+															<a href="{% url 'client-schedule-list' client_staff.client.id  %}" class="dropdown-item">
+																<i class="fas fa-calendar-alt"></i> List Schedule
+															</a>
+															<!-- % if own_user % -->
+															<a href="{% url 'client-schedule-add' client_staff.client.id  %}" class="dropdown-item">
+																<i class="fas fa-calendar-plus"></i> Add Schedule
+															</a>
+														
+															<span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client_staff.client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
+															<span  class="dropdown-item" onclick="set_hot({{client_staff.client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Hot Client</span>
+															<!-- % endif % -->
+
+														</div>
+													</div>
+												</div>
+										  </td>
+										  
+										</tr>
+										{% endif %}
+									{% endfor %}
+								
+								
+								
+							  </tbody>
+							</table>
+
+
+					  </div>
 					</div>
 
 
@@ -424,121 +424,121 @@
 </div>
 <!-- Mini modal -->
 <div id="modal_mini" class="modal fade" tabindex="-1">
-    <div class="modal-dialog modal-xs">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Pick Color</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
+	<div class="modal-dialog modal-xs">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Pick Color</h5>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
 
-            <div class="modal-body">
-                <!-- <h6 class="font-weight-semibold">Text in a modal</h6> -->
-                <!-- <input type="color" class="form-control"  name="client-color" id="client-color"> -->
-                {{form_color.color|add_class:"form-control"}}
-            </div>
+			<div class="modal-body">
+				<!-- <h6 class="font-weight-semibold">Text in a modal</h6> -->
+				<!-- <input type="color" class="form-control"  name="client-color" id="client-color"> -->
+				{{form_color.color|add_class:"form-control"}}
+			</div>
 
-            <div class="modal-focoloroter px-3 pb-3">
-                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="color-button-save">Save changes</button>
-            </div>
-        </div>
-    </div>
+			<div class="modal-focoloroter px-3 pb-3">
+				<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" id="color-button-save">Save changes</button>
+			</div>
+		</div>
+	</div>
 </div>
 <!-- /mini modal -->
 <script type="text/javascript">
 
-    
-    var dataTableFollowup = $("#table-main").DataTable({
-        dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
-        language: {
-            search: '<span>Search:</span> _INPUT_',
-            searchPlaceholder: 'Type to search...',
-            lengthMenu: '<span>Show:</span> _MENU_',
-        },
-        scrollX: true,
-        scrollY: '350px',
-        scrollCollapse: true,
-        fixedColumns: {
-            leftColumns: 3,
-            rightColumns: 1
-        }
-    });
-    dataTableFollowup.draw();
-    $('.filter-checkbox').on('change', function(e){
-        var searchTerms = []
-        $.each($('.filter-checkbox'), function(i,elem){
-            if($(elem).prop('checked')){
-                searchTerms.push("^" + $(this).val() + "$")
-            }   
-        })
-        dataTableFollowup.column(1).search(searchTerms.join('|'), true, false, true).draw();
-    });
-    var dataTableClient = $("#table-main-2").DataTable({
-        dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
-        language: {
-            search: '<span>Search:</span> _INPUT_',
-            searchPlaceholder: 'Type to search...',
-            lengthMenu: '<span>Show:</span> _MENU_',
-        },
-        scrollX: true,
-        scrollY: '350px',
-        scrollCollapse: true,
-        fixedColumns: {
-            leftColumns: 3,
-            rightColumns: 1
-        }
-    });
-    dataTableClient.draw();
-    $('.client-filter-checkbox').on('change', function(e){
-        console.log('checked')
-        var searchTerms = []
-        $.each($('.client-filter-checkbox'), function(i,elem){
-            if($(elem).prop('checked')){
-                console.log($(this).val())
-                searchTerms.push("^" + $(this).val() + "$")
-            }   
-        })
-        dataTableClient.column(1).search(searchTerms.join('|'), true, false, true).draw();
-    });
-    var dataTableHotClient = $("#table-main-3").DataTable({
-        dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
-        language: {
-            search: '<span>Search:</span> _INPUT_',
-            searchPlaceholder: 'Type to search...',
-            lengthMenu: '<span>Show:</span> _MENU_',
-        },
-        scrollX: true,
-         scrollX: true,
-        scrollY: '350px',
-        scrollCollapse: true,
-        fixedColumns: {
-            leftColumns: 3,
-            rightColumns: 1
-        }
-    });
-    dataTableHotClient.draw()
-    $('.hot-client-filter-checkbox').on('change', function(e){
-        console.log('checked')
-        var searchTerms = []
-        $.each($('.hot-client-filter-checkbox'), function(i,elem){
-            if($(elem).prop('checked')){
-                console.log($(this).val())
-                searchTerms.push("^" + $(this).val() + "$")
-            }   
-        })
-        dataTableHotClient.column(1).search(searchTerms.join('|'), true, false, true).draw();
-    });
-
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-		  if (e.target.hash == '#menu1') {
-		  	console.log('menu1');
-		    dataTableClient.columns.adjust().draw()
-		  }
-		  if (e.target.hash == '#menu2') {
-		  	console.log('menu1');
-		    dataTableHotClient.columns.adjust().draw()
-		  }
+	
+	var dataTableFollowup = $("#table-main").DataTable({
+		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+		language: {
+			search: '<span>Search:</span> _INPUT_',
+			searchPlaceholder: 'Type to search...',
+			lengthMenu: '<span>Show:</span> _MENU_',
+		},
+		scrollX: true,
+		scrollY: '350px',
+		scrollCollapse: true,
+		fixedColumns: {
+			leftColumns: 3,
+			rightColumns: 1
+		}
+	});
+	dataTableFollowup.draw();
+	$('.filter-checkbox').on('change', function(e){
+		var searchTerms = []
+		$.each($('.filter-checkbox'), function(i,elem){
+			if($(elem).prop('checked')){
+				searchTerms.push("^" + $(this).val() + "$")
+			}   
 		})
+		dataTableFollowup.column(1).search(searchTerms.join('|'), true, false, true).draw();
+	});
+	var dataTableClient = $("#table-main-2").DataTable({
+		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+		language: {
+			search: '<span>Search:</span> _INPUT_',
+			searchPlaceholder: 'Type to search...',
+			lengthMenu: '<span>Show:</span> _MENU_',
+		},
+		scrollX: true,
+		scrollY: '350px',
+		scrollCollapse: true,
+		fixedColumns: {
+			leftColumns: 3,
+			rightColumns: 1
+		}
+	});
+	dataTableClient.draw();
+	$('.client-filter-checkbox').on('change', function(e){
+		console.log('checked')
+		var searchTerms = []
+		$.each($('.client-filter-checkbox'), function(i,elem){
+			if($(elem).prop('checked')){
+				console.log($(this).val())
+				searchTerms.push("^" + $(this).val() + "$")
+			}   
+		})
+		dataTableClient.column(1).search(searchTerms.join('|'), true, false, true).draw();
+	});
+	var dataTableHotClient = $("#table-main-3").DataTable({
+		dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+		language: {
+			search: '<span>Search:</span> _INPUT_',
+			searchPlaceholder: 'Type to search...',
+			lengthMenu: '<span>Show:</span> _MENU_',
+		},
+		scrollX: true,
+		 scrollX: true,
+		scrollY: '350px',
+		scrollCollapse: true,
+		fixedColumns: {
+			leftColumns: 3,
+			rightColumns: 1
+		}
+	});
+	dataTableHotClient.draw()
+	$('.hot-client-filter-checkbox').on('change', function(e){
+		console.log('checked')
+		var searchTerms = []
+		$.each($('.hot-client-filter-checkbox'), function(i,elem){
+			if($(elem).prop('checked')){
+				console.log($(this).val())
+				searchTerms.push("^" + $(this).val() + "$")
+			}   
+		})
+		dataTableHotClient.column(1).search(searchTerms.join('|'), true, false, true).draw();
+	});
+
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+		if (e.target.hash == '#menu1') {
+			console.log('menu1');
+			dataTableClient.columns.adjust().draw()
+		}
+	  	if (e.target.hash == '#menu2') {
+			console.log('menu1');
+			dataTableHotClient.columns.adjust().draw()
+	  	}
+	})
 
 
 	
@@ -551,33 +551,33 @@
 		});
 		
 		function set_hot(client_id,action){
-            console.log("masuk hott")
-            var string_color_url = "{% url 'client-set-hot' 0 '!99' %}";    
-            string_color_url = string_color_url.replace(0, client_id)
-            string_color_url = string_color_url.replace('!99', action)
-            window.location.href = string_color_url;
-        }
-        $('#color-button-save').click(function(){
-            console.log(123);
-            var color_value = $('#id_color').val()
-            console.log(color_value,'color_value');
-            color_value = color_value.replace('#', '')
-            var string_color_url = "{% url 'client-edit-color' 0 '!99' %}";
-            string_color_url = string_color_url.replace(0, client_id)
-            string_color_url = string_color_url.replace('!99', color_value)
-            console.log(string_color_url);
-            window.location.href = string_color_url;
+			console.log("masuk hott")
+			var string_color_url = "{% url 'client-set-hot' 0 '!99' %}";    
+			string_color_url = string_color_url.replace(0, client_id)
+			string_color_url = string_color_url.replace('!99', action)
+			window.location.href = string_color_url;
+		}
+		$('#color-button-save').click(function(){
+			console.log(123);
+			var color_value = $('#id_color').val()
+			console.log(color_value,'color_value');
+			color_value = color_value.replace('#', '')
+			var string_color_url = "{% url 'client-edit-color' 0 '!99' %}";
+			string_color_url = string_color_url.replace(0, client_id)
+			string_color_url = string_color_url.replace('!99', color_value)
+			console.log(string_color_url);
+			window.location.href = string_color_url;
 
-        });
+		});
 		$(".table-row").click(function() {
-		 	var link = $(this).data('href');
-		 	window.location.href = link;
+			var link = $(this).data('href');
+			window.location.href = link;
 		});
 
 		$("#search_input").on("keyup", function() {
 		  var value = this.value.toLowerCase().trim();
 		  $(".media-list li").show().filter(function() {
-		    return $(this).text().toLowerCase().trim().indexOf(value) == -1;
+			return $(this).text().toLowerCase().trim().indexOf(value) == -1;
 		  }).hide();
 		});
 

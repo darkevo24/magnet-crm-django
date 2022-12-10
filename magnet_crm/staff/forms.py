@@ -75,3 +75,8 @@ class IBStaffForm(ModelForm):
 			employee_choices.append((data.id, data.profile.full_name))
 
 		self.fields['staff'].choices = employee_choices
+
+class UserChangePasswordForm(forms.Form):
+	new_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'New Password'}), required=True)
+	confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password'}), required=True)
+	

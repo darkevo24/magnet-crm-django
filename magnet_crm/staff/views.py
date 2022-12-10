@@ -62,6 +62,37 @@ def staff_level_list(request):
 
 from django.contrib.auth import authenticate, login
 
+
+def staff_change_password(request, staff_uid):
+	template = 'admin/staff/staff_change_password.html'
+	staff = Staff.objects.filter(uid=staff_uid).first()
+	context = {}
+	form = UserChangePasswordForm(request.POST or None)
+	error_message = ''
+	if request.POST and form.is_valid():
+		new_password = form.cleaned_data['new_password']
+		confirm_new_password = form.cleaned_data['confirm_password']
+		if new_password == confirm_new_password:
+			try:
+				with transaction.atomic():
+					user = staff.profile.user
+					user.set_password(new_password)
+					user.save()
+					return redirect(reverse('staff-list'))
+			except IntegrityError as e:
+				error_message = 'Terjadi Kesalahan pada server'
+		else:
+			error_message = 'password baru dan konfirmasi password tidak cocok'
+	context['staff'] = staff
+	context['form'] = form
+	context['error_message'] = error_message
+	context['menu'] = 'staff-list'
+
+	return render(request, template, context=context)
+
+
+
+	user = staff.profile.user 
 def staff_delete(request, staff_uid):
 	staff = Staff.objects.filter(uid=staff_uid).first()
 	staff.is_active = False

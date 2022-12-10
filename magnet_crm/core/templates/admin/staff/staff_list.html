@@ -40,7 +40,7 @@
 					      <th scope="col">Email</th>
 					      <th scope="col">Level</th>
 					      <th scope="col">Supervisor</th>
-					      <th scope="col" class="text-center">Lock Status</th>
+					      <!-- <th scope="col" class="text-center">Lock Status</th> -->
 					      <th scope="col">Last Login</th>
 					      <th scope="col" class="text-center">Action</th>
 					    </tr>
@@ -54,6 +54,7 @@
 
 						      <td scope="row">{{staff.staff_level.level_name}}</td>
 						      <td scope="row">{{staff.staff_parent.profile.full_name}}</td>
+						      {% comment %}
 						      <td scope="row" class="text-center">
 						      	{% if staff.is_locked == True %}
 									<i class="icon-lock2" style="color: red"></i>
@@ -62,6 +63,7 @@
 								{% endif %}
 
 						      </td>
+						      {% endcomment %}
 						      <td></td>
 						      <td class="text-center">
 									<div class="list-icons">
@@ -73,12 +75,14 @@
 											<div class="dropdown-menu dropdown-menu-right">
 												<a href="{% url 'staff-edit' staff.uid %}" class="dropdown-item"><i class="icon-pencil7"></i> Edit</a>
 												<a href="{% url 'staff-salary-list' staff.uid %}" class="dropdown-item"><i class="icon-pencil7"></i> Salary</a>
+												{% comment %}
 												{% if staff.is_locked == False %}
 													<a href="{% url 'staff-lock' staff.uid %}" class="dropdown-item"><i class="icon-lock2"></i>Lock</a>
 												{% else %}
 													<a href="{% url 'staff-unlock' staff.uid %}" class="dropdown-item"><i class="icon-unlocked2"></i>Unlock</a>
 												{% endif %}
-												
+												{% endcomment %}
+												<a href="{% url 'staff-change-password' staff.uid %}" class="dropdown-item"><i class="icon-lock2"></i> Change Password</a>
 												<a href="{% url 'staff-delete' staff.uid %}" class="dropdown-item"><i class="icon-trash"></i> Delete</a>
 											</div>
 										</div>
