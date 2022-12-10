@@ -499,7 +499,7 @@ def client_list(request):
 		template = 'admin/client/client_list.html'
 		# staff = Staff.objects.filter(is_active=True, profile__user__id=request.user.id).first()
 
-		client_staff_list = Client_Staff.objects.filter(staff__id=staff.id, is_active=True).order_by('-created_at','-client__magnet_created_at')
+		client_staff_list = Client_Staff.objects.filter(staff__id=staff.id, is_active=True).order_by('-created_at','-client__magnet_created_at').prefetch_related('client')
 		client_list = Client.objects.none()
 
 		
