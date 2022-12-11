@@ -73,6 +73,51 @@
 				</div>
 			</div>
 			<!-- taro disini -->
+			<div class="row">
+				<div class="col-12">
+					<table class="table" id="table_ftd" style="max-height: 100vh">
+					  	<thead>
+	                        <tr>
+	                            <th scope="col">#</th>
+	                            <th scope="col">Staff Name</th>
+	                            <th scope="col">Client Name</th>
+	                            <th scope="col">Supervisor Name</th>
+	                            <th scope="col">UserID</th>
+	                            <th scope="col">login</th>
+	                            <th scope="col">TFD</th>
+	                            <th scope="col">Time</th>
+	                        </tr>
+	                    </thead>
+					  	<tbody>
+	                   		{% for supervisor, staff_ftp_dict in supervisor_staff_dict.items %}
+		                    	{% for staff, ftd_dict in staff_ftp_dict.items %}
+		                    	{% with ftd_dict.list_ftd as client_ftd_list %}
+		                    		{% for client_ftd in client_ftd_list %}
+				                        <tr>
+				                            <th scope="row">{{client_ftd.index_loop}}</th>
+				                            <th scope="row">{{staff.profile.full_name}}</th>
+				                            <th scope="row">{{client_ftd_user_magnet_dict|dict_get:client_ftd.userid}}</th>
+				                            <th scope="row">{{staff.staff_parent.profile.full_name}}</th>
+				                            <th scope="row">{{client_ftd.userid}}</th>
+				                            <td>
+				                               {{client_ftd.login}}
+				                            </td>
+				                            <td>
+				                                {{client_ftd.ftd}}
+				                            </td>
+				                            <td>
+				                                {{client_ftd.time}}
+				                            </td>
+				                        </tr>
+		                        {% endfor %}
+		                        {% endwith %}
+		                        {% endfor %}
+		                    {% endfor %}
+	                    </tbody>
+					</table>
+					
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -688,7 +733,22 @@
 		    minViewMode: "months"
 		});
 
-		
+		$("#table_ftd").DataTable({
+			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+			pageLength: 10,
+			language: {
+		        search: '<span>Filter:</span> _INPUT_',
+		        searchPlaceholder: 'Type to filter...',
+		        lengthMenu: '<span>Show:</span> _MENU_',
+		    },
+		    scrollX: true,
+		    // scrollY: '350px',
+		    
+		    fixedColumns: {
+		        leftColumns: 3,
+		    }
+		});
+		$('#table_ftd').DataTable().draw();
 
 	    $("#table_bonus").DataTable({
 			dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',

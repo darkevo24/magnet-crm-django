@@ -962,6 +962,8 @@ def master_report_detail(request):
 	total_client_ftd_usd = 0
 	total_client_bonus_ftd = 0
 	supervisor_staff = {}
+	index_ftd = 0
+	client_ftd_user_magnet_dict = {}
 	for staff in staff_list:
 
 		if staff.staff_parent not in supervisor_staff:
@@ -979,7 +981,7 @@ def master_report_detail(request):
 			# client__magnet_created_at__year=calculated_year,
 			is_active=True,).prefetch_related('client')
 
-		client_ftd_user_magnet_dict = {}
+		
 
 		meta_ids_for_api = ''
 		for client_staff in client_staff_list:
@@ -991,9 +993,7 @@ def master_report_detail(request):
 
 		
 
-		# print('meta_ids_for_api', meta_ids_for_api)
-		# print('^^^^^^')
-		# get_meta5_ftd_ids(meta_ids_for_api, now)
+		
 		client_ftd_list = get_ftd_list(meta_ids_for_api)
 		current_month_client_ftd_list = []
 		client_ftd_total_usd = 0
@@ -1007,8 +1007,11 @@ def master_report_detail(request):
 			if now.year == loop_year and now.month == loop_month:
 
 				client_ftd_total_usd += Decimal(client_ftd['ftd'])
-
+				index_ftd += 1
+				client_ftd['index_loop'] = index_ftd
 				current_month_client_ftd_list.append(client_ftd)
+				index_ftd += 1
+				total_client_ftd += 1
 				supervisor_staff[staff.staff_parent][staff]['list_ftd'].append(client_ftd)
 
 		client_ftd_list = current_month_client_ftd_list
@@ -1029,15 +1032,15 @@ def master_report_detail(request):
 		elif client_ftd_count > 4 and client_ftd_total_usd >= Decimal(2500) :
 			staff_ftd_bonus = client_ftd_count * 10
 
-		print('sebelum ini itu ftd dihitung', staff_ftd_bonus, client_ftd_count)
+		
 		total_client_ftd_usd = total_client_ftd_usd +  client_ftd_total_usd
-		print('ftd client_ftd_total_usd', total_client_ftd_usd, client_ftd_total_usd)
-		total_client_ftd += 1
+		
+		
 		total_client_bonus_ftd +=  staff_ftd_bonus
-		print('masuk sini ftd',total_client_bonus_ftd, staff_ftd_bonus)
+		
 
 
-	print('jadi disini total_client_bonus_ftd', total_client_bonus_ftd)
+	
 
 	#data 0-2bulan
 	last_two_months_date = now - relativedelta(months=2)
@@ -1052,7 +1055,6 @@ def master_report_detail(request):
 	
 	data_pribadi_months_bonus_dict, data_pribadi_trades = master_calculate_data_pribadi_bonus(staff_list, now, end_date)
 	
-	print('sampe disni')
 
 	#data-ib
 	show_ib_bonus = False
@@ -1105,12 +1107,15 @@ def master_report_detail(request):
 	# pribadi_bonus_dict = calculate_data_pribadi_bonus(staff, now, end_date)
 
 	# print('two_months_bonus_dict', two_months_bonus_dict)
-	print('ib_bonus_dict', ib_bonus_dict, type(ib_bonus_dict))
+
+
+	
 	context = {}
 	context['total_client_ftd_usd'] = total_client_ftd_usd
 	context['total_client_ftd'] = total_client_ftd
 	context['total_client_bonus_ftd'] = total_client_bonus_ftd
-
+	context['supervisor_staff_dict'] = supervisor_staff
+	context['client_ftd_user_magnet_dict'] = client_ftd_user_magnet_dict
 	context['two_months_bonus_dict'] = two_months_bonus_dict
 	context['two_months_trades'] = two_months_trades
 	context['more_two_months_bonus_dict'] = more_two_months_bonus_dict
