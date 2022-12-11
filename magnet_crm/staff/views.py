@@ -958,6 +958,86 @@ def master_report_detail(request):
 
 
 	#lot data kantor
+	total_client_ftd = 0 
+	total_client_ftd_usd = 0
+	total_client_bonus_ftd = 0
+	supervisor_staff = {}
+	for staff in staff_list:
+
+		if staff.staff_parent not in supervisor_staff:
+			supervisor_staff[staff.staff_parent] = {}
+
+		supervisor_staff[staff.staff_parent][staff] = {}
+		supervisor_staff[staff.staff_parent][staff]['total_ftd'] = 0
+		supervisor_staff[staff.staff_parent][staff]['total_ftd_usd'] = 0
+		supervisor_staff[staff.staff_parent][staff]['total_ftd_bonus_usd'] = 0 
+		supervisor_staff[staff.staff_parent][staff]['list_ftd'] = []
+
+		client_staff_list = Client_Staff.objects.filter(
+			staff=staff,
+			# client__magnet_created_at__month=calculated_month,
+			# client__magnet_created_at__year=calculated_year,
+			is_active=True,).prefetch_related('client')
+
+		client_ftd_user_magnet_dict = {}
+
+		meta_ids_for_api = ''
+		for client_staff in client_staff_list:
+			if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
+				meta_ids_for_api += ( client_staff.client.magnet_id + ',')
+
+				if client_staff.client.magnet_id not in client_ftd_user_magnet_dict:
+					client_ftd_user_magnet_dict[client_staff.client.magnet_id] = client_staff.client
+
+		
+
+		# print('meta_ids_for_api', meta_ids_for_api)
+		# print('^^^^^^')
+		# get_meta5_ftd_ids(meta_ids_for_api, now)
+		client_ftd_list = get_ftd_list(meta_ids_for_api)
+		current_month_client_ftd_list = []
+		client_ftd_total_usd = 0
+		index_loop = 0
+		for client_ftd in client_ftd_list:
+			
+			temp_split = client_ftd['time'].split('-')
+			loop_year = int(temp_split[0])
+			loop_month = int(temp_split[1])
+
+			if now.year == loop_year and now.month == loop_month:
+
+				client_ftd_total_usd += Decimal(client_ftd['ftd'])
+
+				current_month_client_ftd_list.append(client_ftd)
+				supervisor_staff[staff.staff_parent][staff]['list_ftd'].append(client_ftd)
+
+		client_ftd_list = current_month_client_ftd_list
+		#rumus 
+		
+		client_ftd_count = len(client_ftd_list)
+		staff_ftd_bonus = 0 
+
+		#ini buat test
+		# client_ftd_count = 16
+		# client_ftd_total_usd = Decimal(5000)
+		#endof test
+
+		if  client_ftd_count > 15 and client_ftd_total_usd >= Decimal(15000):
+			staff_ftd_bonus = client_ftd_count * 35
+		elif client_ftd_count > 9  and client_ftd_total_usd >= Decimal(5000):
+			staff_ftd_bonus = client_ftd_count * 15
+		elif client_ftd_count > 4 and client_ftd_total_usd >= Decimal(2500) :
+			staff_ftd_bonus = client_ftd_count * 10
+
+		print('sebelum ini itu ftd dihitung', staff_ftd_bonus, client_ftd_count)
+		total_client_ftd_usd = total_client_ftd_usd +  client_ftd_total_usd
+		print('ftd client_ftd_total_usd', total_client_ftd_usd, client_ftd_total_usd)
+		total_client_ftd += 1
+		total_client_bonus_ftd +=  staff_ftd_bonus
+		print('masuk sini ftd',total_client_bonus_ftd, staff_ftd_bonus)
+
+
+	print('jadi disini total_client_bonus_ftd', total_client_bonus_ftd)
 
 	#data 0-2bulan
 	last_two_months_date = now - relativedelta(months=2)
@@ -1027,6 +1107,10 @@ def master_report_detail(request):
 	# print('two_months_bonus_dict', two_months_bonus_dict)
 	print('ib_bonus_dict', ib_bonus_dict, type(ib_bonus_dict))
 	context = {}
+	context['total_client_ftd_usd'] = total_client_ftd_usd
+	context['total_client_ftd'] = total_client_ftd
+	context['total_client_bonus_ftd'] = total_client_bonus_ftd
+
 	context['two_months_bonus_dict'] = two_months_bonus_dict
 	context['two_months_trades'] = two_months_trades
 	context['more_two_months_bonus_dict'] = more_two_months_bonus_dict
