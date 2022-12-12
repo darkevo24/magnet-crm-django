@@ -502,7 +502,7 @@ def create_client_journey_mt5():
 								client_journey.client = client
 								client_journey.staff = client_staff.staff
 								client_journey.journal_type = 'mt5 created'
-								client_journey.extra = existing_client_journey
+								client_journey.extra = extra_notes
 								tz = pytz.timezone('Asia/Jakarta')
 								client_journey.created_at = login_created_at.replace(tzinfo=tz)
 								client_journey.updated_by = client_journey.created_by = super_user
