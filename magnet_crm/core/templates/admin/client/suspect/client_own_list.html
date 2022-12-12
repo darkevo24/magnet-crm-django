@@ -183,13 +183,14 @@
 		 	var link = $(this).data('href');
 		 	window.location.href = link;
 		});
-		$("#table-main").DataTable({
+		var tableDataTableMain = $("#table-main").DataTable({
 	    	dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
 			language: {
 	            search: '<span>Filter:</span> _INPUT_',
 	            searchPlaceholder: 'Type to filter...',
 	            lengthMenu: '<span>Show:</span> _MENU_',
 	        },
+	        "autoWidth": false,
 	        scrollX: true,
 	        // scrollY: '350px',
 	        scrollCollapse: true,
@@ -198,6 +199,8 @@
 	            // rightColumns: 1
 	        }
 	    });
+
+	    tableDataTableMain.columns.adjust().draw()
 
 	});
 
