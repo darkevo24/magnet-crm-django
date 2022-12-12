@@ -203,7 +203,7 @@ def get_client_position(user_id):
 		for myresult in myresult:
 			login_mt5_ids.append(myresult[2])
 
-		print('connect to another db')
+		print('connect to another db', login_mt5_ids)
 		pos_cnx = mysql.connector.connect(
 				host="54.255.131.102",
 				user='ivan',
@@ -226,6 +226,7 @@ def get_client_position(user_id):
 				FROM data_magnet.mt5_positions 
 				WHERE login IN (""" + str(login_mt5_ids)[:-1][1:]+ ");"
 			mycursor.execute(query)
+			print('client pos in query', query)
 			pos_detail = mycursor.fetchall()
 			print("test_pos", pos_detail)
 			

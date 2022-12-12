@@ -278,7 +278,7 @@ class Client_Journey(Base_Model):
 	extra = models.CharField(max_length=255, default='')
 	
 	def __str__(self):
-		return self.client.nama + ' ' + self.journal_type + ' at ' + self.created_at
+		return self.client.nama + ' ' + self.journal_type + ' at ' + str(self.created_at)
 
 class Client_Staff_Request:
 	client = models.ForeignKey(

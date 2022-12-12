@@ -470,7 +470,7 @@ def create_client_journey_mt5():
 
 		
 	super_user = User.objects.filter(is_superuser=True).first()
-	string_sql = "Select user_id, login, account_type , updated_at, rate FROM vif_cabinet_legal_form_decleration ORDER BY 'id' ASC"
+	string_sql = "Select user_id, login, account_type , updated_at, rate, created_at FROM vif_cabinet_legal_form_decleration ORDER BY 'id' ASC"
 	mycursor = cnx.cursor()
 	mycursor.execute(string_sql)
 	new_legal_form_declerations = mycursor.fetchall()
@@ -492,21 +492,20 @@ def create_client_journey_mt5():
 							account_type = new_legal_form_decleration[2]
 							rate = new_legal_form_decleration[4]
 							extra_notes = str(account_type) + ' ' + str(rate) + ' ' + str(login_id)
-							existing_client_journey = Client_Journey.objects.filter(staff=client_staff.staff, client=client, extra=extra_notes, is_active=True, journal_type='mt5 created').first()
-							print('check disni', existing_client_journey, client_staff.staff, client.nama, extra_notes, 'mt5 created')
+							existing_client_journey = Client_Journey.objects.filter(client=client, extra=extra_notes, is_active=True, journal_type='mt5 created').first()
 							if existing_client_journey == None:
 									
 								login_created_at = new_legal_form_decleration[3]
 								
 								client_journey = Client_Journey()
 								client_journey.client = client
-								client_journey.staff = client_staff.staff
 								client_journey.journal_type = 'mt5 created'
 								client_journey.extra = extra_notes
 								tz = pytz.timezone('Asia/Jakarta')
 								client_journey.created_at = login_created_at.replace(tzinfo=tz)
 								client_journey.updated_by = client_journey.created_by = super_user
 								client_journey.save()
+
 
 	except IntegrityError as e:
 		print('error bung', e)
