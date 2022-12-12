@@ -283,7 +283,7 @@ def client_transfer_new(request):
 	# 	print("cur_staff_client",cur_staff_client)
 	# else:
 		# client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("nama")
-	client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("created_at")
+	client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("-created_at", '-magnet_created_at')
 	journey_register = Client_Journey.objects.filter(is_active=True,journal_type='registered',client__in=client_list.values_list('id',flat=True))
 	# print("journey_register",journey_register)
 	register_dict = {}
