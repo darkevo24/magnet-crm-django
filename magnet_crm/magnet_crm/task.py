@@ -320,13 +320,13 @@ def check_user_deposit():
 				database='vifx'
 			)
 			mycursor = cnx.cursor()
-			string_sql = "SELECT user_id, login_id FROM vif_cabinet_legal_form_decleration"
+			string_sql = "SELECT user_id, login FROM vif_cabinet_legal_form_decleration"
 			mycursor.execute(string_sql)
 			all_data = mycursor.fetchall()
 			arr_id = []
 			print(all_data)
 			for data in all_data:
-				if data[1] != None and data[2] != '':
+				if data[1] != None and data[1] != '':
 					arr_id.append(data[0])
 
 			all_client = Client.objects.filter(is_active=True,magnet_id__in=arr_id,is_deposit=False)
@@ -486,15 +486,16 @@ def create_client_journey_mt5():
 					client = Client.objects.filter(magnet_id=magnet_id, is_active=True).first()
 					if client != None:
 						print('ada ini')
-						print('>>>>',client.magnet_id)
+						
 						client_staff = Client_Staff.objects.filter(client__magnet_id=magnet_id, is_active=True).first()
 						if client_staff != None:
 							account_type = new_legal_form_decleration[2]
 							rate = new_legal_form_decleration[4]
 							extra_notes = str(account_type) + ' ' + str(rate) + ' ' + str(login_id)
 							existing_client_journey = Client_Journey.objects.filter(staff=client_staff.staff, client=client, extra=extra_notes, is_active=True, journal_type='mt5 created').first()
+							print('check disni', existing_client_journey, client_staff.staff, client.nama, extra_notes, 'mt5 created')
 							if existing_client_journey == None:
-								
+									
 								login_created_at = new_legal_form_decleration[3]
 								
 								client_journey = Client_Journey()
