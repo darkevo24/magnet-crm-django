@@ -27,20 +27,23 @@
 	<div class="card-body">
 		{% if client_position_list|length > 0 or client.is_deposit %}
 		<div class="row">
-			<dir class="col-12" style="text-align: right;">
+			<div class="col-12" style="text-align: right;">
 				{% if client_staff is not None %}
 					<a href="{% url 'client-request-own' client.id %}">
 						<button class="btn btn-warning">Request Own Client</button>
 					</a>
 				{% endif %}
 
+				<a href="{% url 'client-edit' client.id %}">
+					<button class="btn green-btn">Client Edit</button>
+				</a>
 				<a href="{% url 'client-position-history' client.id %}">
 					<button class="btn green-btn">Client History</button>
 				</a>
 				<!-- <a href="{% url 'client-position' client.id %}">
 					<button class="btn green-btn">Client Position</button>
 				</a> -->
-			</dir>
+			</div>
 		</div>	
 		{% endif %}
 		<div class="row">
