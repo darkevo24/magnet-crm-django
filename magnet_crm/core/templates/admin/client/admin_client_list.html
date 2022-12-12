@@ -62,6 +62,7 @@
                                   <th scope="col">Nama</th>
                                   <th scope="col">No. Telepon</th>
                                   <th scope="col">Email</th>
+                                  <th scope="col">Registered Date</th>
                                   <th scope="col">Source</th>
                                   <th scope="col">Medium</th>
                                   <th scope="col">Campaign</th>
@@ -79,6 +80,7 @@
                                           <td scope="row">{{client.nama|default:"-"}}</td>
                                           <td scope="row">{{client.phone_no|default:"-"}}</td>
                                           <td scope="row">{{client.email|default:"-"}}</td>
+                                          <td scope="row">{{client.magnet_created_at|date:"d-m-Y H:i"|default:'-'}}</td>
                                           <td scope="row">{% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
                                                         {{client.get_source_detail_2_display}} 
                                                     {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
@@ -150,6 +152,7 @@
                                   <th scope="col">Nama</th>
                                   <th scope="col">No. Telepon</th>
                                   <th scope="col">Email</th>
+                                  <th scope="col">Registered Date</th>
                                   <th scope="col">Source</th>
                                   <th scope="col">Medium</th>
                                   <th scope="col">Campaign</th>
@@ -167,6 +170,7 @@
                                           <td scope="row">{{client.nama|default:"-"}}</td>
                                           <td scope="row">{{client.phone_no|default:"-"}}</td>
                                           <td scope="row">{{client.email|default:"-"}}</td>
+                                          <td scope="row">{{client.magnet_created_at|date:"d-m-Y H:i"|default:'-'}}</td>
                                           <td scope="row">{% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
                                                         {{client.get_source_detail_2_display}} 
                                                     {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
