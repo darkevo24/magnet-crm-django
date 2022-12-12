@@ -1111,6 +1111,7 @@ def master_report_detail(request):
 
 	
 	context = {}
+	
 	context['total_client_ftd_usd'] = total_client_ftd_usd
 	context['total_client_ftd'] = total_client_ftd
 	context['total_client_bonus_ftd'] = total_client_bonus_ftd

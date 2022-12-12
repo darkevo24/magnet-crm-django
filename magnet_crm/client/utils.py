@@ -483,6 +483,7 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
 		staff_id = str(client_staff.staff.id)
+		print('>>>>>>>>>',client_staff.client, client_staff.staff, client_staff.client.source_detail_1, client_staff.client.magnet_id)
 		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
 			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
 			if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
