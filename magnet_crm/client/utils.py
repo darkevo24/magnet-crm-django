@@ -475,7 +475,7 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
-		is_active=True,).exclude(client__source_detail_1=2, client__magnet_id='').exclude( client__magnet_id=None).prefetch_related('client', 'staff', 'staff__profile')
+		is_active=True,).exclude(client__source_detail_1='2').exclude(client__magnet_id='').exclude( client__magnet_id=None).prefetch_related('client', 'staff', 'staff__profile')
 	
 	staff_client_dict = {}
 	client_staff_dict = {}

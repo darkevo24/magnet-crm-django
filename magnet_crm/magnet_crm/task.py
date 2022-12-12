@@ -489,12 +489,14 @@ def create_client_journey_mt5():
 						print('>>>>',client.magnet_id)
 						client_staff = Client_Staff.objects.filter(client__magnet_id=magnet_id, is_active=True).first()
 						if client_staff != None:
+							account_type = new_legal_form_decleration[2]
+							rate = new_legal_form_decleration[4]
 							extra_notes = str(account_type) + ' ' + str(rate) + ' ' + str(login_id)
-							existing_client_journey = Client_Journey.objects.filter(staff=client_staff.staff, client=client, extra=extra_notes, is_active=True).first()
+							existing_client_journey = Client_Journey.objects.filter(staff=client_staff.staff, client=client, extra=extra_notes, is_active=True, journal_type='mt5 created').first()
 							if existing_client_journey == None:
-								account_type = new_legal_form_decleration[2]
+								
 								login_created_at = new_legal_form_decleration[3]
-								rate = new_legal_form_decleration[4]
+								
 								client_journey = Client_Journey()
 								client_journey.client = client
 								client_journey.staff = client_staff.staff
