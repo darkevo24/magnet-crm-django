@@ -320,14 +320,14 @@ def check_user_deposit():
 				database='vifx'
 			)
 			mycursor = cnx.cursor()
-			string_sql = "SELECT user_id FROM vif_cabinet_legal_form_decleration"
+			string_sql = "SELECT user_id, login_id FROM vif_cabinet_legal_form_decleration"
 			mycursor.execute(string_sql)
 			all_data = mycursor.fetchall()
 			arr_id = []
 			print(all_data)
 			for data in all_data:
-				print("ini data ", data[0])
-				arr_id.append(data[0])
+				if data[1] != None and data[2] != '':
+					arr_id.append(data[0])
 
 			all_client = Client.objects.filter(is_active=True,magnet_id__in=arr_id,is_deposit=False)
 			print("ini all client",all_client)
@@ -342,52 +342,6 @@ def check_user_deposit():
 	except IntegrityError as e:
 		print(e)
 
-
-# 	nama = models.CharField(max_length=255)
-# 	first_name = models.CharField(max_length=255) 
-# 	last_name = models.CharField(max_length=255)
-# 	middle_name = models.CharField(max_length=255)
-# 	city = models.CharField(max_length=100)
-# 	address = models.CharField(max_length=255)
-
-# 	MAGNET_STATUS = [
-# 		('active', 'Active'), 
-# 		('inactive', 'Inactive'),
-# 		('deleted', 'Deleted'),
-# 	]
-# 	magnet_status = models.CharField(max_length=255, choices=MAGNET_STATUS, default='active')
-# 	id_verification_status = models.IntegerField(default=0)
-# 	legal_status = models.IntegerField(default=0)
-# 	magnet_created_by = 
-
-
-# 'vif_cabinet_legal_form_decleration',)
-# ('vif_cabinet_legal_form_personal',)
-# ('id', 'int(10) unsigned', 'NO', '', '0', '')
-# ('name', 'varchar(255)', 'NO', '', None, '')
-# ('first_name', 'varchar(60)', 'NO', '', None, '')
-# ('middle_name', 'varchar(20)', 'NO', '', None, '')
-# ('last_name', 'varchar(50)', 'NO', '', None, '')
-# ('email', 'varchar(255)', 'NO', '', None, '')
-# ('city', 'varchar(100)', 'NO', '', None, '')
-# ('address', 'varchar(255)', 'NO', '', None, '')
-# ('dob', 'varchar(20)', 'NO', '', None, '')
-# ('status', "enum('Active','Inactive','Deleted')", 'NO', '', None, '')
-# ('phone_mobile', 'varchar(50)', 'NO', '', None, '')
-# ('id_verification_status', 'tinyint(4)', 'NO', '', None, '')
-# ('legal_status', 'tinyint(4)', 'NO', '', None, '')
-# ('created_at', 'timestamp', 'YES', '', None, '')
-# ('updated_at', 'timestamp', 'YES', '', None, '')
-# ('aecode', 'varchar(20)', 'YES', '', None, '')
-# ('demologin', 'int(10) unsigned', 'YES', '', None, '')
-# ('cdd', 'tinyint(1)', 'NO', '', '0', '')
-# ('create_ip', 'varchar(32)', 'YES', '', None, '')
-# ('source', 'varchar(50)', 'YES', '', None, '')
-# ('medium', 'varchar(50)', 'YES', '', None, '')
-# ('campaign', 'varchar(50)', 'YES', '', None, '')
-# ('term', 'varchar(50)', 'YES', '', None, '')
-# ('content', 'varchar(50)', 'YES', '', None, '')
-# ('gclid', 'varchar(128)', 'YES', '', None, '')
 
 def update_client_data(mycursor, last_id, user):
 	# print(last_id,"last_id")
@@ -535,18 +489,21 @@ def create_client_journey_mt5():
 						print('>>>>',client.magnet_id)
 						client_staff = Client_Staff.objects.filter(client__magnet_id=magnet_id, is_active=True).first()
 						if client_staff != None:
-							account_type = new_legal_form_decleration[2]
-							login_created_at = new_legal_form_decleration[3]
-							rate = new_legal_form_decleration[4]
-							client_journey = Client_Journey()
-							client_journey.client = client
-							client_journey.staff = client_staff.staff
-							client_journey.journal_type = 'mt5 created'
-							client_journey.extra = str(account_type) + ' ' + str(rate) + ' ' + str(login_id)
-							tz = pytz.timezone('Asia/Jakarta')
-							client_journey.created_at = login_created_at.replace(tzinfo=tz)
-							client_journey.updated_by = client_journey.created_by = super_user
-							client_journey.save()
+							extra_notes = str(account_type) + ' ' + str(rate) + ' ' + str(login_id)
+							existing_client_journey = Client_Journey.objects.filter(staff=client_staff.staff, client=client, extra=extra_notes, is_active=True).first()
+							if existing_client_journey == None:
+								account_type = new_legal_form_decleration[2]
+								login_created_at = new_legal_form_decleration[3]
+								rate = new_legal_form_decleration[4]
+								client_journey = Client_Journey()
+								client_journey.client = client
+								client_journey.staff = client_staff.staff
+								client_journey.journal_type = 'mt5 created'
+								client_journey.extra = existing_client_journey
+								tz = pytz.timezone('Asia/Jakarta')
+								client_journey.created_at = login_created_at.replace(tzinfo=tz)
+								client_journey.updated_by = client_journey.created_by = super_user
+								client_journey.save()
 
 	except IntegrityError as e:
 		print('error bung', e)
