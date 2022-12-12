@@ -1300,7 +1300,7 @@ def supervisor_calculate_lot_two_months_bonus(staffs, last_two_months_date, now,
 
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
-		is_active=True,).exclude(client__source_detail_1=2, client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client', 'staff')
+		is_active=True,).exclude(client__source_detail_1='2').exclude(client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client', 'staff')
 	print(client_staff_all_list.count(), 'count')
 	staff_client_dict = {}
 	client_staff_dict = {}
@@ -1504,7 +1504,7 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
 		client__magnet_created_at__lt= last_two_months_date,
-		is_active=True,).exclude(client__source_detail_1=2, client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client')
+		is_active=True,).exclude(client__source_detail_1='2').exclude( client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client', 'staff')
 	
 	two_month_trades = {}
 	bonus_account_type_dict = {}
@@ -2084,12 +2084,15 @@ def calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date):
 
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff=staff,
-		is_active=True,).exclude(client__source_detail_1=2, client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client')
+		is_active=True).exclude(client__source_detail_1='2').exclude(client__magnet_id='').prefetch_related('client', 'staff')
 	print(client_staff_all_list.count(), 'count')
 	
 	client_detail_magnet_id_dict = {}
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
+		print('++++++-------', client_staff.client.source_detail_1, type(client_staff.client.source_detail_1), client_staff.client, client_staff.client.magnet_id)
+		if client_staff.client.magnet_id == '':
+			print('ksong')
 		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
 			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
 			if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
@@ -2280,7 +2283,7 @@ def calculate_lot_more_than_two_months_bonus(staff, last_two_months_date, now, e
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff=staff,
 		client__magnet_created_at__lt= last_two_months_date,
-		is_active=True,).exclude(client__source_detail_1=2, client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client')
+		is_active=True,).exclude(client__source_detail_1='2').exclude( client__magnet_id='').exclude(client__magnet_id=None).prefetch_related('client', 'staff')
 	
 	two_month_trades = {}
 	bonus_account_type_dict = {}
