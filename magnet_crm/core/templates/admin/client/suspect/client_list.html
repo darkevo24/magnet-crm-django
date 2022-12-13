@@ -2,6 +2,8 @@
 {% extends 'base/head.html' %}
 
 {% block content %}
+{% load static %}
+{% load core_extras %}
 
 <div class="row">
 	<!-- Typeahead -->
@@ -60,13 +62,13 @@
 					<table class="table" id="table-main">
 					  <thead>
 					    <tr>
-					      <th scope="col">#</th>
-					      <th scope="col">Nama</th>
-					      <!-- <th scope="col">Color</th> -->
-					      <th scope="col">Umur</th>
-					      <th scope="col">Gender</th>
-					      <th scope="col">Pekerjaan</th>
-					      <th scope="col">Domisili</th>
+					      <th scope="col">No</th>
+					      <th scope="col">Registered At</th>
+					      <th scope="col">Name</th>
+					      <th scope="col">Phone No</th>
+					      <th scope="col">E-mail</th>
+					      <th scope="col">Source</th>
+					      <th scope="col">AE Code</th>
 					      <th scope="col" class="text-center">Detail</th>
 					      <th scope="col" class="text-center">Action</th>
 					    </tr>
@@ -76,13 +78,22 @@
 					  		
 							<tr>
 						      <td scope="row">{{forloop.counter}}</td>
+							  <td scope="row">{{register_dict|dict_get:client.client_new}}</td>
 						      <td>
 						      	<span style="display: inline-block;" >{{client.client_new.nama}}</span>
 						      </td>
-						      <td scope="row">{{client.client_new.umur|default:'-'}}</td>
-						      <td scope="row">{{client.client_new.gender|default:'-'}}</td>
-						      <td scope="row">{{client.client_new.pekerjaan|default:'-'}}</td>
-						      <td scope="row">{{client.client_new.domisili|default:'-'}}</td>
+						      <td scope="row">{{client.client_new.phone_no|default:'-'}}</td>
+						      <td scope="row">{{client.client_new.email|default:'-'}}</td>
+						      <td>
+								{% if client.client_new.source_detail_2 is not None and client.client_new.source_detail_2 != '' %}
+									{{client.client_new.get_source_detail_2_display}} 
+								{% elif client.client_new.source_detail_1 is not None and client.client_new.source_detail_1 != '' %}
+									{{client.client_new.get_source_detail_1_display}} 
+								{% else %}
+									{{client.client_new.get_source_display|default:'-'}}
+								{% endif %}    
+							  </td>
+							  <td>{{client.client_new.aecode}}</td>
 						      <td scope="row" class="text-center">
 						      	<a href="{% url 'client-suspect-detail' client.id %}"><i class="icon-file-eye"></i></a>
 						      </td>
@@ -222,7 +233,7 @@
 	        // scrollY: '350px',
 	        scrollCollapse: true,
 	        fixedColumns: {
-	            leftColumns: 2,
+	            leftColumns: 3,
 	            // rightColumns: 1
 	        }
 	    });

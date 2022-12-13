@@ -346,9 +346,16 @@ def client_suspect_list(request):
 	else:
 		client_list = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False).order_by("created_at")
 
-	
+	client_id_list = []
+	for client in client_list:
+		client_id_list.append(client.client_new.id)
+	journey_register = Client_Journey.objects.filter(is_active=True,journal_type='registered',client__in=client_id_list)
+	register_dict = {}
+	for x in journey_register:
+		register_dict[x.client] = x.created_at
 
 	context = {
+		'register_dict': register_dict,
 		'client_list': client_list,
 		'menu':'client_suspect'
 	}
