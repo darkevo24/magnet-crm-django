@@ -739,7 +739,7 @@ def detail_list(request,id_client):
 	cur_staff = Staff.objects.filter(profile__user=request.user).first()
 	client = Client.objects.filter(id=id_client).first()
 	client_staff = Client_Staff.objects.filter(is_active=True,client=client,staff=cur_staff,is_own_client_suspect=False).exclude(client__source='0').first()
-
+	
 	
 
 	history_followup = Client_Followup.objects.filter(client=client)
