@@ -82,7 +82,7 @@ def client_import(request):
 								print('+++++', row[2].value, phone_no)
 								new_client.phone_no = phone_no
 								new_client.email = row[4].value
-								new_client.source = 2
+								new_client.source = '2'
 								if row[5].value == "google":
 									new_client.source_detail_1 = None
 									new_client.source_detail_2 = "4"
@@ -174,7 +174,7 @@ def client_import(request):
 								print('____', row[2].value, phone_no)
 								new_client.phone_no = phone_no
 								new_client.email = row[4].value
-								new_client.source = 1
+								new_client.source = '0'
 								if row[8].value == "google":
 									new_client.source_detail_1 = None
 									new_client.source_detail_2 = "4"
