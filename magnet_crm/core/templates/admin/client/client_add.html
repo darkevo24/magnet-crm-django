@@ -79,7 +79,68 @@
 </div>
 <script type="text/javascript">
 	$( document ).ready(function() {
+
+		let source_array = [];
+		source_array['0'] = ['0','1','2','3'];
+		source_array['1'] = ['4', '5'];
+		source_array['2'] = [];
+		let source_array_1 = [];
+		source_array_1['0'] = ['0', '1']
+		source_array_1['1'] = ['2', '3', '4', '5']
+		source_array_1['2'] = []
+		source_array_1['3'] = []
+
+		$('#id_source_detail_1')
+
 	    $('#id_birthday').datepicker({ format: "yyyy-mm-dd" }).val();
+	    $('#id_source').change(function(){
+	    	let source_index = $(this).val();
+	    	$("#id_source_detail_1 > option").each(function() {
+
+	    		if(this.value == '') {
+	    			
+	    		}
+	    		else {
+	    			let loop_value = this.value;
+	    			if(source_array[source_index].includes(loop_value)) {
+	    				console.log('-0---');
+						console.log(this.text + ' ' + this.value);
+						$(this).show();
+	    			}
+	    			else {
+	    				$(this).hide();
+	    			}
+	    		}
+	    		console.log($(this))
+	    		
+
+				
+			});
+	    });
+	    $('#id_source_detail_1').change(function(){
+	    	let source_index = $(this).val();
+	    	$("#id_source_detail_2 > option").each(function() {
+
+	    		if(this.value == '') {
+	    			$(this).hide();
+	    		}
+	    		else {
+	    			let loop_value = this.value;
+	    			if(source_array_1[source_index].includes(loop_value)) {
+	    				console.log('-0---');
+						console.log(this.text + ' ' + this.value);
+						$(this).show();
+	    			}
+	    			else {
+	    				$(this).hide();
+	    			}
+	    		}
+	    		console.log($(this))
+	    		
+
+				
+			});
+	    });
 	});
 	var submited = 0
 
