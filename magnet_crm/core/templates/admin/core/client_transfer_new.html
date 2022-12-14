@@ -112,7 +112,7 @@
                                     <th><input type="checkbox" id='inactivelist' value="checked" /></th>
                                     <th>id</th>
                                     <th>No</th>
-                                    <th style="white-space:nowrap">Registered At</th>
+                                    <th style="white-space: nowrap;">Registered At</th>
                                     <th>Name</th>
                                     <th>Phone No</th>
                                     <th>E-mail</th>
@@ -128,7 +128,7 @@
                                         <td></td>
                                         <td>{{client.id}}</td>
                                         <td>{{forloop.counter}}</td>
-                                        <td>{{register_dict|dict_get:client|date:"d-m-Y H:i"|default:'-'}}</td>
+                                        <td style="white-space: nowrap;">{{register_dict|dict_get:client|date:"d-m-Y H:i"|default:'-'}}</td>
                                         <td>{{client.nama|default:'-'}}</td>
                                         <td>{{client.phone_no|default:'-'}}</td>
                                         <td>{{client.email|default:'-'}}</td>
