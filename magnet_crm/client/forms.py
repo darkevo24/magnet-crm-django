@@ -9,7 +9,7 @@ class ClientForm(ModelForm):
 	pekerjaan = forms.CharField(label='Pekerjaan', required=False)
 	domisili = forms.CharField(label='Domisili', required=False)
 	birthday = forms.DateField(label='Tanggal Ulang Tahun',required=False, input_formats=['%Y-%m-%d'])
-	source = forms.CharField(label='Source', required=False)
+	
 	
 	class Meta:
 		model = Client
@@ -31,7 +31,7 @@ class ClientForm(ModelForm):
 	def __init__(self, *args, **kwargs):
 		aecode = kwargs.pop('aecode', None)
 		super(ClientForm, self).__init__(*args, **kwargs)
-		
+		self.fields['source'].required = False
 		self.fields['source_detail_1'].required = False
 		self.fields['source_detail_2'].required = False
 		self.fields['aecode'].initial = aecode
