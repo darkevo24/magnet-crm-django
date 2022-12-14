@@ -207,8 +207,7 @@ def client_transfer(request):
 	template = 'admin/core/client_transfer.html'
 
 	all_selected_client = Client_Staff.objects.filter(is_active=True).values_list('client__id',flat=True)
-	print("ini yang udah selected",all_selected_client)
-
+	
 	client_list = Client.objects.filter(is_active=True,is_locked = False).exclude(id__in=all_selected_client).order_by("nama")
 	staff_list = Staff.objects.filter(is_active=True,is_locked = False).order_by("profile__full_name")
 

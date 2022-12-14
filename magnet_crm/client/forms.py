@@ -10,7 +10,7 @@ class ClientForm(ModelForm):
 	domisili = forms.CharField(label='Domisili', required=False)
 	birthday = forms.DateField(label='Tanggal Ulang Tahun',required=False, input_formats=['%Y-%m-%d'])
 	source = forms.CharField(label='Source', required=False)
-	aecode = forms.CharField(label='Aecode', required=False)
+	
 	class Meta:
 		model = Client
 		fields = [
@@ -25,6 +25,7 @@ class ClientForm(ModelForm):
 			'source',
 			'source_detail_1',
 			'source_detail_2',
+			'aecode'
 		]
 	
 	def __init__(self, *args, **kwargs):

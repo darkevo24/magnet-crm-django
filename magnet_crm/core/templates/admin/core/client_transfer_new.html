@@ -128,7 +128,7 @@
                                         <td></td>
                                         <td>{{client.id}}</td>
                                         <td>{{forloop.counter}}</td>
-                                        <td>{{register_dict|dict_get:client}}</td>
+                                        <td>{{register_dict|dict_get:client|date:"d-m-Y H:i"|default:'-'}}</td>
                                         <td>{{client.nama|default:'-'}}</td>
                                         <td>{{client.phone_no|default:'-'}}</td>
                                         <td>{{client.email|default:'-'}}</td>
@@ -444,6 +444,8 @@
                 searchPlaceholder: 'Type to filter...',
                 lengthMenu: '<span>Show:</span> _MENU_',
             },
+            // scrollX: true,
+            scrollCollapse: true,
             columnDefs: [
                 
                 {
@@ -451,12 +453,9 @@
                     className: 'select-checkbox',
                     targets: 0
                 },
-                { 'visible': false, 'targets': [1] }
+                { 'visible': false, 'targets': [1] },
+                { "width": "30%", "targets": [3] },
             ],
-            // select: {
-            //     style: 'os',
-            //     selector: 'td:first-child'
-            // },
             select: {
                 style: 'multi'
             },
