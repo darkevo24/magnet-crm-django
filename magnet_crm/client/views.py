@@ -380,6 +380,8 @@ def client_suspect_detail(request,id_client_sus):
 	
 	# client = Client.objects.filter(id=id_client).first()
 	client_sus = Client_Duplicate_Suspect.objects.filter(id=id_client_sus).first()
+	old_staff = Client_Staff.objects.filter(client=client_sus.client_old, is_active=True).first()
+	new_staff = Client_Staff.objects.filter(client=client_sus.client_new, is_active=True).first()
 	
 	print(client_sus,'client_sus')
 
@@ -471,6 +473,8 @@ def client_suspect_detail(request,id_client_sus):
 	context = {
 		'client_sus': client_sus,
 		'menu':'client_suspect',
+		'old_staff': old_staff.staff,
+		'new_staff': new_staff.staff,
 		# 'client_exist':client_exist,
 		# 'history_followup': history_followup,
 		# 'history_schedule': history_schedule,
