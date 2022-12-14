@@ -63,7 +63,7 @@
 					  <thead>
 					    <tr>
 					      <th scope="col">No</th>
-					      <th scope="col">Registered At</th>
+					      <th scope="col" style="white-space: nowrap;">Registered At</th>
 					      <th scope="col">Name</th>
 					      <th scope="col">Phone No</th>
 					      <th scope="col">E-mail</th>
@@ -78,7 +78,7 @@
 					  		
 							<tr>
 						      <td scope="row">{{forloop.counter}}</td>
-							  <td scope="row">{{register_dict|dict_get:client.client_new}}</td>
+							  <td scope="row" style="white-space: nowrap;">{{register_dict|dict_get:client.client_new|date:"d-m-Y H:i"|default:'-'}}</td>
 						      <td>
 						      	<span style="display: inline-block;" >{{client.client_new.nama}}</span>
 						      </td>

@@ -77,7 +77,15 @@
 							<tr>
 								<td>Source</td>
 								<td>:</td>
-								<td>{{client_sus.client_old.source|default:"-"}}</td>
+								<td>
+									{% if client_sus.client_old.source_detail_2 is not None and client_sus.client_old.source_detail_2 != '' %}
+										{{client_sus.client_old.get_source_detail_2_display}} 
+									{% elif client_sus.client_old.source_detail_1 is not None and client_sus.client_old.source_detail_1 != '' %}
+										{{client_sus.client_old.get_source_detail_1_display}} 
+									{% else %}
+										{{client_sus.client_old.get_source_display|default:'-'}}
+									{% endif %}
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -137,7 +145,15 @@
 							<tr>
 								<td>Source</td>
 								<td>:</td>
-								<td>{{client_sus.client_new.source|default:"-"}}</td>
+								<td>
+									{% if client_sus.client_new.source_detail_2 is not None and client_sus.client_new.source_detail_2 != '' %}
+										{{client_sus.client_new.get_source_detail_2_display}} 
+									{% elif client_sus.client_new.source_detail_1 is not None and client_sus.client_new.source_detail_1 != '' %}
+										{{client_sus.client_new.get_source_detail_1_display}} 
+									{% else %}
+										{{client_sus.client_new.get_source_display|default:'-'}}
+									{% endif %}
+								</td>
 							</tr>
 						</tbody>
 					</table>
