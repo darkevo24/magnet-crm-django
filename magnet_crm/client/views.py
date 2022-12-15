@@ -84,17 +84,21 @@ def client_import(request):
 								new_client.phone_no = phone_no
 								new_client.email = row[4].value
 								new_client.source = '2'
-								if row[5].value == "google":
-									new_client.source_detail_1 = None
-									new_client.source_detail_2 = "4"
-								elif row[5].value == "fb / ig":
-									new_client.source_detail_1 = None
-									new_client.source_detail_2 = "1"
-								else:
-									new_client.source_detail_1 = None
-								new_client.medium = row[6].value
-								new_client.campaign = row[7].value
-								new_client.gclid = row[8].value
+								if 5 in row:
+									if row[5].value == "google":
+										new_client.source_detail_1 = None
+										new_client.source_detail_2 = "4"
+									elif row[5].value == "fb / ig":
+										new_client.source_detail_1 = None
+										new_client.source_detail_2 = "1"
+									else:
+										new_client.source_detail_1 = None
+								if 6 in row:
+									new_client.medium = row[6].value
+								if 7 in row:
+									new_client.campaign = row[7].value
+								if 8 in row:
+									new_client.gclid = row[8].value
 								new_client.save()
 
 								if selected_staff is not None and selected_staff is not "":
@@ -474,7 +478,7 @@ def client_suspect_detail(request,id_client_sus):
 	# history_schedule = Client_Schedule.objects.filter(client=client)
 	# history_journey = Client_Journey.objects.filter(client=client)
 
-	
+	old_staff 
 	context = {
 		'client_sus': client_sus,
 		'menu':'client_suspect',
