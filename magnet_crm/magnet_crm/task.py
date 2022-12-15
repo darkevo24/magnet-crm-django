@@ -379,16 +379,24 @@ def update_client_data(mycursor, last_id, user):
 			if (new_client[8] == "1990-04-31"):
 				client.birthday = "1990-04-30"
 			else:
-				client.birthday = new_client[8]	if new_client[8] != "" else None
-			
+				if new_client[8] != None and new_client[8] != "":
+					print("masuk kesini dongs" + str(new_client[8]))
+					temp_birthday = new_client[8].split("-")
+
+					if int(temp_birthday[1])  > 12:
+						print("lebih besar dari 12 ")
+						client.birthday = temp_birthday[0]+"-"+temp_birthday[2]+"-"+temp_birthday[1]
+					else :
+						print("lebih kecil dari 12 ")
+						client.birthday = temp_birthday[0]+"-"+temp_birthday[1]+"-"+temp_birthday[2]
 		
-		
+		tz = pytz.timezone('Asia/Jakarta')
 		client.magnet_status = new_client[9]
 		client.phone_no = new_client[10]
 		client.id_verification_status = new_client[11]
 		client.legal_status = new_client[12]
-		client.magnet_created_at = new_client[13]
-		tz = pytz.timezone('Asia/Jakarta')
+		client.magnet_created_at = new_client[13].replace(tzinfo=tz)
+	
 		
 
 
@@ -442,8 +450,11 @@ def update_client_data(mycursor, last_id, user):
 		# client.source = None
 		# client.source_detail_1 = None
 		# client.source_detail_2 = None
+		print("----|||||" + str(new_client[8]))
+		print("|||||------" + str(client.birthday))
+		
 		client.save()
-
+		print("saved!")
 		regis = Client_Journey()
 		regis.client = client
 		regis.journal_type = 'registered'

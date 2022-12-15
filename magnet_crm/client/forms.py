@@ -46,7 +46,7 @@ class ClientImportForm(forms.Form):
 		self.fields['staff'].required = False
 		
 		employee_choices = []
-		employees = Staff.objects.filter(is_active=True,staff_level__level=3)
+		employees = Staff.objects.filter(is_active=True,staff_level__level=3).order_by("profile__full_name")
 		for data in employees:
 			employee_choices.append((data.id, data.profile.full_name))
 

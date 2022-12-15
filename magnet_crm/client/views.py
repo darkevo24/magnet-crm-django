@@ -37,6 +37,7 @@ def client_import(request):
 	import_form = ClientImportForm(request.POST or None, request.FILES or None)
 
 	print(request.POST)
+	
 	if request.POST:
 		try:
 			with transaction.atomic():
@@ -45,8 +46,8 @@ def client_import(request):
 					excel_file = request.FILES["file"]
 					print(excel_file)
 					staff_email = excel_file.name.split('.xlsx')[0]
-					
-					
+					selected_staff = Staff.objects.filter(id=import_form.cleaned_data['staff']).first()
+					print('selected_staff', selected_staff)
 					wb = openpyxl.load_workbook(excel_file)
 					external_data_wb = wb["Data Eksternal"]
 					leads_data_wb = wb["Data Leads"]
@@ -96,7 +97,6 @@ def client_import(request):
 								new_client.gclid = row[8].value
 								new_client.save()
 
-								selected_staff = Staff.objects.filter(id=import_form.cleaned_data['staff']).first()
 								if selected_staff is not None and selected_staff is not "":
 									c_staff = Client_Staff()
 									c_staff.client = new_client
@@ -118,23 +118,33 @@ def client_import(request):
 							# print("User code: ", row[12].value)
 							# print("Category data: ", row[13].value)
 							# print("Tanggal respon: ", row[14].value)
-							existing_client = Client.objects.filter(email=row[4].value, nama=row[2].value, phone_no=phone_no).first()
+							phone_no = str(row[3].value)
+							if phone_no != None and phone_no != '':
+								phone_no = str(row[3].value).strip()
+								phone_no = phone_no.replace('-', '')
+								if len(phone_no) > 0:
+									if phone_no[0] == '8':
+										phone_no = '6' + phone_no
+							
+							existing_client = Client.objects.filter(email=row[4].value, nama=row[2].value, phone_no=phone_no, is_active=True).first()
 							print("existing leads data: ", existing_client)
 							if existing_client != None:
 								print("existing client found")
 								
 								# existing_client.is_active = False
-								client_staff = Client_Staff.objects.filter(is_active=True, client=existing_client).first()
+								client_staff = Client_Staff.objects.filter(is_active=True, client=existing_client, staff=selected_staff).first()
 								if client_staff != None :
-									if client_staff.staff.profile.email != staff_email:
+									print('client_staff tidak sama dengan None')
+									if client_staff.staff.profile.email != selected_staff.profile.user.email:
+										print('client_staff email tidak sama', client_staff.staff.profile.email, selected_staff.profile.user.email)
 										client_staff.is_active = False
 										client_staff.save()
 
-										selected_staff = Staff.objects.filter(profile__email=staff_email, is_active=True).first()
 										new_client_staff = Client_Staff()
 										new_client_staff.client = existing_client
 										new_client_staff.staff = selected_staff
 										new_client_staff.updated_by = new_client_staff.created_by = request.user
+										print('new_client_staff saved !')
 										new_client_staff.save()
 
 										client_journey_list = Client_Journey.objects.filter(client=existing_client, is_active=True)
@@ -152,40 +162,36 @@ def client_import(request):
 											new_client_journey.created_at = client_journey.created_at
 											new_client_journey.save()
 								else:
-									selected_staff = Staff.objects.filter(profile__email=staff_email, is_active=True).first()
+									print('client_staff sama dengan None')
 									new_client_staff = Client_Staff()
 									new_client_staff.client = existing_client
 									new_client_staff.staff = selected_staff
 									new_client_staff.updated_by = new_client_staff.created_by = request.user
+									print('new_client_staff saved !!')
 									new_client_staff.save()
 
 							else:
-								
+								print("existing client not found")
 								new_client = Client()
 								new_client.created_at = row[1].value
 								new_client.created_by = request.user
 								new_client.nama = row[2].value
-								if phone_no != None and phone_no != '':
-									phone_no = str(row[3].value).strip()
-									phone_no = phone_no.replace('-', '')
-									if len(phone_no) > 0:
-										if phone_no[0] == '8':
-											phone_no = '6' + phone_no
+								
 								print('____', row[2].value, phone_no)
 								new_client.phone_no = phone_no
 								new_client.email = row[4].value
 								new_client.source = '0'
-								if row[8].value == "google":
+								if row[5].value == "google":
 									new_client.source_detail_1 = None
 									new_client.source_detail_2 = "4"
-								elif row[8].value == "fb / ig":
+								elif row[5].value == "fb / ig":
 									new_client.source_detail_1 = None
 									new_client.source_detail_2 = "1"
 								else:
 									new_client.source_detail_1 = None
-								new_client.medium = row[9].value
-								new_client.campaign = row[10].value
-								client_aecode = row[11].value
+								new_client.medium = row[6].value
+								new_client.campaign = row[7].value
+								client_aecode = row[8].value
 								if client_aecode == None:
 									client_aecode = ''
 								new_client.aecode = client_aecode
@@ -193,12 +199,11 @@ def client_import(request):
 								new_client.save()		
 								print('setelah save')				
 
-								
-								selected_staff = Staff.objects.filter(profile__email=staff_email).first()
 								new_client_staff = Client_Staff()
 								new_client_staff.client = new_client
 								new_client_staff.staff = selected_staff
 								new_client_staff.updated_by = new_client_staff.created_by = request.user
+								print('new_client_staff saved !!!!')
 								new_client_staff.save()
 								
 
@@ -510,7 +515,7 @@ def client_list(request):
 		template = 'admin/client/client_list.html'
 		# staff = Staff.objects.filter(is_active=True, profile__user__id=request.user.id).first()
 
-		client_staff_list = Client_Staff.objects.filter(staff__id=staff.id, is_active=True).order_by('-created_at','-client__magnet_created_at').prefetch_related('client')
+		client_staff_list = Client_Staff.objects.filter(staff__id=staff.id, is_active=True, client__is_suspect=False).order_by('-created_at','-client__magnet_created_at').prefetch_related('client')
 		client_list = Client.objects.none()
 
 		
@@ -523,7 +528,7 @@ def client_list(request):
 
 	else:
 		template = 'admin/client/admin_client_list.html'
-		client_list = Client.objects.filter(is_active=True).order_by("-created_at")
+		client_list = Client.objects.filter(is_active=True, is_suspect=False).order_by("-created_at")
 		client_staff_list = Client_Staff.objects.none()
 
 	form_color = ColorForm(None)
@@ -617,33 +622,7 @@ def client_edit(request,id_client):
 						new_client_staff.staff = selected_staff
 						new_client_staff.updated_by = new_client_staff.created_by = request.user
 						new_client_staff.save()
-					# client_staff = Client_Staff.objects.filter(client__aecode=client_aecode).first()
-					# if client_staff == None:
-					# 	staff = Staff.objects.filter(aecode=client_aecode).first()
-					# 	#get active client_staff
-					# 	client_staff = Client_Staff.objects.filter(client=client, staff=staff, is_active=True).first()
-					# 	if client_staff != None and staff.aecode != client_aecode:
-					# 		client_staff.is_active = False
-					# 		client_staff.updated_by = request.user
-					# 		client_staff.save()
-
-					# 		client_journey_list = Client_Journey.objects.filter(client=client, staff=staff, is_active=True)
-
-
-
-					# 	if staff != None:
-					# 		new_client_staff = Client_Staff()
-					# 		new_client_staff.client = client
-					# 		new_client_staff.staff = staff
-					# 		new_client_staff.updated_by = client_staff.created_by = request.user
-					# 		new_client_staff.save()
-
-					# 		if client_journey_list.count() > 0 :
-					# 			for client_journey in client_journey_list:
-					# 				new_client_journey = Client_Journey()
-					# 				new_client_journey.client = client
-					# 				new_client_journey.staff 
-
+					
 
 
 					client.aecode = client_aecode
