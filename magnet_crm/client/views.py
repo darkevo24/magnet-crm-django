@@ -392,6 +392,12 @@ def client_suspect_detail(request,id_client_sus):
 	old_staff = Client_Staff.objects.filter(client=client_sus.client_old, is_active=True).first()
 	new_staff = Client_Staff.objects.filter(client=client_sus.client_new, is_active=True).first()
 	
+	if old_staff != None:
+		temp = old_staff
+		old_staff = temp.staff
+	if new_staff != None:
+		temp = new_staff
+		new_staff = temp.staff
 	print(client_sus,'client_sus')
 
 	if request.POST:
@@ -478,12 +484,12 @@ def client_suspect_detail(request,id_client_sus):
 	# history_schedule = Client_Schedule.objects.filter(client=client)
 	# history_journey = Client_Journey.objects.filter(client=client)
 
-	old_staff 
+	
 	context = {
 		'client_sus': client_sus,
 		'menu':'client_suspect',
-		'old_staff': old_staff.staff,
-		'new_staff': new_staff.staff,
+		'old_staff': old_staff,
+		'new_staff': new_staff,
 		# 'client_exist':client_exist,
 		# 'history_followup': history_followup,
 		# 'history_schedule': history_schedule,
