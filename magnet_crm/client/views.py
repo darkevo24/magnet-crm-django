@@ -409,16 +409,40 @@ def client_suspect_detail(request,id_client_sus):
 		action = request.POST['action']
 		action_extra = request.POST['action_extra']
 		client = client_sus.client_new
+		client.is_suspect_bypass = True
 		if action == 'accept':
 			print("accept")
 			client.is_suspect = False
-			client.is_suspect_bypass = True
+			
+			
 
 			new_his = Client_Duplicate_Suspect_History()
 			new_his.duplicate_suspect = client_sus
 			new_his.action = "accepted"
 			new_his.created_by = request.user
+
 			new_his.save()
+
+		elif action == 'take_right':
+			client.is_suspect = False
+			
+
+			new_his = Client_Duplicate_Suspect_History()
+			new_his.duplicate_suspect = client_sus
+			new_his.action = "take_right"
+			new_his.created_by = request.user
+
+			new_his.save()
+
+			old_client = client_sus.client_old
+			old_client.is_active = False
+			old_client.is_suspect = False
+			old_client.is_suspect_bypass = True
+
+			old_client.updated_by = request.user
+			old_client.save()
+
+
 
 		else:
 			print("reject")
@@ -478,10 +502,11 @@ def client_suspect_detail(request,id_client_sus):
 		client.updated_by = request.user
 		client.save()
 		client_sus.is_checked = True
+
 		client_sus.updated_by = request.user
 		client_sus.updated_at = timezone.now()
 		client_sus.save()
-
+		print('client_sus id', client_sus.id, client_sus.is_checked)
 		return redirect(reverse('client-suspect-list'))
 	# history_followup = Client_Followup.objects.filter(client=client)
 	# history_schedule = Client_Schedule.objects.filter(client=client)
