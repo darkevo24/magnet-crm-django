@@ -36,8 +36,8 @@ class Command(BaseCommand):
 				phone_number = phone_number.replace(' ', '')
 				phone_number = phone_number.encode('ascii', 'ignore').decode("utf-8")
 				phone_number = str(phone_number)
-				# c.phone_no = phone_number
-				# c.save()
+				c.phone_no = phone_number
+				c.save()
 				print(c.phone_no, c.nama)
 		print('finished')
 		# try:
