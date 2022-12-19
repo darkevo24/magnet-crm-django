@@ -36,10 +36,20 @@ class Command(BaseCommand):
 				phone_number = phone_number.replace(' ', '')
 				phone_number = phone_number.encode('ascii', 'ignore').decode("utf-8")
 				phone_number = str(phone_number)
-				c.phone_no = phone_number
-				c.save()
-				print(c.phone_no, c.nama)
+				# c.phone_no = phone_number
+				# c.save()
+				# print(c.phone_no, c.nama)
 		print('finished')
+
+		for c in clients:
+			phone_number = c.phone_no
+			if phone_number != ' ' and phone_number != '' and phone_number != None:
+				print(phone_number, phone_number[0])
+				if phone_number[0] == '8':
+					print('ini yang diubah')
+					phone_number = '62' + phone_number
+					c.phone_no = phone_number
+					c.save()
 		# try:
 		# 	with transaction.atomic():
 		# 		clients = Client.objects.filter(is_active=True)
