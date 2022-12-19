@@ -496,8 +496,9 @@ def delete_tree(request,tree_id):
 def add_form(request,id_client):
 	template = 'add_form.html'
 	# tree_form = ChoicesForm(request.POST or None)
-	first_choices = Followup.objects.exclude(followup_choice_code__icontains="_")
-
+	first_choices = Followup.objects.exclude(followup_choice_code__icontains="_").exclude(is_active=False)
+	for first_choice in first_choices:
+		print(first_choice.followup_choices)
 	if request.POST:
 		selected_radio = request.POST['selected_radio']
 		notes = request.POST['notes']
