@@ -129,6 +129,7 @@ def index(request):
 	context = {
 		'all_choices' : all_choices,
 		'menu':'feedback_list',
+		'tree_level': tree_level,
 
 	}
 	return render(request,template,context=context)
@@ -441,8 +442,11 @@ def add_tree(request):
 			instances.color = color
 			instances.font_color = font_color
 			instances.save()
-	
-		return redirect(reverse('followup-list'))
+		
+		redirect_url = reverse('followup-list')
+		if tree_level != None:
+			redirect_url += '?level=' + str(tree_level)
+		return redirect(redirect_url)
 
 
 	context = {
