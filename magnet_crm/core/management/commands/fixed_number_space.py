@@ -46,7 +46,7 @@ class Command(BaseCommand):
 			if phone_number != ' ' and phone_number != '' and phone_number != None:
 				print(phone_number, phone_number[0])
 				if phone_number[0] == '8':
-					print('ini yang diubah')
+					
 					phone_number = '62' + phone_number
 					c.phone_no = phone_number
 					c.save()

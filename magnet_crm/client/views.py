@@ -70,9 +70,12 @@ def client_import(request):
 							if phone_no != None and phone_no != '':
 								phone_no = str(row[3].value).strip()
 								phone_no = phone_no.replace('-', '')
+
+								phone_no = phone_no.encode('ascii', 'ignore').decode("utf-8")
+
 								if len(phone_no) > 0:
 									if phone_no[0] == '8':
-										phone_no = '6' + phone_no
+										phone_no = '62' + phone_no
 							print('****', row[2].value, phone_no)
 							existing_client = Client.objects.filter(email=row[4].value, nama=row[2].value, phone_no=phone_no).first()
 							if existing_client == None:
@@ -126,9 +129,10 @@ def client_import(request):
 							if phone_no != None and phone_no != '':
 								phone_no = str(row[3].value).strip()
 								phone_no = phone_no.replace('-', '')
+								phone_no = phone_no.encode('ascii', 'ignore').decode("utf-8")
 								if len(phone_no) > 0:
 									if phone_no[0] == '8':
-										phone_no = '6' + phone_no
+										phone_no = '62' + phone_no
 							
 							existing_client = Client.objects.filter(email=row[4].value, nama=row[2].value, phone_no=phone_no, is_active=True).first()
 							print("existing leads data: ", existing_client)
