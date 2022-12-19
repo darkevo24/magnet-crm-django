@@ -402,7 +402,6 @@ def client_suspect_detail(request,id_client_sus):
 	if new_staff != None:
 		temp = new_staff
 		new_staff = temp.staff
-	print(client_sus,'client_sus')
 
 	if request.POST:
 		print(request.POST)

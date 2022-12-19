@@ -841,13 +841,14 @@ def staff_report_detail(request,staff_uid):
 	#lot data kantor
 
 	#data 0-2bulan
-	last_two_months_date = now - relativedelta(months=2)
+	last_two_months_date = now - relativedelta(months=1)
+	print('last_two_months_date', last_two_months_date)
 	last_two_monthsend_date = calendar.monthrange(calculated_year, calculated_month)[0]
 	last_two_months_date = datetime(last_two_months_date.year, last_two_months_date.month, 1)
 	last_program_date = datetime(2022, 10, 1)
-	if last_two_months_date <= last_two_months_date:
+	if last_two_months_date <= last_program_date:
 		last_two_months_date = last_program_date
-
+	print('now', now)
 	print('last_two_months_date', last_two_months_date)
 	two_months_bonus_dict, two_months_trades = calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date)
 	#data > 2bulan
