@@ -418,7 +418,6 @@ def client_suspect_detail(request,id_client_sus):
 			new_his.duplicate_suspect = client_sus
 			new_his.action = "accepted"
 			new_his.created_by = request.user
-			i
 			new_his.save()
 
 		else:
@@ -573,6 +572,15 @@ def client_add(request):
 					client = client_form.save(commit=False)
 					client.created_by = request.user
 					client.save()
+
+					staff = Staff.objects.filter(is_active=True, profile__user=request.user).first()
+					if staff != None:
+						client_staff = Client_Staff()
+						client_staff.client = client
+						client_staff.staff = staff
+						client_staff.created_by = client_staff.updated_by = request.user
+						client_staff.save()
+
 
 					return redirect(reverse('client-list'))
 				else:

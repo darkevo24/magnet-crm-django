@@ -34,6 +34,7 @@ class ClientForm(ModelForm):
 		self.fields['source'].required = False
 		self.fields['source_detail_1'].required = False
 		self.fields['source_detail_2'].required = False
+		self.fields['aecode'].required = False
 		self.fields['aecode'].initial = aecode
 		
 
