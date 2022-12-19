@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
 		try:
 			with transaction.atomic():
-				clients = Client.objects.filter(is_active=True, source='2')
+				clients = Client.objects.filter(is_active=True)
 				for c in clients:
 					phone_number = c.phone_no
 					print(phone_number[:2], phone_number[2:])
