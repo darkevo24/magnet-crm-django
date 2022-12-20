@@ -196,6 +196,7 @@
                                   				<th scope="col" hidden>Warna</th>
                                   				<th scope="col">Nama</th>
                                   				<th scope="col">No. Telepon</th>
+                                                <th scope="col">Share Date</th>
                                                 <th scope="col">Registered Date</th>
                                   				<th scope="col">Email</th>
                                   				<th scope="col">Source</th>
@@ -212,6 +213,7 @@
                                             		<td scope="row" hidden>{{client_color_text|dict_get:client.id}}</td>
                                             		<td scope="row">{{client.nama|default:"-"}}</td>
                                             		<td scope="row">{{client.phone_no|default:"-"}}</td>
+                                                    <td scope="row">{{client.created_at|date:"d-m-Y H:i"|default:'-'}}</td>
                                                     <td scope="row">{{client.magnet_created_at|date:"d-m-Y H:i"|default:'-'}}</td>
                                             		<td scope="row">{{client.email|default:"-"}}</td>
                                             		<td scope="row">
@@ -306,6 +308,7 @@
                                   				<th scope="col">Nama</th>
                                   				<th scope="col">No. Telepon</th>
                                   				<th scope="col">Email</th>
+                                                <th scope="col">Share Date</th>
                                                 <th scope="col">Registered Date</th>
                                   				<th scope="col">Source</th>
                                   				<th scope="col">Aksi</th>
@@ -321,6 +324,7 @@
                                             		<td scope="row">{{client.nama|default:"-"}}</td>
                                             		<td scope="row">{{client.phone_no|default:"-"}}</td>
                                             		<td scope="row">{{client.email|default:"-"}}</td>
+                                                    <td scope="row">{{client.created_at|date:"d-m-Y H:i"|default:'-'}}</td>
                                                     <td scope="row">{{client.magnet_created_at|date:"d-m-Y H:i"|default:'-'}}</td>
                                             		<td scope="row">
                                                 		{% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
