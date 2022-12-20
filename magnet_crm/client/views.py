@@ -359,10 +359,12 @@ def client_share_date(request):
 
 
 							print(nama, nomor_telepon, email)
-							existing_client = Client.objects.filter(nama=nama, phone_no=phone_no, email=email).order_by('-id')[0]
-							existing_client.created_at = share_date.replace(tzinfo=jakarta_timezone)
-							existing_client.save()
-							print(existing_client)
+							existing_client = Client.objects.filter(nama=nama, phone_no=phone_no, email=email).order_by('-id')
+							if existing_client.count() > 0:
+								existing_client = existing_client[0]
+								existing_client.created_at = share_date.replace(tzinfo=jakarta_timezone)
+								existing_client.save()
+								print(existing_client)
 					
 					for row in leads_data_wb.iter_rows(2, leads_data_wb.max_row):
 						if row[0].value != None:
@@ -385,10 +387,12 @@ def client_share_date(request):
 									if phone_no[0] == '8':
 										phone_no = '62' + phone_no
 
-							existing_client = Client.objects.filter(nama=nama, phone_no=phone_no, email=email).order_by('-id')[0]
-							existing_client.created_at = share_date.replace(tzinfo=jakarta_timezone)
-							existing_client.save()
-							print(existing_client)
+							existing_client = Client.objects.filter(nama=nama, phone_no=phone_no, email=email).order_by('-id')
+							if existing_client.count() > 0:
+								existing_client = existing_client[0]
+								existing_client.created_at = share_date.replace(tzinfo=jakarta_timezone)
+								existing_client.save()
+								print(existing_client)
 					
 					messages.success(request, 'Berhasil Impor Data.')
 					return redirect(reverse('client-share-date'))
