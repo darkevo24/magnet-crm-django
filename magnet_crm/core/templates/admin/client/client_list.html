@@ -88,6 +88,7 @@
 								  <th scope="col">Nama</th>
 								  <th scope="col">No. Telepon</th>
 								  <th scope="col">Email</th>
+								  <th scope="col">Share Date</th>
 								  <th scope="col">Registered Date</th>
 								  <th scope="col">Source</th>
 								  <th scope="col">Medium</th>
@@ -109,6 +110,7 @@
 											<td scope="row">{{client_staff.client.nama|default:"-"}}</td>
 											<td scope="row">{{client_staff.client.phone_no|default:"-"}}</td>
 											<td scope="row">{{client_staff.client.email|default:"-"}}</td>
+											<td scope="row">{{client_staff.client.created_at|date:"d-m-Y H:i"|default:'-'}}</td>
 											<td scope="row">{{client_staff.client.magnet_created_at|date:"d-m-Y H:i"|default:'-'}}</td>
 											<td scope="row">
 												{% if client_staff.client.source_detail_2 is not None and client_staff.client.source_detail_2 != '' %}

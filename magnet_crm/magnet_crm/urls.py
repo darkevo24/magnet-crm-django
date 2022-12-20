@@ -41,6 +41,7 @@ urlpatterns = [
     path('client_feedback', client_views.feedback_list, name='client-feedback-list'),
 
     path('client_import', client_views.client_import, name='client-import'),
+    path('client_share_date', client_views.client_share_date, name='client-share-date'),
 
     path('change_password', main_view.change_staff_password, name='change_password'),
 

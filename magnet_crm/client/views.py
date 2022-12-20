@@ -35,7 +35,7 @@ CLEANR = re.compile('<.*?>')
 def client_import(request):
 	template = 'admin/client/client_import.html'
 	import_form = ClientImportForm(request.POST or None, request.FILES or None)
-
+	jakarta_timezone = pytz.timezone('Asia/Jakarta')
 	print(request.POST)
 	
 	if request.POST:
@@ -80,7 +80,7 @@ def client_import(request):
 							existing_client = Client.objects.filter(email=row[4].value, nama=row[2].value, phone_no=phone_no).first()
 							if existing_client == None:
 								new_client = Client()
-								new_client.created_at = row[1].value
+								new_client.created_at = row[1].value.replace(tzinfo=jakarta_timezone)
 								new_client.created_by = request.user
 								new_client.nama = row[2].value
 								print('+++++', row[2].value, phone_no)
@@ -110,6 +110,44 @@ def client_import(request):
 									c_staff.staff =	selected_staff
 									c_staff.created_by = request.user				
 									c_staff.save()
+							else:
+								client_staff = Client_Staff.objects.filter(is_active=True, client=existing_client, staff=selected_staff).first()
+								if client_staff != None :
+									print('client_staff tidak sama dengan None')
+									if client_staff.staff.profile.email != selected_staff.profile.user.email:
+										print('client_staff email tidak sama', client_staff.staff.profile.email, selected_staff.profile.user.email)
+										client_staff.is_active = False
+										client_staff.save()
+
+										new_client_staff = Client_Staff()
+										new_client_staff.client = existing_client
+										new_client_staff.staff = selected_staff
+										new_client_staff.updated_by = new_client_staff.created_by = request.user
+										print('new_client_staff saved !')
+										new_client_staff.save()
+
+										client_journey_list = Client_Journey.objects.filter(client=existing_client, is_active=True)
+										for client_journey in client_journey_list:
+											client_journey.is_active = False
+											client_journey.updated_by = request.user
+											client_journey.save()
+
+											new_client_journey = Client_Journey()
+											new_client_journey.client = existing_client
+											new_client_journey.staff = selected_staff
+											new_client_journey.journal_type = client_journey.journal_type
+											new_client_journey.created_by = request.user
+											new_client_journey.updated_by = request.user
+											new_client_journey.created_at = client_journey.created_at
+											new_client_journey.save()
+								else:
+									print('client_staff sama dengan None')
+									new_client_staff = Client_Staff()
+									new_client_staff.client = existing_client
+									new_client_staff.staff = selected_staff
+									new_client_staff.updated_by = new_client_staff.created_by = request.user
+									print('new_client_staff saved !!')
+									new_client_staff.save()
 
 					# Cek client udah exist belom, query email
 					for row in leads_data_wb.iter_rows(2, leads_data_wb.max_row):
@@ -181,7 +219,7 @@ def client_import(request):
 							else:
 								print("existing client not found")
 								new_client = Client()
-								new_client.created_at = row[1].value
+								new_client.created_at = row[1].value.replace(tzinfo=jakarta_timezone)
 								new_client.created_by = request.user
 								new_client.nama = row[2].value
 								
@@ -270,6 +308,90 @@ def client_import(request):
 
 					messages.success(request, 'Berhasil Impor Data.')
 					return redirect(reverse('client-import'))
+				else:
+					print(import_form.errors)
+					print(import_form.errors)
+
+		except IntegrityError as e:
+			print(e)
+
+	context = {
+		'import_form': import_form,
+		'menu':'client_import',
+	}
+	return render(request,template,context=context)
+
+@login_required
+def client_share_date(request):
+	template = 'admin/client/client_import.html'
+	import_form = ClientImportForm(request.POST or None, request.FILES or None)
+	jakarta_timezone = pytz.timezone('Asia/Jakarta')
+	print(request.POST)
+	
+	if request.POST:
+		try:
+			with transaction.atomic():
+
+				if import_form.is_valid():
+					excel_file = request.FILES["file"]
+					print(excel_file)
+					staff_email = excel_file.name.split('.xlsx')[0]
+					
+					wb = openpyxl.load_workbook(excel_file)
+					external_data_wb = wb["Data Eksternal"]
+					leads_data_wb = wb["Data Leads"]
+					for row in external_data_wb.iter_rows(2, external_data_wb.max_row):
+						if row[0].value != None:
+							share_date = row[1].value
+							nama = row[2].value
+							nomor_telepon = row[3].value
+							email = row[4].value
+							phone_no = str(row[3].value)
+							if phone_no != None and phone_no != '':
+								phone_no = str(row[3].value).strip()
+								phone_no = phone_no.replace('-', '')
+
+								phone_no = phone_no.encode('ascii', 'ignore').decode("utf-8")
+
+								if len(phone_no) > 0:
+									if phone_no[0] == '8':
+										phone_no = '62' + phone_no
+
+
+							print(nama, nomor_telepon, email)
+							existing_client = Client.objects.filter(nama=nama, phone_no=phone_no, email=email).order_by('-id')[0]
+							existing_client.created_at = share_date.replace(tzinfo=jakarta_timezone)
+							existing_client.save()
+							print(existing_client)
+					
+					for row in leads_data_wb.iter_rows(2, leads_data_wb.max_row):
+						if row[0].value != None:
+							# print("Tanggal data diberikan: ", row[1].value)
+							# print("Nama: ", row[2].value)
+							# print("No Telepon: ", row[3].value)
+							# print("Email: ", row[4].value)
+							share_date = row[1].value
+							nama = row[2].value
+							nomor_telepon = row[3].value
+							email = row[4].value
+							phone_no = str(row[3].value)
+							if phone_no != None and phone_no != '':
+								phone_no = str(row[3].value).strip()
+								phone_no = phone_no.replace('-', '')
+
+								phone_no = phone_no.encode('ascii', 'ignore').decode("utf-8")
+
+								if len(phone_no) > 0:
+									if phone_no[0] == '8':
+										phone_no = '62' + phone_no
+
+							existing_client = Client.objects.filter(nama=nama, phone_no=phone_no, email=email).order_by('-id')[0]
+							existing_client.created_at = share_date.replace(tzinfo=jakarta_timezone)
+							existing_client.save()
+							print(existing_client)
+					
+					messages.success(request, 'Berhasil Impor Data.')
+					return redirect(reverse('client-share-date'))
 				else:
 					print(import_form.errors)
 					print(import_form.errors)
