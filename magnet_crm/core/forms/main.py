@@ -37,6 +37,10 @@ class ColorForm(ModelForm):
 		model = Client_Staff
 		fields = ['color']
 
+class ClientAjaxForm(forms.Form):
+	query = forms.CharField(required=False)
+	is_deposit = forms.CharField(required=False)
+	page = forms.CharField(required=False)
 
 class TreeForm(forms.ModelForm):
 	class Meta:

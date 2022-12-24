@@ -102,9 +102,9 @@ DATABASES = {
         # 'NAME': 'magnet_crm_db',
         # 'USER': 'aristo',
         # 'PASSWORD': '',
-        'NAME': 'magnet_crm',
-        'USER': 'magnet_user',
-        'PASSWORD': 'MagnetPassowrd2022',
+        'NAME': 'magnet_test_2',
+        'USER': 'ivan',
+        'PASSWORD': '',
 
 
         # 'HOST': '108.137.21.206',

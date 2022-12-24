@@ -69,6 +69,8 @@ urlpatterns = [
 
     path('client/sync', client_views.client_sync, name='client-sync'),
     
+    path('client_admin', client_views.admin_client_list, name='admin-client-list'),
+    path('client_admin/ajax', client_views.admin_client_list_ajax, name='admin-client-list-ajax'),
     path('client', client_views.client_list, name='client-list'),
     path('client/add', client_views.client_add, name='client-add'),
     path('client/<str:id_client>/edit', client_views.client_edit, name='client-edit'),
