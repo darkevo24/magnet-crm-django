@@ -806,9 +806,7 @@ def client_list(request):
 	
 	# messages.success(request, 'Profile details updated.')
 	context = {
-		'client_obj': client_obj,
 		'client_staff_list': client_staff_list,
-		'client_staff_obj': client_staff_obj,	
 		'form_color' : form_color,
 		'menu':'client',
 		'client_color':client_color,

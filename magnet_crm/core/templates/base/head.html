@@ -451,12 +451,26 @@
 						</li>
 						
 						<li class="nav-item {% if menu == 'client' %} active {% endif %}">
+							{% with request.user|full_menu as is_privilage %}
+							{% with request.user|is_admin as is_low_admin %} 
+							{% if is_privilage %}
+							<a href="{% url 'admin-client-list' %}" class="nav-link {% if menu == 'client' %} inverted-border-radius {% endif %} ">
+								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-client.png' %}">
+								<span>
+									Client
+								</span>
+							</a>
+							
+							{% else %}
 							<a href="{% url 'client-list' %}" class="nav-link {% if menu == 'client' %} inverted-border-radius {% endif %} ">
 								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-client.png' %}">
 								<span>
 									Client
 								</span>
 							</a>
+							{% endif %}
+							{% endwith %}
+							{% endwith %}
 						</li>
 						
 						<li class="nav-item {% if menu == 'client_feedback' %} active {% endif %}">
