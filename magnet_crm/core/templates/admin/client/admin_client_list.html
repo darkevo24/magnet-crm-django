@@ -29,19 +29,11 @@
 		</div>
 
 		<div class="card-body">
-			
+			{% csrf_token %}"
 			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
 			<div class="btn-group mr-lg-3 mb-3">
 				<a href="{% url 'client-add' %}"><button type="button" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Client</span></button></a>
 				<a href="{% url 'client-sync' %}"><button type="button" class="btn btn-light ml-2"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">SYNC Client</span></button></a>
-				<form method="POST" id="search-form">
-					{% csrf_token %}
-					{{ client_ajax_form.query.as_hidden }}
-					{{ client_ajax_form.is_deposit.as_hidden }}
-					{{ client_ajax_form.page.as_hidden }}
-
-				</form>
-
 			</div>
 			<div class="row ">
 				
@@ -62,82 +54,22 @@
 					<!-- Tab panes -->
 					<div class="tab-content">
 					   <div class="tab-pane active" id="home">
-					   		<div class="row">
-					   			<div class="col-4">
-					   				<input id="followup_search_query" name="" class="form-control" placeholder="Ketik disini">
-					   			</div>
-					   			<div class="col-3">
-					   				<button class="btn btn-warning" id="followup_search_btn">
-					   					Search
-					   				</button>
-					   			</div>
-					   		</div>
-
-					  		<table class="table" id="table-main" width="100%">
+					  		<table class="stripe table row-border order-column" id="table-main" width="100%">
                                 <thead>
                                     <tr>
-                                        <th scope="col">No</th>
                                         <th scope="col">Nama</th>
-                                        <th scope="col">No. Telepon</th>
+                                        <th scope="col">Shared Date</th>
+                                        <th scope="col">Register Date</th>
                                         <th scope="col">Email</th>
-                                        <th scope="col">Registered Date</th>
+                                        <th scope="col">No. Telepon</th>
                                         <th scope="col">Source</th>
                                         <th scope="col">Medium</th>
-                                        <th scope="col">Campaign</th>
-                                        <th scope="col">Aksi</th>
+                                  		<th scope="col">Campaign</th>
+                                  		<th scope="col">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for client in followup_client_obj %}
-                                        <tr>
-                                            <td scope="row">{{forloop.counter}}</td>
-                                            <td scope="row">{{client.nama|default:"-"}}</td>
-                                            <td scope="row">{{client.phone_no|default:"-"}}</td>
-                                            <td scope="row">{{client.email|default:"-"}}</td>
-                                            <td scope="row">{{client.magnet_created_at|date:"d-m-Y H:i"|default:'-'}}</td>
-                                            <td scope="row">{% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
-                                                        {{client.get_source_detail_2_display}} 
-                                                    {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
-                                                        {{client.get_source_detail_1_display}} 
-                                                    {% else %}
-                                                        {{client.get_source_display|default:'-'}}
-                                                    {% endif %}     </td>
-                                            <td scope="row">{{client.medium|default:"-"}}</td>
-                                            <td scope="row">{{client.campaign|default:"-"}}</td>
-                                            <td scope="row">
-                                                <div class="list-icons">
-                                                    <div class="dropdown">
-                                                        <a href="#" class="list-icons-item" data-toggle="dropdown">
-                                                            <i class="icon-menu9" style="font-size: 1.8em"></i>
-                                                        </a>
-                                                        <div class="dropdown-menu dropdown-menu-right">
-                                                            <a href="{% url 'client-detail-list' client.id  %}" class="dropdown-item">
-                                                                <i class="icon-file-eye"></i> Client Detail
-                                                            </a>
-                                                            {% if not own_user %}
-                                                            <a href="{% url 'client-edit' client.id  %}" class="dropdown-item">
-                                                                <i class="fas fa-edit"></i> Client Edit
-                                                            </a>
-                                                            {% endif %}
-
-                                                            <a href="{% url 'client-schedule-list' client.id  %}" class="dropdown-item">
-                                                                <i class="fas fa-calendar-alt"></i> List Schedule
-                                                            </a>
-                                                            {% if own_user %}
-                                                                <a href="{% url 'client-schedule-add' client.id  %}" class="dropdown-item">
-                                                                    <i class="fas fa-calendar-plus"></i> Add Schedule
-                                                                </a>
-                                                            
-                                                                <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
-                                                                <span  class="dropdown-item" onclick="set_hot({{client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Hot Client</span>
-                                                            {% endif %}
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                          </td>
-                                        </tr>
-                                    {% endfor %}
+                                   
                                 </tbody>
                             </table>
 					  </div>
@@ -147,75 +79,18 @@
                               <thead>
                                 <tr>
                                   
-                                  <th scope="col"></th>
-                                  <th scope="col">Nama</th>
-                                  <th scope="col">No. Telepon</th>
-                                  <th scope="col">Email</th>
-                                  <th scope="col">Registered Date</th>
-                                  <th scope="col">Source</th>
-                                  <th scope="col">Medium</th>
-                                  <th scope="col">Campaign</th>
-                                  <th scope="col">Aksi</th>
+                                 	<th scope="col">Nama</th>
+                                    <th scope="col">Shared Date</th>
+                                    <th scope="col">Register Date</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">No. Telepon</th>
+                                    <th scope="col">Source</th>
+                                    <th scope="col">Medium</th>
+                              		<th scope="col">Campaign</th>
+                              		<th scope="col">Aksi</th>
                                 </tr>
                               </thead>
                               <tbody>
-                                
-                                    {% for client in client_obj %}
-                                        <tr>
-                                          <td scope="row" hidden>{{client_color_text|dict_get:client.id}}</td>
-                                          <td scope="row">{{client.nama|default:"-"}}</td>
-                                          <td scope="row">{{client.phone_no|default:"-"}}</td>
-                                          <td scope="row">{{client.email|default:"-"}}</td>
-                                          <td scope="row">{{client.magnet_created_at|date:"d-m-Y H:i"|default:'-'}}</td>
-                                          <td scope="row">{% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
-                                                        {{client.get_source_detail_2_display}} 
-                                                    {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
-                                                        {{client.get_source_detail_1_display}} 
-                                                    {% else %}
-                                                        {{client.get_source_display|default:'-'}}
-                                                    {% endif %}     </td>
-                                          <td scope="row">{{client.medium|default:"-"}}</td>
-                                          <td scope="row">{{client.campaign|default:"-"}}</td>
-                                          <td scope="row">
-                                              
-                                              <div class="list-icons">
-                                                    <div class="dropdown">
-                                                        <a href="#" class="list-icons-item" data-toggle="dropdown">
-                                                            <i class="icon-menu9" style="font-size: 1.8em"></i>
-                                                        </a>
-
-                                                        <div class="dropdown-menu dropdown-menu-right">
-                                                            <a href="{% url 'client-detail-list' client.id  %}" class="dropdown-item">
-                                                                <i class="icon-file-eye"></i> Client Detail
-                                                            </a>
-                                                            {% if not own_user %}
-                                                            <a href="{% url 'client-edit' client.id  %}" class="dropdown-item">
-                                                                <i class="fas fa-edit"></i> Client Edit
-                                                            </a>
-                                                            {% endif %}
-
-                                                            <a href="{% url 'client-schedule-list' client.id  %}" class="dropdown-item">
-                                                                <i class="fas fa-calendar-alt"></i> List Schedule
-                                                            </a>
-                                                            {% if own_user %}
-                                                                <a href="{% url 'client-schedule-add' client.id  %}" class="dropdown-item">
-                                                                    <i class="fas fa-calendar-plus"></i> Add Schedule
-                                                                </a>
-                                                            
-                                                                <span data-toggle="modal" data-target="#modal_mini" class="dropdown-item change-color-button" data-client_id="{{client.id}}"><i class="icon-pencil7"></i>Edit Color</span>
-                                                                <span  class="dropdown-item" onclick="set_hot({{client_staff.client.id}},{% if client_staff.is_hot %}'false' {% else %} 'true' {% endif %})"><i class="icon-pencil7"></i>Hot Client</span>
-                                                            {% endif %}
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                          </td>
-                                          
-                                        </tr>
-                                    {% endfor %}
-                                
-                                
-                                
                               </tbody>
                             </table>
 
@@ -263,102 +138,145 @@
 </div>
 <!-- /mini modal -->
 <script type="text/javascript">
+	function SetupColumnSearch(table, columnTitles) {
+	    /* Setup column-level search input fields. */
+	    $(table.table().header()).find('th').each( function () {
+	        var title = $(this).text();
+	        console.log('title', title);
+	        if (columnTitles.indexOf(title) > -1)
+	            $(this).html( '<input type="text" placeholder="'+title+'" class="column_search" oninput="stopPropagation(event)" onclick="stopPropagation(event);"/>' );
+	    } );
+
+	    /* Setup column-level searches on enter key only. */
+	    table.columns().every( function () {
+	        var column = this;
+	        $( 'input.column_search', this.header() ).on( 'keyup', function (e) {
+	            /* Ignore all keyup events except for return keys */
+	            if(e.type === 'keyup' && e.keyCode !== 10 && e.keyCode !== 13) return;
+
+	            /* Avoid a DataTables bug where invisible columns show up */
+	            if (column.visible()) {
+	                table.column( column.index() ).search( this.value ).draw();
+	            }
+	        } );
+	    } );
+	}
+	function stopPropagation(evt) {
+	    if (evt.stopPropagation !== undefined) {
+	        evt.preventDefault();
+	        evt.stopPropagation();
+	    } else {
+	        evt.cancelBubble = true;
+	    }
+	}
 	$(function() {
+		var data_followup_ajax = [];
+		data_followup_ajax['page'] = 1
+		data_followup_ajax['query'] = ''
+		data_followup_ajax['csrfmiddlewaretoken'] = $("input[name=csrfmiddlewaretoken]").val();;
+        var tableMainDataTable = $("#table-main").DataTable({
+            dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+            language: {
+                search: '<span>Search:</span> _INPUT_',
+                searchPlaceholder: 'Type to search...',
+                lengthMenu: '<span>Show:</span> _MENU_',
+            },
+            scrollX: true,
+            // scrollY: '350px',
+           
+            "pageLength": 100,
+            "lengthChange": false,
+	        serverSide: true,
+	        sAjaxSource: "{% url 'admin-client-server-side' %}",
+	        
+	        columns: [
+               	{name: "nama", data: 0},
+               	{name: "created_at", data: 1},
+               	{name: "magnet_created_at", data: 2},
+	            {name: "email", data: 3},
+	            {name: "phone_np", data: 4},
+	            {name: "source_detail_2", data: 5},
+	            {name: "medium", data: 6},
+	            {name: "campaign", data: 7},
+	            {
+	            	name: "aksi", 
+	            	data: 8, 
+	            	render: function ( data, type, row ) {
+					    return data;
+					}
+	            },
+            ],
+            fixedColumns: {
+                leftColumns: 1,
+                // rightColumns: 1
+            }
+        });
+        SetupColumnSearch(tableMainDataTable, ["Source",]);
+        var tableMain2DataTable = $("#table-main-2").DataTable({
+            dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+            language: {
+                search: '<span>Search:</span> _INPUT_',
+                searchPlaceholder: 'Type to search...',
+                lengthMenu: '<span>Show:</span> _MENU_',
+            },
+            scrollX: true,
+            // scrollY: '350px',
+            scrollCollapse: true,
+            "pageLength": 100,
+            "lengthChange": false,
+            serverSide: true,
+	        sAjaxSource: "{% url 'admin-deposit-client-server-side' %}",
+	        
+	        columns: [
+               	{name: "nama", data: 0},
+               	{name: "created_at", data: 1},
+               	{name: "magnet_created_at", data: 2},
+	            {name: "email", data: 3},
+	            {name: "phone_np", data: 4},
+	            {name: "source_detail_2", data: 5},
+	            {name: "medium", data: 6},
+	            {name: "campaign", data: 7},
+	            {
+	            	name: "aksi", 
+	            	data: 8, 
+	            	render: function ( data, type, row ) {
+					    return data;
+					}
+	            },
+            ],
+            fixedColumns: {
+                leftColumns: 1,
+                // rightColumns: 1
+            }
 
-		function submit_form() {
-			$.ajax({
-                url: "{% url 'admin-client-list' %}",
-                type: 'POST',
-                data: {
-                    csrfmiddlewaretoken: $("[name='csrfmiddlewaretoken']").val();,
-                    staff_uid: current_staff,
-                },
-                error: function() {
-                    console.log("error")
-                },
-                success: function(res) {
-                    // print(res)
 
-                    console.log(res)
-                    if (res.client_list.length != 0){
+        });
 
-                        
-                        secondaryTable.clear()
-                        $.each(res.client_list, function( index, value ) {
-
-                            if (current_staff in dict_changes){
-                                dict_changes[current_staff].push(value.id)
-                            }
-                            else{
-                                dict_changes[current_staff] = []
-                                dict_changes[current_staff].push(value.id)
-                            }    
-                            dict_all_client[value.id] = value.name
-                            dict_all_staff[value.id] = value.name
-                            // mainTable.row.add([counter + '.1', counter + '.2', counter + '.3']).draw(false);
-                            secondaryTable.row.add([null, value.id,index+1, value.name, value.is_registered, value.phone_no, value.email]).draw(false);
-                        });
-                        secondaryTable.rows().select();
-                        
-
-                        if (first_load_ajax == 0 ){
-                            first_load_ajax = 1
-                            dict_first_staff_data = dict_changes[current_staff].slice();
-                        }   
-
-                    }
-                    update_info();
-
-                }
-            });
-		}
-		$('#followup_search_btn').click(function(){
-			let followup_query = $('#followup_search_query').val();
-			$('#id_query').val(followup_query);
-			$('#is_deposit').val('true');
-			console.log('submit');
-			$('#search-form').submit();
+        SetupColumnSearch(tableMain2DataTable, ["Source",]);
+		$(".table-row").click(function() {
+		 	var link = $(this).data('href');
+		 	window.location.href = link;
 		});
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+            if (e.target.hash == '#home') {
+                console.log('home');
+                tableMainDataTable.columns.adjust().draw()
+            }
+            if (e.target.hash == '#menu1') {
+                console.log('menu1');
+                tableMain2DataTable.columns.adjust().draw()
+            }
+        })
+
+
 	});
-    //     var tableMain2DataTable = $("#table-main-2").DataTable({
-    //         dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
-    //         language: {
-    //             search: '<span>Search:</span> _INPUT_',
-    //             searchPlaceholder: 'Type to search...',
-    //             lengthMenu: '<span>Show:</span> _MENU_',
-    //         },
-    //         scrollX: true,
-    //         // scrollY: '350px',
-    //         scrollCollapse: true,
-    //         "pageLength": 100,
-    //         "lengthChange": false,
-    //         fixedColumns: {
-    //             leftColumns: 3,
-    //             // rightColumns: 1
-    //         }
-    //     });
 
-
-	// 	$(".table-row").click(function() {
-	// 	 	var link = $(this).data('href');
-	// 	 	window.location.href = link;
-	// 	});
-
-    //     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-    //         if (e.target.hash == '#menu1') {
-    //             console.log('menu1');
-    //             tableMain2DataTable.columns.adjust().draw()
-    //         }
-    //     })
-
-
-	// });
-
-	// $("#search_input").on("keyup", function() {
-	// 	  var value = this.value.toLowerCase().trim();
-	// 	  $(".media-list li").show().filter(function() {
-	// 	    return $(this).text().toLowerCase().trim().indexOf(value) == -1;
-	// 	  }).hide();
-	// 	});
+	$("#search_input").on("keyup", function() {
+		  var value = this.value.toLowerCase().trim();
+		  $(".media-list li").show().filter(function() {
+		    return $(this).text().toLowerCase().trim().indexOf(value) == -1;
+		  }).hide();
+		});
 </script>
 {% endblock content %}

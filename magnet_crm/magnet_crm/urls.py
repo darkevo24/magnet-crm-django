@@ -21,6 +21,7 @@ from magnet_crm.views_ex import (
 )
 from staff import views as staff_views
 from client import views as client_views
+from client.views import ClientListView, DepositClientListView
 from core import views as core_views
 from notification import views as notification_views
 from django.conf.urls.static import static
@@ -70,6 +71,8 @@ urlpatterns = [
     path('client/sync', client_views.client_sync, name='client-sync'),
     
     path('client_admin', client_views.admin_client_list, name='admin-client-list'),
+    path('client_admin/data_table/serverside', ClientListView.as_view(), name='admin-client-server-side'),
+    path('client_admin/data_table/deposit/client/serverside', DepositClientListView.as_view(), name='admin-deposit-client-server-side'),
     path('client_admin/ajax', client_views.admin_client_list_ajax, name='admin-client-list-ajax'),
     path('client', client_views.client_list, name='client-list'),
     path('client/add', client_views.client_add, name='client-add'),
