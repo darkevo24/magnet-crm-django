@@ -29,10 +29,19 @@
 		</div>
 
 		<div class="card-body">
+			
 			<!-- <p class="mb-4">Table dibawah ini berupa list seluruh unit dari organization JADDI</p> -->
 			<div class="btn-group mr-lg-3 mb-3">
 				<a href="{% url 'client-add' %}"><button type="button" class="btn btn-light"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">Add Client</span></button></a>
 				<a href="{% url 'client-sync' %}"><button type="button" class="btn btn-light ml-2"><i class="icon-diff-added"></i> <span class="d-none d-lg-inline-block ml-2">SYNC Client</span></button></a>
+				<form method="POST" id="search-form">
+					{% csrf_token %}
+					{{ client_ajax_form.query.as_hidden }}
+					{{ client_ajax_form.is_deposit.as_hidden }}
+					{{ client_ajax_form.page.as_hidden }}
+
+				</form>
+
 			</div>
 			<div class="row ">
 				
@@ -52,51 +61,55 @@
 
 					<!-- Tab panes -->
 					<div class="tab-content">
-					  <div class="tab-pane active" id="home">
-					  		<table class="stripe table row-border order-column" id="table-main" width="100%">
-                              <thead>
-                                <tr>
-                                  
-                                  <th scope="col"></th>
-                                  <th scope="col" hidden>Warna</th>
-                                  <th scope="col">Nama</th>
-                                  <th scope="col">No. Telepon</th>
-                                  <th scope="col">Email</th>
-                                  <th scope="col">Registered Date</th>
-                                  <th scope="col">Source</th>
-                                  <th scope="col">Medium</th>
-                                  <th scope="col">Campaign</th>
-                                  <th scope="col">Aksi</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                
-                                    {% for client in client_list %}
-                                        {% if not client.is_deposit %}
+					   <div class="tab-pane active" id="home">
+					   		<div class="row">
+					   			<div class="col-4">
+					   				<input id="followup_search_query" name="" class="form-control" placeholder="Ketik disini">
+					   			</div>
+					   			<div class="col-3">
+					   				<button class="btn btn-warning" id="followup_search_btn">
+					   					Search
+					   				</button>
+					   			</div>
+					   		</div>
+
+					  		<table class="table" id="table-main" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Nama</th>
+                                        <th scope="col">No. Telepon</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Registered Date</th>
+                                        <th scope="col">Source</th>
+                                        <th scope="col">Medium</th>
+                                        <th scope="col">Campaign</th>
+                                        <th scope="col">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for client in followup_client_obj %}
                                         <tr>
-                                          
-                                          <td scope="row"><i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="icon-circle2 mr-1"></i></td>
-                                          <td scope="row" hidden>{{client_color_text|dict_get:client.id}}</td>
-                                          <td scope="row">{{client.nama|default:"-"}}</td>
-                                          <td scope="row">{{client.phone_no|default:"-"}}</td>
-                                          <td scope="row">{{client.email|default:"-"}}</td>
-                                          <td scope="row">{{client.magnet_created_at|date:"d-m-Y H:i"|default:'-'}}</td>
-                                          <td scope="row">{% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
+                                            <td scope="row">{{forloop.counter}}</td>
+                                            <td scope="row">{{client.nama|default:"-"}}</td>
+                                            <td scope="row">{{client.phone_no|default:"-"}}</td>
+                                            <td scope="row">{{client.email|default:"-"}}</td>
+                                            <td scope="row">{{client.magnet_created_at|date:"d-m-Y H:i"|default:'-'}}</td>
+                                            <td scope="row">{% if client.source_detail_2 is not None and client.source_detail_2 != '' %}
                                                         {{client.get_source_detail_2_display}} 
                                                     {% elif client.source_detail_1 is not None and client.source_detail_1 != '' %}
                                                         {{client.get_source_detail_1_display}} 
                                                     {% else %}
                                                         {{client.get_source_display|default:'-'}}
                                                     {% endif %}     </td>
-                                          <td scope="row">{{client.medium|default:"-"}}</td>
-                                          <td scope="row">{{client.campaign|default:"-"}}</td>
-                                          <td scope="row">
-                                              <div class="list-icons">
+                                            <td scope="row">{{client.medium|default:"-"}}</td>
+                                            <td scope="row">{{client.campaign|default:"-"}}</td>
+                                            <td scope="row">
+                                                <div class="list-icons">
                                                     <div class="dropdown">
                                                         <a href="#" class="list-icons-item" data-toggle="dropdown">
                                                             <i class="icon-menu9" style="font-size: 1.8em"></i>
                                                         </a>
-
                                                         <div class="dropdown-menu dropdown-menu-right">
                                                             <a href="{% url 'client-detail-list' client.id  %}" class="dropdown-item">
                                                                 <i class="icon-file-eye"></i> Client Detail
@@ -123,23 +136,10 @@
                                                     </div>
                                                 </div>
                                           </td>
-                                          
                                         </tr>
-                                        {% endif %}
                                     {% endfor %}
-                                
-                                
-                                
-                              </tbody>
+                                </tbody>
                             </table>
-
-					  		
-                        </ul>
-		
-
-					  		<!-- start end -->
-
-
 					  </div>
 					  <div class="tab-pane fade" id="menu1">
 
@@ -148,7 +148,6 @@
                                 <tr>
                                   
                                   <th scope="col"></th>
-                                  <th scope="col" hidden>Warna</th>
                                   <th scope="col">Nama</th>
                                   <th scope="col">No. Telepon</th>
                                   <th scope="col">Email</th>
@@ -161,11 +160,8 @@
                               </thead>
                               <tbody>
                                 
-                                    {% for client in client_list %}
-                                        {% if client.is_deposit %}
+                                    {% for client in client_obj %}
                                         <tr>
-                                          
-                                          <td scope="row"><i style="display: inline-block;color: #{{client_color|dict_get:client.id}}" class="icon-circle2 mr-1"></i></td>
                                           <td scope="row" hidden>{{client_color_text|dict_get:client.id}}</td>
                                           <td scope="row">{{client.nama|default:"-"}}</td>
                                           <td scope="row">{{client.phone_no|default:"-"}}</td>
@@ -216,7 +212,6 @@
                                           </td>
                                           
                                         </tr>
-                                        {% endif %}
                                     {% endfor %}
                                 
                                 
@@ -270,63 +265,100 @@
 <script type="text/javascript">
 	$(function() {
 
-        var tableMainDataTable = $("#table-main").DataTable({
-            dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
-            language: {
-                search: '<span>Search:</span> _INPUT_',
-                searchPlaceholder: 'Type to search...',
-                lengthMenu: '<span>Show:</span> _MENU_',
-            },
-            scrollX: true,
-            // scrollY: '350px',
-            scrollCollapse: true,
-            fixedColumns: {
-                leftColumns: 3,
-                // rightColumns: 1
-            }
-        });
+		function submit_form() {
+			$.ajax({
+                url: "{% url 'admin-client-list' %}",
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: $("[name='csrfmiddlewaretoken']").val();,
+                    staff_uid: current_staff,
+                },
+                error: function() {
+                    console.log("error")
+                },
+                success: function(res) {
+                    // print(res)
 
-        var tableMain2DataTable = $("#table-main-2").DataTable({
-            dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
-            language: {
-                search: '<span>Search:</span> _INPUT_',
-                searchPlaceholder: 'Type to search...',
-                lengthMenu: '<span>Show:</span> _MENU_',
-            },
-            scrollX: true,
-            // scrollY: '350px',
-            scrollCollapse: true,
-            fixedColumns: {
-                leftColumns: 3,
-                // rightColumns: 1
-            }
-        });
+                    console.log(res)
+                    if (res.client_list.length != 0){
 
+                        
+                        secondaryTable.clear()
+                        $.each(res.client_list, function( index, value ) {
 
-		$(".table-row").click(function() {
-		 	var link = $(this).data('href');
-		 	window.location.href = link;
+                            if (current_staff in dict_changes){
+                                dict_changes[current_staff].push(value.id)
+                            }
+                            else{
+                                dict_changes[current_staff] = []
+                                dict_changes[current_staff].push(value.id)
+                            }    
+                            dict_all_client[value.id] = value.name
+                            dict_all_staff[value.id] = value.name
+                            // mainTable.row.add([counter + '.1', counter + '.2', counter + '.3']).draw(false);
+                            secondaryTable.row.add([null, value.id,index+1, value.name, value.is_registered, value.phone_no, value.email]).draw(false);
+                        });
+                        secondaryTable.rows().select();
+                        
+
+                        if (first_load_ajax == 0 ){
+                            first_load_ajax = 1
+                            dict_first_staff_data = dict_changes[current_staff].slice();
+                        }   
+
+                    }
+                    update_info();
+
+                }
+            });
+		}
+		$('#followup_search_btn').click(function(){
+			let followup_query = $('#followup_search_query').val();
+			$('#id_query').val(followup_query);
+			$('#is_deposit').val('true');
+			console.log('submit');
+			$('#search-form').submit();
 		});
-
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-            if (e.target.hash == '#home') {
-                console.log('home');
-                tableMainDataTable.columns.adjust().draw()
-            }
-            if (e.target.hash == '#menu1') {
-                console.log('menu1');
-                tableMain2DataTable.columns.adjust().draw()
-            }
-        })
-
-
 	});
+    //     var tableMain2DataTable = $("#table-main-2").DataTable({
+    //         dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+    //         language: {
+    //             search: '<span>Search:</span> _INPUT_',
+    //             searchPlaceholder: 'Type to search...',
+    //             lengthMenu: '<span>Show:</span> _MENU_',
+    //         },
+    //         scrollX: true,
+    //         // scrollY: '350px',
+    //         scrollCollapse: true,
+    //         "pageLength": 100,
+    //         "lengthChange": false,
+    //         fixedColumns: {
+    //             leftColumns: 3,
+    //             // rightColumns: 1
+    //         }
+    //     });
 
-	$("#search_input").on("keyup", function() {
-		  var value = this.value.toLowerCase().trim();
-		  $(".media-list li").show().filter(function() {
-		    return $(this).text().toLowerCase().trim().indexOf(value) == -1;
-		  }).hide();
-		});
+
+	// 	$(".table-row").click(function() {
+	// 	 	var link = $(this).data('href');
+	// 	 	window.location.href = link;
+	// 	});
+
+    //     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+    //         if (e.target.hash == '#menu1') {
+    //             console.log('menu1');
+    //             tableMain2DataTable.columns.adjust().draw()
+    //         }
+    //     })
+
+
+	// });
+
+	// $("#search_input").on("keyup", function() {
+	// 	  var value = this.value.toLowerCase().trim();
+	// 	  $(".media-list li").show().filter(function() {
+	// 	    return $(this).text().toLowerCase().trim().indexOf(value) == -1;
+	// 	  }).hide();
+	// 	});
 </script>
 {% endblock content %}

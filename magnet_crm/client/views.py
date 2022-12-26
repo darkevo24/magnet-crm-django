@@ -9,6 +9,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from client.forms import *
 from django.db import IntegrityError, transaction
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 from datetime import datetime
 from django.utils import timezone
@@ -28,6 +29,8 @@ import openpyxl
 from io import StringIO
 from decimal import *
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+
 
 CLEANR = re.compile('<.*?>') 
 
@@ -656,8 +659,98 @@ def client_suspect_detail(request,id_client_sus):
 def client_sync(request):
 	sync_data_magnet()
 	# check_user_deposit()
-	
+	 
 	return redirect(reverse('client-list'))
+@login_required
+def admin_client_list_ajax(request):
+	followup_page = request.GET.get('page') or 1
+	followup_client_list = Client.objects.filter(is_active=True, is_suspect=False, is_deposit=False).order_by("-created_at")
+	followup_client_list_count = followup_client_list.count()
+
+	followup_paginator = Paginator(followup_client_list, 100) # Show 25 contacts per page.
+	followup_page_number = int(followup_page)
+	followup_client_obj = followup_paginator.get_page(followup_client_list)
+	response_data = {}
+	response_data['recordsTotal'] = followup_client_list_count
+	response_data['data'] = []
+	counter = 1
+	for followup_client in followup_client_obj:
+		temp = {}
+		temp['id'] = followup_client.id
+		temp['no'] = counter
+		temp['nama'] = followup_client.nama
+		temp['nomor_telepon'] = followup_client.phone_no
+		temp['email'] = followup_client.email
+		temp['registered_date'] = str(followup_client.created_at)
+		temp['source'] = followup_client.source
+		temp['medium'] = followup_client.medium
+		temp['campaign'] = followup_client.campaign
+		temp['action'] = 'aksi'
+		response_data['data'].append(temp)
+	
+	return JsonResponse(response_data)
+@login_required
+def admin_client_list(request):
+	template = 'admin/client/admin_client_list.html'
+	client_ajax_form = ClientAjaxForm(request.POST or None)
+	client_color = {}
+	client_color_text = {}
+
+	followup_client_list = Client.objects.filter(is_active=True, is_suspect=False, is_deposit=False).order_by("-created_at")
+	followup_client_list_count = followup_client_list.count()
+
+	followup_paginator = Paginator(followup_client_list, 100) # Show 25 contacts per page.
+	followup_page = request.GET.get('page') or 1
+	followup_max_page = followup_paginator.num_pages
+	followup_page_number = int(followup_page)
+	followup_client_obj = followup_paginator.get_page(followup_client_list)
+
+
+	if request.POST:
+		print('masuk ajax')
+		if client_ajax_form.is_valid():
+			print('form ajax valid')
+			query = client_ajax_form.cleaned_data['query']
+			followup_page = client_ajax_form.cleaned_data['page'] or 1
+
+			if query == '' and query == None:
+				followup_client_list = Client.objects.filter(is_active=True, is_suspect=False, is_deposit=False).order_by("-created_at")
+				followup_client_list_count = followup_client_list.count()
+			else:
+				followup_client_list = Client.objects.filter(is_active=True, is_suspect=False, is_deposit=False).order_by("-created_at")
+				followup_paginator = Paginator(followup_client_list, 100) # Show 25 contacts per page.
+				followup_page_number = int(followup_page)
+				followup_client_obj = followup_paginator.get_page(followup_client_list)
+				response_data = {}
+				response_data['recordsTotal'] = followup_client_list_count
+				response_data['data'] = []
+				counter = 1
+				for followup_client in followup_client_obj:
+					temp = {}
+					temp['id'] = followup_client.id
+					temp['no'] = counter
+					temp['nama'] = followup_client.nama
+					temp['nomor_telepon'] = followup_client.phone_no
+					temp['email'] = followup_client.email
+					temp['registered_date'] = str(followup_client.created_at)
+					temp['source'] = followup_client.source
+					temp['medium'] = followup_client.medium
+					temp['campaign'] = followup_client.campaign
+					temp['action'] = 'aksi'
+					response_data['data'].append(temp)
+
+				return JsonResponse(response_data)
+	context = {
+		'client_ajax_form': client_ajax_form,
+		'followup_client_obj': followup_client_obj,
+		'followup_max_page': followup_max_page,
+
+		'menu':'client',
+		# 'staff_level':staff.staff_level.level,
+	}
+
+	return render(request,template,context=context)
+
 
 @login_required
 def client_list(request):
@@ -695,11 +788,12 @@ def client_list(request):
 		client_staff_list = Client_Staff.objects.none()
 
 	form_color = ColorForm(None)
-
+	
 	# messages.success(request, 'Profile details updated.')
 	context = {
-		'client_list': client_list,
+		'client_obj': client_obj,
 		'client_staff_list': client_staff_list,
+		'client_staff_obj': client_staff_obj,	
 		'form_color' : form_color,
 		'menu':'client',
 		'client_color':client_color,
