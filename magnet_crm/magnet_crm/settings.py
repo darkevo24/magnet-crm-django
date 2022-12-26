@@ -89,7 +89,7 @@ TEMPLATES = [
         },
     },
 ]
-asdx
+
 WSGI_APPLICATION = 'magnet_crm.wsgi.application'
 
 
