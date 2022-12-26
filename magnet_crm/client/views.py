@@ -30,6 +30,7 @@ from io import StringIO
 from decimal import *
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from core.datatable.server_side_datatable_view import ServerSideDatatableView
 
 
 CLEANR = re.compile('<.*?>') 
@@ -661,6 +662,20 @@ def client_sync(request):
 	# check_user_deposit()
 	 
 	return redirect(reverse('client-list'))
+
+class ClientListView(ServerSideDatatableView):
+	print('_____')
+	queryset = Client.objects.filter(is_active=True, is_suspect=False, is_deposit=False).order_by('-created_at')
+
+	print(queryset)
+	columns = ['nama', 'created_at', 'magnet_created_at', 'email', 'phone_no', 'source_detail_2', 'medium', 'campaign', 'id']
+
+class DepositClientListView(ServerSideDatatableView):
+	
+	queryset = Client.objects.filter(is_active=True, is_suspect=False, is_deposit=True).order_by('-created_at')
+	columns = ['nama', 'created_at', 'magnet_created_at', 'email', 'phone_no', 'source_detail_2', 'medium', 'campaign', 'id']
+
+
 @login_required
 def admin_client_list_ajax(request):
 	followup_page = request.GET.get('page') or 1
@@ -791,9 +806,7 @@ def client_list(request):
 	
 	# messages.success(request, 'Profile details updated.')
 	context = {
-		'client_obj': client_obj,
 		'client_staff_list': client_staff_list,
-		'client_staff_obj': client_staff_obj,	
 		'form_color' : form_color,
 		'menu':'client',
 		'client_color':client_color,
