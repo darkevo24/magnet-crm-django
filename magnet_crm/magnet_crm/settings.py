@@ -89,7 +89,7 @@ TEMPLATES = [
         },
     },
 ]
-
+asdx
 WSGI_APPLICATION = 'magnet_crm.wsgi.application'
 
 
@@ -102,9 +102,9 @@ DATABASES = {
         # 'NAME': 'magnet_crm_db',
         # 'USER': 'aristo',
         # 'PASSWORD': '',
-        'NAME': 'magnet_test_2',
-        'USER': 'ivan',
-        'PASSWORD': '',
+        'NAME': 'magnet_crm',
+        'USER': 'magnet_user',
+        'PASSWORD': 'MagnetPassowrd2022',
 
 
         # 'HOST': '108.137.21.206',
