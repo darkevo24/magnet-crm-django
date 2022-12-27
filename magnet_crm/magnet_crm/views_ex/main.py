@@ -143,10 +143,12 @@ def dashboard(request):
 	template = 'admin/core/dashboard.html'
 	
 
+	
+
 	form_color = ColorForm(None)
 	staff = Staff.objects.filter(profile__user=request.user).first()
 	client_staff_list = Client_Staff.objects.filter(staff=staff, is_active=True).prefetch_related('client')
-	print(client_staff_list.count(), '>>>')
+	
 	client_ids = []
 
 	client_list = Client.objects.filter(is_active=True,id__in=client_staff_list.values_list('client__id',flat=True)).order_by('-magnet_created_at')
@@ -175,12 +177,13 @@ def dashboard(request):
 	get_all_user = False
 	if request.user.is_superuser or staff.staff_level.level < 2:
 		get_all_user = True
-		print("masuk sini all user")
+		
 	
 
 	if get_all_user == True	:
-		total_client = Client.objects.filter(is_active=True).order_by("nama").count()
-		client_list = Client.objects.filter(is_active=True).order_by('-magnet_created_at')
+		total_client = Client.objects.filter(is_active=True, is_suspect=False).order_by("nama").count()
+		client_list = Client.objects.filter(is_active=True, is_suspect=False).order_by('-magnet_created_at')
+		template = 'admin/core/admin_dashboard.html'
 	else:
 		total_client = client_staff_list.count()
 

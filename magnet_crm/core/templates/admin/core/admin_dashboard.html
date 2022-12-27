@@ -1,0 +1,521 @@
+
+{% extends 'base/head.html' %}
+{% block content %}
+{% load static %}
+{% load core_extras %}
+<style type="text/css">
+    .icon_green{
+        background-color: #cbdfcd;
+        border-radius: 50%;
+    }
+    .gadget_green{
+        white-space: nowrap;background-color: #e8f5eb;border-radius: 10px;position: relative;   
+    }
+    .nav-tabs-highlight .nav-link.active{
+        background-color: green!important;
+        color: white!important;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+    .nav-tabs{
+        border-bottom: 2px solid green;
+        margin: 0;
+        padding: 0;
+    }
+    .nav-tabs-highlight .nav-link{
+        /*background-color: green!important;*/
+        /*color: !important;*/
+        border:1px solid green!important;
+        border-top-left-radius: 5px!important;
+        border-top-right-radius: 5px!important;
+        padding-top: 3px;
+        padding-bottom: 3px;
+        margin-right: 10px;
+    }
+    .nav-tabs-highlight .nav-link.active:before{
+        background-color:transparent!important;
+    }
+    .nav-tabs-highlight .nav-item:first-child {
+        margin-left: 20px;
+    }
+    .media{
+        border: 1px solid silver;
+        border-radius: 15px;
+        padding: 10px;
+    }
+
+    .tab-content{
+        border: 1px solid green;
+        padding: 10px;
+        padding-left: 15px;
+        padding-right: 20px;
+    }
+
+    div.dataTables_wrapper div.dataTables_scrollBody {
+      min-height: 300px!important;
+    }
+
+    .datatable-scroll-wrap{
+        min-height: 300px!important;;
+    }
+    .dataTables_scrollHeadInner{
+        width: 100%!important;
+    }
+
+</style>
+<script src="{% static 'limitless/global_assets/js/plugins/ui/fullcalendar/main.min.js' %}"></script>
+<div class="row">
+    <!-- Typeahead -->
+    <div class="card col-12">
+        <div class="card-header">
+            <h5 class="card-title">Dashboard</h5>
+        </div>
+        <div class="card-body">
+            <div class="row pb-3">
+                <div class="col-3 px-3">
+                    <div class="row" style="line-height: 1">
+                        <div class="col py-2 px-3 gadget_green" >
+                            <div style="display: inline-block;" class="mr-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_client|num_format}}</h1>
+                                <p class="mb-0">Total Client</p>
+                            </div>
+                            <div style="display: inline-grid;position: absolute;right: 20px">
+                                <img src="{% static 'magnet/images/icon_list.png' %}" style="height: 50px" class="icon_green">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 pr-3">
+                    <div class="row" style="line-height: 1">
+                        <div class="col py-2 px-3 gadget_green" >
+                            <div style="display: inline-block;" class="mr-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_followup|num_format}}</h1>
+                                <p class="mb-0">Total Followup</p>
+                            </div>
+                            <div style="display: inline-grid;position: absolute;right: 20px">
+                                <img src="{% static 'magnet/images/icon_list.png' %}" style="height: 50px" class="icon_green">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 pr-3">
+                    <div class="row" style="line-height: 1">
+                        <div class="col py-2 px-3 gadget_green" >
+                            <div style="display: inline-block;" class="mr-3">
+                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_feedback|num_format}}</h1>
+                                <p class="mb-0">Total Feedback</p>
+                            </div>
+                            <div style="display: inline-grid;position: absolute;right: 20px">
+                                <img src="{% static 'magnet/images/icon_list.png' %}" style="height: 50px" class="icon_green">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    {% if total_upcomming_followup > 0 %}
+                        <div class="row" style="line-height: 1">
+                            <div class="col py-2 px-3 gadget_green" style="background-color:#f5e0e1">
+                                <div style="display: inline-block;" class="mr-3">
+                                    <h1 class="p-0 m-0" style="color:red;font-size: 2.5em;line-height:1">{{total_upcomming_followup}}</h1>
+                                    <p class="mb-0">Upcomming Followup</p>
+                                </div>
+                                <div style="display: inline-grid;position: absolute;right: 20px">
+                                    <img src="{% static 'magnet/images/icon_list.png' %}" style="height: 50px;background-color: #f3c2c7!important" class="icon_green">
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="row" style="line-height: 1">
+                            <div class="col py-2 px-3 gadget_green" >
+                                <div style="display: inline-block;" class="mr-3">
+                                    <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_upcomming_followup}}</h1>
+                                    <p class="mb-0">Upcomming Followup</p>
+                                </div>
+                                <div style="display: inline-grid;position: absolute;right: 20px">
+                                    <img src="{% static 'magnet/images/icon_list.png' %}" style="height: 50px;" class="icon_green">
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    
+
+                    
+                </div>
+            </div>
+
+            <div class="row"> 
+                <div class="col-12">
+                    <ul class="nav nav-tabs nav-tabs-highlight">
+                        <li class="nav-item"><a href="#highlighted-justified-tab2" class="nav-link active" data-toggle="tab">Clients</a></li>
+                        <li id="calendar-tab" class="nav-item"><a href="#highlighted-justified-tab3" class="nav-link" data-toggle="tab">Callendar</a></li>
+                    </ul>
+
+                    <div class="tab-content" >
+                        <div class="tab-pane fade active show" id="highlighted-justified-tab2">
+                            <!-- <input type="text" id="search_input"  class="form-control mb-3" placeholder="Search Client"> -->
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" style="border:0" id="ul-tabs">
+                            	<li class="nav-item">
+                                	<a class="nav-link active" data-toggle="tab" href="#home">Data Followup</a>
+                              	</li>
+                              	<li class="nav-item">
+                                	<a class="nav-link" data-toggle="tab" href="#menu1" id='client-tab'>Client</a>
+                              	</li>
+                            </ul>
+                    		<div class="tab-content" style="border:0">
+                      			<div class="tab-pane active" id="home">
+                            
+                            		
+                           			<!-- USING TABLE -->
+
+                            		<table class="stripe table row-border order-column" id="table-main" width="100%">
+                              			<thead>
+                                			<tr>
+                                  				<th scope="col"></th>
+                                  				<th scope="col" hidden>Warna</th>
+                                  				<th scope="col">Nama</th>
+                                  				<th scope="col">No. Telepon</th>
+                                                <th scope="col">Share Date</th>
+                                                <th scope="col">Registered Date</th>
+                                  				<th scope="col">Email</th>
+                                  				<th scope="col">Source</th>
+                                  				<th scope="col">Aksi</th>
+                                			</tr>
+                              			</thead>
+                              			<tbody>
+                                
+                                    	
+                              			</tbody>
+                            		</table>
+
+                            		<!-- FINISH TABLE -->
+                           
+                      			</div>
+                       			<div class="tab-pane" id="menu1">
+                            
+                            		<!-- USING TABLE -->
+
+                            		<table class="stripe table row-border order-column" id="table-main-2" width="100%">
+                              			<thead>
+                                			<tr>
+                                  				<th scope="col"></th>
+                                  				<th scope="col" hidden>Warna</th>
+                                  				<th scope="col">Nama</th>
+                                  				<th scope="col">No. Telepon</th>
+                                  				<th scope="col">Email</th>
+                                                <th scope="col">Share Date</th>
+                                                <th scope="col">Registered Date</th>
+                                  				<th scope="col">Source</th>
+                                  				<th scope="col">Aksi</th>
+                                			</tr>
+                              			</thead>
+                              			<tbody>
+                                    	
+                              			</tbody>
+                            		</table>
+                      			</div>
+                    		</div>
+						</div>
+                        <div class="tab-pane" id="highlighted-justified-tab3">
+                            <div class="fullcalendar-basic">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /typeahead -->
+</div>
+<!-- Phone call modal -->
+<div id="call" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="card-img-actions d-inline-block mb-3">
+                    <script src="{% static 'limitless/global_assets/js/plugins/forms/inputs/duallistbox/duallistbox.min.js' %}"></script>
+                    <img class="rounded-circle" src="{% static 'limitless/global_assets/images/placeholders/placeholder.jpg' %}" width="160" height="160" alt="">
+                    <div class="card-img-actions-overlay card-img rounded-circle">
+                        <a href="#" class="btn btn-outline-white border-2 btn-icon rounded-pill">
+                            <i class="icon-question7"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <h6 class="font-weight-semibold mb-0">Nathan Jacobson</h6>
+                    <span class="d-block text-muted">Lead UX designer</span>
+                </div>
+
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item"><a href="#" class="btn btn-success btn-float rounded-pill"><i class="icon-phone2"></i></a></li>
+                    <li class="list-inline-item"><a href="#" class="btn btn-danger btn-float rounded-pill" data-dismiss="modal"><i class="icon-phone-slash"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+                    <!-- /phone call modal -->
+<div id="modal_mini" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-xs">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pick Color</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- <h6 class="font-weight-semibold">Text in a modal</h6> -->
+                <!-- <input type="color" class="form-control"  name="client-color" id="client-color"> -->
+                {{form_color.color|add_class:"form-control"}}
+            </div>
+
+            <div class="modal-focoloroter px-3 pb-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="color-button-save">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    
+
+
+    
+
+
+    $( document ).ready(function() {
+        console.log( "ready!" );
+
+
+       	var dataTableFollowup = $("#table-main").DataTable({
+            dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+            language: {
+                search: '<span>Search:</span> _INPUT_',
+                searchPlaceholder: 'Type to search...',
+                lengthMenu: '<span>Show:</span> _MENU_',
+            },
+            scrollX: true,
+            // scrollY: '400',
+            "pageLength": 100,
+            "lengthChange": false,
+            serverSide: true,
+            sAjaxSource: "{% url 'admin-client-server-side' %}",
+            
+            columns: [
+                {name: "nama", data: 0},
+                {name: "created_at", data: 1},
+                {name: "magnet_created_at", data: 2},
+                {name: "email", data: 3},
+                {name: "phone_np", data: 4},
+                {name: "source_detail_2", data: 5},
+                {name: "medium", data: 6},
+                {name: "campaign", data: 7},
+                {
+                    name: "aksi", 
+                    data: 8, 
+                    render: function ( data, type, row ) {
+                        return data;
+                    }
+                },
+            ],
+            fixedColumns: {
+                leftColumns: 1,
+                // rightColumns: 1
+            }
+        });
+
+       	dataTableFollowup.draw();
+        // $('.filter-checkbox').on('change', function(e){
+        //     var searchTerms = []
+        //     $.each($('.filter-checkbox'), function(i,elem){
+        //         if($(elem).prop('checked')){
+        //             searchTerms.push("^" + $(this).val() + "$")
+        //         }   
+        //     })
+        //     dataTableFollowup.column(1).search(searchTerms.join('|'), true, false, true).draw();
+        // });
+        var dataTableClient = $("#table-main-2").DataTable({
+            dom: '<"datatable-header"fl><"datatable-scroll datatable-scroll-wrap"t><"datatable-footer"ip>',
+            language: {
+                search: '<span>Search:</span> _INPUT_',
+                searchPlaceholder: 'Type to search...',
+                lengthMenu: '<span>Show:</span> _MENU_',
+            },
+            scrollX: true,
+            "pageLength": 100,
+            "lengthChange": false,
+            serverSide: true,
+            sAjaxSource: "{% url 'admin-deposit-client-server-side' %}",
+            
+            columns: [
+                {name: "nama", data: 0},
+                {name: "created_at", data: 1},
+                {name: "magnet_created_at", data: 2},
+                {name: "email", data: 3},
+                {name: "phone_np", data: 4},
+                {name: "source_detail_2", data: 5},
+                {name: "medium", data: 6},
+                {name: "campaign", data: 7},
+                {
+                    name: "aksi", 
+                    data: 8, 
+                    render: function ( data, type, row ) {
+                        return data;
+                    }
+                },
+            ],
+            fixedColumns: {
+                leftColumns: 1,
+                // rightColumns: 1
+            }
+        });
+        // $('.client-filter-checkbox').on('change', function(e){
+        //     console.log('checked')
+        //     var searchTerms = []
+        //     $.each($('.client-filter-checkbox'), function(i,elem){
+        //         if($(elem).prop('checked')){
+        //             console.log($(this).val())
+        //             searchTerms.push("^" + $(this).val() + "$")
+        //         }   
+        //     })
+        //     dataTableClient.column(1).search(searchTerms.join('|'), true, false, true).draw();
+        // });
+        $('#table-main-2').DataTable().draw();
+
+        events = {{client_schedule_list_json|safe}};
+        const calendarBasicViewElement = document.querySelector('.fullcalendar-basic');
+
+        // Initialize
+        
+        const calendarBasicViewInit = new FullCalendar.Calendar(calendarBasicViewElement, {
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            initialDate: '2020-09-12',
+            navLinks: true, // can click day/week names to navigate views
+            nowIndicator: true,
+            weekNumberCalculation: 'ISO',
+            editable: true,
+            selectable: true,
+            direction: document.dir == 'rtl' ? 'rtl' : 'ltr',
+            dayMaxEvents: true, // allow "more" link when too many events
+            events: events
+        });
+
+        // Init
+        // calendarBasicViewInit.render();
+
+        // Resize calendar when sidebar toggler is clicked
+        $('.sidebar-control').on('click', function() {
+            calendarBasicViewInit.updateSize();
+        });
+        var counter = 1;
+        $('#calendar-tab').click(function(){
+            console.log(123123);
+            const myTimeout = setTimeout(init_calendar, 1200);
+            // setTimeout("calendarBasicViewInit.render();", 1000);
+            // setTimeout(() => {calendarBasicViewInit.render()}, 1)
+        });
+
+        function init_calendar() {
+            calendarBasicViewInit.render();
+        }
+        var client_id = '';
+        $('.change-color-button').click(function(){
+            client_id = $(this).data('client_id');
+            console.log(client_id)
+
+        });
+        // $('#client-color').colorpicker();
+        $('#color-button-save').click(function(){
+            console.log(123);
+            var color_value = $('#id_color').val()
+            console.log(color_value,'color_value');
+            color_value = color_value.replace('#', '')
+            var string_color_url = "{% url 'client-edit-color' 0 '!99' %}";
+            string_color_url = string_color_url.replace(0, client_id)
+            string_color_url = string_color_url.replace('!99', color_value)
+            console.log(string_color_url);
+            window.location.href = string_color_url;
+
+        });
+        $('.call-button').click(function(){
+            var client_id = $(this).data('client_id');
+            var journey_type = $(this).data('journey_type');
+            console.log(client_id, journey_type)
+            submit_user_journey(client_id, journey_type)
+
+        });
+        $('.whatsapp-button').click(function(){
+            var client_id = $(this).data('client_id');
+            var journey_type = $(this).data('journey_type');
+            
+            submit_user_journey(client_id, journey_type)
+
+        });
+        $('.feedback-button').click(function(){
+            var client_id = $(this).data('client_id');
+            var journey_type = $(this).data('whatsapp');
+            
+
+        });
+        function submit_user_journey(client_id, journey_type)
+        {
+            var string_url = "{% url 'client-journey-add' 0 'default' %}"
+            string_url = string_url.replace('0', client_id)
+            string_url = string_url.replace('default', journey_type)
+            console.log(string_url)
+            $.ajax({
+                url: string_url,
+                type: 'get',
+                // dataType: 'json',
+                // data: {
+                //     csrfmiddlewaretoken:"{{csrf_token}}",
+                //     tree_level: code,
+                // },
+                error: function() {
+                    console.log("error")
+                },
+                success: function(res) {
+                    // print(res)
+                    console.log(res)
+
+                }
+            });
+        }
+        // $('#client-tab').click(function(e){
+		// 	console.log('client tab function');
+		// 	// $('.client-filter-checkbox').click();
+		// 	dataTableClient.draw();
+
+		// })
+
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+		  if (e.target.hash == '#menu1') {
+		  	console.log('menu1');
+		    dataTableClient.columns.adjust().draw()
+		  }
+		})
+
+      
+
+    });
+
+    $("#search_input").on("keyup", function() {
+        var value = this.value.toLowerCase().trim();
+        $(".media-list li").show().filter(function() {
+        return $(this).text().toLowerCase().trim().indexOf(value) == -1;
+        }).hide();
+    });
+    
+</script>
+{% endblock content %}
+
+                            
