@@ -42,6 +42,9 @@ class ClientAjaxForm(forms.Form):
 	is_deposit = forms.CharField(required=False)
 	page = forms.CharField(required=False)
 
+class ClientDeleteForm(forms.Form):
+	client_ids = forms.CharField(required=False)
+	
 class TreeForm(forms.ModelForm):
 	class Meta:
 		model = Followup

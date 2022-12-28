@@ -20,7 +20,6 @@ from django.contrib.auth.decorators import login_required
 
 
 def notif_check(request):
-	print("masuk sini")
 	# start_process.apply_async(_id='eta-testing')
 	all_notif = None
 	if not request.user.is_anonymous:
@@ -51,7 +50,7 @@ def admin_login(request):
 		if form.is_valid():
 			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
-			
+		
 
 			user = User.objects.filter(email=email).first()			
 
@@ -142,7 +141,7 @@ def dashboard(request):
 	# start_process.apply_async(_id='eta-testing',eta=birthday)
 	template = 'admin/core/dashboard.html'
 	
-
+	form = ClientDeleteForm(request.POST or None)
 	
 
 	form_color = ColorForm(None)
@@ -202,6 +201,7 @@ def dashboard(request):
 		'client_color' : client_color,
 		'client_color_text' : client_color_text,
 		'form_color':form_color,
+		'form' : form,
 		'menu':'dashboard',
 
 	}

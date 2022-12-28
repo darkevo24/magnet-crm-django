@@ -31,7 +31,7 @@ from decimal import *
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from core.datatable.server_side_datatable_view import ServerSideDatatableView
-
+from django.views.decorators.csrf import csrf_exempt
 
 CLEANR = re.compile('<.*?>') 
 
@@ -664,11 +664,10 @@ def client_sync(request):
 	return redirect(reverse('client-list'))
 
 class ClientListView(ServerSideDatatableView):
-	print('_____')
 	queryset = Client.objects.filter(is_active=True, is_suspect=False, is_deposit=False).order_by('-created_at')
 
-	print(queryset)
-	columns = ['nama', 'created_at', 'magnet_created_at', 'email', 'phone_no', 'source_detail_2', 'medium', 'campaign', 'id']
+	
+	columns = ['checkbox', 'nama', 'created_at', 'magnet_created_at', 'email', 'phone_no', 'source_detail_2', 'medium', 'campaign', 'id']
 
 class DepositClientListView(ServerSideDatatableView):
 	
@@ -964,18 +963,6 @@ def client_set_hot(request,id_client, action):
 
 	return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-
-
-@login_required
-def client_delete(request,id_client):
-	
-	client = Client.objects.filter(id=id_client).first()
-	client.is_active = False
-	client.updated_by = request.user
-	client.updated_at = timezone.now()
-	client.save()
-	return redirect(reverse('client-list'))
-
 @login_required
 def request_own(request,id_client):
 	template = 'admin/client/client_detail_list.html'
@@ -1039,6 +1026,61 @@ def detail_list(request,id_client):
 		'id_client':id_client,
 	}
 	return render(request,template,context=context)
+
+@login_required
+@csrf_exempt
+def client_delete(request):
+	print('client_delete')
+	success = False
+	if request.user.is_superuser == True:
+		print('super user')
+		try:
+			with transaction.atomic():
+				if request.is_ajax():
+					print('halo request post')
+					print (request.body)
+					print(request.body.decode())
+					response_data = request.body.decode()
+					print(type(response_data))
+					data_dict = json.loads(response_data)
+					print(data_dict)
+					if 'client_ids' in data_dict:
+						print(data_dict['client_ids'])
+						for str_client_id in data_dict['client_ids']:
+							id_client = int(str_client_id)
+					
+
+							client = Client.objects.filter(id=id_client).first()
+							client.is_active = False
+							client.updated_by = request.user
+							client.updated_at = timezone.now()
+							client.save()
+
+							client_staff_list = Client_Staff.objects.filter(client=client, is_active = True)
+							for client_staff in client_staff_list:
+								client_staff.is_active = False
+								client_staff.updated_by = request.user
+								client_staff.updated_at = timezone.now()
+								client_staff.save()
+
+							client_journey_list = Client_Journey.objects.filter(client=client, is_active=True)
+							for client_journey in client_journey_list:
+								client_journey.is_active = False
+								client_journey.updated_by = request.user
+								client_journey.updated_at = timezone.now()
+								client_journey.save()
+
+						success = True
+
+
+		except IntegrityError as e:
+			pritn(e)
+
+	json_response = {
+		'status' : success,
+		'url': request.META.get('HTTP_REFERER')
+	}
+	return JsonResponse(json_response)
 
 @login_required
 def client_followup_list(request,id_client):

@@ -25,7 +25,7 @@ class ServerSideDatatableView(View):
         if self.queryset is not None:
             queryset = self.queryset
             if isinstance(queryset, QuerySet):
-                queryset = queryset.all()
+                queryset = queryset.all().order_by('-created_at')
         elif self.model is not None:
             queryset = self.model._default_manager.all()
         else:

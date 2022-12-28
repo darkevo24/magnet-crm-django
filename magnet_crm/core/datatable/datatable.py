@@ -3,6 +3,7 @@ import operator
 from django.db.models import Q
 from functools import reduce
 from django.urls import reverse
+from client.models import Client_Staff
 
 order_dict = {'asc': '', 'desc': '-'}
 SOURCE_2_SEARCH_MAPPING_STR = {
@@ -23,12 +24,17 @@ class DataTablesServer(object):
         self.request_values = request.GET
         # results from the db
         self.result_data = None
+        self.client_staff = None
+        self.client_staff_ids = None
+        self.client_staff_dict = {}
+        self.client_ids = []
         # total in the table after filtering
         self.cardinality_filtered = 0
         # total in the table unfiltered
         self.cardinality = 0
         self.user = request.user
         self.qs = qs
+        self.columns_database = []
         self.run_queries()
 
     def output_result(self):
@@ -45,8 +51,12 @@ class DataTablesServer(object):
             '4' : 'Google',
             '5' : 'Discord',
         }
+        
         for row in self.result_data:
             data_row = []
+            client_staff_column = '-'
+            client_id = ''
+            print('self.columns', self.columns)
             for i in range(len(self.columns)):
                 # val = getattr(row, self.columns[i])
                 
@@ -70,23 +80,33 @@ class DataTablesServer(object):
                     button_html += '<a href="' + client_detail_url +'" class="dropdown-item">'
                     button_html += ' <i class="icon-file-eye"></i> Client Detail</a>'
                     button_html += '<a href="' + client_edit_url + '" class="dropdown-item">'
-                    button_html += ' <i class="fas fa-edit"></i> Client Edit</a></div></div></div>'
+                    button_html += ' <i class="fas fa-edit"></i> Client Edit</a>'
+                    button_html += '<span class="dropdown-item client-delete-single-btn" data-client_id="' + str(row[self.columns[i]]) +'">' 
+                    button_html += '<i class="fas fa-trash-alt"></i> Client Delete</span>'
+                    button_html += '</div></div></div>'
                     val = button_html
+
+                    if row[self.columns[i]] in self.client_staff_dict:
+                        client_staff_column = self.client_staff_dict[row[self.columns[i]]]
+                        
+
+                elif 'checkbox' in self.columns[i]:
+                    client_id = row[self.columns[9]]
+                    print('client_id', client_id)
+                    checkbox = '<input type="checkbox" class="checkbox-client-id" value="' + str(client_id) + '">'
+                    val = checkbox
                 else:
                     val = row[self.columns[i]]
                 data_row.append(val)
-            # button_html = '<div class="list-icons"> <div class="dropdown"> <a href="#" class="list-icons-item" data-toggle="dropdown">'
-            # button_html += '<i class="icon-menu9" style="font-size: 1.8em"></i></a><div class="dropdown-menu dropdown-menu-right">'
-            # button_html += '<a href="{% url 'client-detail-list' client.id  %}" class="dropdown-item">'
-            # button_html += '<i class="icon-file-eye"></i> Client Detail'
-            # button_html += '</div></div>'
+            
+            
                                                             
                                                         
                                                         
                                                             
                                                                 
 
-            
+            data_row.append(client_staff_column)
             print('data_row', data_row)                              
                                                 
             data_rows.append(data_row)
@@ -103,18 +123,35 @@ class DataTablesServer(object):
         sorting = self.sorting()
         # custom filter
         qs = self.qs
+        for column in self.columns:
+            print('column', column)
+            if 'checkbox' not in column:
+                self.columns_database.append(column)
 
+        print(*self.columns_database, 'self.columns_database')
         if _filter:
             data = qs.filter(
                 reduce(operator.or_, _filter)).order_by('%s' % sorting)
             len_data = data.count()
-            data = list(data[pages.start:pages.length].values(*self.columns))
+            data = list(data[pages.start:pages.length].values(*self.columns_database))
         else:
-            data = qs.order_by('%s' % sorting).values(*self.columns)
+            print('sorting in query', sorting)
+            print(*self.columns)
+            data = qs.order_by('%s' % sorting).values(*self.columns_database)
             len_data = data.count()
             _index = int(pages.start)
             data = data[_index:_index + (pages.length - pages.start)]
 
+
+        for d in data:
+            self.client_ids.append(d['id'])
+
+        client_staff_list = Client_Staff.objects.filter(client__id__in=self.client_ids, is_active=True).prefetch_related('client', 'staff', 'staff__profile')
+        for client_staff in client_staff_list:
+            if client_staff.client.id not in  self.client_staff_dict:
+                self.client_staff_dict[client_staff.client.id] = client_staff.staff.profile.full_name
+
+        
         self.result_data = list(data)
 
         # length of filtered set
@@ -145,14 +182,16 @@ class DataTablesServer(object):
                 or_filter.append(('source_detail_2', SOURCE_2_SEARCH_MAPPING_STR[matching]))            
 
         q_list = [Q(x) for x in or_filter]
-        print('q_list', q_list)
+        
         return q_list
 
     def sorting(self):
 
         order = ''
+        print('sorting', self.request_values['iSortCol_0'])
+        print('iSortingCols', self.request_values['iSortingCols'])
         if (self.request_values['iSortCol_0'] != "") and (int(self.request_values['iSortingCols']) > 0):
-
+            print('masuk if')
             for i in range(int(self.request_values['iSortingCols'])):
                 # column number
                 column_number = int(self.request_values['iSortCol_' + str(i)])
@@ -160,7 +199,10 @@ class DataTablesServer(object):
                 sort_direction = self.request_values['sSortDir_' + str(i)]
 
                 order = ('' if order == '' else ',') +order_dict[sort_direction]+self.columns[column_number]
-
+        else:
+            print('masuk else')
+            order = '-created_at'
+        print('order_by', order)
         return order
 
     def paging(self):

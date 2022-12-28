@@ -79,13 +79,14 @@ urlpatterns = [
     path('client/<str:id_client>/edit', client_views.client_edit, name='client-edit'),
     path('client/<str:id_client>/edit/color/<str:color_str>', client_views.client_edit_color, name='client-edit-color'),
     path('client/<str:id_client>/set_hot/<str:action>', client_views.client_set_hot, name='client-set-hot'),
-    path('client/<str:id_client>/delete', client_views.client_delete, name='client-delete'),
+    path('client/delete', client_views.client_delete, name='client-delete'),
 
     path('client/<str:client_id>/client_schedule/add', client_views.client_schedule_add, name='client-schedule-add'),
     path('client/<str:client_id>/client_schedule/list', client_views.client_schedule_list, name='client-schedule-list'),
     path('client/<uuid:client_schedule_uid>/client_schedule/update', client_views.client_schedule_update, name='client-schedule-update'),
 
     path('client/detail/<str:id_client>', client_views.detail_list, name='client-detail-list'),
+    path('client/delete/<str:id_client>', client_views.client_delete, name='client-detail-delete'),
     path('client/<str:id_client>/request_own', client_views.request_own, name='client-request-own'),
     path('client/feedback/<str:id_client>', client_views.client_followup_list, name='client-feedback-list'),
     path('client/feedback/<str:id_client>/add', main_view.add_form, name='followup-form'),
