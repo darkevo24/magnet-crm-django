@@ -31,6 +31,7 @@ from decimal import *
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from core.datatable.server_side_datatable_view import ServerSideDatatableView
+from core.datatable.client_suspect_datatable_view import ClientSuspectServerSideDatatableView
 from django.views.decorators.csrf import csrf_exempt
 
 CLEANR = re.compile('<.*?>') 
@@ -470,6 +471,11 @@ def client_own_suspect_detail(request,uid_client_staff):
 	}
 	return render(request,template,context=context)
 
+
+@login_required
+class DepositClientListView(ClientSuspectServerSideDatatableView):
+	
+	queryset = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False).order_by("-client_new__magnet_created_at").prefetch_related('client_old', 'client_new')
 
 
 @login_required

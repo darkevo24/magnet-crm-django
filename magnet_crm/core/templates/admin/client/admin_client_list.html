@@ -64,7 +64,7 @@
 					  		<table class="stripe table row-border order-column" id="table-main" width="100%">
                                 <thead>
                                     <tr>
-                                        <th></th>
+                                        <th scope="col"></th>
                           				<th scope="col">Nama</th>
                                         <th scope="col">Shared Date</th>
                                         <th scope="col">Register Date</th>
@@ -237,10 +237,8 @@
                 lengthMenu: '<span>Show:</span> _MENU_',
             },
             scrollX: true,
-            // scrollY: '350px',
-           
+            "autoWidth": false,
             "pageLength": 100,
-            "lengthChange": false,
 	        serverSide: true,
 	        sAjaxSource: "{% url 'admin-client-server-side' %}",
 	        

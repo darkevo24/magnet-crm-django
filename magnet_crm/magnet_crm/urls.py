@@ -71,6 +71,8 @@ urlpatterns = [
     path('client/sync', client_views.client_sync, name='client-sync'),
     
     path('client_admin', client_views.admin_client_list, name='admin-client-list'),
+    path('client_admin/data_table/client_suspect', ClientListView.as_view(), name='admin-client-server-side'),
+
     path('client_admin/data_table/serverside', ClientListView.as_view(), name='admin-client-server-side'),
     path('client_admin/data_table/deposit/client/serverside', DepositClientListView.as_view(), name='admin-deposit-client-server-side'),
     path('client_admin/ajax', client_views.admin_client_list_ajax, name='admin-client-list-ajax'),
