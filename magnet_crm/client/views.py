@@ -485,9 +485,9 @@ def client_suspect_list(request):
 	staff = Staff.objects.filter(profile__user=request.user).first()
 	template = 'admin/client/suspect/client_list.html'
 	if month != "" and month != None:
-		client_list = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False,created_at__year=year,created_at__month=month).order_by("-client_new__magnet_created_at")
+		client_list = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False,created_at__year=year,created_at__month=month).order_by("-client_new__magnet_created_at").prefetch_related('client_old', 'client_new')
 	else:
-		client_list = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False).order_by("-client_new__magnet_created_at")
+		client_list = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False).order_by("-client_new__magnet_created_at").prefetch_related('client_old', 'client_new')
 
 	client_id_list = []
 	for client in client_list:
