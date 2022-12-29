@@ -473,7 +473,7 @@ def client_own_suspect_detail(request,uid_client_staff):
 
 
 @login_required
-class DepositClientListView(ClientSuspectServerSideDatatableView):
+class ClientSuspectListView(ClientSuspectServerSideDatatableView):
 	
 	queryset = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False).order_by("-client_new__magnet_created_at").prefetch_related('client_old', 'client_new')
 
@@ -672,13 +672,14 @@ def client_sync(request):
 class ClientListView(ServerSideDatatableView):
 	queryset = Client.objects.filter(is_active=True, is_suspect=False, is_deposit=False).order_by('-created_at')
 
-	
 	columns = ['checkbox', 'nama', 'created_at', 'magnet_created_at', 'email', 'phone_no', 'source_detail_2', 'medium', 'campaign', 'id']
+	is_delete_data = True
 
 class DepositClientListView(ServerSideDatatableView):
 	
 	queryset = Client.objects.filter(is_active=True, is_suspect=False, is_deposit=True).order_by('-created_at')
 	columns = ['nama', 'created_at', 'magnet_created_at', 'email', 'phone_no', 'source_detail_2', 'medium', 'campaign', 'id']
+	is_delete_data = False
 
 
 @login_required

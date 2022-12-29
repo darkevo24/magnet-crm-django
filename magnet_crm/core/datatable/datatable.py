@@ -18,7 +18,8 @@ SOURCE_2_SEARCH_MAPPING_STR = {
 SEARCH_SOURCE_LIST = ['adwords', 'facebook/ig', 'social media', 'google', 'discord']
 
 class DataTablesServer(object):
-    def __init__(self, request, columns, qs):
+    def __init__(self, request, columns, qs, is_delete_data):
+        self.is_delete_data = is_delete_data
         self.columns = columns
         # values specified by the datatable for filtering, sorting, paging
         self.request_values = request.GET
@@ -81,8 +82,10 @@ class DataTablesServer(object):
                     button_html += ' <i class="icon-file-eye"></i> Client Detail</a>'
                     button_html += '<a href="' + client_edit_url + '" class="dropdown-item">'
                     button_html += ' <i class="fas fa-edit"></i> Client Edit</a>'
-                    button_html += '<span class="dropdown-item client-delete-single-btn" data-client_id="' + str(row[self.columns[i]]) +'">' 
-                    button_html += '<i class="fas fa-trash-alt"></i> Client Delete</span>'
+
+                    if self.is_delete_data == True:
+                        button_html += '<span class="dropdown-item client-delete-single-btn" data-client_id="' + str(row[self.columns[i]]) +'">' 
+                        button_html += '<i class="fas fa-trash-alt"></i> Client Delete</span>'
                     button_html += '</div></div></div>'
                     val = button_html
 

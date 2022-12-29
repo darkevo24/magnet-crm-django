@@ -9,10 +9,11 @@ class ServerSideDatatableView(View):
     queryset = None
     columns = None
     model = None
-
+    is_delete_data = None
+    
     def get(self, request, *args, **kwargs):
         result = datatable.DataTablesServer(
-            request, self.columns, self.get_queryset()).output_result()
+            request, self.columns, self.get_queryset(), self.is_delete_data).output_result()
         return JsonResponse(result, safe=False)
 
     def get_queryset(self):
