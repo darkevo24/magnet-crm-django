@@ -57,7 +57,6 @@ class DataTablesServer(object):
             data_row = []
             client_staff_column = '-'
             client_id = ''
-            print('self.columns', self.columns)
             for i in range(len(self.columns)):
                 # val = getattr(row, self.columns[i])
                 
@@ -95,7 +94,6 @@ class DataTablesServer(object):
 
                 elif 'checkbox' in self.columns[i]:
                     client_id = row[self.columns[9]]
-                    print('client_id', client_id)
                     checkbox = '<input type="checkbox" class="checkbox-client-id" value="' + str(client_id) + '">'
                     val = checkbox
                 else:
@@ -109,11 +107,8 @@ class DataTablesServer(object):
                                                             
                                                                 
 
-            data_row.append(client_staff_column)
-            print('data_row', data_row)                              
-                                                
+            data_row.append(client_staff_column)                                                
             data_rows.append(data_row)
-        print('data_rows', data_rows)
         output['aaData'] = data_rows
         return output
 
@@ -127,19 +122,15 @@ class DataTablesServer(object):
         # custom filter
         qs = self.qs
         for column in self.columns:
-            print('column', column)
             if 'checkbox' not in column:
                 self.columns_database.append(column)
 
-        print(*self.columns_database, 'self.columns_database')
         if _filter:
             data = qs.filter(
                 reduce(operator.or_, _filter)).order_by('%s' % sorting)
             len_data = data.count()
             data = list(data[pages.start:pages.length].values(*self.columns_database))
         else:
-            print('sorting in query', sorting)
-            print(*self.columns)
             data = qs.order_by('%s' % sorting).values(*self.columns_database)
             len_data = data.count()
             _index = int(pages.start)
@@ -172,17 +163,16 @@ class DataTablesServer(object):
             for i in range(len(self.columns)):
                 or_filter.append((self.columns[i]+'__icontains', self.request_values['sSearch']))
 
-        if (self.request_values.get('sSearch_5')) and (self.request_values['sSearch_5'] != ""):
-            matching_list = [s for s in SEARCH_SOURCE_LIST if self.request_values.get('sSearch_5').lower() in s]
-            for matching in matching_list:
-                print(SOURCE_2_SEARCH_MAPPING_STR[matching], '<-')
-            
-
-
-            
-            
-            
-                or_filter.append(('source_detail_2', SOURCE_2_SEARCH_MAPPING_STR[matching]))            
+        if self.is_delete_data == False:
+            if (self.request_values.get('sSearch_6')) and (self.request_values['sSearch_6'] != ""):
+                matching_list = [s for s in SEARCH_SOURCE_LIST if self.request_values.get('sSearch_5').lower() in s]
+                for matching in matching_list:
+                    or_filter.append(('source_detail_2', SOURCE_2_SEARCH_MAPPING_STR[matching]))            
+        else:
+            if (self.request_values.get('sSearch_7')) and (self.request_values['sSearch_7'] != ""):
+                matching_list = [s for s in SEARCH_SOURCE_LIST if self.request_values.get('sSearch_5').lower() in s]
+                for matching in matching_list:
+                    or_filter.append(('source_detail_2', SOURCE_2_SEARCH_MAPPING_STR[matching]))            
 
         q_list = [Q(x) for x in or_filter]
         
@@ -191,10 +181,7 @@ class DataTablesServer(object):
     def sorting(self):
 
         order = ''
-        print('sorting', self.request_values['iSortCol_0'])
-        print('iSortingCols', self.request_values['iSortingCols'])
         if (self.request_values['iSortCol_0'] != "") and (int(self.request_values['iSortingCols']) > 0):
-            print('masuk if')
             for i in range(int(self.request_values['iSortingCols'])):
                 # column number
                 column_number = int(self.request_values['iSortCol_' + str(i)])
@@ -203,9 +190,7 @@ class DataTablesServer(object):
 
                 order = ('' if order == '' else ',') +order_dict[sort_direction]+self.columns[column_number]
         else:
-            print('masuk else')
             order = '-created_at'
-        print('order_by', order)
         return order
 
     def paging(self):
