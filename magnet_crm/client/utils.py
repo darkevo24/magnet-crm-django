@@ -602,6 +602,7 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 				
 				total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 				two_month_trades[login_id]['total_lot'] += loop_lot_decimal
+				two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
 			# print(type(loop_lot_decimal), type(loop_rate_decimal))
 			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
 
@@ -674,9 +675,9 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 		for login_id, detail_dict in two_month_trades.items():
 			# print('|||||',two_month_trades[login_id])
 			account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-			two_month_trades[login_id]['bonus_lot_usd'] = bonus_account_type_dict[account_type]['bonus_lot_usd']
-			two_month_trades[login_id]['total_usd'] = Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd'])
-			two_month_trades[login_id]['total_idr'] = Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate'])
+			two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
+			two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
+			two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
 		
 	
 	return bonus_account_type_dict, two_month_trades
@@ -816,6 +817,7 @@ def master_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_date
 					
 					total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 					two_month_trades[login_id]['total_lot'] += loop_lot_decimal
+					two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
 				# print(type(loop_lot_decimal), type(loop_rate_decimal))
 				# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
 
@@ -891,9 +893,9 @@ def master_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_date
 			for login_id, detail_dict in two_month_trades.items():
 				# print('|||||',two_month_trades[login_id])
 				account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-				two_month_trades[login_id]['bonus_lot_usd'] = bonus_account_type_dict[account_type]['bonus_lot_usd']
-				two_month_trades[login_id]['total_usd'] = Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd'])
-				two_month_trades[login_id]['total_idr'] = Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate'])
+				two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
+				two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
+				two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
 				
 
 
@@ -1035,6 +1037,7 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 				
 				total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 				two_month_trades[login_id]['total_lot'] += loop_lot_decimal
+				two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
 			# print(type(loop_lot_decimal), type(loop_rate_decimal))
 			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
 
@@ -1094,9 +1097,9 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 		for login_id, detail_dict in two_month_trades.items():
 			# print('|||||',two_month_trades[login_id])
 			account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-			two_month_trades[login_id]['bonus_lot_usd'] = bonus_account_type_dict[account_type]['bonus_lot_usd']
-			two_month_trades[login_id]['total_usd'] = Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd'])
-			two_month_trades[login_id]['total_idr'] = Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate'])
+			two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
+			two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
+			two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
 		
 	
 	return bonus_account_type_dict, two_month_trades
@@ -1233,6 +1236,7 @@ def master_calculate_ib_bonus(staffs, now, end_date):
 				
 				total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 				two_month_trades[login_id]['total_lot'] += loop_lot_decimal
+				two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
 			# print(type(loop_lot_decimal), type(loop_rate_decimal))
 			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
 
@@ -1292,9 +1296,9 @@ def master_calculate_ib_bonus(staffs, now, end_date):
 		for login_id, detail_dict in two_month_trades.items():
 			# print('|||||',two_month_trades[login_id])
 			account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-			two_month_trades[login_id]['bonus_lot_usd'] = bonus_account_type_dict[account_type]['bonus_lot_usd']
-			two_month_trades[login_id]['total_usd'] = Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd'])
-			two_month_trades[login_id]['total_idr'] = Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate'])
+			two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
+			two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
+			two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
 		
 	
 	return bonus_account_type_dict, two_month_trades
@@ -1422,6 +1426,7 @@ def supervisor_calculate_lot_two_months_bonus(staffs, last_two_months_date, now,
 				
 				total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 				two_month_trades[login_id]['total_lot'] += loop_lot_decimal
+				two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
 			# print(type(loop_lot_decimal), type(loop_rate_decimal))
 			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
 
@@ -1494,9 +1499,9 @@ def supervisor_calculate_lot_two_months_bonus(staffs, last_two_months_date, now,
 		for login_id, detail_dict in two_month_trades.items():
 			# print('|||||',two_month_trades[login_id])
 			account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-			two_month_trades[login_id]['bonus_lot_usd'] = bonus_account_type_dict[account_type]['bonus_lot_usd']
-			two_month_trades[login_id]['total_usd'] = Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd'])
-			two_month_trades[login_id]['total_idr'] = Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate'])
+			two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
+			two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
+			two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
 		
 	
 	return bonus_account_type_dict, two_month_trades
@@ -1624,6 +1629,7 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 					
 					total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 					two_month_trades[login_id]['total_lot'] += loop_lot_decimal
+					two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
 				# print(type(loop_lot_decimal), type(loop_rate_decimal))
 				# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
 
@@ -1699,9 +1705,9 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 			for login_id, detail_dict in two_month_trades.items():
 				# print('|||||',two_month_trades[login_id])
 				account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-				two_month_trades[login_id]['bonus_lot_usd'] = bonus_account_type_dict[account_type]['bonus_lot_usd']
-				two_month_trades[login_id]['total_usd'] = Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd'])
-				two_month_trades[login_id]['total_idr'] = Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate'])
+				two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
+				two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
+				two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
 				
 
 
@@ -1830,6 +1836,7 @@ def supervisor_calculate_data_pribadi_bonus(staffs, now, end_date):
 				
 				total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 				two_month_trades[login_id]['total_lot'] += loop_lot_decimal
+				two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
 			# print(type(loop_lot_decimal), type(loop_rate_decimal))
 			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
 
@@ -1889,9 +1896,9 @@ def supervisor_calculate_data_pribadi_bonus(staffs, now, end_date):
 		for login_id, detail_dict in two_month_trades.items():
 			# print('|||||',two_month_trades[login_id])
 			account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-			two_month_trades[login_id]['bonus_lot_usd'] = bonus_account_type_dict[account_type]['bonus_lot_usd']
-			two_month_trades[login_id]['total_usd'] = Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd'])
-			two_month_trades[login_id]['total_idr'] = Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate'])
+			two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
+			two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
+			two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
 		
 	
 	return bonus_account_type_dict, two_month_trades
@@ -2016,6 +2023,7 @@ def supervisor_calculate_ib_bonus(staffs, now, end_date):
 				
 				total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 				two_month_trades[login_id]['total_lot'] += loop_lot_decimal
+				two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
 			# print(type(loop_lot_decimal), type(loop_rate_decimal))
 			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
 
@@ -2075,9 +2083,9 @@ def supervisor_calculate_ib_bonus(staffs, now, end_date):
 		for login_id, detail_dict in two_month_trades.items():
 			# print('|||||',two_month_trades[login_id])
 			account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-			two_month_trades[login_id]['bonus_lot_usd'] = bonus_account_type_dict[account_type]['bonus_lot_usd']
-			two_month_trades[login_id]['total_usd'] = Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd'])
-			two_month_trades[login_id]['total_idr'] = Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate'])
+			two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
+			two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
+			two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
 		
 	
 	return bonus_account_type_dict, two_month_trades
@@ -2201,6 +2209,7 @@ def calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date):
 				
 				total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 				two_month_trades[login_id]['total_lot'] += loop_lot_decimal
+				two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
 			# print(type(loop_lot_decimal), type(loop_rate_decimal))
 			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
 
@@ -2274,9 +2283,9 @@ def calculate_lot_two_months_bonus(staff, last_two_months_date, now, end_date):
 		for login_id, detail_dict in two_month_trades.items():
 			# print('|||||',two_month_trades[login_id])
 			account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-			two_month_trades[login_id]['bonus_lot_usd'] = bonus_account_type_dict[account_type]['bonus_lot_usd']
-			two_month_trades[login_id]['total_usd'] = Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd'])
-			two_month_trades[login_id]['total_idr'] = Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate'])
+			two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
+			two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
+			two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
 		
 	
 	return bonus_account_type_dict, two_month_trades
@@ -2399,6 +2408,8 @@ def calculate_lot_more_than_two_months_bonus(staff, last_two_months_date, now, e
 					
 					total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 					two_month_trades[login_id]['total_lot'] += loop_lot_decimal
+					two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
+					
 				# print(type(loop_lot_decimal), type(loop_rate_decimal))
 				# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
 
@@ -2474,9 +2485,9 @@ def calculate_lot_more_than_two_months_bonus(staff, last_two_months_date, now, e
 			for login_id, detail_dict in two_month_trades.items():
 				# print('|||||',two_month_trades[login_id])
 				account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-				two_month_trades[login_id]['bonus_lot_usd'] = bonus_account_type_dict[account_type]['bonus_lot_usd']
-				two_month_trades[login_id]['total_usd'] = Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd'])
-				two_month_trades[login_id]['total_idr'] = Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate'])
+				two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
+				two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
+				two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
 				
 
 
@@ -2601,6 +2612,7 @@ def calculate_data_pribadi_bonus(staff, now, end_date):
 				
 				total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 				two_month_trades[login_id]['total_lot'] += loop_lot_decimal
+				two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
 			# print(type(loop_lot_decimal), type(loop_rate_decimal))
 			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
 
@@ -2660,9 +2672,9 @@ def calculate_data_pribadi_bonus(staff, now, end_date):
 		for login_id, detail_dict in two_month_trades.items():
 			# print('|||||',two_month_trades[login_id])
 			account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-			two_month_trades[login_id]['bonus_lot_usd'] = bonus_account_type_dict[account_type]['bonus_lot_usd']
-			two_month_trades[login_id]['total_usd'] = Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd'])
-			two_month_trades[login_id]['total_idr'] = Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate'])
+			two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
+			two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
+			two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
 		
 	
 	return bonus_account_type_dict, two_month_trades
@@ -2781,6 +2793,7 @@ def calculate_ib_bonus(staff, now, end_date):
 				
 				total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 				two_month_trades[login_id]['total_lot'] += loop_lot_decimal
+				two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
 			# print(type(loop_lot_decimal), type(loop_rate_decimal))
 			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
 
@@ -2840,9 +2853,9 @@ def calculate_ib_bonus(staff, now, end_date):
 		for login_id, detail_dict in two_month_trades.items():
 			# print('|||||',two_month_trades[login_id])
 			account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-			two_month_trades[login_id]['bonus_lot_usd'] = bonus_account_type_dict[account_type]['bonus_lot_usd']
-			two_month_trades[login_id]['total_usd'] = Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd'])
-			two_month_trades[login_id]['total_idr'] = Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate'])
+			two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
+			two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
+			two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
 		
 	
 	return bonus_account_type_dict, two_month_trades
