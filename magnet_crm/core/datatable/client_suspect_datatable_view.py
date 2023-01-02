@@ -2,17 +2,22 @@ from django.views import View
 from django.http import JsonResponse
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models import QuerySet
-from core.datatable import client_suspect_datatable
+from core.datatable.client_suspect_datatable import ClientSuspectDataTablesServer
 
 
 class ClientSuspectServerSideDatatableView(View):
     queryset = None
     columns = None
     model = None
-
+    filter_date = None
+    month = None
+    year = None
     def get(self, request, *args, **kwargs):
-        result = datatable.ClientSuspectDataTablesServer(
-            request, self.columns, self.get_queryset()).output_result()
+        self.month = kwargs.get('month', "-")
+        self.year = kwargs.get('year', "-")
+
+        result = ClientSuspectDataTablesServer(
+            request, self.columns, self.get_queryset(), None).output_result()
         return JsonResponse(result, safe=False)
 
     def get_queryset(self):
@@ -25,7 +30,10 @@ class ClientSuspectServerSideDatatableView(View):
         if self.queryset is not None:
             queryset = self.queryset
             if isinstance(queryset, QuerySet):
-                queryset = queryset.all().order_by('-created_at')
+                if self.month != '-' and self.month != '' and self.month != None:
+                    queryset = queryset.filter(created_at__year=self.year,created_at__month=self.month).order_by('-created_at')
+                else:
+                    queryset = queryset.all().order_by('-created_at')
         elif self.model is not None:
             queryset = self.model._default_manager.all()
         else:
