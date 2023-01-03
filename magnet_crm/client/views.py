@@ -568,6 +568,12 @@ def client_suscpet_action(request):
 								new_his.created_by = request.user
 
 								new_his.save()
+								
+								old_client = client_sus.client_old
+								old_client.is_suspect_bypass = True
+								old_client.is_suspect = False
+								old_client.updated_by = request.user
+								old_client.save()
 
 							elif action == 'take_right':
 								client.is_suspect = False
@@ -641,6 +647,7 @@ def client_suscpet_action(request):
 
 							client.updated_by = request.user
 							client.save()
+							print('client saved !', client.is_suspect, client.nama)
 							client_sus.is_checked = True
 
 							client_sus.updated_by = request.user

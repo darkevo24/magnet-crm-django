@@ -113,19 +113,22 @@ class DataTablesServer(object):
         return output
 
     def run_queries(self):
+        for column in self.columns:
+            if 'checkbox' not in column:
+                self.columns_database.append(column)
         # pages has 'start' and 'length' attributes
         pages = self.paging()
         # the term you entered into the datatable search
         _filter = self.filtering()
+        print('run queries', _filter)
         # the document field you chose to sort
         sorting = self.sorting()
         # custom filter
         qs = self.qs
-        for column in self.columns:
-            if 'checkbox' not in column:
-                self.columns_database.append(column)
+        
 
         if _filter:
+            print(_filter, '<----')
             data = qs.filter(
                 reduce(operator.or_, _filter)).order_by('%s' % sorting)
             len_data = data.count()
@@ -160,8 +163,8 @@ class DataTablesServer(object):
         or_filter = []
 
         if (self.request_values.get('sSearch')) and (self.request_values['sSearch'] != ""):
-            for i in range(len(self.columns)):
-                or_filter.append((self.columns[i]+'__icontains', self.request_values['sSearch']))
+            for i in range(len(self.columns_database)):
+                or_filter.append((self.columns_database[i]+'__icontains', self.request_values['sSearch']))
 
         if self.is_delete_data == False:
             if (self.request_values.get('sSearch_6')) and (self.request_values['sSearch_6'] != ""):

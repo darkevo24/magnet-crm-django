@@ -47,7 +47,7 @@
 					      		<th scope="col">E-mail</th>
 					      		<th scope="col">Source</th>
 					      		<th scope="col">Staff</th>
-					      		<th scope="col" class="text-center">Action</th>
+					      		<th scope="col">Action</th>
 					    	</tr>
 					  	</thead>
 					  	<tbody>
@@ -127,7 +127,25 @@
 		</div>
 	</div>
 </div>
+<div id="action-data-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" >Confirmation Modal</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
 
+            <div class="modal-body">
+                Are you sure to <span class="modal-action-text"></span> this data ?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="modal-confirm-btn">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- /mini modal -->
@@ -260,8 +278,10 @@
             let suspect_client_id = $(this).data('suspect_client_id');
             suspect_client_ids.push(suspect_client_id)
             action = $(this).data('suscpect_action');
-            client_suspect_action();
-            console.log(suspect_client_id, action);
+            // client_suspect_action();
+            // console.log(suspect_client_id, action);
+            $('.modal-action-text').text(action.toUpperCase());
+            $('#action-data-modal').modal('show');
             
             
         });
@@ -283,7 +303,13 @@
 
         $('.all-suspect-btn-action').click(function(){
         	action = $(this).data('suscpect_action');
-        	client_suspect_action();
+        	// client_suspect_action();
+        	$('.modal-action-text').text(action.toUpperCase());
+        	$('#action-data-modal').modal('show');
+        });
+
+         $('#modal-confirm-btn').click(function(){
+            client_suspect_action();
         });
 
 	});
