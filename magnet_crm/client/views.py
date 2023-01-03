@@ -472,20 +472,19 @@ def client_own_suspect_detail(request,uid_client_staff):
 	return render(request,template,context=context)
 
 
-@login_required
-class ClientSuspectListView(ClientSuspectServerSideDatatableView):
-	
-	queryset = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False).order_by("-client_new__magnet_created_at").prefetch_related('client_old', 'client_new')
 
+class SuspectListView(ClientSuspectServerSideDatatableView):
+	print('masuk class view')
+	queryset = Client_Duplicate_Suspect.objects.filter(is_active=True,is_checked=False)
+
+	columns = ['nama', 'magnet_created_at', 'phone_no', 'email', 'source', 'staff' , 'aecode', 'source_detail_2', 'medium', 'campaign', 'action']
+	is_delete_data = True
 
 @login_required
 def client_suspect_list(request):
 	now = timezone.now()
 	month = request.GET.get('month')
 	year = request.GET.get('year') or now.year
-	
-
-	
 
 
 	staff = Staff.objects.filter(profile__user=request.user).first()
@@ -514,13 +513,159 @@ def client_suspect_list(request):
 def client_suspect_history_list(request):
 		
 	template = 'admin/client/suspect/history_list.html'
-	history_list = Client_Duplicate_Suspect_History.objects.filter(is_active=True).order_by("created_at")
+	history_list = Client_Duplicate_Suspect_History.objects.filter(is_active=True).order_by("-updated_at")
 	context = {
 		'history_list': history_list,
 		'menu':'client_suspect'
 	}
 	return render(request,template,context=context)
 
+@login_required
+@csrf_exempt
+def client_suscpet_action(request):
+	success = False
+	if request.user.is_superuser == True:
+		print('super user')
+		try:
+			with transaction.atomic():
+				if request.is_ajax():
+					
+					response_data = request.body.decode()
+					
+					data_dict = json.loads(response_data)
+					print(data_dict)
+
+					if 'suspect_client_ids' in data_dict:
+						print(data_dict['suspect_client_ids'])
+						for str_suspect_client_id in data_dict['suspect_client_ids']:
+							client_sus = Client_Duplicate_Suspect.objects.filter(id=int(str_suspect_client_id)).first()
+							old_staff = Client_Staff.objects.filter(client=client_sus.client_old, is_active=True).first()
+							new_staff = Client_Staff.objects.filter(client=client_sus.client_new, is_active=True).first()
+							print('-----')	
+							if old_staff != None:
+								temp = old_staff
+								old_staff = temp.staff
+							if new_staff != None:
+								temp = new_staff
+								new_staff = temp.staff
+
+							action = data_dict['action']
+							if 'action_extra' in data_dict:
+								action_extra = data_dict['action_extra']
+							else:
+								action_extra = ''
+							client = client_sus.client_new
+							client.is_suspect_bypass = True
+							if action == 'accept':
+								print("accept")
+								client.is_suspect = False
+								
+								
+
+								new_his = Client_Duplicate_Suspect_History()
+								new_his.duplicate_suspect = client_sus
+								new_his.action = "accepted"
+								new_his.created_by = request.user
+
+								new_his.save()
+								
+								old_client = client_sus.client_old
+								old_client.is_suspect_bypass = True
+								old_client.is_suspect = False
+								old_client.updated_by = request.user
+								old_client.save()
+
+							elif action == 'take_right':
+								client.is_suspect = False
+								
+
+								new_his = Client_Duplicate_Suspect_History()
+								new_his.duplicate_suspect = client_sus
+								new_his.action = "take_right"
+								new_his.created_by = request.user
+
+								new_his.save()
+
+								old_client = client_sus.client_old
+								old_client.is_active = False
+								old_client.is_suspect = False
+								old_client.is_suspect_bypass = True
+
+								old_client.updated_by = request.user
+								old_client.save()
+
+
+
+							else:
+								print("reject")
+								new_his = Client_Duplicate_Suspect_History()
+								new_his.duplicate_suspect = client_sus
+								new_his.action = "rejected"
+								new_his.created_by = request.user
+								new_his.save()
+								client.is_active = False
+								if action_extra != None and action_extra != '' and action_extra == 'pribadi':
+									client.source_detail_1 = 2
+
+								rejected_client_followup = Client_Followup.objects.filter(is_active=True,client=client)
+								for x in rejected_client_followup:
+									follow = Client_Followup()
+									follow.client = x.client
+									follow.followup = x.followup
+									follow.staff = x.staff
+									follow.answer = x.answer
+									follow.created_by = request.user
+									follow.created_at = timezone.now() 
+									follow.save()
+
+								rejected_client_schedule = Client_Schedule.objects.filter(is_active=True,client=client)
+								for x in rejected_client_schedule:
+									schedule = Client_Schedule()
+									schedule.schedule_date = x.schedule_date
+									schedule.client = x.client
+									schedule.staff = x.staff
+									schedule.schedule_type = x.schedule_type
+									schedule.status = x.status
+									schedule.notes = x.notes
+									schedule.answer = x.answer
+									schedule.created_by = request.user
+									schedule.created_at = timezone.now() 
+									schedule.save()
+								
+								
+								rejected_client_journey = Client_Journey.objects.filter(is_active=True,client=client)
+								for x in rejected_client_journey:
+									if x.journal_type != 'registered':
+										journey = Client_Journey()
+										journey.schedule_date = x.schedule_date
+										journey.client = x.client
+										journey.staff = x.staff
+										journey.journal_type = x.journal_type
+										journey.created_by = request.user
+										journey.created_at = timezone.now() 
+										journey.save()
+
+							client.updated_by = request.user
+							client.save()
+							print('client saved !', client.is_suspect, client.nama)
+							client_sus.is_checked = True
+
+							client_sus.updated_by = request.user
+							client_sus.updated_at = timezone.now()
+							client_sus.save()
+							print('client_sus saved!')
+
+						success = True
+
+
+		except IntegrityError as e:
+			pritn(e)
+
+	json_response = {
+		'status' : success,
+		'url': request.META.get('HTTP_REFERER')
+	}
+	return JsonResponse(json_response)
 
 @login_required
 def client_suspect_detail(request,id_client_sus):
