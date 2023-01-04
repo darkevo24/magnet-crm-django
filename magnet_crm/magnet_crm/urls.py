@@ -123,6 +123,8 @@ urlpatterns = [
     path('report/<uuid:staff_uid>', staff_views.staff_report_detail, name='staff-report-detail'),
     path('report/master', staff_views.master_report_detail, name='master-report-detail'), 
     path('report/supervisor/<uuid:staff_uid>', staff_views.staff_supervisor_report_detail, name='staff-supervisor-report-detail'),
+    path('report-staff', staff_views.staff_own_report, name='staff-own-report'),
+
     path('ib', staff_views.ib_list, name='ib-list'),
     path('ib/add', staff_views.ib_add, name='ib-add'),
     path('ib/<uuid:ib_uid>/fc', staff_views.ib_staff_edit, name='ib-staff-edit'),
