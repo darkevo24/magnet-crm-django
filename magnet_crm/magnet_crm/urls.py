@@ -124,6 +124,7 @@ urlpatterns = [
     path('report/master', staff_views.master_report_detail, name='master-report-detail'), 
     path('report/supervisor/<uuid:staff_uid>', staff_views.staff_supervisor_report_detail, name='staff-supervisor-report-detail'),
     path('report-staff', staff_views.staff_own_report, name='staff-own-report'),
+    path('report-supervisor', staff_views.staff_supervisor_report, name='staff-supervisor-report'),
 
     path('ib', staff_views.ib_list, name='ib-list'),
     path('ib/add', staff_views.ib_add, name='ib-add'),

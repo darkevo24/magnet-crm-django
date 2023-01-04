@@ -65,16 +65,10 @@ def full_menu(user):
 	if user.is_superuser == True:
 		return True
 
-	staff_level = Staff.objects.filter(profile__user=user).first().staff_level.level
-	return staff_level < 3
-
-@register.filter(name='full_menu')
-def full_menu(user):
-	if user.is_superuser == True:
-		return True
-
-	staff_level = Staff.objects.filter(profile__user=user).first().staff_level.level
-	return staff_level < 3
+	# staff_level = Staff.objects.filter(profile__user=user).first().staff_level.level
+	# return staff_level < 3
+	else:
+		return False
 
 @register.filter(name='is_admin')
 def is_admin(user):
@@ -83,6 +77,17 @@ def is_admin(user):
 	else:
 		staff_level = Staff.objects.filter(profile__user=user).first().staff_level.level
 		return staff_level > 1
+
+@register.filter(name='is_supervisor')
+def is_supervisor(user):
+	
+	staff_level = Staff.objects.filter(profile__user=user).first().staff_level.level
+	print('00000000',staff_level)
+	if staff_level == 2:
+		return True
+	else:
+		return False
+
 
 
 @register.filter(name='dict_get')

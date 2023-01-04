@@ -484,14 +484,28 @@
 						{% with request.user|full_menu as is_privilage %}
 						 	{% with request.user|is_admin as is_low_admin %} 
 								{% if not is_privilage %}
-									<li class="nav-item {% if menu == 'staff-own-report' %} active {% endif %}">
-										<a href="{% url 'staff-own-report' %}" class="nav-link {% if menu == 'staff-own-report' %} inverted-border-radius {% endif %}">
-											<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
-											<span>
-												Report
-											</span>
-										</a>
-									</li>
+									{% with request.user|is_supervisor as is_supervisor %}
+										{% if is_supervisor == True %}
+											<li class="nav-item {% if menu == 'staff-supervisor-report' %} active {% endif %}">
+												<a href="{% url 'staff-supervisor-report' %}" class="nav-link {% if menu == 'staff-supervisor-report' %} inverted-border-radius {% endif %}">
+													<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+													<span>
+														Report
+													</span>
+												</a>
+											</li>
+										{% else %}
+											<li class="nav-item {% if menu == 'staff-own-report' %} active {% endif %}">
+												<a href="{% url 'staff-own-report' %}" class="nav-link {% if menu == 'staff-own-report' %} inverted-border-radius {% endif %}">
+													<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+													<span>
+														Report
+													</span>
+												</a>
+											</li>
+										{% endif %}
+									{% endwith %}
+									
 								{% endif %}
 							{% endwith %}
 						{% endwith %}
