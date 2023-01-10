@@ -24,6 +24,14 @@ import calendar
 import pytz
 from django.utils.timezone import make_aware
 from dateutil.relativedelta import relativedelta
+import math
+import decimal
+def round_down(value, decimals):
+    with decimal.localcontext() as ctx:
+        d = decimal.Decimal(value)
+        ctx.rounding = decimal.ROUND_DOWN
+        return round(d, decimals)
+
 
 def create_client_journal(request, staff=None, client=None, journal_type=None):
 	try:
@@ -100,7 +108,7 @@ def get_client_magnet_id(client):
 		print(m)
 
 	str_sql = "SELECT id FROM v_users WHERE  email = '" +  client_email + "';";
-	print('sql str', str_sql)
+	
 	mycursor.execute(str_sql)
 	result = mycursor.fetchone()
 	cnx.close()
@@ -364,10 +372,8 @@ def get_ftd_list(client_ids):
 		data = {
 			'userids': client_ids,
 		}
-		print('data ftd', data)
-
+		
 		response = requests.post('http://13.229.114.255/getUserFTD', data=data)
-		print('response ftd', response)
 
 		json_data = json.loads(response.text)
 		return json_data['data']
@@ -400,7 +406,7 @@ def get_so_list(client_ids):
 def get_meta5_ftd_ids(magnet_ids, now):
 	year = now.year
 	month = now.month
-	print('get_meta5_ids', magnet_ids, now)
+	# print('get_meta5_ids', magnet_ids, now)
 	if magnet_ids != '':
 		cnx = mysql.connector.connect(
 			host="54.151.138.128",
@@ -416,7 +422,7 @@ def get_meta5_ftd_ids(magnet_ids, now):
 		mycursor = cnx.cursor()		
 		str_sql = "Select  user_id, login, account_type, rate, updated_at FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_ids)[:-1]+ ") AND updated_at >= "
 		str_sql += start_date_str + " AND updated_at <= " + end_date_str +" ORDER BY 'id' DESC " 
-		print(str_sql)
+		
 		# print('finished')
 		
 		# print('str_sql', str_sql,date, )
@@ -429,7 +435,7 @@ def get_meta5_ftd_ids(magnet_ids, now):
 		return {}
 
 def get_meta5_ids(magnet_ids, date, calculation_type):
-	print('get_meta5_ids', magnet_ids, date, calculation_type)
+	# print('get_meta5_ids', magnet_ids, date, calculation_type)
 	if magnet_ids != '':
 		cnx = mysql.connector.connect(
 			host="54.151.138.128",
@@ -455,10 +461,9 @@ def get_meta5_ids(magnet_ids, date, calculation_type):
 		elif date != None and date != '' and calculation_type=='more_than_two_months': 
 			str_sql = "Select id, user_id, login, account_type, rate, updated_at FROM vif_cabinet_legal_form_decleration WHERE user_id in ("+ str(magnet_ids)[:-1]+ ") AND updated_at < '" + date_str + "' AND updated_at >= '2022-10-01 00:00' ORDER BY 'id' DESC "
 
-		print('str_sql', str_sql,date, )
 		mycursor.execute(str_sql)
 		myresult = mycursor.fetchall()
-		print('myresult', myresult)
+		
 		return myresult
 	else:
 		return {}
@@ -484,7 +489,7 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 	meta_ids_lot_for_api = ''
 	for client_staff in client_staff_all_list:
 		staff_id = str(client_staff.staff.id)
-		print('>>>>>>>>>',client_staff.client, client_staff.staff, client_staff.client.source_detail_1, client_staff.client.magnet_id)
+		# print('>>>>>>>>>',client_staff.client, client_staff.staff, client_staff.client.source_detail_1, client_staff.client.magnet_id)
 		if client_staff.client.magnet_id != '' and client_staff.client.magnet_id != None:
 			meta_ids_lot_for_api += ( client_staff.client.magnet_id + ',')
 			if str(client_staff.client.magnet_id) not in client_detail_magnet_id_dict:
@@ -500,12 +505,9 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 			if str(client_staff.client.magnet_id) not in client_staff_dict :
 				client_staff_dict[str(client_staff.client.magnet_id)] = client_staff.staff
 			
-
-	print('last_two_months_date', last_two_months_date,)
 	
 	#get meta5 ids
 	user_login_details = get_meta5_ids(meta_ids_lot_for_api, last_two_months_date, 'two_months')
-	print('user_login_details -->', user_login_details)
 	meta5_ids = []
 	user_magnet_detail_dict = {}
 	mt5_account_type_dict = {}
@@ -532,9 +534,11 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 			mt5_account_type_dict[loop_meta_id]['created_at'] = user_login_detail[5]
 			mt5_account_type_dict[loop_meta_id]['client_name'] = client_detail_magnet_id_dict[str(user_magnet_id)]
 			mt5_account_type_dict[loop_meta_id]['staff_name'] = client_staff_dict[str(user_magnet_id)]
+			mt5_account_type_dict[loop_meta_id]['staff_id'] = client_staff_dict[str(user_magnet_id)].id
 			staff = client_staff_dict[str(user_magnet_id)]
 			supervisor = staff_supervisor_dict[str(staff.id)]
 			mt5_account_type_dict[loop_meta_id]['supervisor_name'] = supervisor.profile.full_name
+			mt5_account_type_dict[loop_meta_id]['supervisor_id'] = supervisor.id
 	
 	meta5_id_string_for_post = ''
 	for meta5_id in meta5_ids:
@@ -542,17 +546,20 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 
 	two_month_trades = {}
 	bonus_account_type_dict = {}
+	bonus_account_type_dict['total'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0,}
 	bonus_account_type_dict['elastico'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 	bonus_account_type_dict['elektro'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 	bonus_account_type_dict['magneto'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
+	bonus_account_type_dict['staff'] = {'total_idr': 0, 'total_usd': 0, }
+	bonus_account_type_dict['supervisor'] = {'total_idr': 0, 'total_usd': 0, }
 
 	if meta5_id_string_for_post != '':
+
 		data_post_for_get_login_trades = {
 			'logins': meta5_id_string_for_post[:-1],
 			'from': str(now.year)+"-"+str(now.month)+"-"+"01",
 	        'to':str(now.year)+"-"+str(now.month)+"-"+str(end_date),
 		}
-		print('data_post_for_get_login_trades two months',data_post_for_get_login_trades)
 		
 		# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
 		res = requests.post('http://13.229.114.255/getLoginsTrades', data=data_post_for_get_login_trades)
@@ -565,7 +572,7 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 		two_month_trades = {}
 		utc_timezone = pytz.timezone('Asia/Jakarta')
 		
-
+		
 		for last_two_months_account_trade in last_two_months_account_trades:
 			if last_two_months_account_trade['entry'] == 'close':
 				account_type = mt5_account_type_dict[last_two_months_account_trade['login']]['account_type']
@@ -585,6 +592,7 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 					two_month_trades[login_id]['bonus_per_lot'] = 0
 					two_month_trades[login_id]['staff_name'] = mt5_account_type_dict[login_id]['staff_name'] 
 					two_month_trades[login_id]['supervisor_name'] = mt5_account_type_dict[login_id]['supervisor_name'] 
+					two_month_trades[login_id]['rate'] = mt5_account_type_dict[last_two_months_account_trade['login']]['rate']
 				#buat testing
 				# account_type = 'magneto'
 
@@ -601,88 +609,191 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 					total_lot_dict[account_type][str_rate]['bonus_tier'] = ''
 				
 				total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
+				bonus_account_type_dict['total']['total_lot'] += loop_lot_decimal
 				two_month_trades[login_id]['total_lot'] += loop_lot_decimal
 				two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
-			# print(type(loop_lot_decimal), type(loop_rate_decimal))
-			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
+
+
+		# grouping staff and supervisor trades
+		staff_trades_dict = {}
+		supervisor_trades_dict = {}
+		for login_id, trade_dict in two_month_trades.items():
+			staff_id = mt5_account_type_dict[login_id]['staff_id']
+			supervisor_id = mt5_account_type_dict[login_id]['supervisor_id']
+			account_type = mt5_account_type_dict[login_id]['account_type']
+			
+			trade_dict['login_id'] = login_id
+			if staff_id not in staff_trades_dict:
+				staff_trades_dict[staff_id] = {}
+				
+			if account_type not in  staff_trades_dict[staff_id] :
+				staff_trades_dict[staff_id][account_type] = {}
+				staff_trades_dict[staff_id][account_type]['trade_list'] = []
+				staff_trades_dict[staff_id][account_type]['total_lot'] = 0
+				staff_trades_dict[staff_id][account_type]['total_usd'] = 0
+				staff_trades_dict[staff_id][account_type]['total_idr'] = 0 
+				staff_trades_dict[staff_id][account_type]['bonus_tier'] = 0
+
+			staff_trades_dict[staff_id][account_type]['trade_list'].append(trade_dict)
+			staff_trades_dict[staff_id][account_type]['total_lot'] += trade_dict['total_lot']
+
+			if supervisor_id not in supervisor_trades_dict:
+				supervisor_trades_dict[supervisor_id] = {}
+				
+			if account_type not in  supervisor_trades_dict[supervisor_id] :
+				supervisor_trades_dict[supervisor_id][account_type] = {}
+				supervisor_trades_dict[supervisor_id][account_type]['trade_list'] = []
+				supervisor_trades_dict[supervisor_id][account_type]['total_lot'] = 0
+				supervisor_trades_dict[supervisor_id][account_type]['total_usd'] = 0
+				supervisor_trades_dict[supervisor_id][account_type]['total_idr'] = 0 
+				supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = 0
+
+			supervisor_trades_dict[supervisor_id][account_type]['trade_list'].append(trade_dict)
+			supervisor_trades_dict[supervisor_id][account_type]['total_lot'] += trade_dict['total_lot']
 
 		
 
+			# print(type(loop_lot_decimal), type(loop_rate_decimal))
+			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )	
 
 		# print(last_two_months_account_trades)
-		print(total_lot_dict)
-		for account_type, rate_trade_dict in total_lot_dict.items():
-			for rate, bonus_dict in rate_trade_dict.items():
+		
+		for staff_id, account_type_dict in staff_trades_dict.items():
 
-				loop_total_lot = total_lot_dict[account_type][rate]['total_lot']
-				decimal_rate = Decimal(rate)
+			for account_type, trade_dict in account_type_dict.items():
+				loop_total_lot = trade_dict['total_lot']
+				bonus_usd_per_lot = Decimal(0.00)
+				bonus_tier = ''
+				bonus_usd_account_per_account_type = Decimal(0.00)
+				bonus_idr_account_per_account_type = Decimal(0.00)
 				if account_type == 'elastico':
-
-					#buat testing
-					# total_lot_dict[account_type][rate]['total_lot'] = 30.001
-
-					
-					if loop_total_lot < 29.99:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(0.5) )
-						total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(0.5) )
-						total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-						total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(0.5)
-
+					if loop_total_lot <= 30.00:
+						bonus_usd_per_lot = Decimal(1)
+						bonus_tier = 'tier 1'
 					else:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(0.75) )
-						total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(0.75) )
-						total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 2'
-						total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(0.75)
+						bonus_usd_per_lot = Decimal(1.75)
+						bonus_tier = 'tier 2'
 				elif account_type == 'elektro':
-					if loop_total_lot < 49.99:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(0.25) )
-						total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(0.25) )
-						total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-						total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(0.25)
+					if loop_total_lot <= 50.00:
+						bonus_usd_per_lot = Decimal(0.75)
+						bonus_tier = 'tier 1'
 					else:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(0.5) )
-						total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(0.5) )
-						total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 2'
-						total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(0.5)
+						bonus_usd_per_lot = Decimal(1)
+						bonus_tier = 'tier 2'
 				elif account_type == 'magneto':
-					if loop_total_lot < 99.99:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(1) )
-						total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(1) )
-						total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-						total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(1)
+					if loop_total_lot <= 100.00:
+						bonus_usd_per_lot = Decimal(2)
+						bonus_tier = 'tier 1'
 					else:
-						total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(2) )
-						total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(2) )
-						total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 2'
-						total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(2)
-		print('after')
-		
+						bonus_usd_per_lot = Decimal(3)
+						bonus_tier = 'tier 2'
+				
 
-		for account_type, rate_bonus_dict in total_lot_dict.items():
-			for rate, bonus_dict in rate_bonus_dict.items():
-				print('>', bonus_dict)
-				bonus_account_type_dict[account_type]['total_idr'] += bonus_dict['total_idr']
-				bonus_account_type_dict[account_type]['total_usd'] += bonus_dict['total_usd']
-				bonus_account_type_dict[account_type]['total_lot'] += bonus_dict['total_lot']
-				bonus_account_type_dict[account_type]['bonus_tier'] = bonus_dict['bonus_tier']
-				bonus_account_type_dict[account_type]['bonus_lot_usd'] = bonus_dict['bonus_lot_usd']
+				for trade in trade_dict['trade_list']:
+					rounding_bonus = round_down( (trade['total_lot'] * bonus_usd_per_lot), 2)
+					trade['idr_bonus'] = rounding_bonus * Decimal(trade['rate'])
+					trade['bonus'] = bonus_usd_per_lot
+					trade['usd_bonus'] = rounding_bonus
+					bonus_usd_account_per_account_type += rounding_bonus
+					bonus_idr_account_per_account_type += (rounding_bonus * Decimal(trade['rate']))
+				
+				staff_trades_dict[staff_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+				staff_trades_dict[staff_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+				staff_trades_dict[staff_id][account_type]['bonus_tier'] = bonus_tier	
 
+				bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
 
-		
-		trade_list = []
-		# print('0000000')
-		# print(mt5_account_type_dict)
-		for login_id, detail_dict in two_month_trades.items():
-			# print('|||||',two_month_trades[login_id])
-			account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-			two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
-			two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
-			two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
-		
+				bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+
+				bonus_account_type_dict['staff']['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict['staff']['total_usd'] += bonus_usd_account_per_account_type
+				
 	
-	return bonus_account_type_dict, two_month_trades
+
+		for supervisor_id, account_type_dict in supervisor_trades_dict.items():
+
+			for account_type, trade_dict in account_type_dict.items():
+				loop_total_lot = trade_dict['total_lot']
+				bonus_usd_per_lot = Decimal(0.00)
+				bonus_tier = ''
+				bonus_usd_account_per_account_type = Decimal(0.00)
+				bonus_idr_account_per_account_type = Decimal(0.00)
+				if account_type == 'elastico':
+					if loop_total_lot <= 30.00:
+						bonus_usd_per_lot = Decimal(0.5)
+						bonus_tier = 'tier 1'
+					else:
+						bonus_usd_per_lot = Decimal(0.75)
+						bonus_tier = 'tier 2'
+				elif account_type == 'elektro':
+					if loop_total_lot <= 50.00:
+						bonus_usd_per_lot = Decimal(0.25)
+						bonus_tier = 'tier 1'
+					else:
+						bonus_usd_per_lot = Decimal(0.5)
+						bonus_tier = 'tier 2'
+				elif account_type == 'magneto':
+					if loop_total_lot <= 100.00:
+						bonus_usd_per_lot = Decimal(1)
+						bonus_tier = 'tier 1'
+					else:
+						bonus_usd_per_lot = Decimal(2)
+						bonus_tier = 'tier 2'
+				
+
+				for trade in trade_dict['trade_list']:
+					rounding_bonus = round_down( (trade['total_lot'] * bonus_usd_per_lot), 2)
+					trade['supervisor_idr_bonus'] = rounding_bonus * Decimal(trade['rate'])
+					trade['supervisor_bonus'] = bonus_usd_per_lot
+					trade['supervisor_usd_bonus'] = rounding_bonus
+					
+					bonus_usd_account_per_account_type += rounding_bonus
+					
+					bonus_idr_account_per_account_type += (rounding_bonus * Decimal(trade['rate']))
+				
+				supervisor_trades_dict[supervisor_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+				supervisor_trades_dict[supervisor_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+				supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = bonus_tier
+
+
+				bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
+
+				bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+				bonus_account_type_dict['supervisor']['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict['supervisor']['total_usd'] += bonus_usd_account_per_account_type
+
+
+		
+		# print('supervisor_trades_dict', supervisor_trades_dict)
+		# for account_type, rate_bonus_dict in total_lot_dict.items():
+		# 	for rate, bonus_dict in rate_bonus_dict.items():
+		# 		print('>', bonus_dict)
+		# 		bonus_account_type_dict[account_type]['total_idr'] += bonus_dict['total_idr']
+		# 		bonus_account_type_dict[account_type]['total_usd'] += bonus_dict['total_usd']
+		# 		bonus_account_type_dict[account_type]['total_lot'] += bonus_dict['total_lot']
+		# 		# bonus_account_type_dict[account_type]['bonus_tier'] = bonus_dict['bonus_tier']
+		# 		bonus_account_type_dict[account_type]['bonus_lot_usd'] = bonus_dict['bonus_lot_usd']
+
+
+		
+		# trade_list = []
+		# # print('0000000')
+		# # print(mt5_account_type_dict)
+		# for login_id, detail_dict in two_month_trades.items():
+		# 	# print('|||||',two_month_trades[login_id])
+		# 	account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
+		# 	two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
+		# 	two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
+		# 	two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
+		
+	return bonus_account_type_dict, two_month_trades, staff_trades_dict, supervisor_trades_dict
 
 def master_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_date, now, end_date):
+	print('calculate more than two months')
 	supervisor_list = Staff.objects.filter(staff_level__level=2, is_active=True)
 	supervisor_staff_dict = {}
 	staff_supervisor_dict = {}
@@ -720,9 +831,9 @@ def master_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_date
 	
 	#get meta5 ids
 	user_login_details = get_meta5_ids(meta_ids_lot_for_api, last_two_months_date, 'more_than_two_months')
-	print(len(user_login_details),user_login_details ,  'mati disini')
+	
 	if len(user_login_details) > 0:
-		print('more than two months user login details', user_login_details)
+		
 		meta5_ids = []
 		user_magnet_detail_dict = {}
 		mt5_account_type_dict = {}
@@ -746,17 +857,15 @@ def master_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_date
 					mt5_account_type_dict[loop_meta_id] = {}
 				mt5_account_type_dict[loop_meta_id]['account_type'] = user_login_detail[3]
 				mt5_account_type_dict[loop_meta_id]['rate'] = user_login_detail[4]
-				mt5_account_type_dict[loop_meta_id]['created_at'] = client_magnet_id_created_at_dict[str(user_magnet_id)]
+				mt5_account_type_dict[loop_meta_id]['created_at'] = user_login_detail[5]
 				mt5_account_type_dict[loop_meta_id]['client_name'] = client_detail_magnet_id_dict[str(user_magnet_id)]
 				mt5_account_type_dict[loop_meta_id]['staff_name'] = client_staff_dict[str(user_magnet_id)]
+				mt5_account_type_dict[loop_meta_id]['staff_id'] = client_staff_dict[str(user_magnet_id)].id
 				staff = client_staff_dict[str(user_magnet_id)]
 				supervisor = staff_supervisor_dict[str(staff.id)]
 				mt5_account_type_dict[loop_meta_id]['supervisor_name'] = supervisor.profile.full_name
-
-		# print('__________')
-		# print(meta5_ids)
-		# print(user_magnet_detail_dict)
-
+				mt5_account_type_dict[loop_meta_id]['supervisor_id'] = supervisor.id
+		
 		meta5_id_string_for_post = ''
 		
 		for meta5_id in meta5_ids:
@@ -769,37 +878,44 @@ def master_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_date
 				'from': str(now.year)+"-"+str(now.month)+"-"+"01",
 		        'to':str(now.year)+"-"+str(now.month)+"-"+str(end_date),
 			}
-			print(data_post_for_get_login_trades)
+			
 			
 			# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
 			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data_post_for_get_login_trades)
 			
 			json_data = json.loads(res.text)
-			print('json_data', json_data)
 			last_two_months_account_trades = json_data['data']
 			total_lot_dict = {}
 			
+			bonus_account_type_dict = {}
+			bonus_account_type_dict['total'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0,}
+			bonus_account_type_dict['elastico'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
+			bonus_account_type_dict['elektro'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
+			bonus_account_type_dict['magneto'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
+			bonus_account_type_dict['staff'] = {'total_idr': 0, 'total_usd': 0, }
+			bonus_account_type_dict['supervisor'] = {'total_idr': 0, 'total_usd': 0, }
+
 			
-			print('more than two months trades', last_two_months_account_trades)
 			for last_two_months_account_trade in last_two_months_account_trades:
-				if last_two_months_account_trade['action'] == 'buy':
+				if last_two_months_account_trade['entry'] == 'close':
 					account_type = mt5_account_type_dict[last_two_months_account_trade['login']]['account_type']
 					login_id = str(last_two_months_account_trade['login'])
-					jakarta_timezone = pytz.timezone('Asia/Jakarta')
-					created_at_timezone = two_month_trades[login_id]['created_at'].replace(tzinfo=jakarta_timezone)
-
+					#group trades by login
 					if last_two_months_account_trade['login'] not in two_month_trades:
 						two_month_trades[login_id] = {}
 						two_month_trades[login_id]['total_lot'] = 0
 						two_month_trades[login_id]['client_name'] = mt5_account_type_dict[login_id]['client_name']
 						two_month_trades[login_id]['rate'] = mt5_account_type_dict[login_id]['rate']
 						two_month_trades[login_id]['created_at'] = mt5_account_type_dict[login_id]['created_at']
+						jakarta_timezone = pytz.timezone('Asia/Jakarta')
+						created_at_timezone = two_month_trades[login_id]['created_at'].replace(tzinfo=jakarta_timezone)
 						two_month_trades[login_id]['account_ages'] = (now - created_at_timezone).days
-						two_month_trades[login_id]['staff_name'] = mt5_account_type_dict[login_id]['staff_name'] 
-						two_month_trades[login_id]['supervisor_name'] = mt5_account_type_dict[login_id]['supervisor_name'] 
 						two_month_trades[login_id]['total_idr'] = 0
 						two_month_trades[login_id]['total_usd'] = 0
 						two_month_trades[login_id]['bonus_per_lot'] = 0
+						two_month_trades[login_id]['staff_name'] = mt5_account_type_dict[login_id]['staff_name'] 
+						two_month_trades[login_id]['supervisor_name'] = mt5_account_type_dict[login_id]['supervisor_name'] 
+						two_month_trades[login_id]['rate'] = mt5_account_type_dict[last_two_months_account_trade['login']]['rate']
 					#buat testing
 					# account_type = 'magneto'
 
@@ -816,97 +932,167 @@ def master_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_date
 						total_lot_dict[account_type][str_rate]['bonus_tier'] = ''
 					
 					total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
+					bonus_account_type_dict['total']['total_lot'] += loop_lot_decimal
 					two_month_trades[login_id]['total_lot'] += loop_lot_decimal
 					two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
-				# print(type(loop_lot_decimal), type(loop_rate_decimal))
-				# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
 
 			
 
 
-			# print(last_two_months_account_trades)
-			print(total_lot_dict)
-			for account_type, rate_trade_dict in total_lot_dict.items():
-				for rate, bonus_dict in rate_trade_dict.items():
+			staff_trades_dict = {}
+			supervisor_trades_dict = {}
+			for login_id, trade_dict in two_month_trades.items():
+				staff_id = mt5_account_type_dict[login_id]['staff_id']
+				supervisor_id = mt5_account_type_dict[login_id]['supervisor_id']
+				account_type = mt5_account_type_dict[login_id]['account_type']
+				trade_dict['login_id'] = login_id
+				if staff_id not in staff_trades_dict:
+					staff_trades_dict[staff_id] = {}
+					
+				if account_type not in  staff_trades_dict[staff_id] :
+					staff_trades_dict[staff_id][account_type] = {}
+					staff_trades_dict[staff_id][account_type]['trade_list'] = []
+					staff_trades_dict[staff_id][account_type]['total_lot'] = 0
+					staff_trades_dict[staff_id][account_type]['total_usd'] = 0
+					staff_trades_dict[staff_id][account_type]['total_idr'] = 0 
+					staff_trades_dict[staff_id][account_type]['bonus_tier'] = 0
 
-					loop_total_lot = total_lot_dict[account_type][rate]['total_lot']
-					decimal_rate = Decimal(rate)
+				staff_trades_dict[staff_id][account_type]['trade_list'].append(trade_dict)
+				staff_trades_dict[staff_id][account_type]['total_lot'] += trade_dict['total_lot']
+
+				if supervisor_id not in supervisor_trades_dict:
+					supervisor_trades_dict[supervisor_id] = {}
+					
+				if account_type not in  supervisor_trades_dict[supervisor_id] :
+					supervisor_trades_dict[supervisor_id][account_type] = {}
+					supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'] = []
+					supervisor_trades_dict[supervisor_id][account_type]['total_lot'] = 0
+					supervisor_trades_dict[supervisor_id][account_type]['total_usd'] = 0
+					supervisor_trades_dict[supervisor_id][account_type]['total_idr'] = 0 
+					supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = 0
+				supervisor_trade_list = trade_dict
+				supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'].append(supervisor_trade_list)
+				supervisor_trades_dict[supervisor_id][account_type]['total_lot'] += trade_dict['total_lot']
+			
+
+
+			for staff_id, account_type_dict in staff_trades_dict.items():
+				for account_type, trade_dict in account_type_dict.items():
+					loop_total_lot = trade_dict['total_lot']
+					bonus_usd_per_lot = Decimal(0.00)
+					bonus_tier = ''
+					bonus_usd_account_per_account_type = Decimal(0.00)
+					bonus_idr_account_per_account_type = Decimal(0.00)
 					if account_type == 'elastico':
-
-						#buat testing
-						# total_lot_dict[account_type][rate]['total_lot'] = 30.001
-
-						
-						if loop_total_lot < 30:
-							total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(1) )
-							total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(1) )
-							total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-							total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(1)
-
+						if loop_total_lot <= 30.00:
+							bonus_usd_per_lot = Decimal(0.5)
+							bonus_tier = 'tier 1'
 						else:
-							total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(1.75) )
-							total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(1.75) )
-							total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 2'
-							total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(1.75)
+							bonus_usd_per_lot = Decimal(0.75)
+							bonus_tier = 'tier 2'
 					elif account_type == 'elektro':
-						if loop_total_lot < 50:
-							total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(0.75) )
-							total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(0.75) )
-							total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-							total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(0.75)
+						if loop_total_lot <= 50.00:
+							bonus_usd_per_lot = Decimal(0.25)
+							bonus_tier = 'tier 1'
 						else:
-							total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(1) )
-							total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(1) )
-							total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 2'
-							total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(1)
+							bonus_usd_per_lot = Decimal(0.5)
+							bonus_tier = 'tier 2'
 					elif account_type == 'magneto':
-						if loop_total_lot < 100:
-							total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(2) )
-							total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(2) )
-							total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-							total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(2)
+						if loop_total_lot <= 100.00:
+							bonus_usd_per_lot = Decimal(1)
+							bonus_tier = 'tier 1'
 						else:
-							total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(3) )
-							total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(3) )
-							total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 2'
-							total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(3)
-			print('after')
-			bonus_account_type_dict = {}
-			bonus_account_type_dict['elastico'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
-			bonus_account_type_dict['elektro'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
-			bonus_account_type_dict['magneto'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
+							bonus_usd_per_lot = Decimal(2)
+							bonus_tier = 'tier 2'
+					
+					for staff_trade in trade_dict['trade_list']:
+						rounding_bonus = round_down( (staff_trade['total_lot'] * bonus_usd_per_lot), 2)
+						staff_trade['idr_bonus'] = rounding_bonus * Decimal(staff_trade['rate'])
+						staff_trade['bonus'] = bonus_usd_per_lot
+						staff_trade['usd_bonus'] = rounding_bonus
+						bonus_usd_account_per_account_type += rounding_bonus
+						bonus_idr_account_per_account_type += (rounding_bonus * Decimal(staff_trade['rate']))
+					
+					staff_trades_dict[staff_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+					staff_trades_dict[staff_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+					staff_trades_dict[staff_id][account_type]['bonus_tier'] = bonus_tier	
 
-			for account_type, rate_bonus_dict in total_lot_dict.items():
-				for rate, bonus_dict in rate_bonus_dict.items():
-					print('>', bonus_dict)
-					bonus_account_type_dict[account_type]['total_idr'] += bonus_dict['total_idr']
-					bonus_account_type_dict[account_type]['total_usd'] += bonus_dict['total_usd']
-					bonus_account_type_dict[account_type]['total_lot'] += bonus_dict['total_lot']
-					bonus_account_type_dict[account_type]['bonus_tier'] = bonus_dict['bonus_tier']
-					bonus_account_type_dict[account_type]['bonus_lot_usd'] = bonus_dict['bonus_lot_usd']
+					bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
 
+					bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+
+					bonus_account_type_dict['staff']['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict['staff']['total_usd'] += bonus_usd_account_per_account_type
+					
+			for supervisor_id, supervisor_account_type_dict in supervisor_trades_dict.items():
+
+				for account_type, supervisor_trade_dict in supervisor_account_type_dict.items():
+					loop_total_lot = supervisor_trade_dict['total_lot']
+					bonus_usd_per_lot = Decimal(0.00)
+					bonus_tier = ''
+					bonus_usd_account_per_account_type = Decimal(0.00)
+					bonus_idr_account_per_account_type = Decimal(0.00)
+					if account_type == 'elastico':
+						if loop_total_lot <= 30.00:
+							bonus_usd_per_lot = Decimal(1)
+							bonus_tier = 'tier 1'
+						else:
+							bonus_usd_per_lot = Decimal(1.75)
+							bonus_tier = 'tier 2'
+					elif account_type == 'elektro':
+						if loop_total_lot <= 50.00:
+							bonus_usd_per_lot = Decimal(0.75)
+							bonus_tier = 'tier 1'
+						else:
+							bonus_usd_per_lot = Decimal(0.1)
+							bonus_tier = 'tier 2'
+					elif account_type == 'magneto':
+						if loop_total_lot <= 100.00:
+							bonus_usd_per_lot = Decimal(2)
+							bonus_tier = 'tier 1'
+						else:
+							bonus_usd_per_lot = Decimal(3)
+							bonus_tier = 'tier 2'
+					
+					
+					loop_index  = 0
+					for supervisor_trade in supervisor_trade_dict['supervisor_trade_list']:
+						rounding_bonus = round_down( (supervisor_trade['total_lot'] * bonus_usd_per_lot), 2)
+						
+						supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_idr_bonus'] = rounding_bonus * Decimal(supervisor_trade['rate'])
+						
+						supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_bonus'] = bonus_usd_per_lot
+						
+						supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_usd_bonus'] = rounding_bonus
+						
+						bonus_usd_account_per_account_type += rounding_bonus
+						
+						bonus_idr_account_per_account_type += (rounding_bonus * Decimal(supervisor_trade['rate']))
+						loop_index += 1
+					
+					supervisor_trades_dict[supervisor_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+					supervisor_trades_dict[supervisor_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+					supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = bonus_tier
+
+
+					bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
+
+					bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+					
+					bonus_account_type_dict['supervisor']['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict['supervisor']['total_usd'] += bonus_usd_account_per_account_type
 
 			
-			trade_list = []
-			print('0000000')
-			print(mt5_account_type_dict)
-			for login_id, detail_dict in two_month_trades.items():
-				# print('|||||',two_month_trades[login_id])
-				account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-				two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
-				two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
-				two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
-				
-
-
-			print('finish more than two months', two_month_trades)
-			print(two_month_trades)
-
-		return bonus_account_type_dict, two_month_trades
+		return bonus_account_type_dict, two_month_trades, staff_trades_dict, supervisor_trades_dict
 	else:
-		return bonus_account_type_dict, {}	
+		return bonus_account_type_dict, {}, {}, {}
 
 def master_calculate_data_pribadi_bonus(staffs, now, end_date):
+	supervisor_list = Staff.objects.filter(staff_level__level=2, is_active=True)
 	supervisor_staff_dict = {}
 	staff_supervisor_dict = {}
 	
@@ -914,11 +1100,12 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 		staff_id = str(staff.id)
 		if staff_id not in staff_supervisor_dict:
 			staff_supervisor_dict[staff_id] = staff.staff_parent
+
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
 		client__source_detail_1=2,
 		is_active=True,).exclude( (Q(client__magnet_id='') & Q(client__magnet_id=None)) ).prefetch_related('client')
-	print(client_staff_all_list.count(), 'count')
+	
 	client_staff_dict = {}
 	client_detail_magnet_id_dict = {}
 	meta_ids_lot_for_api = ''
@@ -935,7 +1122,6 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 	
 	#get meta5 ids
 	user_login_details = get_meta5_ids(meta_ids_lot_for_api, None, None)
-	print('user_login_details -->', user_login_details)
 	meta5_ids = []
 	user_magnet_detail_dict = {}
 	mt5_account_type_dict = {}
@@ -957,6 +1143,10 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 			meta5_ids.append(loop_meta_id)
 			if loop_meta_id not in mt5_account_type_dict:
 				mt5_account_type_dict[loop_meta_id] = {}
+
+			supervisor = staff_supervisor_dict[str(staff.id)]
+			mt5_account_type_dict[loop_meta_id]['staff_id'] = client_staff_dict[str(user_magnet_id)].id
+			mt5_account_type_dict[loop_meta_id]['supervisor_id'] = supervisor.id
 			mt5_account_type_dict[loop_meta_id]['account_type'] = user_login_detail[3]
 			mt5_account_type_dict[loop_meta_id]['rate'] = user_login_detail[4]
 			mt5_account_type_dict[loop_meta_id]['created_at'] = user_login_detail[5]
@@ -977,9 +1167,12 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 
 	two_month_trades = {}
 	bonus_account_type_dict = {}
+	bonus_account_type_dict['total'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0,}
 	bonus_account_type_dict['elastico'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 	bonus_account_type_dict['elektro'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 	bonus_account_type_dict['magneto'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
+	bonus_account_type_dict['staff'] = {'total_idr': 0, 'total_usd': 0, }
+	bonus_account_type_dict['supervisor'] = {'total_idr': 0, 'total_usd': 0, }
 
 	if meta5_id_string_for_post != '':
 		data_post_for_get_login_trades = {
@@ -1020,6 +1213,8 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 					two_month_trades[login_id]['total_idr'] = 0
 					two_month_trades[login_id]['total_usd'] = 0
 					two_month_trades[login_id]['bonus_per_lot'] = 0
+
+					
 				#buat testing
 				# account_type = 'magneto'
 
@@ -1037,74 +1232,146 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 				
 				total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 				two_month_trades[login_id]['total_lot'] += loop_lot_decimal
-				two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
-			# print(type(loop_lot_decimal), type(loop_rate_decimal))
-			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
+			
+		staff_trades_dict = {}
+		supervisor_trades_dict = {}
+		for login_id, trade_dict in two_month_trades.items():
+			staff_id = mt5_account_type_dict[login_id]['staff_id']
+			supervisor_id = mt5_account_type_dict[login_id]['supervisor_id']
+			account_type = mt5_account_type_dict[login_id]['account_type']
+			if staff_id not in staff_trades_dict:
+				staff_trades_dict[staff_id] = {}
+				
+			if account_type not in  staff_trades_dict[staff_id] :
+				staff_trades_dict[staff_id][account_type] = {}
+				staff_trades_dict[staff_id][account_type]['trade_list'] = []
+				staff_trades_dict[staff_id][account_type]['total_lot'] = 0
+				staff_trades_dict[staff_id][account_type]['total_usd'] = 0
+				staff_trades_dict[staff_id][account_type]['total_idr'] = 0 
+				staff_trades_dict[staff_id][account_type]['bonus_tier'] = 0
 
+			staff_trades_dict[staff_id][account_type]['trade_list'].append(trade_dict)
+			staff_trades_dict[staff_id][account_type]['total_lot'] += trade_dict['total_lot']
+
+			if supervisor_id not in supervisor_trades_dict:
+				supervisor_trades_dict[supervisor_id] = {}
+				
+			if account_type not in  supervisor_trades_dict[supervisor_id] :
+				supervisor_trades_dict[supervisor_id][account_type] = {}
+				supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'] = []
+				supervisor_trades_dict[supervisor_id][account_type]['total_lot'] = 0
+				supervisor_trades_dict[supervisor_id][account_type]['total_usd'] = 0
+				supervisor_trades_dict[supervisor_id][account_type]['total_idr'] = 0 
+				supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = 0
+			supervisor_trade_list = trade_dict
+			supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'].append(supervisor_trade_list)
+			supervisor_trades_dict[supervisor_id][account_type]['total_lot'] += trade_dict['total_lot']
 		
 
 
-		# print(last_two_months_account_trades)
-		print(total_lot_dict)
-		for account_type, rate_trade_dict in total_lot_dict.items():
-			for rate, bonus_dict in rate_trade_dict.items():
-
-				loop_total_lot = total_lot_dict[account_type][rate]['total_lot']
-				decimal_rate = Decimal(rate)
+		for staff_id, account_type_dict in staff_trades_dict.items():
+			for account_type, trade_dict in account_type_dict.items():
+				loop_total_lot = trade_dict['total_lot']
+				bonus_usd_per_lot = Decimal(0.00)
+				bonus_tier = ''
+				bonus_usd_account_per_account_type = Decimal(0.00)
+				bonus_idr_account_per_account_type = Decimal(0.00)
 				if account_type == 'elastico':
-
-					#buat testing
-					# total_lot_dict[account_type][rate]['total_lot'] = 30.001
-
 					
+					bonus_usd_per_lot = Decimal(3)
+					bonus_tier = 'tier 1'
 					
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(0.5) )
-					total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(0.5) )
-					total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-					total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(0.5)
-
 				elif account_type == 'elektro':
 					
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(0.5) )
-					total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(0.5) )
-					total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-					total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(0.5)
+					bonus_usd_per_lot = Decimal(1)
+					bonus_tier = 'tier 1'
 					
 				elif account_type == 'magneto':
 					
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(0.5) )
-					total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(0.5) )
-					total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-					total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(0.5)
+					bonus_usd_per_lot = Decimal(4)
+					bonus_tier = 'tier 1'
 					
-		print('after')
-		
+				
+				for staff_trade in trade_dict['trade_list']:
+					rounding_bonus = round_down( (staff_trade['total_lot'] * bonus_usd_per_lot), 2)
+					staff_trade['idr_bonus'] = rounding_bonus * Decimal(staff_trade['rate'])
+					staff_trade['bonus'] = bonus_usd_per_lot
+					staff_trade['usd_bonus'] = rounding_bonus
+					bonus_usd_account_per_account_type += rounding_bonus
+					bonus_idr_account_per_account_type += (rounding_bonus * Decimal(staff_trade['rate']))
+				
+				staff_trades_dict[staff_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+				staff_trades_dict[staff_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+				staff_trades_dict[staff_id][account_type]['bonus_tier'] = bonus_tier	
 
-		for account_type, rate_bonus_dict in total_lot_dict.items():
-			for rate, bonus_dict in rate_bonus_dict.items():
-				print('>', bonus_dict)
-				bonus_account_type_dict[account_type]['total_idr'] += bonus_dict['total_idr']
-				bonus_account_type_dict[account_type]['total_usd'] += bonus_dict['total_usd']
-				bonus_account_type_dict[account_type]['total_lot'] += bonus_dict['total_lot']
-				bonus_account_type_dict[account_type]['bonus_tier'] = bonus_dict['bonus_tier']
-				bonus_account_type_dict[account_type]['bonus_lot_usd'] = bonus_dict['bonus_lot_usd']
+				bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
+
+				bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+
+				bonus_account_type_dict['staff']['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict['staff']['total_usd'] += bonus_usd_account_per_account_type
+					
+
+		for supervisor_id, supervisor_account_type_dict in supervisor_trades_dict.items():
+
+			for account_type, supervisor_trade_dict in supervisor_account_type_dict.items():
+				loop_total_lot = supervisor_trade_dict['total_lot']
+				bonus_usd_per_lot = Decimal(0.00)
+				bonus_tier = ''
+				bonus_usd_account_per_account_type = Decimal(0.00)
+				bonus_idr_account_per_account_type = Decimal(0.00)
+				if account_type == 'elastico':
+					
+					bonus_usd_per_lot = Decimal(0.5)
+					bonus_tier = 'tier 1'
+					
+				elif account_type == 'elektro':
+					
+					bonus_usd_per_lot = Decimal(0.5)
+					bonus_tier = 'tier 1'
+					
+				elif account_type == 'magneto':
+					
+					bonus_usd_per_lot = Decimal(0.5)
+					bonus_tier = 'tier 1'
+				
+				
+				loop_index  = 0
+				for supervisor_trade in supervisor_trade_dict['supervisor_trade_list']:
+					rounding_bonus = round_down( (supervisor_trade['total_lot'] * bonus_usd_per_lot), 2)
+					
+					supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_idr_bonus'] = rounding_bonus * Decimal(supervisor_trade['rate'])
+					
+					supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_bonus'] = bonus_usd_per_lot
+					
+					supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_usd_bonus'] = rounding_bonus
+					
+					bonus_usd_account_per_account_type += rounding_bonus
+					
+					bonus_idr_account_per_account_type += (rounding_bonus * Decimal(supervisor_trade['rate']))
+					loop_index += 1
+				
+				supervisor_trades_dict[supervisor_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+				supervisor_trades_dict[supervisor_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+				supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = bonus_tier
 
 
+				bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
+
+				bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+				
+				bonus_account_type_dict['supervisor']['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict['supervisor']['total_usd'] += bonus_usd_account_per_account_type
 		
-		trade_list = []
-		# print('0000000')
-		# print(mt5_account_type_dict)
-		for login_id, detail_dict in two_month_trades.items():
-			# print('|||||',two_month_trades[login_id])
-			account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-			two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
-			two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
-			two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
-		
-	
-	return bonus_account_type_dict, two_month_trades
+	return bonus_account_type_dict, two_month_trades, staff_trades_dict, supervisor_trades_dict
 
 def master_calculate_ib_bonus(staffs, now, end_date):
+
+
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
 		client__is_ib=True,
@@ -1157,18 +1424,17 @@ def master_calculate_ib_bonus(staffs, now, end_date):
 			meta5_ids.append(loop_meta_id)
 			if loop_meta_id not in mt5_account_type_dict:
 				mt5_account_type_dict[loop_meta_id] = {}
+
+			supervisor = staff_supervisor_dict[str(staff.id)]
+			mt5_account_type_dict[loop_meta_id]['staff_id'] = client_staff_dict[str(user_magnet_id)].id
+			mt5_account_type_dict[loop_meta_id]['supervisor_id'] = supervisor.id
 			mt5_account_type_dict[loop_meta_id]['account_type'] = user_login_detail[3]
 			mt5_account_type_dict[loop_meta_id]['rate'] = user_login_detail[4]
 			mt5_account_type_dict[loop_meta_id]['created_at'] = user_login_detail[5]
 			mt5_account_type_dict[loop_meta_id]['client_name'] = client_detail_magnet_id_dict[str(user_magnet_id)]
 			mt5_account_type_dict[loop_meta_id]['staff_name'] = client_staff_dict[str(user_magnet_id)]
 			staff = client_staff_dict[str(user_magnet_id)]
-			supervisor = staff_supervisor_dict[str(staff.id)]
 			mt5_account_type_dict[loop_meta_id]['supervisor_name'] = supervisor.profile.full_name
-
-	# print('__________')
-	# print(meta5_ids)
-	# print(user_magnet_detail_dict)
 
 	meta5_id_string_for_post = ''
 	for meta5_id in meta5_ids:
@@ -1176,9 +1442,11 @@ def master_calculate_ib_bonus(staffs, now, end_date):
 
 	two_month_trades = {}
 	bonus_account_type_dict = {}
+	bonus_account_type_dict['total'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0,}
 	bonus_account_type_dict['elastico'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 	bonus_account_type_dict['elektro'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 	bonus_account_type_dict['magneto'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
+	bonus_account_type_dict['supervisor'] = {'total_idr': 0, 'total_usd': 0, }
 
 	if meta5_id_string_for_post != '':
 		data_post_for_get_login_trades = {
@@ -1236,69 +1504,142 @@ def master_calculate_ib_bonus(staffs, now, end_date):
 				
 				total_lot_dict[account_type][str_rate]['total_lot'] += loop_lot_decimal
 				two_month_trades[login_id]['total_lot'] += loop_lot_decimal
-				two_month_trades[login_id]['total_lot'] = round(two_month_trades[login_id]['total_lot'], 2)
-			# print(type(loop_lot_decimal), type(loop_rate_decimal))
-			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )
+				two_month_trades[login_id]['total_lot'] = round_down(two_month_trades[login_id]['total_lot'], 2)
+			
+		staff_trades_dict = {}
+		supervisor_trades_dict = {}
+		for login_id, trade_dict in two_month_trades.items():
+			staff_id = mt5_account_type_dict[login_id]['staff_id']
+			supervisor_id = mt5_account_type_dict[login_id]['supervisor_id']
+			account_type = mt5_account_type_dict[login_id]['account_type']
+			if staff_id not in staff_trades_dict:
+				staff_trades_dict[staff_id] = {}
+				
+			if account_type not in  staff_trades_dict[staff_id] :
+				staff_trades_dict[staff_id][account_type] = {}
+				staff_trades_dict[staff_id][account_type]['trade_list'] = []
+				staff_trades_dict[staff_id][account_type]['total_lot'] = 0
+				staff_trades_dict[staff_id][account_type]['total_usd'] = 0
+				staff_trades_dict[staff_id][account_type]['total_idr'] = 0 
+				staff_trades_dict[staff_id][account_type]['bonus_tier'] = 0
+
+			staff_trades_dict[staff_id][account_type]['trade_list'].append(trade_dict)
+			staff_trades_dict[staff_id][account_type]['total_lot'] += trade_dict['total_lot']
+
+			if supervisor_id not in supervisor_trades_dict:
+				supervisor_trades_dict[supervisor_id] = {}
+				
+			if account_type not in  supervisor_trades_dict[supervisor_id] :
+				supervisor_trades_dict[supervisor_id][account_type] = {}
+				supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'] = []
+				supervisor_trades_dict[supervisor_id][account_type]['total_lot'] = 0
+				supervisor_trades_dict[supervisor_id][account_type]['total_usd'] = 0
+				supervisor_trades_dict[supervisor_id][account_type]['total_idr'] = 0 
+				supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = 0
+			supervisor_trade_list = trade_dict
+			supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'].append(supervisor_trade_list)
+			supervisor_trades_dict[supervisor_id][account_type]['total_lot'] += trade_dict['total_lot']	
 
 		
-
-
-		# print(last_two_months_account_trades)
-		print(total_lot_dict)
-		for account_type, rate_trade_dict in total_lot_dict.items():
-			for rate, bonus_dict in rate_trade_dict.items():
-
-				loop_total_lot = total_lot_dict[account_type][rate]['total_lot']
-				decimal_rate = Decimal(rate)
+		for staff_id, account_type_dict in staff_trades_dict.items():
+			for account_type, trade_dict in account_type_dict.items():
+				loop_total_lot = trade_dict['total_lot']
+				bonus_usd_per_lot = Decimal(0.00)
+				bonus_tier = ''
+				bonus_usd_account_per_account_type = Decimal(0.00)
+				bonus_idr_account_per_account_type = Decimal(0.00)
 				if account_type == 'elastico':
-
-					#buat testing
-					# total_lot_dict[account_type][rate]['total_lot'] = 30.001
-
 					
+					bonus_usd_per_lot = Decimal(3)
+					bonus_tier = 'tier 1'
 					
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(1) )
-					total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(1) )
-					total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-					total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(1)
-
 				elif account_type == 'elektro':
 					
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(0.5) )
-					total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(0.5) )
-					total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-					total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(0.5)
+					bonus_usd_per_lot = Decimal(1)
+					bonus_tier = 'tier 1'
 					
 				elif account_type == 'magneto':
 					
-					total_lot_dict[account_type][rate]['total_idr'] += ( loop_total_lot * decimal_rate * Decimal(0.35) )
-					total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(0.35) )
-					total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 1'
-					total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(0.35)
+					bonus_usd_per_lot = Decimal(4)
+					bonus_tier = 'tier 1'
 					
-		print('after')
-		
+				
+				for staff_trade in trade_dict['trade_list']:
+					rounding_bonus = round_down( (staff_trade['total_lot'] * bonus_usd_per_lot), 2)
+					staff_trade['idr_bonus'] = rounding_bonus * Decimal(staff_trade['rate'])
+					staff_trade['bonus'] = bonus_usd_per_lot
+					staff_trade['usd_bonus'] = rounding_bonus
+					bonus_usd_account_per_account_type += rounding_bonus
+					bonus_idr_account_per_account_type += (rounding_bonus * Decimal(staff_trade['rate']))
+				
+				staff_trades_dict[staff_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+				staff_trades_dict[staff_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+				staff_trades_dict[staff_id][account_type]['bonus_tier'] = bonus_tier	
 
-		for account_type, rate_bonus_dict in total_lot_dict.items():
-			for rate, bonus_dict in rate_bonus_dict.items():
-				print('>', bonus_dict)
-				bonus_account_type_dict[account_type]['total_idr'] += bonus_dict['total_idr']
-				bonus_account_type_dict[account_type]['total_usd'] += bonus_dict['total_usd']
-				bonus_account_type_dict[account_type]['total_lot'] += bonus_dict['total_lot']
-				bonus_account_type_dict[account_type]['bonus_tier'] = bonus_dict['bonus_tier']
-				bonus_account_type_dict[account_type]['bonus_lot_usd'] = bonus_dict['bonus_lot_usd']
+				bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
+
+				bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+
+				bonus_account_type_dict['staff']['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict['staff']['total_usd'] += bonus_usd_account_per_account_type
+					
+
+		for supervisor_id, supervisor_account_type_dict in supervisor_trades_dict.items():
+
+			for account_type, supervisor_trade_dict in supervisor_account_type_dict.items():
+				loop_total_lot = supervisor_trade_dict['total_lot']
+				bonus_usd_per_lot = Decimal(0.00)
+				bonus_tier = ''
+				bonus_usd_account_per_account_type = Decimal(0.00)
+				bonus_idr_account_per_account_type = Decimal(0.00)
+				if account_type == 'elastico':
+					
+					bonus_usd_per_lot = Decimal(0.5)
+					bonus_tier = 'tier 1'
+					
+				elif account_type == 'elektro':
+					
+					bonus_usd_per_lot = Decimal(0.5)
+					bonus_tier = 'tier 1'
+					
+				elif account_type == 'magneto':
+					
+					bonus_usd_per_lot = Decimal(0.5)
+					bonus_tier = 'tier 1'
+				
+				
+				loop_index  = 0
+				for supervisor_trade in supervisor_trade_dict['supervisor_trade_list']:
+					rounding_bonus = round_down( (supervisor_trade['total_lot'] * bonus_usd_per_lot), 2)
+					
+					supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_idr_bonus'] = rounding_bonus * Decimal(supervisor_trade['rate'])
+					
+					supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_bonus'] = bonus_usd_per_lot
+					
+					supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_usd_bonus'] = rounding_bonus
+					
+					bonus_usd_account_per_account_type += rounding_bonus
+					
+					bonus_idr_account_per_account_type += (rounding_bonus * Decimal(supervisor_trade['rate']))
+					loop_index += 1
+				
+				supervisor_trades_dict[supervisor_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+				supervisor_trades_dict[supervisor_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+				supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = bonus_tier
 
 
-		
-		trade_list = []
-		# print('0000000')
-		# print(mt5_account_type_dict)
-		for login_id, detail_dict in two_month_trades.items():
-			# print('|||||',two_month_trades[login_id])
-			account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-			two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
-			two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
-			two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
+				bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
+
+				bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+				
+				bonus_account_type_dict['supervisor']['total_idr'] += bonus_idr_account_per_account_type
+				bonus_account_type_dict['supervisor']['total_usd'] += bonus_usd_account_per_account_type
+
+
 		
 	
 	return bonus_account_type_dict, two_month_trades
@@ -1377,7 +1718,6 @@ def supervisor_calculate_lot_two_months_bonus(staffs, last_two_months_date, now,
 			'from': str(now.year)+"-"+str(now.month)+"-"+"01",
 	        'to':str(now.year)+"-"+str(now.month)+"-"+str(end_date),
 		}
-		print('data_post_for_get_login_trades two months',data_post_for_get_login_trades)
 		
 		# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
 		res = requests.post('http://13.229.114.255/getLoginsTrades', data=data_post_for_get_login_trades)

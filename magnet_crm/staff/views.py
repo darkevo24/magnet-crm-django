@@ -756,6 +756,9 @@ def ib_report(request,ib_uid):
 
 def staff_report_detail(request,staff_uid):
 	template = 'admin/report/report_staff_detail.html'
+	
+
+
 
 	test_client = Client.objects.filter(nama__icontains='Sukoyo')
 	
@@ -842,7 +845,6 @@ def staff_report_detail(request,staff_uid):
 
 	#data 0-2bulan
 	last_two_months_date = now - relativedelta(months=1)
-	print('last_two_months_date', last_two_months_date)
 	last_two_monthsend_date = calendar.monthrange(calculated_year, calculated_month)[0]
 	last_two_months_date = datetime(last_two_months_date.year, last_two_months_date.month, 1)
 	last_program_date = datetime(2022, 10, 1)
@@ -1083,7 +1085,7 @@ def staff_own_report(request):
 	print('client_ftd_total_usd', client_ftd_total_usd)
 	print('ib_bonus_dict', ib_bonus_dict, type(ib_bonus_dict))
 	context = {}
-	context['staff'] = staff
+	context[' '] = staff
 	context['staff_ftd_bonus'] = staff_ftd_bonus
 	context['client_ftd_count'] = client_ftd_count
 	context['client_ftd_total_usd'] = client_ftd_total_usd
@@ -1110,7 +1112,11 @@ def staff_own_report(request):
 
 def master_report_detail(request):
 	template = 'admin/report/report_staff_master_detail.html'
-	
+	staff_id_name_dict = {}
+	staff_list = Staff.objects.filter(is_active=True).prefetch_related('profile')
+	for _staff in staff_list:
+		if _staff.id not in staff_id_name_dict:
+			staff_id_name_dict[_staff.id] = _staff.profile.full_name
 	
 	staff_list = Staff.objects.filter(is_active=True, staff_level__level=3).prefetch_related('staff_parent', 'staff_level')
 	date = request.GET.get('date') or None
@@ -1216,21 +1222,21 @@ def master_report_detail(request):
 		total_client_bonus_ftd +=  staff_ftd_bonus
 		
 
-
-	
-
 	#data 0-2bulan
-	last_two_months_date = now - relativedelta(months=2)
+	last_two_months_date = now - relativedelta(months=1)
 	last_two_monthsend_date = calendar.monthrange(calculated_year, calculated_month)[0]
 	last_two_months_date = datetime(last_two_months_date.year, last_two_months_date.month, 1)
+	last_program_date = datetime(2022, 10, 1)
+	if last_two_months_date <= last_program_date:
+		last_two_months_date = last_program_date
 	
 	
-	two_months_bonus_dict, two_months_trades = master_calculate_lot_two_months_bonus(staff_list, last_two_months_date, now, end_date)
+	two_months_bonus_dict, two_months_trades, staff_two_months_trades, supervisor_two_months_trades = master_calculate_lot_two_months_bonus(staff_list, last_two_months_date, now, end_date)
 	
 	#data > 2bulan
-	more_two_months_bonus_dict, more_two_months_trades = master_calculate_lot_more_than_two_months_bonus(staff_list, last_two_months_date, now, end_date)
+	more_two_months_bonus_dict, more_two_months_trades, staff_more_two_months_trades, supervisor_more_two_months_trades= master_calculate_lot_more_than_two_months_bonus(staff_list, last_two_months_date, now, end_date)
 	
-	data_pribadi_months_bonus_dict, data_pribadi_trades = master_calculate_data_pribadi_bonus(staff_list, now, end_date)
+	data_pribadi_months_bonus_dict, data_pribadi_trades, staff_data_pribadi_trades, supervisor_data_pribadi_trades = master_calculate_data_pribadi_bonus(staff_list, now, end_date)
 	
 
 	#data-ib
@@ -1288,7 +1294,13 @@ def master_report_detail(request):
 
 	
 	context = {}
-	
+	context['staff_id_name_dict'] = staff_id_name_dict
+	context['staff_two_months_trades'] = staff_two_months_trades
+	context['supervisor_two_months_trades'] = supervisor_two_months_trades
+	context['supervisor_more_two_months_trades'] = supervisor_more_two_months_trades
+	context['staff_more_two_months_trades'] = staff_more_two_months_trades
+	context['staff_data_pribadi_trades'] = staff_data_pribadi_trades
+	context['supervisor_data_pribadi_trades'] = supervisor_data_pribadi_trades
 	context['total_client_ftd_usd'] = total_client_ftd_usd
 	context['total_client_ftd'] = total_client_ftd
 	context['total_client_bonus_ftd'] = total_client_bonus_ftd

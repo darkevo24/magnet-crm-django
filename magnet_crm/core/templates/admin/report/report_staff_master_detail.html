@@ -126,17 +126,23 @@
 	<div class="card col-12 px-2">
 		<div class="card-body">
 			<div class="row">
-				<div class="col-12">
-					<h5 style="color:green">Bonus LOT</h5>
+				<div class="col-4">
+					<h5 style="color:green">Bonus Total 2 Bulan</h5>
+				</div>
+				<div class="col-4">
+					<h5 style="color:green">Bonus Supervisor 2 Bulan</h5>
+				</div>
+				<div class="col-4">
+					<h5 style="color:green">Bonus Staff 2 Bulan</h5>
 				</div>
 			</div>
 			<div class="row mb-3" style="line-height: 1">
-				<div class="col-12" style="display: flex;">
+				<div class="col-4" style="display: flex;">
 					<div class="py-2 " >
 	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
 	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
 	                        	
-	                        	{{total_bonus_lot_usd|num_format_decimal|default:'-'}}
+	                        	{{two_months_bonus_dict.total.total_usd|str_currency|default:'-'}}
 	                        	
 	                        </h1>
 	                        <p class="mb-0">Total Bonus $US</p>
@@ -146,17 +152,60 @@
 	            	<div class="py-2 " >
 	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
 	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
-	                        	{{total_bonus_lot_idr|str_currency|default:'-'}}
+	                        	{{two_months_bonus_dict.total.total_idr|str_currency|default:'-'}}
 	                        </h1>
 	                        <p class="mb-0">Total Bonus IDR</p>
 	                    </div>
 	                    
-	            	</div>       
+	            	</div>   
 				</div>
-                	
+				<div class="col-4" style="display: flex;">
+					<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	
+	                        	{{two_months_bonus_dict.supervisor.total_usd|str_currency|default:'-'}}
+	                        	
+	                        </h1>
+	                        <p class="mb-0">Total Bonus $US</p>
+	                    </div>
+	                    
+	            	</div>
+	            	<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	{{two_months_bonus_dict.supervisor.total_idr|str_currency|default:'-'}}
+	                        </h1>
+	                        <p class="mb-0">Total Bonus IDR</p>
+	                    </div>
+	                    
+	            	</div>   
+				</div>
+				<div class="col-4" style="display: flex;">
+					<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	
+	                        	{{two_months_bonus_dict.staff.total_usd|str_currency|default:'-'}}
+	                        	
+	                        </h1>
+	                        <p class="mb-0">Total Bonus $US</p>
+	                    </div>
+	                    
+	            	</div>
+	            	<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	{{two_months_bonus_dict.staff.total_idr|str_currency|default:'-'}}
+	                        </h1>
+	                        <p class="mb-0">Total Bonus IDR</p>
+	                    </div>
+	                    
+	            	</div>   
+				</div>
 			</div>
 			<div class="row mb-3" style="line-height: 1">
-                <div class="col-12 py-2" >
+                <!-- <div class="col-12 py-2" >
                 	<div class="row">
                 		<div class="col-4">
                 			<div style="width: 100%;" class="mr-3 gadget_green p-3">
@@ -210,9 +259,9 @@
 		                    </div>
                 		</div>
                 	</div>
-            	</div>    	
+            	</div> -->    	
             	
-            	<div class="col-12 py-2 " >
+            	<!-- <div class="col-12 py-2 " >
             		<div class="row">
             			<div class="col-4">
             				<div style="width: 100%;"  class="mr-3 gadget_green p-3">
@@ -268,20 +317,20 @@
 
             		</div>
                     
-            	</div>
+            	</div> -->
 			</div>
 			<div class="row mb-3">
 				<div class="col-12 col-custom-table" style="height: 100%;">
-					<h5>Bonus LOT (Data Kantor 0 -2 months) </h5>
+					<h5>Supervisor Bonus Detail </h5>
 					<div class="card p-2" style="">
 
 						<table class="table" id="table_bonus" style="max-height: 100vh">
-						  <thead>
+						  	<thead>
 	                            <tr>
 	                                <th scope="col">#</th>
-	                                <th scope="col">Name</th>
-	                                <th scope="col">FC</th>
-	                                <th scope="col">SPV</th>
+	                                <th scope="col">SPV Name</th>
+	                                <th scope="col">Staff Name</th>
+	                                <th scope="col">Client Name</th>
 	                                <th scope="col">Created At</th>
 	                                <th scope="col">Account Age (Days)</th>
 	                                <th scope="col">Login</th>
@@ -290,67 +339,72 @@
 	                                <th scope="col">Lot</th>
 	                                <th scope="col">Bonus</th>
 	                                <th scope="col">Bonus Total (Bonus * Lot)</th>
-	                                <th scope="col">Bonus Total Rupiah (Bonys * Rate)</th>
+	                                <th scope="col">Bonus Total Rupiah (Bonus * Rate)</th>
 	                                <th scope="col">Rate</th>
 	                                
 	                            </tr>
 	                        </thead>
-						  <tbody>
-							{% for meta_id, trade_dict in two_months_trades.items %}
-	                           	<tr>
-		                           <td >{{forloop.counter}}</td> 
-		                        	
-		                            <td >{{trade_dict.client_name|default:'-'}}</td>
-		                            <td >{{trade_dict.staff_name }}</td>
-		                            <td >{{trade_dict.supervisor_name }}</td>
-		                            <td >{{trade_dict.created_at}}</td>
-		                            <td >{{trade_dict.account_ages }} Days </td>
-		                        	
-		                        	<td scope="row">{{meta_id}}</td>
-	                            	
-	                                <td >{{trade_dict.account_type }}</td>
-	                                
-	                                <td>
-	                                    {{trade_dict.total_lot }}
-	                                </td>
-	                            	
-	                            	
-	                                <td>
-	                                    {{trade_dict.bonus_lot_usd }}$
-	                                </td>
+						  	<tbody>
 
-	                                <td>
-										{{trade_dict.total_usd}}$
-	                                </td>
+						  	{% for supervisor_id, account_type_dict in supervisor_two_months_trades.items %}
+								{% for account_type, trade_dict in account_type_dict.items %}
+									{% with trade_dict.trade_list as trade_list %}
+										{% for trade in trade_list %}
+											<tr>
+					                           <td >{{forloop.counter}}</td> 
+					                        	
+					                            <td >{{staff_id_name_dict|dict_get:supervisor_id}}</td>
+					                            <td >{{trade.staff_name}}</td>
+					                            <td >{{trade.client_name}}</td>
+					                            <td >{{trade.created_at|date:'d-m-Y H:i'}}</td>
+					                            <td style="text-align:center">{{trade.account_ages}} days</td>
+					                        	
+					                        	<td scope="row">{{trade.login_id}}</td>
+				                            	
+				                                <td style="text-align:center">{{account_type}}</td>
+				                                
+				                                <td>
+				                                   {{trade.total_lot}}
+				                                </td>
+				                            	
+				                            	
+				                                <td style="text-align:center">
+				                                    {{trade.supervisor_bonus}}
+				                                </td>
 
-	                                <td>
-										Rp. {{trade_dict.total_idr|str_currency}}
-	                                </td>
-	                                <td>
-	                                    {{trade_dict.rate }}
-	                                </td>
-				                                    
-	                                
-	                                
-	                        	</tr>
-	                        {% endfor %}
-	                    
+				                                <td style="text-align:right">
+													{{trade.supervisor_usd_bonus}}$
+				                                </td>
+
+				                                <td style="text-align:right;">
+													Rp. {{trade.supervisor_idr_bonus|str_currency}}
+				                                </td>
+				                                <td style="text-align:center">
+				                                    {{trade.rate}}
+				                                </td>
+							                                    
+				                                
+				                                
+				                        	</tr>
+										{% endfor %}
+									{% endwith %}
+								{% endfor %}
+							{% endfor %}
 	                        </tbody>
 						</table>
 					</div>
 				</div>
 			</div>
 			<div class="col-12 pt-2 " style="height: 100%;">
-				<h5>Bonus LOT (Data Kantor > 2 months) </h5>
+				<h5>Staff Bonus Detail </h5>
 				<div class="card p-2" style="">
 
 					<table class="table" id="table_bonus_more_than_two_months" style="max-height: 100vh">
 					  <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">FC</th>
-                                <th scope="col">SPV</th>
+                                <th scope="col">Staff Name</th>
+                                <th scope="col">Client Name</th>
                                 <th scope="col">Created At</th>
                                 <th scope="col">Account Age (Days)</th>
                                 <th scope="col">Login</th>
@@ -359,49 +413,54 @@
                                 <th scope="col">Lot</th>
                                 <th scope="col">Bonus</th>
                                 <th scope="col">Bonus Total (Bonus * Lot)</th>
-                                <th scope="col">Bonus Total Rupiah (Bonys * Rate)</th>
+                                <th scope="col">Bonus Total Rupiah (Bonus * Rate)</th>
                                 <th scope="col">Rate</th>
                                 
                             </tr>
                         </thead>
-					  <tbody>
-						{% for meta_id, trade_dict in more_two_months_trades.items %}
-                           	<tr>
-	                           <th scope="row">{{forloop.counter}}</th> 
-	                        	
-	                            <th scope="row">{{trade_dict.client_name|default:'-'}}</th>
-	                            <td >{{trade_dict.staff_name }}</td>
-		                        <td >{{trade_dict.supervisor_name }}</td>
-	                            <th scope="row">{{trade_dict.created_at}}</th>
-	                            <td >{{trade_dict.account_ages }} Days </td>
-	                        	
-	                        	<th scope="row">{{meta_id}}</th>
-                            	
-                                <td >{{trade_dict.account_type }}</td>
-                                
-                                <td>
-                                    {{trade_dict.total_lot }}
-                                </td>
-                            	
-                                <td>
-                                    {{trade_dict.bonus_lot_usd }}$
-                                </td>
+					  	<tbody>
+						{% for staff_id, account_type_dict in staff_two_months_trades.items %}
+							{% for account_type, trade_dict in account_type_dict.items %}
+								{% with trade_dict.trade_list as trade_list %}
+									{% for trade in trade_list %}
+										<tr>
+				                           <td >{{forloop.counter}}</td> 
+				                            <td >{{trade.staff_name}}</td>
+				                            <td >{{trade.client_name}}</td>
+				                            <td >{{trade.created_at|date:'d-m-Y H:i'}}</td>
+				                            <td style="text-align:center">{{trade.account_ages}} days</td>
+				                        	
+				                        	<td scope="row">{{trade.login_id}}</td>
+			                            	
+			                                <td style="text-align:center">{{account_type}}</td>
+			                                
+			                                <td>
+			                                   {{trade.total_lot}}
+			                                </td>
+			                            	
+			                            	
+			                                <td style="text-align:center">
+			                                    {{trade.bonus}}
+			                                </td>
 
-                                <td>
-									{{trade_dict.total_usd}}$
-                                </td>
+			                                <td style="text-align:right">
+												{{trade.usd_bonus}}$
+			                                </td>
 
-                                <td>
-									Rp. {{trade_dict.total_idr|str_currency}}
-                                </td>
-                                <td>
-                                    {{trade_dict.rate }}
-                                </td>
-			                                    
-                                
-                                
-                        	</tr>
-                        {% endfor %}
+			                                <td style="text-align:right;">
+												Rp. {{trade.idr_bonus|str_currency}}
+			                                </td>
+			                                <td style="text-align:center">
+			                                    {{trade.rate}}
+			                                </td>
+						                                    
+			                                
+			                                
+			                        	</tr>
+									{% endfor %}
+								{% endwith %}
+							{% endfor %}
+						{% endfor %}
                     
                         </tbody>
 					</table>
@@ -414,17 +473,23 @@
 	<div class="card col-12 px-2">
 		<div class="card-body">
 			<div class="row">
-				<div class="col-12">
-					<h5 style="color:green">Bonus Data Pribadi</h5>
+				<div class="col-4">
+					<h5 style="color:green">Bonus Total > 2 Bulan</h5>
+				</div>
+				<div class="col-4">
+					<h5 style="color:green">Bonus Supervisor > 2 Bulan</h5>
+				</div>
+				<div class="col-4">
+					<h5 style="color:green">Bonus Staff > 2 Bulan</h5>
 				</div>
 			</div>
 			<div class="row mb-3" style="line-height: 1">
-				<div class="col-12" style="display: flex;">
+				<div class="col-4" style="display: flex;">
 					<div class="py-2 " >
 	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
 	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
 	                        	
-	                        	{{total_bonus_data_pribadi_usd|num_format_decimal|default:'-'}}
+	                        	{{more_two_months_bonus_dict.total.total_usd|str_currency|default:'-'}}
 	                        	
 	                        </h1>
 	                        <p class="mb-0">Total Bonus $US</p>
@@ -434,77 +499,259 @@
 	            	<div class="py-2 " >
 	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
 	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
-	                        	{{total_bonus_data_pribadi_idr|str_currency|default:'-'}}
+	                        	{{more_two_months_bonus_dict.total.total_idr|str_currency|default:'-'}}
 	                        </h1>
 	                        <p class="mb-0">Total Bonus IDR</p>
 	                    </div>
 	                    
-	            	</div>       
+	            	</div>   
 				</div>
-                <div class="col-12 py-2" >
+				<div class="col-4" style="display: flex;">
+					<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	
+	                        	{{more_two_months_bonus_dict.supervisor.total_usd|str_currency|default:'-'}}
+	                        	
+	                        </h1>
+	                        <p class="mb-0">Total Bonus $US</p>
+	                    </div>
+	                    
+	            	</div>
+	            	<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	{{more_two_months_bonus_dict.supervisor.total_idr|str_currency|default:'-'}}
+	                        </h1>
+	                        <p class="mb-0">Total Bonus IDR</p>
+	                    </div>
+	                    
+	            	</div>   
+				</div>
+				<div class="col-4" style="display: flex;">
+					<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	
+	                        	{{more_two_months_bonus_dict.staff.total_usd|str_currency|default:'-'}}
+	                        	
+	                        </h1>
+	                        <p class="mb-0">Total Bonus $US</p>
+	                    </div>
+	                    
+	            	</div>
+	            	<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	{{more_two_months_bonus_dict.staff.total_idr|str_currency|default:'-'}}
+	                        </h1>
+	                        <p class="mb-0">Total Bonus IDR</p>
+	                    </div>
+	                    
+	            	</div>   
+				</div>
+			</div>
+			<div class="row mb-3" style="line-height: 1">
+                <!-- <div class="col-12 py-2" >
                 	<div class="row">
                 		<div class="col-4">
                 			<div style="width: 100%;" class="mr-3 gadget_green p-3">
 		                        <h1 class="p-0 m-0" style="color:green;font-size: 2em;line-height:1">
-		                        	{% with data_pribadi_months_bonus_dict|dict_get:'elastico' as elastico_two_months_dict %}
+		                        	{% with two_months_bonus_dict|dict_get:'elastico' as elastico_two_months_dict %}
 		                        		{{elastico_two_months_dict|dict_get:'total_lot'|num_format_decimal|default:'-'}}
 		                        	{% endwith %}
 		                        </h1>
-		                        <p class="mb-0">Total Lot Elastico</p>
-		                        <h1 class="pt-2 m-0" style="color:green;font-size: 2em;line-height:1;">
-		                        	{% with data_pribadi_months_bonus_dict|dict_get:'elastico' as elastico_two_months_dict %}
-		                        		{{elastico_two_months_dict|dict_get:'total_usd'|num_format_decimal|default:'-'}}
+		                        <p class="mb-0">Total Lot Elastico (Less than 2 Month)</p>
+
+		                        <h1 class="p-0 m-0 mt-1 pt-2" style="color:green;font-size: 1.5em;line-height:1">
+		                        	{% with two_months_bonus_dict|dict_get:'elastico' as elastico_two_months_dict %}
+		                        		{{elastico_two_months_dict|dict_get:'bonus_tier'|default:'-'}}
 		                        	{% endwith %}
 		                        </h1>
-		                        <p class="mb-0">Total Komisi $</p>
+		                        <p class="mb-0">Tier Elastico (Less than 2 Month)</p>
 		                    </div>
                 		</div>
                 		<div class="col-4">
                 			<div style="width: 100%;"  class="mr-3 gadget_green p-3">
 		                        <h1 class="p-0 m-0" style="color:green;font-size: 2em;line-height:1">
-		                        	{% with data_pribadi_months_bonus_dict|dict_get:'elektro' as elektro_two_months_dict %}
+		                        	{% with two_months_bonus_dict|dict_get:'elektro' as elektro_two_months_dict %}
 		                        		{{elektro_two_months_dict|dict_get:'total_lot'|num_format_decimal|default:'-'}}
 		                        	{% endwith %}
 		                        </h1>
-		                        <p class="mb-0">Total Lot Electro</p>
-		                        <h1 class="pt-2 m-0" style="color:green;font-size: 2em;line-height:1;">
-		                        	{% with data_pribadi_months_bonus_dict|dict_get:'elektro' as elastico_two_months_dict %}
-		                        		{{elastico_two_months_dict|dict_get:'total_usd'|num_format_decimal|default:'-'}}
+		                        <p class="mb-0">Total Lot Electro (Less than 2 Month)</p>
+
+		                        <h1 class="p-0 m-0 mt-1 pt-2" style="color:green;font-size: 1.5em;line-height:1">
+		                        	{% with two_months_bonus_dict|dict_get:'elektro' as elektro_two_months_dict %}
+		                        		{{elektro_two_months_dict|dict_get:'bonus_tier'|default:'-'}}
 		                        	{% endwith %}
 		                        </h1>
-		                        <p class="mb-0">Total Komisi $</p>
+		                        <p class="mb-0">Tier Electro (Less than 2 Month)</p>
 		                    </div>
                 		</div>
                 		<div class="col-4">
                 			 <div style="width: 100%;"  class="mr-3 gadget_green p-3">
 		                        <h1 class="p-0 m-0" style="color:green;font-size: 2em;line-height:1">
-		                        	{% with data_pribadi_months_bonus_dict|dict_get:'magneto' as magneto_two_months_dict %}
+		                        	{% with two_months_bonus_dict|dict_get:'magneto' as magneto_two_months_dict %}
 		                        		{{magneto_two_months_dict|dict_get:'total_lot'|num_format_decimal|default:'-'}}
 		                        	{% endwith %}
 		                        </h1>
-		                        <p class="mb-0">Total Lot Magneto </p>
-		                        <h1 class="pt-2 m-0" style="color:green;font-size: 2em;line-height:1;">
-		                        	{% with data_pribadi_months_bonus_dict|dict_get:'magneto' as elastico_two_months_dict %}
-		                        		{{elastico_two_months_dict|dict_get:'total_usd'|num_format_decimal|default:'-'}}
+		                        <p class="mb-0">Total Lot Magneto (Less than 2 Month)</p>
+
+		                        <h1 class="p-0 m-0 mt-1 pt-2" style="color:green;font-size: 1.5em;line-height:1">
+		                        	{% with two_months_bonus_dict|dict_get:'magneto' as magneto_two_months_dict %}
+		                        		{{magneto_two_months_dict|dict_get:'bonus_tier'|default:'-'}}
 		                        	{% endwith %}
 		                        </h1>
-		                        <p class="mb-0">Total Komisi $</p>
+		                        <p class="mb-0">Tier Magneto (Less than 2 Month)</p>
 		                    </div>
                 		</div>
                 	</div>
-            	</div>
-            </div>
-			<div class="col-12 pt-2 " style="height:100%">
-				<h5>Bonus LOT (Data Pribadi) </h5>
+            	</div> -->    	
+            	
+            	<!-- <div class="col-12 py-2 " >
+            		<div class="row">
+            			<div class="col-4">
+            				<div style="width: 100%;"  class="mr-3 gadget_green p-3">
+		                        <h1 class="p-0 m-0" style="color:green;font-size: 2em;line-height:1">
+		                        	{% with more_two_months_bonus_dict|dict_get:'elastico' as elastico_more_two_months_dict %}
+		                        		{{elastico_more_two_months_dict|dict_get:'total_lot'|num_format_decimal|default:'-'}}
+		                        	{% endwith %}
+		                        </h1>
+		                        <p class="mb-0">Total Lot Elastico (More than 2 Month)</p>
+
+		                        <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 1.5em;line-height:1">
+		                        	{% with more_two_months_bonus_dict|dict_get:'elastico' as elastico_more_two_months_dict %}
+		                        		{{elastico_more_two_months_dict|dict_get:'bonus_tier'|default:'-'}}
+		                        	{% endwith %}
+		                        </h1>
+		                        <p class="mb-0">Tier Elastico (More than 2 Month)</p>
+		                    </div>
+            			</div>
+            			
+            			<div class="col-4">
+            				<div style="width: 100%;"  class="mr-3 gadget_green p-3">
+		                        <h1 class="p-0 m-0" style="color:green;font-size: 2em;line-height:1">
+		                        	{% with more_two_months_bonus_dict|dict_get:'elektro' as eletro_more_two_months_dict %}
+		                        		{{eletro_more_two_months_dict|dict_get:'total_lot'|num_format_decimal|default:'-'}}
+		                        	{% endwith %}
+		                        </h1>
+		                        <p class="mb-0">Total Lot Electro (More than 2 Month)</p>
+
+		                        <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 1.5em;line-height:1">
+		                        	-
+		                        </h1>
+		                        <p class="mb-0">Tier Electro (More than 2 Month)</p>
+		                    </div>
+            			</div>
+            			
+            			<div class="col-4">
+            				 <div style="width: 100%;"  class="mr-3 gadget_green p-3">
+		                        <h1 class="p-0 m-0" style="color:green;font-size: 2em;line-height:1">
+		                        	{% with more_two_months_bonus_dict|dict_get:'magneto' as magneto_more_two_months_dict %}
+		                        		{{magneto_more_two_months_dict|dict_get:'total_lot'|num_format_decimal|default:'-'}}
+		                        	{% endwith %}
+		                        </h1>
+		                        <p class="mb-0">Total Lot Magneto (More than 2 Month)</p>
+
+		                        <h1 class="p-0 m-0 mt-1" style="color:green;font-size: 1.5em;line-height:1">
+		                        	{% with more_two_months_bonus_dict|dict_get:'elastico' as elastico_more_two_months_dict %}
+		                        		{{elastico_more_two_months_dict|dict_get:'bonus_tier'|default:'-'}}
+		                        	{% endwith %}
+		                        </h1>
+		                        <p class="mb-0">Tier Magneto (More than 2 Month)</p>
+		                    </div>
+            			</div>
+
+            		</div>
+                    
+            	</div> -->
+			</div>
+			<div class="row mb-3">
+				<div class="col-12 col-custom-table" style="height: 100%;">
+					<h5>Supervisor Bonus Detail </h5>
+					<div class="card p-2" style="">
+
+						<table class="table" id="table_bonus" style="max-height: 100vh">
+						  	<thead>
+	                            <tr>
+	                                <th scope="col">#</th>
+	                                <th scope="col">SPV Name</th>
+	                                <th scope="col">Staff Name</th>
+	                                <th scope="col">Client Name</th>
+	                                <th scope="col">Created At</th>
+	                                <th scope="col">Account Age (Days)</th>
+	                                <th scope="col">Login</th>
+	                                <th scope="col">Account Type</th>
+	                                <!-- <th scope="col">Bonus</th> -->
+	                                <th scope="col">Lot</th>
+	                                <th scope="col">Bonus</th>
+	                                <th scope="col">Bonus Total (Bonus * Lot)</th>
+	                                <th scope="col">Bonus Total Rupiah (Bonus * Rate)</th>
+	                                <th scope="col">Rate</th>
+	                                
+	                            </tr>
+	                        </thead>
+						  	<tbody>
+
+						  	{% for supervisor_id, account_type_dict in supervisor_more_two_months_trades.items %}
+								{% for account_type, trade_dict in account_type_dict.items %}
+									{% with trade_dict.supervisor_trade_list as trade_list %}
+										{% for trade in trade_list %}
+											<tr>
+					                           <td >{{forloop.counter}}</td> 
+					                        	
+					                            <td >{{staff_id_name_dict|dict_get:supervisor_id}}</td>
+					                            <td >{{trade.staff_name}}</td>
+					                            <td >{{trade.client_name}}</td>
+					                            <td >{{trade.created_at|date:'d-m-Y H:i'}}</td>
+					                            <td style="text-align:center">{{trade.account_ages}} days</td>
+					                        	
+					                        	<td scope="row">{{trade.login_id}}</td>
+				                            	
+				                                <td style="text-align:center">{{account_type}}</td>
+				                                
+				                                <td>
+				                                   {{trade.total_lot}}
+				                                </td>
+				                            	
+				                            	
+				                                <td style="text-align:center">
+				                                    {{trade.supervisor_bonus}}
+				                                </td>
+
+				                                <td style="text-align:right">
+													{{trade.supervisor_usd_bonus}}$
+				                                </td>
+
+				                                <td style="text-align:right;">
+													Rp. {{trade.supervisor_idr_bonus|str_currency}}
+				                                </td>
+				                                <td style="text-align:center">
+				                                    {{trade.rate}}
+				                                </td>
+							                                    
+				                                
+				                                
+				                        	</tr>
+										{% endfor %}
+									{% endwith %}
+								{% endfor %}
+							{% endfor %}
+	                        </tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 pt-2 " style="height: 100%;">
+				<h5>Staff Bonus Detail </h5>
 				<div class="card p-2" style="">
 
-					<table class="table" id="table_bonus_data_pribadi" style="max-height: 100vh">
+					<table class="table" id="table_bonus_more_than_two_months" style="max-height: 100vh">
 					  <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">FC</th>
-                                <th scope="col">SPV</th>
+                                <th scope="col">Staff Name</th>
+                                <th scope="col">Client Name</th>
                                 <th scope="col">Created At</th>
                                 <th scope="col">Account Age (Days)</th>
                                 <th scope="col">Login</th>
@@ -513,49 +760,288 @@
                                 <th scope="col">Lot</th>
                                 <th scope="col">Bonus</th>
                                 <th scope="col">Bonus Total (Bonus * Lot)</th>
-                                <th scope="col">Bonus Total Rupiah (Bonys * Rate)</th>
+                                <th scope="col">Bonus Total Rupiah (Bonus * Rate)</th>
                                 <th scope="col">Rate</th>
                                 
                             </tr>
                         </thead>
-					  <tbody>
-						{% for meta_id, trade_dict in data_pribadi_trades.items %}
-                           	<tr>
-	                           <th scope="row">{{forloop.counter}}</th> 
-	                        	
-	                            <th scope="row">{{trade_dict.client_name|default:'-'}}</th>
-	                            <td >{{trade_dict.staff_name }}</td>
-		                        <td >{{trade_dict.supervisor_name }}</td>
-	                            <th scope="row">{{trade_dict.created_at}}</th>
-	                            <td >{{trade_dict.account_ages }} Days </td>
-	                        	
-	                        	<th scope="row">{{meta_id}}</th>
-                            	
-                                <td >{{trade_dict.account_type }}</td>
-                                
-                                <td>
-                                    {{trade_dict.total_lot }}
-                                </td>
-                            	
-                                <td>
-                                    {{trade_dict.bonus_lot_usd }}$
-                                </td>
+					  	<tbody>
+						{% for staff_id, account_type_dict in staff_more_two_months_trades.items %}
+							{% for account_type, trade_dict in account_type_dict.items %}
+								{% with trade_dict.trade_list as trade_list %}
+									{% for trade in trade_list %}
+										<tr>
+				                           <td >{{forloop.counter}}</td> 
+				                            <td >{{trade.staff_name}}</td>
+				                            <td >{{trade.client_name}}</td>
+				                            <td >{{trade.created_at|date:'d-m-Y H:i'}}</td>
+				                            <td style="text-align:center">{{trade.account_ages}} days</td>
+				                        	
+				                        	<td scope="row">{{trade.login_id}}</td>
+			                            	
+			                                <td style="text-align:center">{{account_type}}</td>
+			                                
+			                                <td>
+			                                   {{trade.total_lot}}
+			                                </td>
+			                            	
+			                            	
+			                                <td style="text-align:center">
+			                                    {{trade.bonus}}
+			                                </td>
 
-                                <td>
-									{{trade_dict.total_usd}}$
-                                </td>
+			                                <td style="text-align:right">
+												{{trade.usd_bonus}}$
+			                                </td>
 
-                                <td>
-									Rp. {{trade_dict.total_idr|str_currency}}
-                                </td>
-                                <td>
-                                    {{trade_dict.rate }}
-                                </td>
-			                                    
+			                                <td style="text-align:right;">
+												Rp. {{trade.idr_bonus|str_currency}}
+			                                </td>
+			                                <td style="text-align:center">
+			                                    {{trade.rate}}
+			                                </td>
+						                                    
+			                                
+			                                
+			                        	</tr>
+									{% endfor %}
+								{% endwith %}
+							{% endfor %}
+						{% endfor %}
+                    
+                        </tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="card col-12 px-2">
+		<div class="card-body">
+			<div class="row">
+				<div class="col-4">
+					<h5 style="color:green">Bonus Pribadi</h5>
+				</div>
+				<div class="col-4">
+					<h5 style="color:green">Bonus Supervisor</h5>
+				</div>
+				<div class="col-4">
+					<h5 style="color:green">Bonus Staff</h5>
+				</div>
+			</div>
+			<div class="row mb-3" style="line-height: 1">
+				<div class="col-4" style="display: flex;">
+					<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	
+	                        	{{data_pribadi_months_bonus_dict.total.total_usd|str_currency|default:'-'}}
+	                        	
+	                        </h1>
+	                        <p class="mb-0">Total Bonus $US</p>
+	                    </div>
+	                    
+	            	</div>
+	            	<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	{{data_pribadi_months_bonus_dict.total.total_idr|str_currency|default:'-'}}
+	                        </h1>
+	                        <p class="mb-0">Total Bonus IDR</p>
+	                    </div>
+	                    
+	            	</div>   
+				</div>
+				<div class="col-4" style="display: flex;">
+					<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	
+	                        	{{data_pribadi_months_bonus_dict.supervisor.total_usd|str_currency|default:'-'}}
+	                        	
+	                        </h1>
+	                        <p class="mb-0">Total Bonus $US</p>
+	                    </div>
+	                    
+	            	</div>
+	            	<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	{{data_pribadi_months_bonus_dict.supervisor.total_idr|str_currency|default:'-'}}
+	                        </h1>
+	                        <p class="mb-0">Total Bonus IDR</p>
+	                    </div>
+	                    
+	            	</div>   
+				</div>
+				<div class="col-4" style="display: flex;">
+					<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	
+	                        	{{data_pribadi_months_bonus_dict.staff.total_usd|str_currency|default:'-'}}
+	                        	
+	                        </h1>
+	                        <p class="mb-0">Total Bonus $US</p>
+	                    </div>
+	                    
+	            	</div>
+	            	<div class="py-2 " >
+	                    <div style="display: inline-block;" class="mr-3 gadget_green p-3">
+	                        <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">
+	                        	{{data_pribadi_months_bonus_dict.staff.total_idr|str_currency|default:'-'}}
+	                        </h1>
+	                        <p class="mb-0">Total Bonus IDR</p>
+	                    </div>
+	                    
+	            	</div>   
+				</div>
+			</div>
+			<div class="row mb-3" style="line-height: 1">
+			</div>
+			<div class="row mb-3">
+				<div class="col-12 col-custom-table" style="height: 100%;">
+					<h5>Supervisor Bonus Detail </h5>
+					<div class="card p-2" style="">
+
+						<table class="table" id="table_bonus" style="max-height: 100vh">
+						  	<thead>
+	                            <tr>
+	                                <th scope="col">#</th>
+	                                <th scope="col">SPV Name</th>
+	                                <th scope="col">Staff Name</th>
+	                                <th scope="col">Client Name</th>
+	                                <th scope="col">Created At</th>
+	                                <th scope="col">Account Age (Days)</th>
+	                                <th scope="col">Login</th>
+	                                <th scope="col">Account Type</th>
+	                                <!-- <th scope="col">Bonus</th> -->
+	                                <th scope="col">Lot</th>
+	                                <th scope="col">Bonus</th>
+	                                <th scope="col">Bonus Total (Bonus * Lot)</th>
+	                                <th scope="col">Bonus Total Rupiah (Bonus * Rate)</th>
+	                                <th scope="col">Rate</th>
+	                                
+	                            </tr>
+	                        </thead>
+						  	<tbody>
+
+						  	{% for supervisor_id, account_type_dict in supervisor_data_pribadi_trades.items %}
+								{% for account_type, trade_dict in account_type_dict.items %}
+									{% with trade_dict.supervisor_trade_list as trade_list %}
+										{% for trade in trade_list %}
+											<tr>
+					                           <td >{{forloop.counter}}</td> 
+					                        	
+					                            <td >{{staff_id_name_dict|dict_get:supervisor_id}}</td>
+					                            <td >{{trade.staff_name}}</td>
+					                            <td >{{trade.client_name}}</td>
+					                            <td >{{trade.created_at|date:'d-m-Y H:i'}}</td>
+					                            <td style="text-align:center">{{trade.account_ages}} days</td>
+					                        	
+					                        	<td scope="row">{{trade.login_id}}</td>
+				                            	
+				                                <td style="text-align:center">{{account_type}}</td>
+				                                
+				                                <td>
+				                                   {{trade.total_lot}}
+				                                </td>
+				                            	
+				                            	
+				                                <td style="text-align:center">
+				                                    {{trade.supervisor_bonus}}
+				                                </td>
+
+				                                <td style="text-align:right">
+													{{trade.supervisor_usd_bonus}}$
+				                                </td>
+
+				                                <td style="text-align:right;">
+													Rp. {{trade.supervisor_idr_bonus|str_currency}}
+				                                </td>
+				                                <td style="text-align:center">
+				                                    {{trade.rate}}
+				                                </td>
+							                                    
+				                                
+				                                
+				                        	</tr>
+										{% endfor %}
+									{% endwith %}
+								{% endfor %}
+							{% endfor %}
+	                        </tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 pt-2 " style="height: 100%;">
+				<h5>Staff Bonus Detail </h5>
+				<div class="card p-2" style="">
+
+					<table class="table" id="table_bonus_more_than_two_months" style="max-height: 100vh">
+					  <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Staff Name</th>
+                                <th scope="col">Client Name</th>
+                                <th scope="col">Created At</th>
+                                <th scope="col">Account Age (Days)</th>
+                                <th scope="col">Login</th>
+                                <th scope="col">Account Type</th>
+                                <!-- <th scope="col">Bonus</th> -->
+                                <th scope="col">Lot</th>
+                                <th scope="col">Bonus</th>
+                                <th scope="col">Bonus Total (Bonus * Lot)</th>
+                                <th scope="col">Bonus Total Rupiah (Bonus * Rate)</th>
+                                <th scope="col">Rate</th>
                                 
-                                
-                        	</tr>
-                        {% endfor %}
+                            </tr>
+                        </thead>
+					  	<tbody>
+						{% for staff_id, account_type_dict in staff_data_pribadi_trades.items %}
+							{% for account_type, trade_dict in account_type_dict.items %}
+								{% with trade_dict.trade_list as trade_list %}
+									{% for trade in trade_list %}
+										<tr>
+				                           <td >{{forloop.counter}}</td> 
+				                            <td >{{trade.staff_name}}</td>
+				                            <td >{{trade.client_name}}</td>
+				                            <td >{{trade.created_at|date:'d-m-Y H:i'}}</td>
+				                            <td style="text-align:center">{{trade.account_ages}} days</td>
+				                        	
+				                        	<td scope="row">{{trade.login_id}}</td>
+			                            	
+			                                <td style="text-align:center">{{account_type}}</td>
+			                                
+			                                <td>
+			                                   {{trade.total_lot}}
+			                                </td>
+			                            	
+			                            	
+			                                <td style="text-align:center">
+			                                    {{trade.bonus}}
+			                                </td>
+
+			                                <td style="text-align:right">
+												{{trade.usd_bonus}}$
+			                                </td>
+
+			                                <td style="text-align:right;">
+												Rp. {{trade.idr_bonus|str_currency}}
+			                                </td>
+			                                <td style="text-align:center">
+			                                    {{trade.rate}}
+			                                </td>
+						                                    
+			                                
+			                                
+			                        	</tr>
+									{% endfor %}
+								{% endwith %}
+							{% endfor %}
+						{% endfor %}
                     
                         </tbody>
 					</table>
