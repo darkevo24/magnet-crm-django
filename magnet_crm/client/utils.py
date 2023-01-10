@@ -1101,6 +1101,8 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 		if staff_id not in staff_supervisor_dict:
 			staff_supervisor_dict[staff_id] = staff.staff_parent
 
+
+
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
 		client__source_detail_1=2,
@@ -1371,6 +1373,19 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 
 def master_calculate_ib_bonus(staffs, now, end_date):
 
+
+	ib_dict = {}
+	ib = IB.objects.filter(is_active=True)
+	ib_client_list = IB_Client.objects.filter(ib__in=ib, client__is_active=True)
+	ib_staff_list = IB_Staff.objects.filter(ib__in=ib)
+	
+	ib_staff_dict = {}
+	for ib_staff in ib_staff_list:
+		ib_id_str = str(ib_staff.ib.id)
+		if ib_id_str not in ib_staff_dict:
+			ib_staff_dict[ib_id_str] = str(ib_staff.staff)
+
+	
 
 	client_staff_all_list = Client_Staff.objects.filter(
 		staff__in=staffs,
