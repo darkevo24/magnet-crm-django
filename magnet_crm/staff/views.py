@@ -112,6 +112,13 @@ def staff_detail(request, staff_uid):
 	client_schedule_list = Client_Schedule.objects.filter(client__id__in=client_ids, is_active=True).order_by('schedule_date')
 	client_schedule_list_json = []
 
+	staff_client_journey_list = Client_Journey.objects.filter(staff=staff).order_by('-created_at').prefetch_related('client', 'staff__profile')
+	print(':::', staff_client_journey_list.count())
+	for staff_client_journey in staff_client_journey_list:
+		print(staff_client_journey.staff)
+		print(staff_client_journey.client)
+		print(staff_client_journey.journal_type)
+
 	# {
  #                title: 'Long Event',
  #                start: '2020-09-07',
@@ -130,6 +137,7 @@ def staff_detail(request, staff_uid):
 
 	context = {
 		'client_schedule_list': client_schedule_list,
+		'staff_client_journey_list': staff_client_journey_list,
 		'staff': staff,
 		'client_staff_list': client_staff_list,
 		'client_schedule_list_json': json.dumps(client_schedule_list_json),

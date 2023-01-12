@@ -507,23 +507,36 @@ def add_form(request,id_client):
 	for first_choice in first_choices:
 		print(first_choice.followup_choices)
 	if request.POST:
-		selected_radio = request.POST['selected_radio']
-		notes = request.POST['notes']
-		# print("selected_radio",selected_radio)
-		print("request.POST",request.POST)
-		tree_code = request.POST['radio_'+selected_radio]
-		staff = Staff.objects.filter(is_active=True,profile__user=request.user).first()
-		client = Client.objects.filter(is_active=True,id=id_client).first()
-		print("tree_code",tree_code)
-		tree = Followup.objects.filter(is_active=True,followup_choice_code=tree_code).first()
-		
-		client_followup = Client_Followup()
-		client_followup.client =  client
-		client_followup.followup = tree
-		client_followup.staff = staff
-		client_followup.answer = notes
-		client_followup.created_by = request.user
-		client_followup.save()
+		try: 
+			with transaction.atomic():
+				selected_radio = request.POST['selected_radio']
+				notes = request.POST['notes']
+				# print("selected_radio",selected_radio)
+				print("request.POST",request.POST)
+				tree_code = request.POST['radio_'+selected_radio]
+				staff = Staff.objects.filter(is_active=True,profile__user=request.user).first()
+				client = Client.objects.filter(is_active=True,id=id_client).first()
+				print("tree_code",tree_code)
+				tree = Followup.objects.filter(is_active=True,followup_choice_code=tree_code).first()
+				
+				client_followup = Client_Followup()
+				client_followup.client =  client
+				client_followup.followup = tree
+				client_followup.staff = staff
+				client_followup.answer = notes
+				client_followup.created_by = request.user
+				client_followup.save()
+
+				client_journey = Client_Journey()
+				client_journey.client = client
+				client_journey.staff = staff
+				client_journey.journal_type = 'feedback'
+				client_journey.created_by = request.user
+				client_journey.save()
+				print('client_journey id', client_journey.id)
+		except IntegrityError as e:
+			print(e)
+		print('form feedback saved!')
 	# if tree_form.is_valid():
 		
 	

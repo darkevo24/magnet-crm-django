@@ -72,7 +72,6 @@ def get_notifications(request):
 			unread += 0
 		
 		notification_list['notification_list'].append(temp) 
-		print(notification_list)
 	notification_list['unread'] = unread
 
 	return JsonResponse(notification_list)

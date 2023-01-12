@@ -73,6 +73,7 @@
 											</a>
 
 											<div class="dropdown-menu dropdown-menu-right">
+												<a href="{% url 'staff-detail' staff.uid %}" class="dropdown-item"><i class="fas fa-info"></i> Detail</a>
 												<a href="{% url 'staff-edit' staff.uid %}" class="dropdown-item"><i class="icon-pencil7"></i> Edit</a>
 												<a href="{% url 'staff-salary-list' staff.uid %}" class="dropdown-item"><i class="icon-pencil7"></i> Salary</a>
 												{% comment %}
