@@ -1908,9 +1908,8 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 	
 	#get meta5 ids
 	user_login_details = get_meta5_ids(meta_ids_lot_for_api, last_two_months_date, 'more_than_two_months')
-	print(len(user_login_details),user_login_details ,  'mati disini')
+	
 	if len(user_login_details) > 0:
-		print('more than two months user login details', user_login_details)
 		meta5_ids = []
 		user_magnet_detail_dict = {}
 		mt5_account_type_dict = {}
@@ -1928,6 +1927,7 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 
 			user_magnet_detail_dict[user_magnet_id].append(temp_dict)
 			loop_meta_id = str(user_login_detail[2])
+			print('loop_meta_id', loop_meta_id)
 			if user_login_detail[2] != None:
 				meta5_ids.append(loop_meta_id)
 				if loop_meta_id not in mt5_account_type_dict:
@@ -1938,9 +1938,6 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 				mt5_account_type_dict[loop_meta_id]['client_name'] = client_detail_magnet_id_dict[str(user_magnet_id)]
 				mt5_account_type_dict[loop_meta_id]['staff_name'] = client_staff_dict[str(user_magnet_id)]
 
-		# print('__________')
-		# print(meta5_ids)
-		# print(user_magnet_detail_dict)
 
 		meta5_id_string_for_post = ''
 		
@@ -1954,24 +1951,21 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 				'from': str(now.year)+"-"+str(now.month)+"-"+"01",
 		        'to':str(now.year)+"-"+str(now.month)+"-"+str(end_date),
 			}
-			print(data_post_for_get_login_trades)
+			
 			
 			# print(str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1]),'str(now.year)+"-"+str(now.month)+"-"+str(calendar.monthrange(now.year, now.month)[1])')
 			res = requests.post('http://13.229.114.255/getLoginsTrades', data=data_post_for_get_login_trades)
 			
 			json_data = json.loads(res.text)
-			print('json_data', json_data)
 			last_two_months_account_trades = json_data['data']
 			total_lot_dict = {}
 			
-			
-			print('more than two months trades', last_two_months_account_trades)
 			for last_two_months_account_trade in last_two_months_account_trades:
 				if last_two_months_account_trade['action'] == 'buy':
 					account_type = mt5_account_type_dict[last_two_months_account_trade['login']]['account_type']
 					login_id = str(last_two_months_account_trade['login'])
 					jakarta_timezone = pytz.timezone('Asia/Jakarta')
-					created_at_timezone = two_month_trades[login_id]['created_at'].replace(tzinfo=jakarta_timezone)
+					created_at_timezone = mt5_account_type_dict[login_id]['created_at'].replace(tzinfo=jakarta_timezone)
 
 					if last_two_months_account_trade['login'] not in two_month_trades:
 						two_month_trades[login_id] = {}
@@ -2009,7 +2003,6 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 
 
 			# print(last_two_months_account_trades)
-			print(total_lot_dict)
 			for account_type, rate_trade_dict in total_lot_dict.items():
 				for rate, bonus_dict in rate_trade_dict.items():
 
@@ -2054,7 +2047,7 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 							total_lot_dict[account_type][str_rate]['total_usd'] += ( loop_total_lot * Decimal(3) )
 							total_lot_dict[account_type][str_rate]['bonus_tier'] = 'Tier 2'
 							total_lot_dict[account_type][str_rate]['bonus_lot_usd'] = Decimal(3)
-			print('after')
+			
 			bonus_account_type_dict = {}
 			bonus_account_type_dict['elastico'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 			bonus_account_type_dict['elektro'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
@@ -2062,7 +2055,6 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 
 			for account_type, rate_bonus_dict in total_lot_dict.items():
 				for rate, bonus_dict in rate_bonus_dict.items():
-					print('>', bonus_dict)
 					bonus_account_type_dict[account_type]['total_idr'] += bonus_dict['total_idr']
 					bonus_account_type_dict[account_type]['total_usd'] += bonus_dict['total_usd']
 					bonus_account_type_dict[account_type]['total_lot'] += bonus_dict['total_lot']
@@ -2072,8 +2064,6 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 
 			
 			trade_list = []
-			print('0000000')
-			print(mt5_account_type_dict)
 			for login_id, detail_dict in two_month_trades.items():
 				# print('|||||',two_month_trades[login_id])
 				account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
@@ -2081,10 +2071,6 @@ def supervisor_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_
 				two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
 				two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
 				
-
-
-			print('finish more than two months', two_month_trades)
-			print(two_month_trades)
 
 		return bonus_account_type_dict, two_month_trades
 	else:
