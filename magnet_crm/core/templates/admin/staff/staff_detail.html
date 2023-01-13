@@ -36,7 +36,65 @@
 						</div>
 
 						<div class="card-body">
-							
+							<div class="row pb-3">
+				                <div class="col-3 px-3">
+				                    <div class="row" style="line-height: 1">
+				                        <div class="col py-2 px-3 gadget_green" >
+				                            <div style="display: inline-block;" class="mr-3">
+				                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{total_client|default:0|num_format}}</h1>
+				                                <p class="mb-0">Total Client</p>
+				                            </div>
+				                            <div style="display: inline-grid;position: absolute;right: 20px">
+				                                <img src="{% static 'magnet/images/Icon-Total-Client.png' %}" style="height: 50px" class="icon_green">
+				                            </div>
+				                        </div>
+				                    </div>
+				                </div>
+				                <div class="col-3 pr-3">
+				                    <div class="row" style="line-height: 1">
+				                        <div class="col py-2 px-3 gadget_green" >
+				                            <div style="display: inline-block;" class="mr-3">
+				                                <h1 class="p-0 m-0" style="color:green;font-size: 2.5em;line-height:1">{{this_week_acitivity_count|default:0|num_format}}</h1>
+				                                <p class="mb-0">Week Acitivty</p>
+				                            </div>
+				                            <div style="display: inline-grid;position: absolute;right: 20px">
+				                                <img src="{% static 'magnet/images/Icon-Total-Followup.png' %}" style="height: 50px" class="icon_green">
+				                            </div>
+				                        </div>
+				                    </div>
+				                </div>
+				                <div class="col-3">
+				                    {% if total_upcomming_followup > 0 %}
+				                        <div class="row" style="line-height: 1">
+				                            <div class="col py-2 px-3 gadget_red" style="background-color:#f5e0e1">
+				                                <div style="display: inline-block;" class="mr-3">
+				                                    <h1 class="p-0 m-0" style="color:red;font-size: 2.5em;line-height:1">{{total_upcomming_followup|default:0|num_format}}</h1>
+				                                    <p class="mb-0">Upcomming Followup</p>
+				                                </div>
+				                                <div style="display: inline-grid;position: absolute;right: 20px">
+				                                    <img src="{% static 'magnet/images/Icon-Upcoming-Followup.png' %}" style="height: 50px;background-color: #f3c2c7!important" class="icon_red">
+				                                </div>
+				                            </div>
+				                        </div>
+				                    {% else %}
+				                        <div class="row" style="line-height: 1">
+				                            <div class="col py-2 px-3 gadget_red" >
+				                                <div style="display: inline-block;" class="mr-3">
+				                                    <h1 class="p-0 m-0 custom_red" style="font-size: 2.5em;line-height:1">{{total_upcomming_followup|default:0|num_format}}</h1>
+				                                    <p class="mb-0">Upcomming Followup</p>
+				                                </div>
+				                                <div style="display: inline-grid;position: absolute;right: 20px">
+				                                    <img src="{% static 'magnet/images/Icon-Upcoming-Followup.png' %}" style="height: 50px;" class="icon_red">
+				                                </div>
+				                            </div>
+				                        </div>
+				                    {% endif %}
+
+				                    
+
+				                    
+				                </div>
+				            </div>
 							<ul class="nav nav-tabs nav-tabs-highlight nav-justified">
 								<li class="nav-item"><a href="#highlighted-justified-tab1" class="nav-link active" data-toggle="tab">Activity</a></li>
 								<li class="nav-item"><a href="#highlighted-justified-tab2" class="nav-link" data-toggle="tab">Clients</a></li>

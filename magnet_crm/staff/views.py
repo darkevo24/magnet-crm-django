@@ -102,9 +102,19 @@ def staff_delete(request, staff_uid):
 	return redirect(reverse('staff-list'))
 
 def staff_detail(request, staff_uid):
+
+	now = timezone.now()
+	current_day = now.weekday()
+	first_day_of_this_week = now - timedelta(days=current_day)
+	end_day_of_this_week = first_day_of_this_week + timedelta(days=6)
+	print(first_day_of_this_week, end_day_of_this_week)
+
+
 	template = 'admin/staff/staff_detail.html'
 	staff = Staff.objects.filter(uid=staff_uid).first()
 	client_staff_list = Client_Staff.objects.filter(staff=staff, is_active=True).prefetch_related('client')
+	total_client = client_staff_list.count()
+
 	client_ids = []
 	for client_staff in client_staff_list:
 		client_ids.append(client_staff.client.id)
@@ -113,9 +123,15 @@ def staff_detail(request, staff_uid):
 	client_schedule_list_json = []
 
 	staff_client_journey_list = Client_Journey.objects.filter(staff=staff).order_by('-created_at').prefetch_related('client', 'staff__profile')
+
+	this_week_acitivity_count = Client_Journey.objects.filter(staff=staff, created_at__gte=first_day_of_this_week, created_at__lte=end_day_of_this_week).count()
+
+
+
 	print(':::', staff_client_journey_list.count())
+	print('this week', this_week_acitivity_count)
 	for staff_client_journey in staff_client_journey_list:
-		print(staff_client_journey.staff)
+		print(staff_client_journey.staff, staff_client_journey.created_at)
 		print(staff_client_journey.client)
 		print(staff_client_journey.journal_type)
 
@@ -131,11 +147,16 @@ def staff_detail(request, staff_uid):
 		temp_dict['start'] = client_schedule.schedule_date.strftime("%Y-%m-%dT%H:%M:%S")
 		client_schedule_list_json.append(temp_dict)
 
+	total_upcomming_followup = Client_Schedule.objects.filter(is_active=True, staff=staff, schedule_date__gt=now).count()
+	
 	print(client_schedule_list_json)
 	print(json.dumps(client_schedule_list_json))
 		
 
 	context = {
+		'total_client' : total_client,
+		'this_week_acitivity_count': this_week_acitivity_count,
+		'total_upcomming_followup': total_upcomming_followup,
 		'client_schedule_list': client_schedule_list,
 		'staff_client_journey_list': staff_client_journey_list,
 		'staff': staff,
@@ -1374,7 +1395,6 @@ def staff_supervisor_report_detail(request,staff_uid):
 	more_two_months_bonus_dict, more_two_months_trades = supervisor_calculate_lot_more_than_two_months_bonus(staff_list, last_two_months_date, now, end_date)
 	
 	data_pribadi_months_bonus_dict, data_pribadi_trades = supervisor_calculate_data_pribadi_bonus(staff_list, now, end_date)
-	print('sampe disni')
 
 	#data-ib
 	show_ib_bonus = False
