@@ -458,10 +458,10 @@
 						<li class="nav-item-header"><div class="text-uppercase font-size-xs line-height-xs">Main</div> <i class="icon-menu" title="Main"></i></li>
 						<li class="nav-item {% if menu == 'dashboard' %} active {% endif %}">
 
-							<a href="{% url 'dashboard' %}" class="nav-link {% if menu == 'dashboard' %} inverted-border-radius {% endif %}" style="position: relative;">
+							<a href="{% url 'dashboard' %}" class="nav-link {% if menu == 'dashboard' %} inverted-border-radius {% endif %}" style="position: relative;vertical-align: middle!important;">
 								<!-- <div style="background-color: red;height: 140%;width:5px;position: absolute;right: -1px;top:-20%">
 								</div> -->
-								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-dashboard.png' %}">
+								<img class="mr-2" style="width: 1.8em" src="{% static 'magnet/images/Dashboard.webp' %}">
 								<span>
 									Dashboard
 								</span>
@@ -472,16 +472,16 @@
 							{% with request.user|full_menu as is_privilage %}
 							{% with request.user|is_admin as is_low_admin %} 
 							{% if is_privilage %}
-							<a href="{% url 'admin-client-list' %}" class="nav-link {% if menu == 'client' %} inverted-border-radius {% endif %} ">
-								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-client.png' %}">
+							<a href="{% url 'admin-client-list' %}" style="vertical-align: middle!important;" class="nav-link {% if menu == 'client' %} inverted-border-radius {% endif %} ">
+								<img class="mr-2" style="width: 1.8em" src="{% static 'magnet/images/Client.webp' %}">
 								<span>
 									Client
 								</span>
 							</a>
 							
 							{% else %}
-							<a href="{% url 'client-list' %}" class="nav-link {% if menu == 'client' %} inverted-border-radius {% endif %} ">
-								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-client.png' %}">
+							<a href="{% url 'client-list' %}" style="vertical-align: middle!important;" class="nav-link {% if menu == 'client' %} inverted-border-radius {% endif %} ">
+								<img class="mr-2" style="width: 1.8em" src="{% static 'magnet/images/Client.webp' %}">
 								<span>
 									Client
 								</span>
@@ -493,7 +493,7 @@
 						
 						<li class="nav-item {% if menu == 'client_feedback' %} active {% endif %}">
 							<a href="{% url 'client-feedback-list' %}" class="nav-link {% if menu == 'client_feedback' %} inverted-border-radius {% endif %}">
-								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+								<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/Client FeedBack.webp' %}">
 								<span>
 									Client Feedback
 								</span>
@@ -506,7 +506,7 @@
 										{% if is_supervisor == True %}
 											<li class="nav-item {% if menu == 'staff-supervisor-report' %} active {% endif %}">
 												<a href="{% url 'staff-supervisor-report' %}" class="nav-link {% if menu == 'staff-supervisor-report' %} inverted-border-radius {% endif %}">
-													<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+													<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/Report.webp' %}">
 													<span>
 														Report
 													</span>
@@ -515,7 +515,7 @@
 										{% else %}
 											<li class="nav-item {% if menu == 'staff-own-report' %} active {% endif %}">
 												<a href="{% url 'staff-own-report' %}" class="nav-link {% if menu == 'staff-own-report' %} inverted-border-radius {% endif %}">
-													<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+													<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/Report.webp' %}">
 													<span>
 														Report
 													</span>
@@ -532,33 +532,33 @@
 							{% if is_privilage %}
 								<li class="nav-item {% if menu == 'client_import' %} active {% endif %}">
 									<a href="{% url 'client-import'%}" class="nav-link {% if menu == 'client_import' %} inverted-border-radius {% endif %}">
-										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-client.png' %}">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/ClientImport.webp' %}">
 										<span>
-											Client Import
+											Import
 										</span>
 									</a>
 								</li>
 								<li class="nav-item {% if menu == 'client_own_suspect' %} active {% endif %}">
 									<a href="{% url 'client-own-suspect-list'%}" class="nav-link {% if menu == 'client_own_suspect' %} inverted-border-radius {% endif %}">
-										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-client.png' %}">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/StaffOwnClientSuspect.webp' %}">
 										<span>
-											Staff Own Client Suspect
+											Request Data
 										</span>
 									</a>
 								</li>
 
 								<li class="nav-item {% if menu == 'client_suspect' %} active {% endif %}">
 									<a href="{% url 'client-suspect-list'%}" class="nav-link {% if menu == 'client_suspect' %} inverted-border-radius {% endif %}">
-										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-client.png' %}">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/ClientSuspect.webp' %}">
 										<span>
-											Client Suspect
+											Suspect Client
 										</span>
 									</a>
 								</li>
 
 								<li class="nav-item {% if menu == 'client_transfer' %} active {% endif %}">
 									<a href="{% url 'client_transfer_new'%}" class="nav-link {% if menu == 'client_transfer' %} inverted-border-radius {% endif %}">
-										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff-level.png' %}">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/ClientTransfer.webp' %}">
 										<span>
 											Client Transfer
 										</span>
@@ -567,7 +567,7 @@
 								
 								<li class="nav-item {% if menu == 'feedback_list' %} active {% endif %}">
 									<a href="{% url 'followup-list' %}" class="nav-link {% if menu == 'feedback_list' %} inverted-border-radius {% endif %}">
-										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/FeedbackList.webp' %}">
 										<span>
 											Feedback List
 										</span>
@@ -576,7 +576,7 @@
 								{% if not is_low_admin %}
 								<li class="nav-item {% if menu == 'report' %} active {% endif %}">
 									<a href="{% url 'staff-report' %}" class="nav-link {% if menu == 'report' %} inverted-border-radius {% endif %}">
-										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/Report.webp' %}">
 										<span>
 											Report
 										</span>
@@ -584,7 +584,7 @@
 								</li>
 								<li class="nav-item {% if menu == 'ib_report' %} active {% endif %}">
 									<a href="{% url 'ib-list' %}" class="nav-link {% if menu == 'ib_report' %} inverted-border-radius {% endif %}">
-										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-followup-form.png' %}">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/IBList.webp' %}">
 										<span>
 											IB List
 										</span>
@@ -592,15 +592,15 @@
 								</li>
 								<li class="nav-item {% if menu == 'staff_list' %} active {% endif %}">
 									<a href="{% url 'staff-list' %}" class="nav-link {% if menu == 'staff_list' %} inverted-border-radius {% endif %}">
-										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff.png' %}">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/Staff.webp' %}">
 										<span>
-											Staff
+											Staff List
 										</span>
 									</a>
 								</li>
 								<li class="nav-item {% if menu == 'staff_level_list' %} active {% endif %}">
 									<a href="{% url 'staff-level-list'%}" class="nav-link {% if menu == 'staff_level_list' %} inverted-border-radius {% endif %}">
-										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/admin-staff-level.png' %}">
+										<img class="mr-2" style="width: 1.5em" src="{% static 'magnet/images/StaffLevel.webp' %}">
 										<span>
 											Staff Level
 										</span>

@@ -82,7 +82,6 @@
 								<th scope="col">Staff Name</th>
 								<th scope="col">Client Name</th>
 								<th scope="col">Supervisor Name</th>
-								<th scope="col">UserID</th>
 								<th scope="col">login</th>
 								<th scope="col">TFD</th>
 								<th scope="col">Time</th>
@@ -98,7 +97,9 @@
 											<th scope="row">{{staff.profile.full_name}}</th>
 											<th scope="row">{{client_ftd_user_magnet_dict|dict_get:client_ftd.userid}}</th>
 											<th scope="row">{{staff.staff_parent.profile.full_name}}</th>
+											{% comment %}
 											<th scope="row">{{client_ftd.userid}}</th>
+											{% endcomment %}
 											<td>
 											   {{client_ftd.login}}
 											</td>
