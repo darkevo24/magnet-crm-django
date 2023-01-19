@@ -7,6 +7,7 @@ import uuid
 class IB(Base_Model):
 	uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	name = models.CharField(max_length=255, default='')
+	aecode = models.CharField(max_length=255, default='')
 
 	def __str__(self):
 		return self.name

@@ -42,7 +42,7 @@ def client_import(request):
 	import_form = ClientImportForm(request.POST or None, request.FILES or None)
 	jakarta_timezone = pytz.timezone('Asia/Jakarta')
 	print(request.POST)
-	
+	now = timezone.now()
 	if request.POST:
 		try:
 			with transaction.atomic():
@@ -85,7 +85,7 @@ def client_import(request):
 							existing_client = Client.objects.filter(email=row[4].value, nama=row[2].value, phone_no=phone_no).first()
 							if existing_client == None:
 								new_client = Client()
-								new_client.created_at = row[1].value.replace(tzinfo=jakarta_timezone)
+								new_client.created_at = now
 								new_client.created_by = request.user
 								new_client.nama = row[2].value
 								print('+++++', row[2].value, phone_no)
@@ -107,6 +107,7 @@ def client_import(request):
 									new_client.campaign = row[7].value
 								if 8 in row:
 									new_client.gclid = row[8].value
+								new_client.share_date = row[1].value.replace(tzinfo=jakarta_timezone)
 								new_client.save()
 
 								if selected_staff is not None and selected_staff is not "":
@@ -224,7 +225,8 @@ def client_import(request):
 							else:
 								print("existing client not found")
 								new_client = Client()
-								new_client.created_at = row[1].value.replace(tzinfo=jakarta_timezone)
+								new_client.created_at = now()
+								new_client.share_date = row[1].value.replace(tzinfo=jakarta_timezone)
 								new_client.created_by = request.user
 								new_client.nama = row[2].value
 								
@@ -257,59 +259,6 @@ def client_import(request):
 								print('new_client_staff saved !!!!')
 								new_client_staff.save()
 								
-
-					# counter = 0 
-					# for row in file:
-					# 	# print(row)
-					# 	if counter == 0:
-					# 		counter+=1
-					# 		pass
-					# 	else:
-					# 		print("temp",row)
-
-					# 		temp = row.split(";")
-					# 		print("temp",temp)
-					# 		new_client = Client()
-					# 		new_client.nama = temp[2]
-					# 		try:
-					# 			new_client.phone_no = temp[3]
-					# 		except:
-					# 			new_client.phone_no = 0
-					# 		new_client.email = temp[4]
-
-					# 		if temp[5] == "google":
-
-					# 			new_client.source_detail_1 = None
-					# 			new_client.source_detail_2 = "4"
-					# 		elif temp[5] == "fb / ig":
-					# 			new_client.source_detail_1 = None
-					# 			new_client.source_detail_2 = "1"
-					# 		else:
-					# 			new_client.source_detail_1 = None
-
-					# 		new_client.created_by = request.user
-					# 		new_client.save()
-
-					# 		selected_staff = Staff.objects.filter(id=import_form.cleaned_data['staff']).first()
-					# 		if selected_staff is not None and selected_staff is not "":
-								
-					# 			c_staff = Client_Staff()
-					# 			c_staff.client = new_client
-					# 			c_staff.staff =	selected_staff
-					# 			c_staff.created_by = request.user				
-					# 			c_staff.save()
-
-
-
-
-					
-					# 			ini kalo pake xls / xlsx
-					# 			excel_file = import_form.cleaned_data['file']
-					# 			rb = open_workbook(file_contents=excel_file.read())
-					# 			sheet = rb.sheet_by_index(0)
-					# 			print(sheet.nrows)
-					# 			for x in range(sheet.nrows):
-					# 				print(sheet.row_values(x)[0])
 
 					messages.success(request, 'Berhasil Impor Data.')
 					return redirect(reverse('client-import'))

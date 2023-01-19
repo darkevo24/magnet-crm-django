@@ -30,6 +30,8 @@ from django_celery_beat.models import CrontabSchedule, PeriodicTask
 from client.models import *
 from django.utils.timezone import make_aware
 from magnet_crm.celery import app
+
+from ib.models import *
 import pytz
 app.conf.beat_schedule = {
     # Executes every Monday morning at 7:30 a.m.
@@ -371,23 +373,23 @@ def update_client_data(mycursor, last_id, user):
 		client.city = new_client[6]
 		client.address = new_client[7]
 		if "/" in new_client[8]: 
-			print(new_client[8],"new_client[8]")
+			# print(new_client[8],"new_client[8]")
 			temp = new_client[8].split("/")
 			client.birthday = temp[2]+"-"+temp[0]+"-"+temp[1]
 		else:
-			print(new_client[8],"else_new_client[8] ")
+			# print(new_client[8],"else_new_client[8] ")
 			if (new_client[8] == "1990-04-31"):
 				client.birthday = "1990-04-30"
 			else:
 				if new_client[8] != None and new_client[8] != "":
-					print("masuk kesini dongs" + str(new_client[8]))
+					# print("masuk kesini dongs" + str(new_client[8]))
 					temp_birthday = new_client[8].split("-")
 
 					if int(temp_birthday[1])  > 12:
-						print("lebih besar dari 12 ")
+						# print("lebih besar dari 12 ")
 						client.birthday = temp_birthday[0]+"-"+temp_birthday[2]+"-"+temp_birthday[1]
 					else :
-						print("lebih kecil dari 12 ")
+						# print("lebih kecil dari 12 ")
 						client.birthday = temp_birthday[0]+"-"+temp_birthday[1]+"-"+temp_birthday[2]
 		
 		tz = pytz.timezone('Asia/Jakarta')
@@ -436,22 +438,14 @@ def update_client_data(mycursor, last_id, user):
 			client.source_detail_2 = None
 
 
-		# client.source = new_client[19]
-		# print(new_client[20],'new_client[20]')
 		client.medium = new_client[20]
-		# print(new_client[21],'new_client[21]')
 		client.campaign = new_client[21]
-		# print(new_client[22],'new_client[22]')
 		client.term = new_client[22]
-		# print(new_client[23],'new_client[23]')
 		client.content = new_client[23]
 		client.gclid = new_client[24]
 		client.is_registered = True
-		# client.source = None
-		# client.source_detail_1 = None
-		# client.source_detail_2 = None
-		print("----|||||" + str(new_client[8]))
-		print("|||||------" + str(client.birthday))
+		
+		
 		
 		client.save()
 		print("saved!")
@@ -532,16 +526,34 @@ def check_aecode(mycursor, start_from, user):
 	new_client_list = mycursor.fetchall()
 	for new_client in new_client_list:
 		print(str(new_client[1])+"|"+str(new_client[0]))
+		staff = Staff.objects.filter(aecode=str(new_client[1]), is_active=True).first()
+		client = Client.objects.filter(magnet_id=str(new_client[0]), is_active=True).first()
+
 		client_staff = Client_Staff.objects.filter(staff__aecode=str(new_client[1]), client__magnet_id=str(new_client[0]), is_active=True).first()
-		if client_staff == None:
-			client = Client.objects.filter(magnet_id=str(new_client[0]), is_active=True).first()
-			staff = Staff.objects.filter(aecode=str(new_client[1]), is_active=True).first()
-			if client != None and staff != None:
-				client_staff = Client_Staff()
-				client_staff.client = client
-				client_staff.staff = staff
-				client_staff.created_by = client_staff.updated_by = user
-				client_staff.save()
+		if staff != None:
+			if client_staff == None:
+				
+				if client != None and staff != None:
+					client_staff = Client_Staff()
+					client_staff.client = client
+					client_staff.staff = staff
+					client_staff.created_by = client_staff.updated_by = user
+					client_staff.save()
+		else:
+			ib = IB.objects.filter(aecode=str(new_client[1]), is_active=True).first()
+			if ib != None:
+				exist_ib_client = IB_Client.objects.filter(client=client, ib=ib, is_active=True).first()
+				if exist_ib_client == None:
+					ib_client = IB_Client()
+					ib_client.client = client
+					ib_client.ib = ib
+					ib_client.created_by = ib_client.updated_by = user
+					ib_client.save()
+				ib_client.save()
+
+
+
+
 
 
 

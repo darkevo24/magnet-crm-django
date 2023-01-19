@@ -48,6 +48,8 @@ class Client(Base_Model):
 	gclid = models.CharField(max_length=128, default='',null=True, blank=True)
 	magnet_created_at = models.DateTimeField(null=True, blank=True)
 	magnet_update_at = models.DateTimeField(null=True, blank=True)
+
+	shared_date = models.DateTimeField(null=True, blank=True)
 	umur = models.CharField(max_length=255, default='')
 	GENDER_CHOICES = (
 		('male', 'Male'),
