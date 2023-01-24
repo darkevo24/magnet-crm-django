@@ -550,8 +550,8 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 	bonus_account_type_dict['elastico'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 	bonus_account_type_dict['elektro'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 	bonus_account_type_dict['magneto'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
-	bonus_account_type_dict['staff'] = {'total_idr': 0, 'total_usd': 0, }
-	bonus_account_type_dict['supervisor'] = {'total_idr': 0, 'total_usd': 0, }
+	bonus_account_type_dict['staff'] = {'total_idr': 0, 'total_usd': 0, 'total_lot': 0 }
+	bonus_account_type_dict['supervisor'] = {'total_idr': 0, 'total_usd': 0, 'total_lot': 0 }
 
 	if meta5_id_string_for_post != '':
 
@@ -617,6 +617,8 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 		# grouping staff and supervisor trades
 		staff_trades_dict = {}
 		supervisor_trades_dict = {}
+		total_lot_staff = 0
+		total_lot_supervisor = 0
 		for login_id, trade_dict in two_month_trades.items():
 			staff_id = mt5_account_type_dict[login_id]['staff_id']
 			supervisor_id = mt5_account_type_dict[login_id]['supervisor_id']
@@ -625,6 +627,9 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 			trade_dict['login_id'] = login_id
 			if staff_id not in staff_trades_dict:
 				staff_trades_dict[staff_id] = {}
+				staff_trades_dict[staff_id]['total_lot'] = 0
+				staff_trades_dict[staff_id]['total_usd'] = 0
+				staff_trades_dict[staff_id]['total_idr'] = 0
 				
 			if account_type not in  staff_trades_dict[staff_id] :
 				staff_trades_dict[staff_id][account_type] = {}
@@ -633,12 +638,20 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 				staff_trades_dict[staff_id][account_type]['total_usd'] = 0
 				staff_trades_dict[staff_id][account_type]['total_idr'] = 0 
 				staff_trades_dict[staff_id][account_type]['bonus_tier'] = 0
+			
+
 
 			staff_trades_dict[staff_id][account_type]['trade_list'].append(trade_dict)
 			staff_trades_dict[staff_id][account_type]['total_lot'] += trade_dict['total_lot']
-
+			staff_trades_dict[staff_id]['total_lot'] += trade_dict['total_lot']
+			
+			total_lot_staff += trade_dict['total_lot']
+				
 			if supervisor_id not in supervisor_trades_dict:
 				supervisor_trades_dict[supervisor_id] = {}
+				supervisor_trades_dict[supervisor_id]['total_usd'] = 0
+				supervisor_trades_dict[supervisor_id]['total_idr'] = 0
+				supervisor_trades_dict[supervisor_id]['total_lot'] = 0
 				
 			if account_type not in  supervisor_trades_dict[supervisor_id] :
 				supervisor_trades_dict[supervisor_id][account_type] = {}
@@ -651,144 +664,151 @@ def master_calculate_lot_two_months_bonus(staffs, last_two_months_date, now, end
 			supervisor_trades_dict[supervisor_id][account_type]['trade_list'].append(trade_dict)
 			supervisor_trades_dict[supervisor_id][account_type]['total_lot'] += trade_dict['total_lot']
 
+			supervisor_trades_dict[supervisor_id]['total_lot'] += trade_dict['total_lot']
+			
+			total_lot_supervisor += trade_dict['total_lot']
+			# print("supervisor two months 123" , staff_trades_dict[staff_id]['total_lot'], login_id, staff_id)
+		print('perbandingan ---', total_lot_staff, total_lot_supervisor )
+
 		
 
 			# print(type(loop_lot_decimal), type(loop_rate_decimal))
 			# total_lot_dict[account_type][str_rate]['total_idr'] += ( loop_lot_decimal * loop_rate_decimal )	
 
-		# print(last_two_months_account_trades)
-		
+		# # print(last_two_months_account_trades)
+		# print('check staff id')
+		# for staff_id, d_dict in staff_trades_dict.items():
+		# 	print(staff_id, d_dict)
+		# 	if 'total' in d_dict:
+		# 		print('[][]', staff_id, d_dict['total_lot'])
 		for staff_id, account_type_dict in staff_trades_dict.items():
-
 			for account_type, trade_dict in account_type_dict.items():
-				loop_total_lot = trade_dict['total_lot']
-				bonus_usd_per_lot = Decimal(0.00)
-				bonus_tier = ''
-				bonus_usd_account_per_account_type = Decimal(0.00)
-				bonus_idr_account_per_account_type = Decimal(0.00)
-				if account_type == 'elastico':
-					if loop_total_lot <= 30.00:
-						bonus_usd_per_lot = Decimal(1)
-						bonus_tier = 'tier 1'
-					else:
-						bonus_usd_per_lot = Decimal(1.75)
-						bonus_tier = 'tier 2'
-				elif account_type == 'elektro':
-					if loop_total_lot <= 50.00:
-						bonus_usd_per_lot = Decimal(0.75)
-						bonus_tier = 'tier 1'
-					else:
-						bonus_usd_per_lot = Decimal(1)
-						bonus_tier = 'tier 2'
-				elif account_type == 'magneto':
-					if loop_total_lot <= 100.00:
-						bonus_usd_per_lot = Decimal(2)
-						bonus_tier = 'tier 1'
-					else:
-						bonus_usd_per_lot = Decimal(3)
-						bonus_tier = 'tier 2'
 				
+				if 'total' not in account_type:
+					loop_total_lot = trade_dict['total_lot']
+					bonus_usd_per_lot = Decimal(0.00)
+					bonus_tier = ''
+					bonus_usd_account_per_account_type = Decimal(0.00)
+					bonus_idr_account_per_account_type = Decimal(0.00)
+					if account_type == 'elastico':
+						if loop_total_lot <= 30.00:
+							bonus_usd_per_lot = Decimal(1)
+							bonus_tier = 'tier 1'
+						else:
+							bonus_usd_per_lot = Decimal(1.75)
+							bonus_tier = 'tier 2'
+					elif account_type == 'elektro':
+						if loop_total_lot <= 50.00:
+							bonus_usd_per_lot = Decimal(0.75)
+							bonus_tier = 'tier 1'
+						else:
+							bonus_usd_per_lot = Decimal(1)
+							bonus_tier = 'tier 2'
+					elif account_type == 'magneto':
+						if loop_total_lot <= 100.00:
+							bonus_usd_per_lot = Decimal(2)
+							bonus_tier = 'tier 1'
+						else:
+							bonus_usd_per_lot = Decimal(3)
+							bonus_tier = 'tier 2'
+					
 
-				for trade in trade_dict['trade_list']:
-					rounding_bonus = round_down( (trade['total_lot'] * bonus_usd_per_lot), 2)
-					trade['idr_bonus'] = rounding_bonus * Decimal(trade['rate'])
-					trade['bonus'] = bonus_usd_per_lot
-					trade['usd_bonus'] = rounding_bonus
-					bonus_usd_account_per_account_type += rounding_bonus
-					bonus_idr_account_per_account_type += (rounding_bonus * Decimal(trade['rate']))
+					for trade in trade_dict['trade_list']:
+						rounding_bonus = round_down( (trade['total_lot'] * bonus_usd_per_lot), 2)
+						trade['idr_bonus'] = rounding_bonus * Decimal(trade['rate'])
+						trade['bonus'] = bonus_usd_per_lot
+						trade['usd_bonus'] = rounding_bonus
+						bonus_usd_account_per_account_type += rounding_bonus
+						bonus_idr_account_per_account_type += (rounding_bonus * Decimal(trade['rate']))
+						bonus_account_type_dict['supervisor']['total_lot'] += round_down(trade['total_lot'] , 2)
+						print("bonus_account_type_dict['supervisor']['total_lot']", bonus_account_type_dict['supervisor']['total_lot'])
+
+						bonus_account_type_dict['staff']['total_lot'] += round_down(trade['total_lot'] , 2)
+					
+					staff_trades_dict[staff_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+					staff_trades_dict[staff_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+					staff_trades_dict[staff_id][account_type]['bonus_tier'] = bonus_tier	
+
+					
+					staff_trades_dict[staff_id]['total_idr'] += bonus_idr_account_per_account_type
+					staff_trades_dict[staff_id]['total_usd'] += bonus_usd_account_per_account_type
+
+					bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
+
+					bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+
+					bonus_account_type_dict['staff']['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict['staff']['total_usd'] += bonus_usd_account_per_account_type
+
 				
-				staff_trades_dict[staff_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
-				staff_trades_dict[staff_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
-				staff_trades_dict[staff_id][account_type]['bonus_tier'] = bonus_tier	
+		
 
-				bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
-				bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
 
-				bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
-				bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
-
-				bonus_account_type_dict['staff']['total_idr'] += bonus_idr_account_per_account_type
-				bonus_account_type_dict['staff']['total_usd'] += bonus_usd_account_per_account_type
-				
-	
-
+		
 		for supervisor_id, account_type_dict in supervisor_trades_dict.items():
 
 			for account_type, trade_dict in account_type_dict.items():
-				loop_total_lot = trade_dict['total_lot']
-				bonus_usd_per_lot = Decimal(0.00)
-				bonus_tier = ''
-				bonus_usd_account_per_account_type = Decimal(0.00)
-				bonus_idr_account_per_account_type = Decimal(0.00)
-				if account_type == 'elastico':
-					if loop_total_lot <= 30.00:
-						bonus_usd_per_lot = Decimal(0.5)
-						bonus_tier = 'tier 1'
-					else:
-						bonus_usd_per_lot = Decimal(0.75)
-						bonus_tier = 'tier 2'
-				elif account_type == 'elektro':
-					if loop_total_lot <= 50.00:
-						bonus_usd_per_lot = Decimal(0.25)
-						bonus_tier = 'tier 1'
-					else:
-						bonus_usd_per_lot = Decimal(0.5)
-						bonus_tier = 'tier 2'
-				elif account_type == 'magneto':
-					if loop_total_lot <= 100.00:
-						bonus_usd_per_lot = Decimal(1)
-						bonus_tier = 'tier 1'
-					else:
-						bonus_usd_per_lot = Decimal(2)
-						bonus_tier = 'tier 2'
+				if 'total' not in account_type:
+					loop_total_lot = trade_dict['total_lot']
+					bonus_usd_per_lot = Decimal(0.00)
+					bonus_tier = ''
+					bonus_usd_account_per_account_type = Decimal(0.00)
+					bonus_idr_account_per_account_type = Decimal(0.00)
+					if account_type == 'elastico':
+						if loop_total_lot <= 30.00:
+							bonus_usd_per_lot = Decimal(0.5)
+							bonus_tier = 'tier 1'
+						else:
+							bonus_usd_per_lot = Decimal(0.75)
+							bonus_tier = 'tier 2'
+					elif account_type == 'elektro':
+						if loop_total_lot <= 50.00:
+							bonus_usd_per_lot = Decimal(0.25)
+							bonus_tier = 'tier 1'
+						else:
+							bonus_usd_per_lot = Decimal(0.5)
+							bonus_tier = 'tier 2'
+					elif account_type == 'magneto':
+						if loop_total_lot <= 100.00:
+							bonus_usd_per_lot = Decimal(1)
+							bonus_tier = 'tier 1'
+						else:
+							bonus_usd_per_lot = Decimal(2)
+							bonus_tier = 'tier 2'
 				
 
-				for trade in trade_dict['trade_list']:
-					rounding_bonus = round_down( (trade['total_lot'] * bonus_usd_per_lot), 2)
-					trade['supervisor_idr_bonus'] = rounding_bonus * Decimal(trade['rate'])
-					trade['supervisor_bonus'] = bonus_usd_per_lot
-					trade['supervisor_usd_bonus'] = rounding_bonus
-					
-					bonus_usd_account_per_account_type += rounding_bonus
-					
-					bonus_idr_account_per_account_type += (rounding_bonus * Decimal(trade['rate']))
+					for trade in trade_dict['trade_list']:
+						rounding_bonus = round_down( (trade['total_lot'] * bonus_usd_per_lot), 2)
+						trade['supervisor_idr_bonus'] = rounding_bonus * Decimal(trade['rate'])
+						trade['supervisor_bonus'] = bonus_usd_per_lot
+						trade['supervisor_usd_bonus'] = rounding_bonus
+						
+						bonus_usd_account_per_account_type += rounding_bonus
+						
+						bonus_idr_account_per_account_type += (rounding_bonus * Decimal(trade['rate']))
+
+						supervisor_trades_dict[supervisor_id]['total_idr'] += trade['supervisor_idr_bonus']
+						supervisor_trades_dict[supervisor_id]['total_usd'] += trade['supervisor_usd_bonus']
+
+						bonus_account_type_dict['supervisor']['total_lot'] += round_down(trade['total_lot'] , 2)
+						# supervisor_trades_dict[supervisor_id]['total_lot'] += rounding_bonus
+
 				
-				supervisor_trades_dict[supervisor_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
-				supervisor_trades_dict[supervisor_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
-				supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = bonus_tier
+					supervisor_trades_dict[supervisor_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+					supervisor_trades_dict[supervisor_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+					supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = bonus_tier
 
 
-				bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
-				bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
 
-				bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
-				bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
-				bonus_account_type_dict['supervisor']['total_idr'] += bonus_idr_account_per_account_type
-				bonus_account_type_dict['supervisor']['total_usd'] += bonus_usd_account_per_account_type
+					bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
 
-
-		
-		# print('supervisor_trades_dict', supervisor_trades_dict)
-		# for account_type, rate_bonus_dict in total_lot_dict.items():
-		# 	for rate, bonus_dict in rate_bonus_dict.items():
-		# 		print('>', bonus_dict)
-		# 		bonus_account_type_dict[account_type]['total_idr'] += bonus_dict['total_idr']
-		# 		bonus_account_type_dict[account_type]['total_usd'] += bonus_dict['total_usd']
-		# 		bonus_account_type_dict[account_type]['total_lot'] += bonus_dict['total_lot']
-		# 		# bonus_account_type_dict[account_type]['bonus_tier'] = bonus_dict['bonus_tier']
-		# 		bonus_account_type_dict[account_type]['bonus_lot_usd'] = bonus_dict['bonus_lot_usd']
-
-
-		
-		# trade_list = []
-		# # print('0000000')
-		# # print(mt5_account_type_dict)
-		# for login_id, detail_dict in two_month_trades.items():
-		# 	# print('|||||',two_month_trades[login_id])
-		# 	account_type = two_month_trades[login_id]['account_type'] = mt5_account_type_dict[login_id]['account_type'] 
-		# 	two_month_trades[login_id]['bonus_lot_usd'] = round(bonus_account_type_dict[account_type]['bonus_lot_usd'], 2)
-		# 	two_month_trades[login_id]['total_usd'] = round(Decimal(two_month_trades[login_id]['total_lot']) * Decimal(two_month_trades[login_id]['bonus_lot_usd']), 2)
-		# 	two_month_trades[login_id]['total_idr'] = round(Decimal(two_month_trades[login_id]['total_usd']) * Decimal(two_month_trades[login_id]['rate']), 2)
+					bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+					bonus_account_type_dict['supervisor']['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict['supervisor']['total_usd'] += bonus_usd_account_per_account_type
 		
 		return bonus_account_type_dict, two_month_trades, staff_trades_dict, supervisor_trades_dict
 	else:
@@ -894,8 +914,8 @@ def master_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_date
 			bonus_account_type_dict['elastico'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 			bonus_account_type_dict['elektro'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 			bonus_account_type_dict['magneto'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
-			bonus_account_type_dict['staff'] = {'total_idr': 0, 'total_usd': 0, }
-			bonus_account_type_dict['supervisor'] = {'total_idr': 0, 'total_usd': 0, }
+			bonus_account_type_dict['staff'] = {'total_idr': 0, 'total_usd': 0, 'total_lot': 0}
+			bonus_account_type_dict['supervisor'] = {'total_idr': 0, 'total_usd': 0, 'total_lot': 0 }
 
 			
 			for last_two_months_account_trade in last_two_months_account_trades:
@@ -950,7 +970,10 @@ def master_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_date
 				trade_dict['login_id'] = login_id
 				if staff_id not in staff_trades_dict:
 					staff_trades_dict[staff_id] = {}
-					
+					staff_trades_dict[staff_id]['total_lot'] = 0
+					staff_trades_dict[staff_id]['total_idr'] = 0
+					staff_trades_dict[staff_id]['total_usd'] = 0
+
 				if account_type not in  staff_trades_dict[staff_id] :
 					staff_trades_dict[staff_id][account_type] = {}
 					staff_trades_dict[staff_id][account_type]['trade_list'] = []
@@ -958,12 +981,18 @@ def master_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_date
 					staff_trades_dict[staff_id][account_type]['total_usd'] = 0
 					staff_trades_dict[staff_id][account_type]['total_idr'] = 0 
 					staff_trades_dict[staff_id][account_type]['bonus_tier'] = 0
+					
 
 				staff_trades_dict[staff_id][account_type]['trade_list'].append(trade_dict)
 				staff_trades_dict[staff_id][account_type]['total_lot'] += trade_dict['total_lot']
+				staff_trades_dict[staff_id]['total_lot'] += trade_dict['total_lot']
+				# staff_trades_dict['total_lot']+= trade_dict['total_lot']
 
 				if supervisor_id not in supervisor_trades_dict:
 					supervisor_trades_dict[supervisor_id] = {}
+					supervisor_trades_dict[supervisor_id]['total_lot'] = 0
+					supervisor_trades_dict[supervisor_id]['total_idr'] = 0
+					supervisor_trades_dict[supervisor_id]['total_usd'] = 0
 					
 				if account_type not in  supervisor_trades_dict[supervisor_id] :
 					supervisor_trades_dict[supervisor_id][account_type] = {}
@@ -972,121 +1001,135 @@ def master_calculate_lot_more_than_two_months_bonus(staffs, last_two_months_date
 					supervisor_trades_dict[supervisor_id][account_type]['total_usd'] = 0
 					supervisor_trades_dict[supervisor_id][account_type]['total_idr'] = 0 
 					supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = 0
+					
 				supervisor_trade_list = trade_dict
 				supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'].append(supervisor_trade_list)
 				supervisor_trades_dict[supervisor_id][account_type]['total_lot'] += trade_dict['total_lot']
+				supervisor_trades_dict[supervisor_id]['total_lot']  += trade_dict['total_lot']
 			
 
 
 			for staff_id, account_type_dict in staff_trades_dict.items():
+				
 				for account_type, trade_dict in account_type_dict.items():
-					loop_total_lot = trade_dict['total_lot']
-					bonus_usd_per_lot = Decimal(0.00)
-					bonus_tier = ''
-					bonus_usd_account_per_account_type = Decimal(0.00)
-					bonus_idr_account_per_account_type = Decimal(0.00)
-					if account_type == 'elastico':
-						if loop_total_lot <= 30.00:
-							bonus_usd_per_lot = Decimal(0.5)
-							bonus_tier = 'tier 1'
-						else:
-							bonus_usd_per_lot = Decimal(0.75)
-							bonus_tier = 'tier 2'
-					elif account_type == 'elektro':
-						if loop_total_lot <= 50.00:
-							bonus_usd_per_lot = Decimal(0.25)
-							bonus_tier = 'tier 1'
-						else:
-							bonus_usd_per_lot = Decimal(0.5)
-							bonus_tier = 'tier 2'
-					elif account_type == 'magneto':
-						if loop_total_lot <= 100.00:
-							bonus_usd_per_lot = Decimal(1)
-							bonus_tier = 'tier 1'
-						else:
-							bonus_usd_per_lot = Decimal(2)
-							bonus_tier = 'tier 2'
-					
-					for staff_trade in trade_dict['trade_list']:
-						rounding_bonus = round_down( (staff_trade['total_lot'] * bonus_usd_per_lot), 2)
-						staff_trade['idr_bonus'] = rounding_bonus * Decimal(staff_trade['rate'])
-						staff_trade['bonus'] = bonus_usd_per_lot
-						staff_trade['usd_bonus'] = rounding_bonus
-						bonus_usd_account_per_account_type += rounding_bonus
-						bonus_idr_account_per_account_type += (rounding_bonus * Decimal(staff_trade['rate']))
-					
-					staff_trades_dict[staff_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
-					staff_trades_dict[staff_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
-					staff_trades_dict[staff_id][account_type]['bonus_tier'] = bonus_tier	
+					if 'total' not in account_type:
+						loop_total_lot = trade_dict['total_lot']
+						bonus_usd_per_lot = Decimal(0.00)
+						bonus_tier = ''
+						bonus_usd_account_per_account_type = Decimal(0.00)
+						bonus_idr_account_per_account_type = Decimal(0.00)
+						if account_type == 'elastico':
+							if loop_total_lot <= 30.00:
+								bonus_usd_per_lot = Decimal(0.5)
+								bonus_tier = 'tier 1'
+							else:
+								bonus_usd_per_lot = Decimal(0.75)
+								bonus_tier = 'tier 2'
+						elif account_type == 'elektro':
+							if loop_total_lot <= 50.00:
+								bonus_usd_per_lot = Decimal(0.25)
+								bonus_tier = 'tier 1'
+							else:
+								bonus_usd_per_lot = Decimal(0.5)
+								bonus_tier = 'tier 2'
+						elif account_type == 'magneto':
+							if loop_total_lot <= 100.00:
+								bonus_usd_per_lot = Decimal(1)
+								bonus_tier = 'tier 1'
+							else:
+								bonus_usd_per_lot = Decimal(2)
+								bonus_tier = 'tier 2'
+						
+						for staff_trade in trade_dict['trade_list']:
+							rounding_bonus = round_down( (staff_trade['total_lot'] * bonus_usd_per_lot), 2)
+							staff_trade['idr_bonus'] = rounding_bonus * Decimal(staff_trade['rate'])
+							staff_trade['bonus'] = bonus_usd_per_lot
+							staff_trade['usd_bonus'] = rounding_bonus
+							bonus_usd_account_per_account_type += rounding_bonus
+							bonus_idr_account_per_account_type += (rounding_bonus * Decimal(staff_trade['rate']))
+							bonus_account_type_dict['staff']['total_lot'] += round_down( staff_trade['total_lot'] , 2)
+						
+						staff_trades_dict[staff_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+						staff_trades_dict[staff_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+						staff_trades_dict[staff_id][account_type]['bonus_tier'] = bonus_tier	
 
-					bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
-					bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
+						staff_trades_dict[staff_id]['total_idr'] += bonus_idr_account_per_account_type
+						staff_trades_dict[staff_id]['total_usd'] += bonus_usd_account_per_account_type
 
-					bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
-					bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+						bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+						bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
 
-					bonus_account_type_dict['staff']['total_idr'] += bonus_idr_account_per_account_type
-					bonus_account_type_dict['staff']['total_usd'] += bonus_usd_account_per_account_type
+						bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+						bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+
+						bonus_account_type_dict['staff']['total_idr'] += bonus_idr_account_per_account_type
+						bonus_account_type_dict['staff']['total_usd'] += bonus_usd_account_per_account_type
 					
 			for supervisor_id, supervisor_account_type_dict in supervisor_trades_dict.items():
 
 				for account_type, supervisor_trade_dict in supervisor_account_type_dict.items():
-					loop_total_lot = supervisor_trade_dict['total_lot']
-					bonus_usd_per_lot = Decimal(0.00)
-					bonus_tier = ''
-					bonus_usd_account_per_account_type = Decimal(0.00)
-					bonus_idr_account_per_account_type = Decimal(0.00)
-					if account_type == 'elastico':
-						if loop_total_lot <= 30.00:
-							bonus_usd_per_lot = Decimal(1)
-							bonus_tier = 'tier 1'
-						else:
-							bonus_usd_per_lot = Decimal(1.75)
-							bonus_tier = 'tier 2'
-					elif account_type == 'elektro':
-						if loop_total_lot <= 50.00:
-							bonus_usd_per_lot = Decimal(0.75)
-							bonus_tier = 'tier 1'
-						else:
-							bonus_usd_per_lot = Decimal(0.1)
-							bonus_tier = 'tier 2'
-					elif account_type == 'magneto':
-						if loop_total_lot <= 100.00:
-							bonus_usd_per_lot = Decimal(2)
-							bonus_tier = 'tier 1'
-						else:
-							bonus_usd_per_lot = Decimal(3)
-							bonus_tier = 'tier 2'
-					
-					
-					loop_index  = 0
-					for supervisor_trade in supervisor_trade_dict['supervisor_trade_list']:
-						rounding_bonus = round_down( (supervisor_trade['total_lot'] * bonus_usd_per_lot), 2)
+					if 'total' not in account_type:
+						loop_total_lot = supervisor_trade_dict['total_lot']
+						bonus_usd_per_lot = Decimal(0.00)
+						bonus_tier = ''
+						bonus_usd_account_per_account_type = Decimal(0.00)
+						bonus_idr_account_per_account_type = Decimal(0.00)
+						if account_type == 'elastico':
+							if loop_total_lot <= 30.00:
+								bonus_usd_per_lot = Decimal(1)
+								bonus_tier = 'tier 1'
+							else:
+								bonus_usd_per_lot = Decimal(1.75)
+								bonus_tier = 'tier 2'
+						elif account_type == 'elektro':
+							if loop_total_lot <= 50.00:
+								bonus_usd_per_lot = Decimal(0.75)
+								bonus_tier = 'tier 1'
+							else:
+								bonus_usd_per_lot = Decimal(0.1)
+								bonus_tier = 'tier 2'
+						elif account_type == 'magneto':
+							if loop_total_lot <= 100.00:
+								bonus_usd_per_lot = Decimal(2)
+								bonus_tier = 'tier 1'
+							else:
+								bonus_usd_per_lot = Decimal(3)
+								bonus_tier = 'tier 2'
 						
-						supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_idr_bonus'] = rounding_bonus * Decimal(supervisor_trade['rate'])
 						
-						supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_bonus'] = bonus_usd_per_lot
-						
-						supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_usd_bonus'] = rounding_bonus
-						
-						bonus_usd_account_per_account_type += rounding_bonus
-						
-						bonus_idr_account_per_account_type += (rounding_bonus * Decimal(supervisor_trade['rate']))
-						loop_index += 1
-					
-					supervisor_trades_dict[supervisor_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
-					supervisor_trades_dict[supervisor_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
-					supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = bonus_tier
+						loop_index  = 0
+						for supervisor_trade in supervisor_trade_dict['supervisor_trade_list']:
+							rounding_bonus = round_down( (supervisor_trade['total_lot'] * bonus_usd_per_lot), 2)
+							
+							supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_idr_bonus'] = rounding_bonus * Decimal(supervisor_trade['rate'])
+							
+							supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_bonus'] = bonus_usd_per_lot
+							
+							supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_usd_bonus'] = rounding_bonus
+							
+							bonus_usd_account_per_account_type += rounding_bonus
+							
+							bonus_idr_account_per_account_type += (rounding_bonus * Decimal(supervisor_trade['rate']))
 
+							bonus_account_type_dict['supervisor']['total_lot'] += round_down( supervisor_trade['total_lot'] , 2)
 
-					bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
-					bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
+							loop_index += 1
+						print('test bonus_account_type_dict', bonus_account_type_dict['supervisor']['total_lot'])
+						supervisor_trades_dict[supervisor_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+						supervisor_trades_dict[supervisor_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+						supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = bonus_tier
 
-					bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
-					bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
-					
-					bonus_account_type_dict['supervisor']['total_idr'] += bonus_idr_account_per_account_type
-					bonus_account_type_dict['supervisor']['total_usd'] += bonus_usd_account_per_account_type
+						supervisor_trades_dict[supervisor_id]['total_idr'] += bonus_idr_account_per_account_type
+						supervisor_trades_dict[supervisor_id]['total_usd'] += bonus_usd_account_per_account_type
+
+						bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+						bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
+
+						bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+						bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+						
+						bonus_account_type_dict['supervisor']['total_idr'] += bonus_idr_account_per_account_type
+						bonus_account_type_dict['supervisor']['total_usd'] += bonus_usd_account_per_account_type
 
 			
 		return bonus_account_type_dict, two_month_trades, staff_trades_dict, supervisor_trades_dict
@@ -1174,8 +1217,8 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 	bonus_account_type_dict['elastico'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 	bonus_account_type_dict['elektro'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
 	bonus_account_type_dict['magneto'] = {'total_idr': 0, 'total_usd': 0, 'total_lot' : 0, 'bonus_tier' : '-'}
-	bonus_account_type_dict['staff'] = {'total_idr': 0, 'total_usd': 0, }
-	bonus_account_type_dict['supervisor'] = {'total_idr': 0, 'total_usd': 0, }
+	bonus_account_type_dict['staff'] = {'total_idr': 0, 'total_usd': 0, 'total_lot': 0 }
+	bonus_account_type_dict['supervisor'] = {'total_idr': 0, 'total_usd': 0, 'total_lot': 0}
 
 	if meta5_id_string_for_post != '':
 		data_post_for_get_login_trades = {
@@ -1244,6 +1287,9 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 			account_type = mt5_account_type_dict[login_id]['account_type']
 			if staff_id not in staff_trades_dict:
 				staff_trades_dict[staff_id] = {}
+				staff_trades_dict[staff_id]['total_lot'] = 0 
+				staff_trades_dict[staff_id]['total_usd'] = 0 
+				staff_trades_dict[staff_id]['total_idr'] = 0 
 				
 			if account_type not in  staff_trades_dict[staff_id] :
 				staff_trades_dict[staff_id][account_type] = {}
@@ -1252,12 +1298,19 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 				staff_trades_dict[staff_id][account_type]['total_usd'] = 0
 				staff_trades_dict[staff_id][account_type]['total_idr'] = 0 
 				staff_trades_dict[staff_id][account_type]['bonus_tier'] = 0
+				
 
 			staff_trades_dict[staff_id][account_type]['trade_list'].append(trade_dict)
-			staff_trades_dict[staff_id][account_type]['total_lot'] += trade_dict['total_lot']
+			staff_trades_dict[staff_id][account_type]['total_lot'] += round_down(trade_dict['total_lot'], 2)
+			staff_trades_dict[staff_id]['total_lot'] += round_down(trade_dict['total_lot'], 2)
+			staff_trades_dict[staff_id]['total_lot'] = round_down(staff_trades_dict[staff_id]['total_lot'], 2)
+			
 
 			if supervisor_id not in supervisor_trades_dict:
 				supervisor_trades_dict[supervisor_id] = {}
+				supervisor_trades_dict[supervisor_id]['total_lot'] = 0
+				supervisor_trades_dict[supervisor_id]['total_usd'] = 0
+				supervisor_trades_dict[supervisor_id]['total_idr'] = 0
 				
 			if account_type not in  supervisor_trades_dict[supervisor_id] :
 				supervisor_trades_dict[supervisor_id][account_type] = {}
@@ -1266,109 +1319,118 @@ def master_calculate_data_pribadi_bonus(staffs, now, end_date):
 				supervisor_trades_dict[supervisor_id][account_type]['total_usd'] = 0
 				supervisor_trades_dict[supervisor_id][account_type]['total_idr'] = 0 
 				supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = 0
+				
 			supervisor_trade_list = trade_dict
 			supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'].append(supervisor_trade_list)
-			supervisor_trades_dict[supervisor_id][account_type]['total_lot'] += trade_dict['total_lot']
-		
+			supervisor_trades_dict[supervisor_id][account_type]['total_lot'] += round_down(trade_dict['total_lot'], 2)
+			supervisor_trades_dict[supervisor_id]['total_lot'] += trade_dict['total_lot']
 
 
 		for staff_id, account_type_dict in staff_trades_dict.items():
 			for account_type, trade_dict in account_type_dict.items():
-				loop_total_lot = trade_dict['total_lot']
-				bonus_usd_per_lot = Decimal(0.00)
-				bonus_tier = ''
-				bonus_usd_account_per_account_type = Decimal(0.00)
-				bonus_idr_account_per_account_type = Decimal(0.00)
-				if account_type == 'elastico':
+				if 'total' not in account_type:
+					loop_total_lot = trade_dict['total_lot']
+					bonus_usd_per_lot = Decimal(0.00)
+					bonus_tier = ''
+					bonus_usd_account_per_account_type = Decimal(0.00)
+					bonus_idr_account_per_account_type = Decimal(0.00)
+					if account_type == 'elastico':
+						
+						bonus_usd_per_lot = Decimal(3)
+						bonus_tier = 'tier 1'
+						
+					elif account_type == 'elektro':
+						
+						bonus_usd_per_lot = Decimal(1)
+						bonus_tier = 'tier 1'
+						
+					elif account_type == 'magneto':
+						
+						bonus_usd_per_lot = Decimal(4)
+						bonus_tier = 'tier 1'
+						
 					
-					bonus_usd_per_lot = Decimal(3)
-					bonus_tier = 'tier 1'
+					for staff_trade in trade_dict['trade_list']:
+						rounding_bonus = round_down( (staff_trade['total_lot'] * bonus_usd_per_lot), 2)
+						staff_trade['idr_bonus'] = rounding_bonus * Decimal(staff_trade['rate'])
+						staff_trade['bonus'] = bonus_usd_per_lot
+						staff_trade['usd_bonus'] = rounding_bonus
+						bonus_usd_account_per_account_type += rounding_bonus
+						bonus_idr_account_per_account_type += (rounding_bonus * Decimal(staff_trade['rate']))
+						bonus_account_type_dict['staff']['total_lot'] += round_down(staff_trade['total_lot'], 2)
 					
-				elif account_type == 'elektro':
-					
-					bonus_usd_per_lot = Decimal(1)
-					bonus_tier = 'tier 1'
-					
-				elif account_type == 'magneto':
-					
-					bonus_usd_per_lot = Decimal(4)
-					bonus_tier = 'tier 1'
-					
-				
-				for staff_trade in trade_dict['trade_list']:
-					rounding_bonus = round_down( (staff_trade['total_lot'] * bonus_usd_per_lot), 2)
-					staff_trade['idr_bonus'] = rounding_bonus * Decimal(staff_trade['rate'])
-					staff_trade['bonus'] = bonus_usd_per_lot
-					staff_trade['usd_bonus'] = rounding_bonus
-					bonus_usd_account_per_account_type += rounding_bonus
-					bonus_idr_account_per_account_type += (rounding_bonus * Decimal(staff_trade['rate']))
-				
-				staff_trades_dict[staff_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
-				staff_trades_dict[staff_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
-				staff_trades_dict[staff_id][account_type]['bonus_tier'] = bonus_tier	
+					staff_trades_dict[staff_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+					staff_trades_dict[staff_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+					staff_trades_dict[staff_id][account_type]['bonus_tier'] = bonus_tier	
+					staff_trades_dict[staff_id]['total_idr'] += bonus_idr_account_per_account_type
+					staff_trades_dict[staff_id]['total_usd'] += bonus_usd_account_per_account_type
 
-				bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
-				bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
+					bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
 
-				bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
-				bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+					bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
 
-				bonus_account_type_dict['staff']['total_idr'] += bonus_idr_account_per_account_type
-				bonus_account_type_dict['staff']['total_usd'] += bonus_usd_account_per_account_type
+					bonus_account_type_dict['staff']['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict['staff']['total_usd'] += bonus_usd_account_per_account_type
 					
 
 		for supervisor_id, supervisor_account_type_dict in supervisor_trades_dict.items():
 
 			for account_type, supervisor_trade_dict in supervisor_account_type_dict.items():
-				loop_total_lot = supervisor_trade_dict['total_lot']
-				bonus_usd_per_lot = Decimal(0.00)
-				bonus_tier = ''
-				bonus_usd_account_per_account_type = Decimal(0.00)
-				bonus_idr_account_per_account_type = Decimal(0.00)
-				if account_type == 'elastico':
+				if 'total' not in account_type:
+					loop_total_lot = supervisor_trade_dict['total_lot']
+					bonus_usd_per_lot = Decimal(0.00)
+					bonus_tier = ''
+					bonus_usd_account_per_account_type = Decimal(0.00)
+					bonus_idr_account_per_account_type = Decimal(0.00)
+					if account_type == 'elastico':
+						
+						bonus_usd_per_lot = Decimal(0.5)
+						bonus_tier = 'tier 1'
+						
+					elif account_type == 'elektro':
+						
+						bonus_usd_per_lot = Decimal(0.5)
+						bonus_tier = 'tier 1'
+						
+					elif account_type == 'magneto':
+						
+						bonus_usd_per_lot = Decimal(0.5)
+						bonus_tier = 'tier 1'
 					
-					bonus_usd_per_lot = Decimal(0.5)
-					bonus_tier = 'tier 1'
 					
-				elif account_type == 'elektro':
+					loop_index  = 0
+					for supervisor_trade in supervisor_trade_dict['supervisor_trade_list']:
+						rounding_bonus = round_down( (supervisor_trade['total_lot'] * bonus_usd_per_lot), 2)
+						
+						supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_idr_bonus'] = rounding_bonus * Decimal(supervisor_trade['rate'])
+						
+						supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_bonus'] = bonus_usd_per_lot
+						
+						supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_usd_bonus'] = rounding_bonus
+						
+						bonus_usd_account_per_account_type += rounding_bonus
+						
+						bonus_idr_account_per_account_type += (rounding_bonus * Decimal(supervisor_trade['rate']))
+						bonus_account_type_dict['supervisor']['total_lot'] += round_down(supervisor_trade_dict ['total_lot'], 2)
+						loop_index += 1
 					
-					bonus_usd_per_lot = Decimal(0.5)
-					bonus_tier = 'tier 1'
-					
-				elif account_type == 'magneto':
-					
-					bonus_usd_per_lot = Decimal(0.5)
-					bonus_tier = 'tier 1'
-				
-				
-				loop_index  = 0
-				for supervisor_trade in supervisor_trade_dict['supervisor_trade_list']:
-					rounding_bonus = round_down( (supervisor_trade['total_lot'] * bonus_usd_per_lot), 2)
-					
-					supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_idr_bonus'] = rounding_bonus * Decimal(supervisor_trade['rate'])
-					
-					supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_bonus'] = bonus_usd_per_lot
-					
-					supervisor_trades_dict[supervisor_id][account_type]['supervisor_trade_list'][loop_index]['supervisor_usd_bonus'] = rounding_bonus
-					
-					bonus_usd_account_per_account_type += rounding_bonus
-					
-					bonus_idr_account_per_account_type += (rounding_bonus * Decimal(supervisor_trade['rate']))
-					loop_index += 1
-				
-				supervisor_trades_dict[supervisor_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
-				supervisor_trades_dict[supervisor_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
-				supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = bonus_tier
+					supervisor_trades_dict[supervisor_id][account_type]['total_idr'] += bonus_idr_account_per_account_type
+					supervisor_trades_dict[supervisor_id][account_type]['total_usd'] += bonus_usd_account_per_account_type
+					supervisor_trades_dict[supervisor_id][account_type]['bonus_tier'] = bonus_tier
+					supervisor_trades_dict[supervisor_id]['total_idr'] += bonus_idr_account_per_account_type
+					supervisor_trades_dict[supervisor_id]['total_usd'] += bonus_usd_account_per_account_type
 
 
-				bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
-				bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
+					bonus_account_type_dict[account_type]['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict[account_type]['total_usd'] += bonus_usd_account_per_account_type
 
-				bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
-				bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
-				
-				bonus_account_type_dict['supervisor']['total_idr'] += bonus_idr_account_per_account_type
-				bonus_account_type_dict['supervisor']['total_usd'] += bonus_usd_account_per_account_type
+					bonus_account_type_dict['total']['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict['total']['total_usd'] += bonus_usd_account_per_account_type
+					
+					bonus_account_type_dict['supervisor']['total_idr'] += bonus_idr_account_per_account_type
+					bonus_account_type_dict['supervisor']['total_usd'] += bonus_usd_account_per_account_type
 		
 	return bonus_account_type_dict, two_month_trades, staff_trades_dict, supervisor_trades_dict
 

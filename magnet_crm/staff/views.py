@@ -23,7 +23,13 @@ from ib.models import *
 from dateutil.relativedelta import relativedelta
 import pytz
 from django.utils.timezone import make_aware
-
+import math
+import decimal
+def round_down(value, decimals):
+    with decimal.localcontext() as ctx:
+        d = decimal.Decimal(value)
+        ctx.rounding = decimal.ROUND_DOWN
+        return round(d, decimals)
 
 
 
@@ -1290,6 +1296,82 @@ def master_report_detail(request):
 	#get_total bonus 
 	total_bonus_lot_usd = 0
 	total_bonus_lot_idr = 0
+	staff_total_lot = 0
+	staff_total_idr = 0
+	staff_total_usd = 0
+	supervisor_total_lot = 0 
+	supervisor_total_idr = 0 
+	supervisor_total_usd = 0
+
+	##calculate total supervisor
+	for supervisor_id, value_dict in supervisor_two_months_trades.items():
+		
+		supervisor_total_idr += round_down(value_dict['total_idr'], 2)
+		supervisor_total_usd += round_down(value_dict['total_usd'], 2)
+		supervisor_total_lot += round_down(value_dict['total_lot'], 2)
+
+
+	supervisor_total_idr = round_down(supervisor_total_idr, 2)
+	supervisor_total_usd = round_down(supervisor_total_usd, 2)
+	supervisor_total_lot = round_down(supervisor_total_lot, 2)
+	print('====', supervisor_total_lot)
+	for supervisor_id, value_dict in supervisor_more_two_months_trades.items():
+		supervisor_total_idr += round_down(value_dict['total_idr'], 2)
+		supervisor_total_usd += round_down(value_dict['total_usd'], 2)
+		supervisor_total_lot += round_down(value_dict['total_lot'], 2)
+		# print('supervisor total lot', supervisor_total_lot)
+
+	supervisor_total_idr = round_down(supervisor_total_idr, 2)
+	supervisor_total_usd = round_down(supervisor_total_usd, 2)
+	supervisor_total_lot = round_down(supervisor_total_lot, 2)
+	# print('check', supervisor_total_idr, supervisor_total_usd, supervisor_total_lot)
+	for supervisor_id, value_dict in supervisor_data_pribadi_trades.items():
+		supervisor_total_idr += round_down(value_dict['total_idr'], 2)
+		supervisor_total_usd += round_down(value_dict['total_usd'], 2)
+		supervisor_total_lot += round_down(value_dict['total_lot'], 2)
+		# print('supervisor total lot', supervisor_total_lot)
+
+	supervisor_total_idr = round_down(supervisor_total_idr, 2)
+	supervisor_total_usd = round_down(supervisor_total_usd, 2)
+	supervisor_total_lot = round_down(supervisor_total_lot, 2)
+	print('check', supervisor_total_idr, supervisor_total_usd, supervisor_total_lot)
+
+	#calculate total staff
+	for staff_id, value_dict in staff_two_months_trades.items():
+		print('()()', staff_id, value_dict)
+		print('->>>',staff_id,  value_dict['total_lot'])
+		staff_total_idr += value_dict['total_idr']
+		staff_total_usd += value_dict['total_usd']
+		staff_total_lot += value_dict['total_lot']
+		print('total trades two months increment', staff_id, staff_total_lot)
+	print('check staff 123 two months', staff_total_lot)
+
+	staff_total_idr = round_down(staff_total_idr, 2)
+	staff_total_usd = round_down(staff_total_usd, 2)
+	staff_total_lot = round_down(staff_total_lot, 2)
+
+	for staff_id, value_dict in staff_more_two_months_trades.items():
+		staff_total_idr += value_dict['total_idr']
+		staff_total_usd += value_dict['total_usd']
+		staff_total_lot += value_dict['total_lot']
+
+	staff_total_idr = round_down(staff_total_idr, 2)
+	staff_total_usd = round_down(staff_total_usd, 2)
+	staff_total_lot = round_down(staff_total_lot, 2)
+	print('check staff', staff_total_idr, staff_total_usd, staff_total_lot)
+
+	for staff_id, value_dict in staff_data_pribadi_trades.items():
+		staff_total_idr += round_down(value_dict['total_idr'], 2)
+		staff_total_usd += round_down(value_dict['total_usd'], 2)
+		staff_total_lot += round_down(value_dict['total_lot'], 2)
+
+	staff_total_idr = round_down(staff_total_idr, 2)
+	staff_total_usd = round_down(staff_total_usd, 2)
+	staff_total_lot = round_down(staff_total_lot, 2)	
+	print('check staff', staff_total_idr, staff_total_usd, staff_total_lot)
+
+			
+
 	for account_type, bonus_dict, in two_months_bonus_dict.items():
 		total_bonus_lot_usd += bonus_dict['total_usd']
 		total_bonus_lot_idr += bonus_dict['total_idr']
@@ -1312,6 +1394,7 @@ def master_report_detail(request):
 	for account_type, bonus_dict, in ib_bonus_dict.items():
 		total_bonus_ib_usd += bonus_dict['total_usd']
 		total_bonus_ib_idr += bonus_dict['total_idr']
+
 	
 	
 
@@ -1319,9 +1402,34 @@ def master_report_detail(request):
 	# pribadi_bonus_dict = calculate_data_pribadi_bonus(staff, now, end_date)
 
 	# print('two_months_bonus_dict', two_months_bonus_dict)
-
-
+	all_bonus_dict = {}
+	all_bonus_dict['total'] = 0
+	all_bonus_dict['total_lot'] = 0
+	all_bonus_dict['supervisor'] = 0
+	all_bonus_dict['staff'] = 0
+	all_bonus_dict['ib'] = 0
+	all_bonus_dict['total_idr'] = 0
+	all_bonus_dict['total_usd'] = 0
 	
+	
+	#total all bonus idr
+	
+	all_bonus_dict['total_idr'] += two_months_bonus_dict['total']['total_idr']
+	all_bonus_dict['total_idr'] += more_two_months_bonus_dict['total']['total_idr']
+	all_bonus_dict['total_idr'] += data_pribadi_months_bonus_dict['total']['total_idr']
+	#total all lot
+	all_bonus_dict['total_lot'] +=  round_down(two_months_bonus_dict['total']['total_lot'], 2)
+	all_bonus_dict['total_lot'] +=  round_down(more_two_months_bonus_dict['total']['total_lot'], 2)
+	all_bonus_dict['total_lot'] += round_down(data_pribadi_months_bonus_dict['total']['total_lot'], 2)
+	all_bonus_dict['total_lot'] += round_down(data_pribadi_months_bonus_dict['total']['total_lot'], 2)
+
+	#total bonus usd
+	all_bonus_dict['total_usd'] +=  round_down(two_months_bonus_dict['total']['total_usd'], 2)
+	all_bonus_dict['total_usd'] +=  round_down(more_two_months_bonus_dict['total']['total_usd'], 2)
+	all_bonus_dict['total_usd'] += round_down(data_pribadi_months_bonus_dict['total']['total_usd'], 2)
+	all_bonus_dict['total_usd'] += round_down(data_pribadi_months_bonus_dict['total']['total_usd'], 2)
+
+	all_bonus_dict['data_pribadi_months_bonus_dict'] = data_pribadi_months_bonus_dict['total']['total_idr']
 	context = {}
 	context['staff_id_name_dict'] = staff_id_name_dict
 	context['staff_two_months_trades'] = staff_two_months_trades
@@ -1349,11 +1457,19 @@ def master_report_detail(request):
 	context['total_bonus_data_pribadi_idr'] = total_bonus_data_pribadi_idr
 	context['total_bonus_ib_usd'] = total_bonus_ib_usd
 	context['total_bonus_ib_idr'] = total_bonus_ib_idr
+	context['all_bonus_dict'] = all_bonus_dict
 	context['show_ib_bonus'] = show_ib_bonus
+	context['supervisor_total_idr'] = supervisor_total_idr
+	context['supervisor_total_usd'] = supervisor_total_usd
+	context['supervisor_total_lot'] = supervisor_total_lot
+	context['staff_total_idr'] = staff_total_idr
+	context['staff_total_usd'] = staff_total_usd
+	context['staff_total_lot'] = staff_total_lot
 
 
 
-
+	print('kkkkk', two_months_bonus_dict)
+	
 	return render(request,template,context=context)
 def staff_supervisor_report_detail(request,staff_uid):
 	template = 'admin/report/report_staff_supervisor_detail.html'
